@@ -2,8 +2,7 @@
   "name": "wise-global",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://durgesh122.github.io/wise-global"
-,
+  "homepage": "https://durgesh122.github.io/wise-global",
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@formspree/react": "^3.0.0",
