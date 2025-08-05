@@ -24,6 +24,13 @@ const AdminPanel = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const submissionsRef = ref(db, 'homeFormSubmissions');
+    onValue(submissionsRef, snapshot => {
+      setSubmissions(snapshot.val() || {});
+    });
+  }, []);
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Contact Submissions</h1>

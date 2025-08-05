@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { ref, onValue, update } from 'firebase/database';
+import { ref, onValue, set } from 'firebase/database';
 import { db } from '../../firebase';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiEdit } from 'react-icons/fi';
 import PropTypes from 'prop-types';
 
 import LoadingSpinner from '../../components/admin/LoadingSpinner';
-import ConfirmationModal from '../../components/admin/ConfirmationModal';
+// ...existing imports...
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -93,7 +93,7 @@ EditModal.propTypes = {
   onSave: PropTypes.func.isRequired,
 };
 
-const ComplaintTable = ({ tableData, handleEdit, handleDelete }) => (
+const ComplaintTable = ({ tableData, handleEdit }) => (
   <motion.div className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20" variants={itemVariants}>
     <table className="w-full text-white responsive-table">
       <thead className="bg-gray-700/50">
@@ -120,11 +120,8 @@ const ComplaintTable = ({ tableData, handleEdit, handleDelete }) => (
             <td data-label="Pending" className="p-4">{row.pending || 0}</td>
             <td data-label="Pending > 3 Months" className="p-4">{row.pending3Months || 0}</td>
             <td data-label="Avg. Resolution time (days)" className="p-4">{row.avgResolutionTime || 0}</td>
-            <td data-label="Actions" className="p-4 flex gap-2">
+            <td data-label="Actions" className="p-4">
               <motion.button onClick={() => handleEdit(row)} className="text-blue-500 hover:text-blue-700" variants={buttonVariants} whileHover="hover"><FiEdit size={16} /></motion.button>
-              {row.srNo !== 'Grand Total' && (
-                <motion.button onClick={() => handleDelete(row.srNo)} className="text-red-500 hover:text-red-700" variants={buttonVariants} whileHover="hover"><FiTrash2 size={16} /></motion.button>
-              )}
             </td>
           </motion.tr>
         ))}
@@ -136,7 +133,6 @@ const ComplaintTable = ({ tableData, handleEdit, handleDelete }) => (
 ComplaintTable.propTypes = {
   tableData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   handleEdit: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
 };
 
 const ComplaintManager = () => {
@@ -144,14 +140,22 @@ const ComplaintManager = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editRowData, setEditRowData] = useState(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
-    const tableRef = ref(db, 'complaintTableData/data');
+    const tableRef = ref(db, 'complaintTableData');
     const unsubscribe = onValue(tableRef, (snapshot) => {
       const data = snapshot.val();
-      setTableData(data ? (Array.isArray(data) ? data : Object.values(data)) : []);
+      if (data) {
+        setTableData(Array.isArray(data) ? data : Object.values(data));
+      } else {
+        // Default rows when no data
+        setTableData([
+          { srNo: 1, source: 'Directly from Investors', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
+          { srNo: 2, source: 'SEBI (SCORES)', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
+          { srNo: 3, source: 'Other Sources (if any)', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
+          { srNo: 'Grand Total', source: '', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
+        ]);
+      }
       setIsLoading(false);
     }, (error) => {
       toast.error('Failed to load complaint data: ' + error.message);
@@ -168,7 +172,7 @@ const ComplaintManager = () => {
   const handleSave = async (editedRow) => {
     try {
       const updatedData = tableData.map(row => row.srNo === editedRow.srNo ? editedRow : row);
-      await update(ref(db, 'complaintTableData'), { data: updatedData });
+      await set(ref(db, 'complaintTableData'), updatedData);
       toast.success('Row updated successfully.');
     } catch (error) {
       toast.error('Failed to update row: ' + error.message);
@@ -176,33 +180,15 @@ const ComplaintManager = () => {
     setIsEditModalOpen(false);
   };
 
-  const handleDeleteClick = (srNo) => {
-    setItemToDelete(srNo);
-    setIsDeleteModalOpen(true);
-  };
 
-  const confirmDelete = async () => {
-    if (itemToDelete) {
-      try {
-        const updatedData = tableData.filter(row => row.srNo !== itemToDelete);
-        await update(ref(db, 'complaintTableData'), { data: updatedData });
-        toast.success('Row deleted successfully.');
-      } catch (error) {
-        toast.error('Failed to delete row: ' + error.message);
-      }
-      setIsDeleteModalOpen(false);
-      setItemToDelete(null);
-    }
-  };
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <h2 className="text-3xl font-bold text-white mb-6">Complaint Manager</h2>
       {isLoading ? <LoadingSpinner /> : (
-        <ComplaintTable tableData={tableData} handleEdit={handleEdit} handleDelete={handleDeleteClick} />
+        <ComplaintTable tableData={tableData} handleEdit={handleEdit} />
       )}
       <EditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} rowData={editRowData} onSave={handleSave} />
-      <ConfirmationModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={confirmDelete} title="Confirm Deletion" message="Are you sure you want to delete this row?" />
     </motion.div>
   );
 };

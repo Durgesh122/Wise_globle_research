@@ -1,12 +1,9 @@
 // src/pages/Comex.js
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Chart as ChartJS, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend } from 'chart.js';
-import { Line } from 'react-chartjs-2';
 import { FaSearch, FaPlus, FaTrash } from 'react-icons/fa';
+import Contact from './Contact';
 
-// Register Chart.js components
-ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
 
 // Mock data for Indian stock market (NIFTY 500 inspired)
 const mockStocks = [
@@ -31,12 +28,6 @@ const mockStocks = [
   })),
 ];
 
-// Mock historical data for charts
-const generateHistoricalData = (basePrice) => {
-  const labels = Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`);
-  const prices = labels.map(() => basePrice * (1 + (Math.random() - 0.5) * 0.1));
-  return { labels, prices };
-};
 
 const Comex = () => {
   // State management
@@ -44,8 +35,8 @@ const Comex = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSector, setSelectedSector] = useState('All');
   const [watchlist, setWatchlist] = useState([]);
-  const [selectedStock, setSelectedStock] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'price', direction: 'desc' });
+  const [showContactForm, setShowContactForm] = useState(false);
 
   // Simulate real-time price updates
   useEffect(() => {
@@ -105,37 +96,14 @@ const Comex = () => {
     );
   };
 
-  // Chart data for selected stock
-  const chartData = selectedStock
-    ? {
-        labels: generateHistoricalData(selectedStock.price).labels,
-        datasets: [
-          {
-            label: `${selectedStock.name} Price`,
-            data: generateHistoricalData(selectedStock.price).prices,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            fill: true,
-          },
-        ],
-      }
-    : null;
 
-  // Chart options
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: { position: 'top' },
-      tooltip: { enabled: true },
-    },
-    scales: {
-      x: { title: { display: true, text: 'Date' } },
-      y: { title: { display: true, text: 'Price (INR)' } },
-    },
-  };
 
   // Sector options for filter
   const sectors = ['All', ...new Set(mockStocks.map((stock) => stock.sector))];
+
+  if (showContactForm) {
+    return <Contact />;
+  }
 
   return (
     <motion.div
@@ -146,13 +114,16 @@ const Comex = () => {
     >
       <div className="max-w-7xl mx-auto">
         <motion.h1
-          className="text-3xl font-bold text-center text-white mb-8"
+          className="text-3xl font-bold text-white text-center mb-8  block px-4 py-2 rounded mx-auto"
           initial={{ y: -20 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.3 }}
         >
           Indian Stock Market - Comex Dashboard
         </motion.h1>
+
+        {/* Note on Data */}
+
 
         {/* Search and Filter Section */}
         <motion.div
@@ -166,7 +137,7 @@ const Comex = () => {
             <input
               type="text"
               placeholder="Search stocks by name or symbol..."
-              className="w-full pl-10 pr-4 py-2 bg-gray-800 bg-opacity-50 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 bg-white/30 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -188,7 +159,7 @@ const Comex = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Stock List */}
           <motion.div
-            className="lg:col-span-2 bg-gray-900 bg-opacity-50 rounded-lg p-6"
+            className="lg:col-span-2 bg-white/30 backdrop-blur-md rounded-lg p-6"
             initial={{ x: -20 }}
             animate={{ x: 0 }}
             transition={{ duration: 0.3 }}
@@ -229,7 +200,6 @@ const Comex = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
-                        onClick={() => setSelectedStock(stock)}
                       >
                         <td className="p-3">{stock.symbol}</td>
                         <td className="p-3">{stock.name}</td>
@@ -263,12 +233,7 @@ const Comex = () => {
           </motion.div>
 
           {/* Watchlist */}
-          <motion.div
-            className="bg-gray-900 bg-opacity-50 rounded-lg p-6"
-            initial={{ x: 20 }}
-            animate={{ x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.div className="bg-white/30 backdrop-blur-md rounded-lg p-6" initial={{ x: 20 }} animate={{ x: 0 }} transition={{ duration: 0.3 }}>
             <h2 className="text-xl font-semibold text-white mb-4">Watchlist</h2>
             {watchlist.length === 0 ? (
               <p className="text-gray-400">Your watchlist is empty.</p>
@@ -305,20 +270,46 @@ const Comex = () => {
           </motion.div>
         </div>
 
-        {/* Stock Chart */}
-        {selectedStock && (
-          <motion.div
-            className="mt-8 bg-gray-900 bg-opacity-50 rounded-lg p-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h2 className="text-xl font-semibold text-white mb-4">
-              Price Trend: {selectedStock.name} ({selectedStock.symbol})
-            </h2>
-            <Line data={chartData} options={chartOptions} />
-          </motion.div>
-        )}
+        {/* About COMEX Section */}
+        <motion.section className="mt-8 mb-12 p-6 bg-white/30 backdrop-blur-md rounded-lg text-white" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+          <h2 className="text-2xl font-semibold mb-4">What Is COMEX?</h2>
+          <p className="mb-4">
+            The Commodity Exchange (COMEX) is a division of the New York Mercantile Exchange (NYMEX) and one of the world’s most prominent marketplaces for trading metals, including gold, silver, copper, and aluminum. Established in 1933, COMEX was created to standardize contract terms and provide a transparent venue for price discovery and risk management in the commodities sector.
+          </p>
+          <p className="mb-4">
+            COMEX originally began as an exchange for copper futures, with members trading standardized contracts to hedge industrial supply and demand risks. Over time, the exchange expanded to include precious metals, launching silver futures contracts in 1965 and gold futures in 1974. These additions bolstered the exchange’s global influence, establishing benchmark prices used by central banks, jewelers, and investors worldwide.
+          </p>
+          <p className="mb-4">
+            Today, COMEX operates both electronic trading platforms and open outcry pits. The electronic Globex system allows participants to trade futures and options contracts twenty-four hours a day. In parallel, traditional trading floors continue to facilitate price negotiations and order execution during regular market hours, preserving a dynamic bond between human market makers and automated systems.
+          </p>
+          <p className="mb-4">
+            Contracts on COMEX are meticulously defined by contract size, commodity grade, delivery location, and delivery month. For instance, a standard gold futures contract represents 100 troy ounces of 99.5% purity gold, deliverable in New York City. This level of standardization ensures uniformity, enabling market participants to trade large volumes with confidence and clarity.
+          </p>
+          <p className="mb-4">
+            The exchange’s regulatory framework, enforced by the Commodity Futures Trading Commission (CFTC), mandates strict reporting, position limits, and auditing standards. These measures protect against market manipulation, excessive speculation, and systemic risk—safeguarding the integrity of global commodity trading.
+          </p>
+          <p className="mb-4">
+            Participants in COMEX include commercial hedgers, financial institutions, investment firms, and retail traders. Commercial producers and consumers—such as mining companies and jewelry manufacturers—use COMEX contracts to lock in prices for physical supplies. Financial traders and speculators leverage the exchange’s liquidity and margin systems to capitalize on price volatility without owning the physical metal.
+          </p>
+          <p className="mb-4">
+            COMEX prices serve as a global reference. Major financial news outlets, economic reports, and industry publications routinely cite COMEX settlement values as authoritative indicators of market sentiment. For example, the London Bullion Market Association (LBMA) uses COMEX quotes to inform its own price benchmarks.
+          </p>
+          <p className="mb-4">
+            Beyond futures and options, COMEX offers micro-sized contracts and spreads, catering to smaller traders and advanced strategies. Micro gold and micro silver contracts provide one-tenth the size of standard contracts, making precious metals trading more accessible to individual investors.
+          </p>
+          <p className="mb-4">
+            Risk management tools on COMEX include daily price limits, margin requirements, and clearinghouse guarantees. Traders must deposit initial margin—collateral to cover potential losses—and maintain variation margin to meet daily mark-to-market adjustments. The COMEX clearinghouse stands between buyers and sellers, ensuring settlement and mitigating counterparty risk.
+          </p>
+          <p className="mb-4">
+            With an average daily trading volume exceeding 100,000 contracts, COMEX boasts deep liquidity and tight bid-ask spreads. This high-volume environment attracts global participants and underpins price efficiency, making COMEX a cornerstone of the modern financial system.
+          </p>
+          {/* CTA Button */}
+          <div className="text-center mt-6">
+            <motion.button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setShowContactForm(true)}>
+              Contact Us to Learn More
+            </motion.button>
+          </div>
+        </motion.section>
       </div>
     </motion.div>
   );

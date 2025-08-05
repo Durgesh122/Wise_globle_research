@@ -69,6 +69,9 @@ const AdminLayout = () => {
     { path: '/admin/reports', label: 'Report Manager', icon: <FaChartBar /> },
   ];
 
+  // Dummy complaint count, replace with real data
+  const complaintCount = 5;
+
   return (
     <div className="flex min-h-screen bg-transparent text-white">
       <aside className="w-64 bg-gray-800/80 p-4 flex-shrink-0 border-r border-gray-700 flex flex-col">
@@ -88,6 +91,10 @@ const AdminLayout = () => {
               <span>{item.label}</span>
             </NavLink>
           ))}
+          {/* Show complaint count */}
+          <div className="px-4 py-2 text-sm text-gray-300">
+            Total Complaints: {complaintCount}
+          </div>
         </nav>
         {/* Go Home Button */}
         <motion.button

@@ -87,6 +87,21 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
           </ul>
         ) : <p className="text-sm text-gray-400">No reports uploaded.</p>}
       </div>
+      {/* Display generated codes under upload button */}
+      <div className="mb-4">
+        <h5 className="text-sm font-medium text-gray-300 mb-2">Report Codes</h5>
+        {reports[day]?.length > 0 ? (
+          <ul className="space-y-1">
+            {reports[day].map((report) => (
+              <li key={report.id} className="text-xs text-gray-300 truncate">
+                {report.title || 'Untitled Report'}: {report.password}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-400">No codes generated.</p>
+        )}
+      </div>
     </motion.div>
   );
 };

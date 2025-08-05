@@ -5,13 +5,14 @@ import { getStorage } from 'firebase/storage'; // Added for Storage
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBF6R7PHX5jqq6akFvrSv0PTYLQeK5WXEw",
-  authDomain: "wise-global-services.firebaseapp.com",
-  databaseURL: "https://wise-global-services-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "wise-global-services",
-  storageBucket: "wise-global-services.appspot.com",
-  messagingSenderId: "652409987561",
-  appId: "1:652409987561:web:021698456d33c163b6ab78",
+  apiKey: "AIzaSyB4VTLgTwDAKqYKzx1gfqqhlRXCCEqD0eU",
+  authDomain: "wiseglobalresearch-services.firebaseapp.com",
+  databaseURL: "https://wiseglobalresearch-services-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  projectId: "wiseglobalresearch-services",
+  storageBucket: "wiseglobalresearch-services.firebasestorage.app",
+  messagingSenderId: "790031846254",
+  appId: "1:790031846254:web:b72a5aaa0352ba32330f7f",
+  measurementId: "G-JVR9PHCWL8"
 };
 
 const app = initializeApp(firebaseConfig);

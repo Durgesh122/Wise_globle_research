@@ -32,7 +32,7 @@ const currencyTrendData = {
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
   datasets: [
     {
-      label: 'USD/EUR Exchange Rate',
+      label: 'Sample Currency Trend (Educational)',
       data: [1.12, 1.15, 1.13, 1.17, 1.16, 1.18],
       borderColor: '#10B981',
       backgroundColor: 'rgba(16, 185, 129, 0.2)',
@@ -43,10 +43,10 @@ const currencyTrendData = {
 };
 
 const tradingVolumeData = {
-  labels: ['USD/EUR', 'USD/JPY', 'GBP/USD', 'AUD/USD'],
+  labels: ['Example A', 'Example B', 'Example C', 'Example D'],
   datasets: [
     {
-      label: 'Trading Volume (Simulated)',
+      label: 'Volume Distribution (Simulated)',
       data: [5000, 3500, 2000, 1500],
       backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#EF4444'],
       borderColor: '#ffffff',
@@ -72,39 +72,39 @@ const itemVariants = {
 const Forex = () => {
   const [activeFaq, setActiveFaq] = useState(null);
 
-  const services = [
+  const topics = [
     {
       title: 'Currency Education',
-      description: 'Learn about currency pairs, spreads, and market behavior.',
+      description: 'Learn about the basics of currency systems and macroeconomic connections.',
       icon: <FaBook />,
     },
     {
-      title: 'Market Insights',
-      description: 'View real-time data and simulated market trends.',
+      title: 'Market Awareness',
+      description: 'Understand macro trends, global movements, and currency impacts.',
       icon: <FaChartBar />,
     },
     {
-      title: 'Risk Awareness',
-      description: 'Understand the risks involved in Forex trading.',
+      title: 'Risk Understanding',
+      description: 'Become aware of the potential risks involved in currency markets.',
       icon: <FaExclamationTriangle />,
     },
   ];
 
   const faqs = [
     {
-      question: 'What is Forex?',
+      question: 'Is this content about trading?',
       answer:
-        'Forex (Foreign Exchange) is the global market for trading currencies. It’s used by banks, businesses, and investors worldwide.',
+        'No. This content is strictly educational and aims to improve financial literacy in alignment with SEBI guidelines. It is not related to trading or investment advice.',
     },
     {
-      question: 'Do you offer trading accounts?',
+      question: 'Can I get real-time trading signals here?',
       answer:
-        'No, we do not provide any kind of trading or brokerage services. This content is for educational purposes only.',
+        'No. We do not provide or support any trading signals, strategies, or accounts. All content is for public knowledge only.',
     },
     {
-      question: 'Why is Forex risky?',
+      question: 'Why discuss currency topics?',
       answer:
-        'The Forex market is highly volatile and involves significant risk due to leverage, geopolitical changes, and economic events.',
+        'Currency markets affect global economies. Our aim is to enhance understanding of economic behavior and responsible finance.',
     },
   ];
 
@@ -118,11 +118,11 @@ const Forex = () => {
       {/* Hero Section */}
       <motion.section className="text-center mb-16" variants={itemVariants}>
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-          Forex Market Overview & Education
+          Forex Market Awareness
         </h1>
         <p className="text-lg sm:text-xl text-white max-w-2xl mx-auto">
-          Explore Forex market trends, insights, and educational material. <br />
-          <strong>*We do not offer any trading services.*</strong>
+          Educational insights into global currency behavior, economic influence, and financial systems. <br />
+          <strong>*We do not support or promote any kind of currency or forex trading.*</strong>
         </p>
         <Link to="/contact">
           <motion.button
@@ -135,13 +135,13 @@ const Forex = () => {
         </Link>
       </motion.section>
 
-      {/* Services Section */}
+      {/* Educational Topics */}
       <motion.section className="mb-16" variants={itemVariants}>
         <h2 className="text-3xl font-bold text-white text-center mb-8">
           What You Can Learn
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
+          {topics.map((item, index) => (
             <motion.div
               key={index}
               className="bg-white/20 p-6 rounded-lg shadow-lg text-center"
@@ -153,12 +153,12 @@ const Forex = () => {
                 whileHover={{ scale: 1.2 }}
                 transition={{ type: 'spring', stiffness: 300 }}
               >
-                {service.icon}
+                {item.icon}
               </motion.div>
               <h3 className="text-xl font-semibold text-white mb-2">
-                {service.title}
+                {item.title}
               </h3>
-              <p className="text-white">{service.description}</p>
+              <p className="text-white">{item.description}</p>
             </motion.div>
           ))}
         </div>
@@ -167,15 +167,12 @@ const Forex = () => {
       {/* Charts Section */}
       <motion.section className="mb-16" variants={itemVariants}>
         <h2 className="text-3xl font-bold text-white text-center mb-8">
-          Forex Market Insights (Simulated)
+          Sample Market Charts (Educational Only)
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <motion.div
-            className="bg-white/20 p-6 rounded-lg shadow-lg"
-            variants={itemVariants}
-          >
+          <motion.div className="bg-white/20 p-6 rounded-lg shadow-lg" variants={itemVariants}>
             <h3 className="text-xl font-semibold text-white mb-4">
-              USD/EUR Trend
+              Currency Trend Sample
             </h3>
             <Line
               data={currencyTrendData}
@@ -183,17 +180,14 @@ const Forex = () => {
                 responsive: true,
                 plugins: {
                   legend: { position: 'top' },
-                  title: { display: true, text: 'USD/EUR Exchange Rate Trend' },
+                  title: { display: true, text: 'Sample Exchange Rate Trend' },
                 },
               }}
             />
           </motion.div>
-          <motion.div
-            className="bg-white/20 p-6 rounded-lg shadow-lg"
-            variants={itemVariants}
-          >
+          <motion.div className="bg-white/20 p-6 rounded-lg shadow-lg" variants={itemVariants}>
             <h3 className="text-xl font-semibold text-white mb-4">
-              Currency Pair Volume
+              Simulated Volume Distribution
             </h3>
             <Pie
               data={tradingVolumeData}
@@ -201,7 +195,7 @@ const Forex = () => {
                 responsive: true,
                 plugins: {
                   legend: { position: 'top' },
-                  title: { display: true, text: 'Simulated Trading Volume' },
+                  title: { display: true, text: 'Example Volume Share' },
                 },
               }}
             />
@@ -251,7 +245,7 @@ const Forex = () => {
           Want to Learn More?
         </h2>
         <p className="text-lg text-white mb-6">
-          Get in touch with us for more educational content.
+          Get in touch with us for more educational resources on finance.
         </p>
         <Link to="/contact">
           <motion.button
@@ -267,9 +261,9 @@ const Forex = () => {
       {/* Disclaimer */}
       <motion.section className="text-center mt-12" variants={itemVariants}>
         <p className="text-sm text-white/80 max-w-xl mx-auto">
-          Disclaimer: This page is for informational and educational purposes only. <br />
-          We do not offer Forex trading services, investment advice, or brokerage support. <br />
-          Trading in the Forex market involves high risk. Please consult a licensed advisor before making any decisions.
+          Disclaimer: This page is solely for educational and awareness purposes. <br />
+          We do not offer currency or forex trading services, financial advice, or brokerage support. <br />
+          Please consult a SEBI-registered financial advisor before making any financial decisions.
         </p>
       </motion.section>
     </motion.div>

@@ -159,7 +159,7 @@ const Training = () => {
       </motion.div>
 
       {/* Introduction Section */}
-      <motion.div className="bg-blur rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
+      <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
         <h2 className="text-3xl font-bold text-white mb-4">Why Choose Our Training?</h2>
         <p className="text-white text-lg leading-7 mb-6">
           Our programs are designed for beginners and seasoned traders alike, offering practical insights into NSE, BSE, and MCX markets. Learn from industry experts with 5+ years of experience, access recorded sessions, and earn a certificate upon completion.
@@ -179,7 +179,7 @@ const Training = () => {
           {trainingPrograms.map((program) => (
             <motion.div
               key={program.id}
-              className="bg-blur rounded-xl shadow-lg p-6 border-t-4 border-blue-500"
+              className="bg-white/30 rounded-xl shadow-lg p-6 border-t-4 border-blue-500"
               variants={cardVariants}
               initial="hidden"
               animate="visible"
@@ -229,7 +229,7 @@ const Training = () => {
           {testimonials.map((testimonial) => (
             <motion.div
               key={testimonial.id}
-              className="bg-blur rounded-xl shadow-lg p-6 border-t-4 border-green-500 text-center"
+              className="bg-white/30 rounded-xl shadow-lg p-6 border-t-4 border-green-500 text-center"
               variants={cardVariants}
               initial="hidden"
               animate="visible"
@@ -246,7 +246,7 @@ const Training = () => {
       </motion.div>
 
       {/* Registration Form Section */}
-      <motion.div className="bg-blur rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
+      <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
         <h2 className="text-3xl font-bold text-white mb-6 text-center">Register for Training</h2>
         <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
           <div>
@@ -340,7 +340,7 @@ const Training = () => {
 
       {/* Call to Action */}
       <motion.div
-        className="text-center bg-blur rounded-xl p-8 mb-12"
+        className="text-center bg-white/30 rounded-xl p-8 mb-12"
         variants={itemVariants}
         style={{ transformStyle: 'preserve-3d' }}
       >
@@ -359,7 +359,7 @@ const Training = () => {
       {/* Disclaimer */}
       <motion.div
         variants={itemVariants}
-        className="text-center bg-blur p-4 rounded-lg"
+        className="text-center p-4 bg-white/30 rounded-lg"
       >
         <p className="text-white">
           <strong>Disclaimer:</strong> Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global Research is not responsible for any profit or loss that may occur.

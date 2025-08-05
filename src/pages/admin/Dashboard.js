@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiMail, FiFileText, FiAlertCircle, FiBarChart2, FiBell } from 'react-icons/fi';
+import { ref, onValue } from 'firebase/database';
+import { db } from '../../firebase';
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -9,11 +11,20 @@ const itemVariants = {
 };
 
 const Dashboard = () => {
+  const [complaintCount, setComplaintCount] = useState(0);
+  useEffect(() => {
+    const complaintsRef = ref(db, 'complaints');
+    const unsub = onValue(complaintsRef, snap => {
+      const data = snap.val() || {};
+      setComplaintCount(Object.keys(data).length);
+    });
+    return () => unsub();
+  }, []);
   const cards = [
     { title: 'Contact Submissions', link: '/admin/contacts', icon: <FiMail size={24} /> },
     { title: 'Popup Submissions', link: '/admin/popups', icon: <FiBell size={24} /> },
     { title: 'Consent Submissions', link: '/admin/consents', icon: <FiFileText size={24} /> },
-    { title: 'Complaint Manager', link: '/admin/complaints', icon: <FiAlertCircle size={24} /> },
+    { title: 'Complaint Manager', link: '/admin/complaints', icon: <FiAlertCircle size={24} />, count: complaintCount },
     { title: 'Report Manager', link: '/admin/reports', icon: <FiBarChart2 size={24} /> },
   ];
 
@@ -34,7 +45,10 @@ const Dashboard = () => {
           <motion.div key={index} variants={itemVariants}>
             <Link to={card.link} className="block bg-gray-800/30 p-6 rounded-xl shadow-lg border border-gray-200/20 hover:bg-indigo-600/30 hover:border-indigo-500 transition-all duration-300 transform hover:-translate-y-1">
               <div className="text-indigo-400 mb-4">{card.icon}</div>
-              <h3 className="text-lg font-semibold">{card.title}</h3>
+              <h3 className="text-lg font-semibold">
+                {card.title}
+                {card.count !== undefined && ` (${card.count})`}
+              </h3>
             </Link>
           </motion.div>
         ))}

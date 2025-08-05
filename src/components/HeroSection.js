@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaArrowRight } from 'react-icons/fa';
+import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { cardVariants } from '../utils/animationVariants';
 
 import slide1 from '../assets/images/slide1.png';
@@ -13,7 +13,9 @@ const sliderImages = [slide1, slide2, slide3];
 const HeroSection = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length);
+  }, []);
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
   }, []);
@@ -30,30 +32,32 @@ const HeroSection = () => {
     >
       <div className="absolute inset-0 z-0">
         {sliderImages.map((image, index) => (
-          <motion.img
+          <img
             key={index}
             src={image}
-            alt={`Trading Slide ${index + 1}`}
+            alt={`Slide ${index + 1}`}
             loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-              transform: `translateZ(${index === currentSlide ? 0 : -200}px) scale(${index === currentSlide ? 1 : 0.8})`,
-              opacity: index === currentSlide ? 1 : 0,
-              transformStyle: 'preserve-3d',
-              willChange: 'transform, opacity',
-            }}
-            initial={false}
-            animate={{
-              opacity: index === currentSlide ? 1 : 0,
-              transform: `translateZ(${index === currentSlide ? 0 : -200}px) scale(${index === currentSlide ? 1 : 0.8})`,
-            }}
-            transition={{ duration: 1, ease: 'easeInOut' }}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
             onError={(e) => {
               e.target.src = '/logo192.png';
               console.warn(`Failed to load image: ${image}`);
             }}
           />
         ))}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 text-white text-2xl p-2 bg-black bg-opacity-50 rounded-full"
+        >
+          <FaChevronLeft />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 text-white text-2xl p-2 bg-black bg-opacity-50 rounded-full"
+        >
+          <FaChevronRight />
+        </button>
       </div>
 
       {/* FIX: Wrap the content inside a motion.div */}

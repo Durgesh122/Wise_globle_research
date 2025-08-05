@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ref, push } from 'firebase/database';
+import { db } from '../firebase';
+import { toast } from 'react-toastify';
 import {
   FaExclamationTriangle,
   FaPaperPlane,
@@ -31,9 +34,20 @@ const Complaint = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setCurrentStep(4);
+    // Save complaint to RTDB
+    try {
+      const newComplaint = {
+        ...formData,
+        timestamp: Date.now()
+      };
+      await push(ref(db, 'complaints'), newComplaint);
+    } catch (error) {
+      console.error('Error saving complaint:', error);
+      toast.error('Failed to submit complaint: ' + error.message);
+    }
     setTimeout(() => setSubmitted(true), 1500);
   };
 

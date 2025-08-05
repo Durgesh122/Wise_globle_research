@@ -15,6 +15,7 @@ import {
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { FaChartBar, FaTools, FaChartLine, FaShieldAlt, FaListAlt } from 'react-icons/fa';
 import Layout from '../components/Layout';
 
 // Register Chart.js components and zoom plugin
@@ -103,65 +104,27 @@ const MCXOption = () => {
     {
       title: 'Options Trading',
       description: 'Trade call and put options on gold, silver, crude oil, and more on MCX.',
-      icon: '📊',
+      icon: FaChartBar,
     },
     {
       title: 'Strategy Builder',
       description: 'Design and simulate custom options strategies with advanced tools.',
-      icon: '⚙️',
+      icon: FaTools,
     },
     {
       title: 'Market Analysis',
       description: 'Real-time insights and technical analysis for MCX options trading.',
-      icon: '📡',
+      icon: FaChartLine,
     },
     {
       title: 'Risk Management',
       description: 'Protect your capital with stop-loss and hedging strategies.',
-      icon: '🛡️',
+      icon: FaShieldAlt,
     },
     {
       title: 'Options Chain',
       description: 'Access live options chain data for informed trading decisions.',
-      icon: '🔗',
-    },
-  ];
-
-  // Pricing plans data
-  const plans = [
-    {
-      name: 'Basic',
-      price: '₹1499/month',
-      features: [
-        'Gold & Silver Options',
-        'Daily Market Updates',
-        'Email Support',
-        'Basic Strategy Tools',
-      ],
-    },
-    {
-      name: 'Pro',
-      price: '₹3499/month',
-      features: [
-        'All Commodity Options',
-        'Real-time Price Alerts',
-        'Priority Support',
-        'Advanced Strategy Builder',
-        'Risk Management Tools',
-        'Options Chain Access',
-      ],
-    },
-    {
-      name: 'Enterprise',
-      price: 'Contact Us',
-      features: [
-        'Custom Options Solutions',
-        'Dedicated Account Manager',
-        'Real-time Analytics',
-        '24/7 Support',
-        'Custom Strategy Development',
-        'Premium Options Chain',
-      ],
+      icon: FaListAlt,
     },
   ];
 
@@ -303,10 +266,10 @@ const MCXOption = () => {
           variants={itemVariants}
           animate={isHeroInView ? 'visible' : 'hidden'}
         >
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4 tracking-tight">
             MCX Options Trading
           </h1>
-          <p className="text-lg sm:text-xl text-gray-800 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-white max-w-3xl mx-auto">
             Master commodity options trading on MCX with our cutting-edge platform, real-time
             data, and powerful trading tools.
           </p>
@@ -323,17 +286,17 @@ const MCXOption = () => {
 
         {/* News Ticker */}
         <motion.section className="mb-16" variants={itemVariants}>
-          <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">
+          <h2 className="text-2xl font-bold text-white text-center mb-4">
             Market Updates
           </h2>
-          <div className="bg-yellow-50 p-4 rounded-lg shadow-md overflow-hidden">
+          <div className="bg-transparent p-4 rounded-lg shadow-md overflow-hidden">
             <motion.div
               animate={{ x: ['0%', '-100%'] }}
               transition={{ duration: 30, ease: 'linear', repeat: Infinity }}
               className="flex space-x-12 whitespace-nowrap"
             >
               {newsTicker.map((news, index) => (
-                <span key={index} className="text-gray-800 text-lg">
+                <span key={index} className="text-white text-lg">
                   {news}
                 </span>
               ))}
@@ -348,22 +311,25 @@ const MCXOption = () => {
           variants={itemVariants}
           animate={isServicesInView ? 'visible' : 'hidden'}
         >
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">
             Our Options Trading Services
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {services.map((service, index) => (
               <motion.div
                 key={index}
-                className="bg-gray-50 p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition"
+                className="bg-white/20 p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition"
                 variants={itemVariants}
                 whileHover={{ y: -10, boxShadow: '0 15px 25px rgba(0,0,0,0.15)' }}
               >
-                <span className="text-4xl mb-4 block">{service.icon}</span>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                {/* ...existing IconComponent import...*/}
+                <motion.div className="text-center">
+                  <service.icon className="text-4xl mb-4 mx-auto text-white" />
+                </motion.div>
+                <h3 className="text-xl font-semibold text-white mb-2">
                   {service.title}
                 </h3>
-                <p className="text-gray-800 text-sm">{service.description}</p>
+                <p className="text-white text-sm">{service.description}</p>
               </motion.div>
             ))}
           </div>
@@ -371,12 +337,12 @@ const MCXOption = () => {
 
         {/* Charts Section */}
         <motion.section className="mb-16" variants={itemVariants}>
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">
             Options Market Insights
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <motion.div className="bg-gray-50 p-6 rounded-xl shadow-lg" variants={itemVariants}>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            <motion.div className="bg-white/20 p-6 rounded-xl shadow-lg" variants={itemVariants}>
+              <h3 className="text-xl font-semibold text-white mb-4">
                 Gold Options Price Trends
               </h3>
               <Line
@@ -400,8 +366,8 @@ const MCXOption = () => {
                 }}
               />
             </motion.div>
-            <motion.div className="bg-gray-50 p-6 rounded-xl shadow-lg" variants={itemVariants}>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            <motion.div className="bg-white/20 p-6 rounded-xl shadow-lg" variants={itemVariants}>
+              <h3 className="text-xl font-semibold text-white mb-4">
                 Options Trading Volume
               </h3>
               <Bar
@@ -420,10 +386,10 @@ const MCXOption = () => {
 
         {/* Options Payoff Calculator */}
         <motion.section className="mb-16" variants={itemVariants}>
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">
             Options Payoff Calculator
           </h2>
-          <div className="bg-gray-50 p-6 rounded-xl shadow-lg max-w-xl mx-auto">
+          <div className="bg-white/20 p-6 rounded-xl shadow-lg max-w-xl mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block text-gray-800 mb-2">Strike Price (₹)</label>
@@ -513,10 +479,10 @@ const MCXOption = () => {
 
         {/* Options Chain Section */}
         <motion.section className="mb-16" variants={itemVariants}>
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">
             Live Options Chain
           </h2>
-          <div className="bg-gray-50 p-6 rounded-xl shadow-lg overflow-x-auto">
+          <div className="bg-white/20 p-6 rounded-xl shadow-lg overflow-x-auto">
             <div className="flex justify-end mb-4">
               <motion.button
                 className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition"
@@ -530,12 +496,12 @@ const MCXOption = () => {
             </div>
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="bg-yellow-100">
-                  <th className="p-4 font-semibold text-gray-900">Commodity</th>
-                  <th className="p-4 font-semibold text-gray-900">Strike Price</th>
-                  <th className="p-4 font-semibold text-gray-900">Premium</th>
-                  <th className="p-4 font-semibold text-gray-900">Open Interest</th>
-                  <th className="p-4 font-semibold text-gray-900">Change</th>
+                <tr className="bg-transparent">
+                  <th className="p-4 font-semibold text-white">Commodity</th>
+                  <th className="p-4 font-semibold text-white">Strike Price</th>
+                  <th className="p-4 font-semibold text-white">Premium</th>
+                  <th className="p-4 font-semibold text-white">Open Interest</th>
+                  <th className="p-4 font-semibold text-white">Change</th>
                 </tr>
               </thead>
               <tbody>
@@ -547,10 +513,10 @@ const MCXOption = () => {
                     initial="hidden"
                     animate="visible"
                   >
-                    <td className="p-4 text-gray-800">{item.commodity}</td>
-                    <td className="p-4 text-gray-800">{item.strike}</td>
-                    <td className="p-4 text-gray-800">{item.premium}</td>
-                    <td className="p-4 text-gray-800">{item.oi}</td>
+                    <td className="p-4 text-white">{item.commodity}</td>
+                    <td className="p-4 text-white">{item.strike}</td>
+                    <td className="p-4 text-white">{item.premium}</td>
+                    <td className="p-4 text-white">{item.oi}</td>
                     <td className={`p-4 ${item.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
                       {item.change}
                     </td>
@@ -561,66 +527,26 @@ const MCXOption = () => {
           </div>
         </motion.section>
 
-        {/* Pricing Plans Section */}
-        <motion.section className="mb-16" variants={itemVariants}>
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-            Our Trading Plans
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {plans.map((plan, index) => (
-              <motion.div
-                key={index}
-                className="bg-gray-50 p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition"
-                variants={itemVariants}
-                whileHover={{ y: -10, boxShadow: '0 15px 25px rgba(0,0,0,0.15)' }}
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {plan.name}
-                </h3>
-                <p className="text-2xl font-bold text-yellow-600 mb-4">
-                  {plan.price}
-                </p>
-                <ul className="text-gray-800 mb-6">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="mb-2 flex items-center justify-center">
-                      <span className="mr-2 text-yellow-600">✔</span> {feature}
-                    </li>
-                  ))}
-                </ul>
-                <motion.button
-                  className="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleNavigateToContact}
-                  aria-label={`Choose ${plan.name} Plan`}
-                >
-                  Choose Plan
-                </motion.button>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-
         {/* FAQ Section */}
         <motion.section className="mb-16" variants={itemVariants}>
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">
             Frequently Asked Questions
           </h2>
           <div className="max-w-3xl mx-auto">
             {faqs.map((faq, index) => (
               <motion.div
                 key={index}
-                className="bg-gray-50 p-6 rounded-xl shadow-md mb-4"
+                className="bg-white/20 p-6 rounded-xl shadow-md mb-4"
                 variants={itemVariants}
               >
                 <button
-                  className="w-full text-left text-lg font-semibold text-gray-900 flex justify-between items-center"
+                  className="w-full text-left text-lg font-semibold text-white flex justify-between items-center"
                   onClick={() => setActiveFaq(activeFaq === index ? null : index)}
                   aria-expanded={activeFaq === index}
                   aria-controls={`faq-${index}`}
                 >
                   {faq.question}
-                  <span className="text-yellow-600">{activeFaq === index ? '−' : '+'}</span>
+                  <span className="text-white">{activeFaq === index ? '−' : '+'}</span>
                 </button>
                 <AnimatePresence>
                   {activeFaq === index && (
@@ -629,7 +555,7 @@ const MCXOption = () => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="text-gray-800 mt-2"
+                      className="text-white mt-2"
                     >
                       {faq.answer}
                     </motion.div>
@@ -642,7 +568,7 @@ const MCXOption = () => {
 
         {/* Testimonials Section */}
         <motion.section className="mb-16" variants={itemVariants}>
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+          <h2 className="text-3xl font-bold text-white text-center mb-8">
             What Our Traders Say
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -670,13 +596,13 @@ const MCXOption = () => {
             ].map((testimonial, index) => (
               <motion.div
                 key={index}
-                className="bg-gray-50 p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition"
+                className="bg-white/20 p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition"
                 variants={itemVariants}
                 whileHover={{ y: -10, boxShadow: '0 15px 25px rgba(0,0,0,0.15)' }}
               >
-                <p className="text-gray-800 mb-4">"{testimonial.text}"</p>
-                <h3 className="text-lg font-semibold text-gray-900">{testimonial.name}</h3>
-                <p className="text-sm text-gray-700">{testimonial.role}</p>
+                <p className="text-white mb-4">"{testimonial.text}"</p>
+                <h3 className="text-lg font-semibold text-white">{testimonial.name}</h3>
+                <p className="text-sm text-white">{testimonial.role}</p>
               </motion.div>
             ))}
           </div>
@@ -684,10 +610,10 @@ const MCXOption = () => {
 
         {/* CTA Section */}
         <motion.section className="text-center" variants={itemVariants}>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Trade MCX Options?
           </h2>
-          <p className="text-lg text-gray-800 mb-6 max-w-2xl mx-auto">
+          <p className="text-lg text-white mb-6 max-w-2xl mx-auto">
             Join thousands of traders leveraging our platform for smarter commodity options trading.
           </p>
           <motion.button

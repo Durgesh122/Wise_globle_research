@@ -2,7 +2,7 @@
   "name": "wise-global",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://durgesh122.github.io/wise-global",
+  "homepage": "https://wiseglobalresearch-services.web.app",
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@formspree/react": "^3.0.0",
@@ -81,7 +81,9 @@
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.{js,jsx}\" --fix",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "firebase:deploy": "firebase deploy --only database --project wiseglobalresearch-services",
+    "deploy:hosting": "npm run build && firebase deploy --only hosting --project wiseglobalresearch-services"
   },
   "eslintConfig": {
     "extends": [

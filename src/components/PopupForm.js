@@ -162,7 +162,7 @@ const ContactForm = ({ onClose }) => {
       style={{ background: 'rgba(0,0,0,0.8)' }}
     >
       <motion.div
-        className="relative bg-gradient-to-br from-gray-900 to-blue-900 bg-opacity-80 backdrop-blur-xl rounded-2xl p-4 sm:p-8 w-full sm:w-3/4 max-w-sm sm:max-w-md shadow-2xl overflow-auto max-h-full"
+        className="relative bg-gradient-to-br from-gray-900 to-blue-900 bg-opacity-80 backdrop-blur-xl rounded-2xl p-4 sm:p-8 w-full max-w-full sm:max-w-xl md:max-w-3xl lg:max-w-2xl shadow-2xl overflow-auto max-h-[90vh] mx-4 sm:mx-0"
         onClick={(e) => e.stopPropagation()}
         initial={{ scale: 0.8, opacity: 0, y: 50 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -181,7 +181,7 @@ const ContactForm = ({ onClose }) => {
         <div
           className="relative mx-auto mb-6 h-24 w-24"
           onMouseEnter={() => setIsLogoHovered(true)}
-          // onMouseLeave removed so particles keep animating after hover
+          onMouseLeave={() => setIsLogoHovered(false)}
         >
           <motion.img
             src={wImg}
@@ -224,7 +224,7 @@ const ContactForm = ({ onClose }) => {
         </AnimatePresence>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6 text-white">
+        <form onSubmit={handleSubmit} className="w-full max-w-lg mx-auto space-y-6 px-4 sm:px-0 text-white">
           {/* Honeypot Field (Hidden for Bot Detection) */}
           <input
             type="text"

@@ -178,7 +178,7 @@ const Team = () => {
   return (
     <Layout>
       <motion.div
-        className="container mx-auto py-12 px-4 bg-gray-800"
+        className="container mx-auto py-12 px-4 max-w-5xl bg-blur"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -196,7 +196,7 @@ const Team = () => {
 
         {/* Mission Statement */}
         <motion.div
-          className="bg-blue-900 rounded-xl p-8 mb-12 text-center"
+          className="bg-white/30 rounded-xl p-8 mb-12 text-center"
           variants={itemVariants}
           style={{ transformStyle: 'preserve-3d' }}
         >
@@ -212,7 +212,7 @@ const Team = () => {
           {teamMembers.map((member) => (
             <motion.div
               key={member.id}
-              className="rounded-xl shadow-lg p-6 bg-gray-700 border-t-4 border-blue-500"
+              className="bg-white/30 rounded-xl shadow-lg p-6 border-t-4 border-blue-500"
               variants={cardVariants}
               initial="hidden"
               animate="visible"
@@ -247,7 +247,7 @@ const Team = () => {
 
         {/* Call to Action */}
         <motion.div
-          className="text-center bg-green-900 rounded-xl p-8"
+          className="text-center bg-white/30 rounded-xl p-8 mb-12"
           variants={itemVariants}
           style={{ transformStyle: 'preserve-3d' }}
         >
@@ -264,9 +264,9 @@ const Team = () => {
         {/* Disclaimer */}
         <motion.div
           variants={itemVariants}
-          className="text-center mt-12 p-4 bg-yellow-900 text-white rounded-lg"
+          className="text-center p-4 bg-white/30 rounded-lg"
         >
-          <p>
+          <p className="text-white">
             <strong>Disclaimer:</strong> Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global is not responsible for any profit or loss that may occur.
           </p>
         </motion.div>

@@ -9,7 +9,7 @@ import { ref, onValue } from 'firebase/database';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiDownload, FiSearch, FiLock, FiEye } from 'react-icons/fi';
+import { FiSearch, FiLock, FiEye } from 'react-icons/fi';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import PropTypes from 'prop-types';
@@ -50,47 +50,67 @@ const LoadingSpinner = () => (
   </motion.div>
 );
 
-// Confirmation modal for password verification
-const PasswordModal = ({ isOpen, onClose, onConfirm, report }) => (
-  <AnimatePresence>
-    {isOpen && (
-      <motion.div
-        className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
+// Controlled confirmation modal for password verification
+const PasswordModal = ({ isOpen, onClose, onConfirm, report }) => {
+  const [passwordInput, setPasswordInput] = useState('');
+  return (
+    <AnimatePresence>
+      {isOpen && (
         <motion.div
-          className="bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-xl border border-gray-200/20 max-w-md w-full"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.8, opacity: 0 }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
         >
-          <h3 className="text-lg font-semibold text-white mb-4">Verify Password for {report?.title}</h3>
-          <input
-            type="text"
-            placeholder="Enter 4-digit password"
-            className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4"
-            onChange={(e) => onConfirm(e.target.value, report)}
-            aria-label={`Password for ${report?.title}`}
-          />
-          <div className="flex justify-end gap-4">
-            <motion.button
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-              aria-label="Cancel password verification"
-            >
-              Cancel
-            </motion.button>
-          </div>
+          <motion.div
+            className="bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-xl border border-gray-200/20 max-w-md w-full"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+          >
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Verify Password for {report?.title}
+            </h3>
+            <input
+              type="text"
+              placeholder="Enter 4-digit password"
+              className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              aria-label={`Password for ${report?.title}`}
+            />
+            <div className="flex justify-end gap-4">
+              <motion.button
+                onClick={() => {
+                  onConfirm(passwordInput, report);
+                  setPasswordInput('');
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                Verify
+              </motion.button>
+              <motion.button
+                onClick={() => {
+                  setPasswordInput('');
+                  onClose();
+                }}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                Cancel
+              </motion.button>
+            </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
+      )}
+    </AnimatePresence>
+  );
+};
 
 PasswordModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
@@ -102,8 +122,8 @@ PasswordModal.propTypes = {
   }),
 };
 
-// Report preview modal
-const ReportPreviewModal = ({ isOpen, onClose, report, onDownload }) => (
+// Report preview modal with embedded PDF view
+const ReportPreviewModal = ({ isOpen, onClose, report }) => (
   <AnimatePresence>
     {isOpen && (
       <motion.div
@@ -113,31 +133,13 @@ const ReportPreviewModal = ({ isOpen, onClose, report, onDownload }) => (
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-xl border border-gray-200/20 max-w-lg w-full"
+          className="bg-white/10 backdrop-blur-lg p-4 rounded-xl shadow-xl border border-gray-200/20 max-w-full sm:max-w-xl md:max-w-3xl w-full h-[90vh] sm:h-[80vh] mx-2 sm:mx-auto flex flex-col overflow-hidden"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
         >
-          <h3 className="text-lg font-semibold text-white mb-4">{report?.title}</h3>
-          <p className="text-gray-300 mb-4">{report?.description}</p>
-          <p className="text-sm text-gray-400 mb-2">Category: {report?.category}</p>
-          <p className="text-sm text-gray-400 mb-4">Size: {report?.size}</p>
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
-            alt="PDF Thumbnail"
-            className="w-32 h-32 object-contain mx-auto mb-4"
-          />
-          <div className="flex justify-end gap-4">
-            <motion.button
-              onClick={() => onDownload(report)}
-              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-              aria-label={`Download ${report?.title}`}
-            >
-              <FiDownload /> Download
-            </motion.button>
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-lg font-semibold text-white truncate">{report?.title}</h3>
             <motion.button
               onClick={onClose}
               className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
@@ -149,6 +151,13 @@ const ReportPreviewModal = ({ isOpen, onClose, report, onDownload }) => (
               Close
             </motion.button>
           </div>
+          <div className="bg-white h-full rounded-md overflow-hidden">
+            <iframe
+              src={report?.fileData}
+              title={report?.title}
+              className="w-full h-full"
+            />
+          </div>
         </motion.div>
       </motion.div>
     )}
@@ -158,13 +167,7 @@ const ReportPreviewModal = ({ isOpen, onClose, report, onDownload }) => (
 ReportPreviewModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  report: PropTypes.shape({
-    title: PropTypes.string,
-    description: PropTypes.string,
-    category: PropTypes.string,
-    size: PropTypes.string,
-  }),
-  onDownload: PropTypes.func.isRequired,
+  report: PropTypes.shape({ title: PropTypes.string }).isRequired,
 };
 
 // Day selector component
@@ -245,7 +248,7 @@ SearchFilter.propTypes = {
 };
 
 // Report card component
-const ReportCard = ({ report, isSelected, onVerify, onPreview }) => (
+const ReportCard = ({ report, isSelected, onVerify }) => (
   <motion.li
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
@@ -270,16 +273,6 @@ const ReportCard = ({ report, isSelected, onVerify, onPreview }) => (
     </div>
     <div className="mt-3 flex items-center gap-3">
       <motion.button
-        onClick={() => onPreview(report)}
-        className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-        variants={buttonVariants}
-        whileHover="hover"
-        whileTap="tap"
-        aria-label={`Preview ${report.title}`}
-      >
-        <FiEye /> Preview
-      </motion.button>
-      <motion.button
         onClick={() => onVerify(report)}
         className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
         variants={buttonVariants}
@@ -303,7 +296,6 @@ ReportCard.propTypes = {
   }).isRequired,
   isSelected: PropTypes.bool.isRequired,
   onVerify: PropTypes.func.isRequired,
-  onPreview: PropTypes.func.isRequired,
 };
 
 // Pagination component
@@ -600,14 +592,14 @@ function Reports() {
                           />
                         </div>
                         <motion.button
-                          onClick={() => handleDownload(pdfPreview)}
+                          onClick={() => setIsPreviewOpen(true)}
                           className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 mx-auto"
                           variants={buttonVariants}
                           whileHover="hover"
                           whileTap="tap"
-                          aria-label={`Download ${pdfPreview.title}`}
+                          aria-label="View report"
                         >
-                          <FiDownload /> Download Report
+                          <FiEye /> View Report
                         </motion.button>
                         <p className="mt-2 text-sm text-gray-300">
                           {pdfPreview.title} ({pdfPreview.size})

@@ -29,7 +29,7 @@ const jobOpenings = [
   {
     id: 1,
     title: 'Market Research Analyst',
-    location: 'Mumbai, Maharashtra',
+    location: 'Indore, Madhya Pradesh',
     description: 'Analyze NSE and BSE market trends, provide insights for NIFTY and BANKNIFTY strategies, and contribute to Smart Options reports.',
     requirements: [
       'Bachelor’s degree in Finance, Economics, or related field.',
@@ -42,7 +42,7 @@ const jobOpenings = [
   {
     id: 2,
     title: 'Financial Advisor',
-    location: 'Delhi, NCR',
+    location: 'Indore, Madhya Pradesh',
     description: 'Guide clients on investment strategies for stocks like RELIANCE and MCX commodities like GOLD, ensuring SEBI-compliant advice.',
     requirements: [
       'Certified Financial Planner (CFP) or equivalent.',
@@ -55,7 +55,7 @@ const jobOpenings = [
   {
     id: 3,
     title: 'Data Scientist',
-    location: 'Bengaluru, Karnataka',
+    location: 'Indore, Madhya Pradesh',
     description: 'Develop AI-driven trading algorithms for services like Universal Cash and Galaxy MCX, using real-time NSE and MCX data.',
     requirements: [
       'Master’s degree in Data Science, Computer Science, or related field.',
@@ -68,7 +68,7 @@ const jobOpenings = [
   {
     id: 4,
     title: 'Client Success Manager',
-    location: 'Hyderabad, Telangana',
+    location: 'Indore, Madhya Pradesh',
     description: 'Support clients using Infinity Club and Evaluation Stock Options, ensuring seamless onboarding and satisfaction.',
     requirements: [
       'Bachelor’s degree in Business or related field.',
@@ -150,7 +150,7 @@ const Career = () => {
 
   return (
     <motion.div
-      className="container mx-auto py-12 px-4 max-w-5xl bg-gray-800"
+      className="container mx-auto py-12 px-4 max-w-5xl bg-blur"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -167,7 +167,7 @@ const Career = () => {
       </motion.div>
 
       {/* Introduction Section */}
-      <motion.div className="bg-blue-900 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
+      <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
         <h2 className="text-3xl font-bold text-white mb-4">Wise Global Research as a Career</h2>
         <p className="text-white text-lg leading-7 mb-6">
           Wise Global Research is not just a Research Analyst company but a vibrant place to grow your career in finance. We value innovation, professionalism, and teamwork, and we’re committed to providing our employees with the resources to succeed.
@@ -187,7 +187,7 @@ const Career = () => {
           {jobOpenings.map((job) => (
             <motion.div
               key={job.id}
-              className="bg-gray-700 rounded-xl shadow-lg p-6 border-t-4 border-blue-500"
+              className="bg-white/30 rounded-xl shadow-lg p-6 border-t-4 border-blue-500"
               variants={cardVariants}
               initial="hidden"
               animate="visible"
@@ -210,7 +210,7 @@ const Career = () => {
       </motion.div>
 
       {/* Application Form Section */}
-      <motion.div className="bg-green-900 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
+      <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
         <h2 className="text-3xl font-bold text-white mb-6 text-center">Apply Now</h2>
         <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
           <div>
@@ -307,7 +307,7 @@ const Career = () => {
 
       {/* Call to Action */}
       <motion.div
-        className="text-center bg-green-900 rounded-xl p-8"
+        className="text-center bg-white/30 rounded-xl p-8 mb-12"
         variants={itemVariants}
         style={{ transformStyle: 'preserve-3d' }}
       >
@@ -326,7 +326,7 @@ const Career = () => {
       {/* Disclaimer */}
       <motion.div
         variants={itemVariants}
-        className="text-center mt-12 p-4 bg-yellow-900 text-white rounded-lg"
+        className="text-center p-4 bg-white/30 text-white rounded-lg"
       >
         <p>
           <strong>Disclaimer:</strong> Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global Research is not responsible for any profit or loss that may occur.

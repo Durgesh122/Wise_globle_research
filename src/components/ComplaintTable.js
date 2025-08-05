@@ -15,7 +15,7 @@ const ComplaintTable = () => {
   const [errorTable, setErrorTable] = useState(null);
 
   useEffect(() => {
-    const tableRef = ref(db, 'complaintTableData/data');
+    const tableRef = ref(db, 'complaintTableData');
     const unsubscribe = onValue(
       tableRef,
       (snapshot) => {
