@@ -107,6 +107,10 @@ const ContactForm = ({ onClose }) => {
           timestamp: new Date().toISOString(),
         }
       );
+      // Google Ads Conversion Tracking
+      if (window.gtag) {
+        window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
+      }
       setSuccessMessage('Form submitted successfully. Our team will reach out soon.');
       setForm({
         name: '',

@@ -7,20 +7,17 @@ const TestimonialsSection = () => {
     {
       name: 'Rahul Sharma',
       role: 'Investor (5+ years)',
-      quote: 'The research quality is exceptional. Helped me grow my portfolio by 35% last year.',
-      stats: '42% annual returns',
+      quote: 'The research quality is exceptional. Helped me grow my portfolio last year.',
     },
     {
       name: 'Priya Patel',
       role: 'Trader (3+ years)',
       quote: 'Accurate technical calls and excellent risk management suggestions.',
-      stats: '78% win rate',
     },
     {
       name: 'Amit Kumar',
       role: 'Business Owner',
       quote: 'Their SEBI registration gives me confidence in their recommendations.',
-      stats: '94% satisfaction',
     },
   ];
 
@@ -50,7 +47,7 @@ const TestimonialsSection = () => {
                   <p className="font-bold text-base sm:text-lg">{testimonial.name}</p>
                   <p className="text-xs sm:text-sm">{testimonial.role}</p>
                 </div>
-                <p className="text-xs sm:text-sm custom-box-bg px-3 py-1 rounded-full">{testimonial.stats}</p>
+
               </div>
             </motion.div>
           ))}

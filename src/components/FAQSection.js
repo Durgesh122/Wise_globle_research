@@ -7,27 +7,27 @@ const FAQSection = () => {
     {
       question: 'Are you SEBI registered research analysts?',
       answer:
-        'Yes, all our research analysts are SEBI registered. Our registration number is INH000012345, which you can verify on the SEBI website.',
+        'Yes, Wise Global Research is registered with SEBI as a Research Analyst. Our SEBI Registration Number is INH000016719. You can verify our registration on the official SEBI website (www.sebi.gov.in).',
     },
     {
-      question: 'What makes your research different from others?',
+      question: 'What is SEBI and why is registration important?',
       answer:
-        'Our research combines fundamental, technical, and quantitative analysis with strict risk management protocols. We provide actionable recommendations with clear entry/exit points and risk-reward ratios.',
+        'SEBI (Securities and Exchange Board of India) is the regulator for the securities market in India. Registration ensures that research analysts follow strict compliance, transparency, and investor protection guidelines as mandated by SEBI.',
     },
     {
-      question: 'Do you provide recommendations for intraday trading?',
+      question: 'What are the key SEBI rules for research analysts?',
       answer:
-        'Yes, we provide intraday trading ideas with specific entry, target and stop-loss levels. However, we recommend position trading for most investors as it has better risk-reward potential.',
+        'SEBI requires research analysts to maintain transparency, avoid conflicts of interest, disclose risks, and provide unbiased recommendations. We strictly adhere to all SEBI guidelines and compliance requirements.',
     },
     {
-      question: 'Can I get customized research for my portfolio?',
+      question: 'How can I verify your SEBI registration?',
       answer:
-        'Absolutely. Our institutional clients get customized research based on their portfolio holdings and risk profile. Contact us to discuss your specific requirements.',
+        'You can visit the SEBI website (www.sebi.gov.in) and search for Wise Global Research or our registration number INH000016719 in the list of registered research analysts.',
     },
     {
-      question: 'What is your success rate for recommendations?',
+      question: 'Is there any SEBI disclaimer I should be aware of?',
       answer:
-        'Our recommendations have an 87% success rate over the past 5 years. However, we emphasize that past performance is not indicative of future results and proper risk management is essential.',
+        'Disclaimer: Investment in securities market are subject to market risks. Read all the related documents carefully before investing. Wise Global Research and its analysts comply with all SEBI regulations. Past performance is not indicative of future results.',
     },
   ];
 
@@ -38,7 +38,7 @@ const FAQSection = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
           variants={itemVariants}
         >
-          Frequently Asked Questions
+          Frequently Asked Questions (SEBI Compliant)
         </motion.h2>
         <div className="space-y-4">
           {faqs.map((faq, index) => (

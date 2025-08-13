@@ -78,7 +78,7 @@ function StockOption() {
             {
               icon: <FaRupeeSign className="text-2xl text-amber-600" />,
               title: "Hedging Techniques",
-              desc: "Portfolio hedging strategies to protect your investments"
+              desc: "Hedging strategies to protect your investments"
             },
             {
               icon: <FaPercentage className="text-2xl text-purple-600" />,

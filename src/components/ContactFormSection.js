@@ -23,6 +23,11 @@ const ContactForm = ({ contactFormRef }) => {
       };
       await push(ref(db, 'homeFormSubmissions'), formData);
 
+      // Google Ads Conversion Tracking
+      if (window.gtag) {
+        window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
+      }
+
       toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
       reset();
     } catch (error) {

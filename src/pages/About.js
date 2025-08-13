@@ -1,185 +1,66 @@
+
 import React from 'react';
-import { motion } from 'framer-motion';
-import { FiGlobe, FiBarChart2, FiUsers, FiAward, FiBook, FiLayers, FiTrendingUp, FiDollarSign, FiPieChart } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
+
+const steps = [
+  {
+    img: 'https://images.unsplash.com/photo-1515168833906-d2a3b82b1e2e?auto=format&fit=facearea&w=128&q=80',
+    title: 'Customer-Centric Approach',
+    desc: 'Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty, fostering long-term relationships.'
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=128&q=80',
+    title: 'Risk Mitigation',
+    desc: 'Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests.'
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=facearea&w=128&q=80',
+    title: 'Creative Solutions',
+    desc: 'Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success.'
+  }
+];
 
 const About = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const stats = [
-    { value: "15+", label: "Years in Market Research", icon: <FiAward className="w-8 h-8 text-white" /> },
-    { value: "5000+", label: "Client Reports Generated", icon: <FiBook className="w-8 h-8 text-white" /> },
-    { value: "50+", label: "Industry Experts", icon: <FiUsers className="w-8 h-8 text-white" /> },
-    { value: "25+", label: "Countries Coverage", icon: <FiGlobe className="w-8 h-8 text-white" /> },
-    { value: "120+", label: "Sectors Analyzed", icon: <FiLayers className="w-8 h-8 text-white" /> },
-    { value: "24/7", label: "Research Support", icon: <FiTrendingUp className="w-8 h-8 text-white" /> }
-  ];
-
-  const methodologies = [
-    {
-      title: "Fundamental Analysis",
-      description: "Reviewing financial statements and business models using proprietary frameworks.",
-      icon: <FiDollarSign className="w-6 h-6 text-white" />
-    },
-    {
-      title: "Technical Analysis",
-      description: "Analyzing chart patterns and indicators to interpret market trends.",
-      icon: <FiBarChart2 className="w-6 h-6 text-white" />
-    },
-    {
-      title: "Quantitative Models",
-      description: "Using statistical models to evaluate and rank securities.",
-      icon: <FiPieChart className="w-6 h-6 text-white" />
-    }
-  ];
-
+  const { t } = useTranslation();
   return (
-    <div className="min-h-screen text-white">
-      <motion.section 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="relative py-32"
-      >
-        <div className="container mx-auto px-6 text-center">
-          <motion.h1 
-            initial={{ y: -30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl md:text-6xl font-bold mb-6"
-          >
-            Market Research Excellence Since 2008
-          </motion.h1>
-          <motion.p
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed text-white/80"
-          >
-            Delivering independent, data-driven financial insights to institutional clients worldwide.
-          </motion.p>
+  <div className="min-h-screen bg-transparent text-white">
+    <div className="container mx-auto px-4 py-12">
+      {/* Breadcrumb navigation removed as requested */}
+      <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-center">{t('about_page.title')}</h1>
+      <p className="text-lg text-center mb-8 text-white/80">{t('about_page.subtitle')}</p>
+
+      <div className="flex flex-col md:flex-row justify-center gap-8 mb-10">
+        <div className="bg-white/30 rounded-xl p-6 flex-1 text-center">
+          <h2 className="text-2xl font-bold mb-2">{t('about_page.about_us_title')}</h2>
+          <p className="text-white/80">{t('about_page.about_us_desc')}</p>
         </div>
-      </motion.section>
+        <div className="bg-white/30 rounded-xl p-6 flex-1 text-center">
+          <h2 className="text-2xl font-bold mb-2">{t('about_page.mission_title')}</h2>
+          <p className="text-white/80">{t('about_page.mission_desc')}</p>
+        </div>
+        <div className="bg-white/30 rounded-xl p-6 flex-1 text-center">
+          <h2 className="text-2xl font-bold mb-2">{t('about_page.vision_title')}</h2>
+          <p className="text-white/80">{t('about_page.vision_desc')}</p>
+        </div>
+      </div>
 
-      <motion.section 
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        className="container mx-auto px-6 py-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
-      >
-        {stats.map((stat, index) => (
-          <motion.div 
-            key={index}
-            variants={itemVariants}
-            whileHover={{ y: -5 }}
-            className="p-6 text-center bg-white/10 backdrop-blur-md rounded-xl border border-white/10 shadow-md"
-          >
-            <div className="mx-auto mb-4">{stat.icon}</div>
-            <h3 className="text-2xl font-bold mb-2">{stat.value}</h3>
-            <p className="text-sm text-white/80">{stat.label}</p>
-          </motion.div>
-        ))}
-      </motion.section>
+      <div className="text-center mb-10">
+        <span className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow">{t('about_page.need_help')} <a href="tel:+919977909494" className="underline ml-2">+91 9977909494</a></span>
+      </div>
 
-      <section className="container mx-auto px-6 py-16">
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="max-w-5xl mx-auto mb-16 text-white/90"
-        >
-          <h2 className="text-4xl font-bold mb-6">Our Journey</h2>
-          <p className="mb-4">Founded during the 2008 financial crisis, we started with a focus on equity research in India and expanded globally over the years.</p>
-          <p className="mb-4">Our proprietary frameworks and commitment to analytical rigor have earned us the trust of over 500 institutional clients worldwide.</p>
-          <p>We now offer research across multiple asset classes and geographic regions, maintaining a strict focus on quality, ethics, and compliance.</p>
-        </motion.div>
-      </section>
-
-      <section className="container mx-auto px-6 py-16">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl font-bold mb-4">Our Research Methodologies</h2>
-          <p className="text-lg max-w-3xl mx-auto text-white/80">
-            We blend classical financial analysis with cutting-edge quantitative methods.
-          </p>
-        </motion.div>
-
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid md:grid-cols-3 gap-8"
-        >
-          {methodologies.map((method, index) => (
-            <motion.div 
-              key={index}
-              variants={itemVariants}
-              whileHover={{ y: -10 }}
-              className="p-6 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 text-center shadow-md"
-            >
-              <div className="mb-4">{method.icon}</div>
-              <h3 className="text-xl font-bold mb-3">{method.title}</h3>
-              <p className="leading-relaxed text-white/80">{method.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
-
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="py-20 border-t border-white/10"
-      >
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Access Our Premium Research</h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-white/80">
-            For informational purposes only. Institutional investors can request reports aligned with SEBI compliance.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="px-8 py-3 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-200 transition-colors">
-              Request Sample Report
-            </button>
-            <button className="px-8 py-3 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-colors">
-              Schedule Consultation
-            </button>
+      <h2 className="text-3xl font-bold mb-6 text-center">{t('about_page.steps_title')}</h2>
+      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {steps.map((step, idx) => (
+          <div key={idx} className="bg-white/30 rounded-xl p-6 text-center flex flex-col items-center shadow">
+            <div className="w-16 h-16 mb-4 flex items-center justify-center bg-green-700 rounded-full overflow-hidden">
+              <img src={step.img} alt={t(`about_page.steps.${idx}.title`)} className="object-cover w-16 h-16" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">{t(`about_page.steps.${idx}.title`)}</h3>
+            <p className="text-white/80">{t(`about_page.steps.${idx}.desc`)}</p>
           </div>
-          <p className="mt-6 text-sm text-white/60">
-            Please consult your financial advisor before making investment decisions.
-          </p>
-        </div>
-      </motion.section>
+        ))}
+      </div>
     </div>
-  );
-};
-
+  </div>
+);}
 export default About;

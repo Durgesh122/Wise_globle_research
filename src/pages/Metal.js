@@ -1,307 +1,101 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Line, Doughnut } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  PointElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-} from 'chart.js';
-import GlobalLayout from '../components/GlobalLayout';
-import { useNavigate } from 'react-router-dom';
-import { FaPlus, FaMinus, FaArrowRight, FaCoins, FaChartLine, FaShieldAlt } from 'react-icons/fa';
 
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  PointElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+import React from 'react';
+import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
-// Sample data for charts
-const metalPriceData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  datasets: [
-    {
-      label: 'Gold Price (₹/10g)',
-      data: [65000, 65500, 67000, 66500, 68000, 69000],
-      borderColor: '#FBBF24',
-      backgroundColor: 'rgba(251, 191, 36, 0.2)',
-      fill: true,
-      tension: 0.4,
-    },
-    {
-      label: 'Silver Price (₹/kg)',
-      data: [72000, 73000, 72500, 74000, 75000, 76000],
-      borderColor: '#D1D5DB',
-      backgroundColor: 'rgba(209, 213, 219, 0.2)',
-      fill: true,
-      tension: 0.4,
-    },
-  ],
-};
+const Metal = () => (
+  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+    <h1 className="text-4xl font-extrabold mb-4 text-center text-white">MCX Metal</h1>
+    <p className="text-lg mb-6 text-center text-white">
+      Our MCX Metal service is tailored for traders who want to maximize their returns in Gold, Silver, Copper, and Aluminum segments of the MCX market. With a unique blend of technical and fundamental research, we provide 1-2 intraday or positional recommendations daily in metals. Our timely and accurate recommendations, delivered via SMS, ensure you never miss a market opportunity. Benefit from our expert analysis of global and domestic market trends, and enjoy real-time customer support for all your trading needs.
+    </p>
 
-const tradingVolumeData = {
-  labels: ['Gold', 'Silver', 'Copper', 'Aluminum'],
-  datasets: [
-    {
-      label: 'Trading Volume (Lots)',
-      data: [3000, 2500, 1800, 1200],
-      backgroundColor: ['#FBBF24', '#D1D5DB', '#B91C1C', '#6B7280'],
-      borderColor: '#ffffff',
-      borderWidth: 2,
-    },
-  ],
-};
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-2 text-white">What We Offer</h2>
+      <ul className="list-disc pl-6 text-base mb-4 text-white">
+        <li>1-2 Intraday/Positional recommendations in Gold, Silver, Copper, and Aluminum (as per market conditions).</li>
+        <li>Each recommendation includes 2 targets and a proper stop loss.</li>
+        <li>Timely follow-ups and updates on all trade signals.</li>
+        <li>Clear entry and exit timings for every recommendation.</li>
+        <li>Comprehensive analysis of global and domestic metal markets.</li>
+        <li>Recommendations delivered via SMS for instant action.</li>
+        <li>Swift, real-time customer support (09:00 AM to 06:00 PM).</li>
+      </ul>
+      <p className="text-base mb-2 text-white">MCX Metal Services are ideal for traders who want detailed technical and fundamental market analysis in one pack.</p>
+    </div>
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-2 text-white">Trading Rules Every Trader Must Follow</h2>
+      <ul className="list-decimal pl-6 text-base mb-4 text-white">
+        <li>Do not over trade.</li>
+        <li>Only follow SMS research recommendations.</li>
+        <li>Trade each recommendation with the same quantity as advised by the Research Team.</li>
+        <li>Profit and loss are subject to market risk; there is no guarantee or assurance.</li>
+        <li>Never be emotional while trading.</li>
+        <li>Beware of overnight risk.</li>
+        <li>Always trade with a stop loss.</li>
+        <li>Don’t look back and regret past trades.</li>
+        <li>Don’t over-leverage in a volatile market.</li>
+        <li>Costs matter a lot when you are a trader.</li>
+        <li>Protect your capital first—trading begins with risk management.</li>
+        <li>Sometimes, not trading is also a valid strategy.</li>
+        <li>Profit is what is booked; all else is just on paper.</li>
+      </ul>
+    </div>
 
-const Metal = () => {
-  const [activeFaq, setActiveFaq] = useState(null);
-  const navigate = useNavigate();
 
-  const services = [
-    {
-      title: 'Metal Trading',
-      description: 'Trade gold, silver, copper, and more on the MCX with competitive rates.',
-      icon: FaCoins,
-    },
-    {
-      title: 'Market Insights',
-      description: 'Real-time price updates and technical analysis for metal commodities.',
-      icon: FaChartLine,
-    },
-    {
-      title: 'Hedging Solutions',
-      description: 'Protect your investments with tailored hedging strategies.',
-      icon: FaShieldAlt,
-    },
-  ];
+    <div className="text-center text-sm text-white mt-8">
+      <strong>Swift real-time customer support:</strong> 09:00 AM to 06:00 PM | <strong>All recommendations are provided through SMS.</strong>
+    </div>
 
-  const faqs = [
-    {
-      question: 'What is MCX metal trading?',
-      answer:
-        'MCX metal trading involves buying and selling metal commodities like gold, silver, copper, and aluminum on the Multi Commodity Exchange of India.',
-    },
-    {
-      question: 'How do I start trading metals?',
-      answer:
-        'Select a plan, open an MCX trading account, and use our platform to start trading with guided support.',
-    },
-    {
-      question: 'What are the risks in metal trading?',
-      answer:
-        'Metal trading involves risks like price volatility, but our hedging tools and market insights help manage these risks.',
-    },
-    {
-      question: 'Can I trade metals internationally?',
-      answer:
-        'Our platform focuses on MCX, but we provide insights and tools for global metal market trends.',
-    },
-  ];
-
-  return (
-    <GlobalLayout>
-      <div className="px-4 sm:px-6 lg:px-8">
-       {/* Hero Section */}
-       <motion.section className="text-center mb-16 mt-12" variants={itemVariants}>
-         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-           MCX Metal Services
-         </h1>
-         <p className="text-lg sm:text-xl text-white max-w-2xl mx-auto">
-           Trade precious and base metals on the Multi Commodity Exchange with our
-           expert tools and insights.
-         </p>
-         <motion.button
-           onClick={() => navigate('/contact')}
-           className="mt-6 bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition flex items-center justify-center mx-auto"
-           whileHover={{ scale: 1.05 }}
-           whileTap={{ scale: 0.95 }}
-         >
-           Start Trading <FaArrowRight className="ml-2" />
-         </motion.button>
-       </motion.section>
-
-       {/* Services Section */}
-       <motion.section className="mb-16" variants={itemVariants}>
-         <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-8">
-           Our Metal Trading Services
-         </h2>
-         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-           {services.map((service, index) => {
-             const IconComponent = service.icon;
-             return (
-               <motion.div
-                 key={index}
-                 className="bg-white/40 rounded-lg shadow-lg text-center p-6"
-                 variants={itemVariants}
-                 whileHover={{ y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
-               >
-                 <IconComponent className="text-4xl mb-4 mx-auto text-white" />
-                 <h3 className="text-xl font-semibold text-white mb-2">
-                   {service.title}
-                 </h3>
-                 <p className="text-white">{service.description}</p>
-               </motion.div>
-             );
-           })}
-         </div>
-       </motion.section>
-
-       {/* Charts Section */}
-       <motion.section className="mb-16" variants={itemVariants}>
-         <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-8">
-           Metal Market Insights
-         </h2>
-         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-           <motion.div
-             className="bg-white/20 rounded-lg shadow-lg"
-             variants={itemVariants}
-           >
-             <h3 className="text-xl font-semibold text-white mb-4">
-               Gold & Silver Price Trends
-             </h3>
-             <Line
-               data={metalPriceData}
-               options={{
-                 responsive: true,
-                 plugins: {
-                   legend: { position: 'top' },
-                   title: { display: true, text: 'Gold & Silver Price Trends (₹)' },
-                 },
-                 scales: {
-                   y: {
-                     beginAtZero: false,
-                     title: { display: true, text: 'Price (₹)' },
-                   },
-                 },
-               }}
-             />
-           </motion.div>
-           <motion.div
-             className="bg-white/20 rounded-lg shadow-lg p-6"
-             variants={itemVariants}
-           >
-             <h3 className="text-xl font-semibold text-white mb-4">
-               Trading Volume by Metal
-             </h3>
-             {/* Small fixed-size container for Doughnut chart */}
-             <div className="mx-auto" style={{ width: '250px', height: '250px' }}>
-               <Doughnut
-                 data={tradingVolumeData}
-                 options={{
-                   responsive: true,
-                   maintainAspectRatio: false,
-                   plugins: {
-                     legend: { position: 'top' },
-                     title: { display: true, text: 'Metal Trading Volume (Lots)' },
-                   },
-                 }}
-               />
-             </div>
-           </motion.div>
-         </div>
-       </motion.section>
-
-       {/* FAQ Section */}
-       <motion.section className="mb-16" variants={itemVariants}>
-         <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-8">
-           Frequently Asked Questions
-         </h2>
-         <div className="max-w-3xl mx-auto">
-           {faqs.map((faq, index) => (
-             <motion.div
-               key={index}
-               className="bg-white/40 rounded-lg shadow-md mb-4"
-               variants={itemVariants}
-             >
-               <button
-                 className="w-full text-left text-lg font-semibold text-white flex justify-between items-center px-4 py-3"
-                 onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-               >
-                 {faq.question}
-                 {activeFaq === index ? <FaMinus /> : <FaPlus />}
-               </button>
-               <AnimatePresence>
-                 {activeFaq === index && (
-                   <motion.div
-                     initial={{ height: 0, opacity: 0 }}
-                     animate={{ height: 'auto', opacity: 1 }}
-                     exit={{ height: 0, opacity: 0 }}
-                     className="text-white mt-2 px-4 pb-4"
-                   >
-                     {faq.answer}
-                   </motion.div>
-                 )}
-               </AnimatePresence>
-             </motion.div>
-           ))}
-         </div>
-       </motion.section>
-
-       {/* Market Snapshot Section */}
-       <motion.section className="mb-16" variants={itemVariants}>
-         <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-8">
-           Market Snapshot
-         </h2>
-         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-           {[
-             { metal: 'Gold', price: '₹69,000/10g', change: '+1.2%' },
-             { metal: 'Silver', price: '₹76,000/kg', change: '+0.8%' },
-             { metal: 'Copper', price: '₹850/kg', change: '-0.5%' },
-             { metal: 'Aluminum', price: '₹220/kg', change: '+0.3%' },
-           ].map((item, index) => (
-             <motion.div
-               key={index}
-               className="bg-white/40 rounded-lg shadow-md text-center"
-               variants={itemVariants}
-             >
-               <h3 className="text-lg font-semibold text-white">{item.metal}</h3>
-               <p className="text-xl font-bold text-amber-600">{item.price}</p>
-               <p className={`text-sm ${item.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
-                 {item.change}
-               </p>
-             </motion.div>
-           ))}
-         </div>
-       </motion.section>
-
-       {/* CTA Section */}
-       <motion.section className="text-center mb-16" variants={itemVariants}>
-         <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-           Ready to Trade Metals?
-         </h2>
-         <p className="text-lg text-white mb-6">
-           Join our MCX platform and start trading metals with confidence.
-         </p>
-         <motion.button
-           onClick={() => navigate('/contact')}
-           className="bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition flex items-center justify-center mx-auto"
-           whileHover={{ scale: 1.05 }}
-           whileTap={{ scale: 0.95 }}
-         >
-           Start Trading Now <FaArrowRight className="ml-2" />
-         </motion.button>
-       </motion.section>
+    {/* Why Choose Us Section */}
+    <div className="my-12">
+      <h2 className="text-2xl font-bold mb-4 text-center text-white">Why Choose MCX Metal?</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+          <FaLightbulb className="text-4xl mb-2 text-yellow-300" />
+          <h3 className="font-bold text-lg mb-1 text-white">Expert Research</h3>
+          <p className="text-white text-center">Our team combines technical and fundamental analysis for the most reliable recommendations.</p>
+        </div>
+        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+          <FaBolt className="text-4xl mb-2 text-blue-300" />
+          <h3 className="font-bold text-lg mb-1 text-white">Real-Time Support</h3>
+          <p className="text-white text-center">Get instant help and trade updates from 9:00 AM to 6:00 PM, Monday to Friday.</p>
+        </div>
+        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+          <FaLock className="text-4xl mb-2 text-green-300" />
+          <h3 className="font-bold text-lg mb-1 text-white">Trusted by Traders</h3>
+          <p className="text-white text-center">Hundreds of metal traders rely on our signals for consistent results.</p>
+        </div>
       </div>
-    </GlobalLayout>
-  );
-};
+    </div>
+
+    {/* FAQ Section */}
+    <div className="my-12">
+      <h2 className="text-2xl font-bold mb-4 text-center text-white">Frequently Asked Questions</h2>
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-4">
+          <h3 className="font-semibold text-white">Q: How will I receive the recommendations?</h3>
+          <p className="text-white">A: All recommendations are sent via SMS to your registered mobile number.</p>
+        </div>
+        <div className="mb-4">
+          <h3 className="font-semibold text-white">Q: Can I get support if I have questions?</h3>
+          <p className="text-white">A: Yes, our support team is available from 09:00 AM to 06:00 PM for any queries.</p>
+        </div>
+        <div className="mb-4">
+          <h3 className="font-semibold text-white">Q: Is there a refund policy?</h3>
+          <p className="text-white">A: Please refer to our terms and conditions or contact support for refund-related queries.</p>
+        </div>
+      </div>
+      <div className="flex justify-center mt-8">
+        <Link to="/contact">
+          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">
+            Contact Us
+          </button>
+        </Link>
+      </div>
+    </div>
+  </div>
+);
 
 export default Metal;

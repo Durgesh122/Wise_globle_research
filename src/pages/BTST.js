@@ -15,32 +15,32 @@ const BTST = () => {
       ],
     },
     {
-      title: "How Our BTST Service Works",
+      title: "How Our BTST Research Works",
       points: [
         "Our SEBI-registered analysts track high-volume stocks and technical breakouts using proprietary algorithms.",
-        "We send 1–3 BTST calls per day, each with clear entry, target, and stop-loss levels.",
-        "Calls are backed by real-time market analysis, global cues, and sentiment indicators.",
-        "Each recommendation includes detailed technical rationale and risk assessment parameters.",
+        "We send 1–3 BTST research reports per day, each with clear entry, target, and stop-loss levels.",
+        "Our research is backed by real-time market analysis, global cues, and sentiment indicators.",
+        "Each research report includes detailed technical rationale and risk assessment parameters.",
         "Subscribers receive alerts 30 minutes before market close for optimal entry timing.",
       ],
     },
     {
       title: "SEBI Compliance & Transparency",
       points: [
-        "All calls are issued by certified analysts under SEBI Registration INHXXXXXXXX.",
+        "All research reports are issued by certified analysts under SEBI Registration INHXXXXXXXX.",
         "We maintain clear separation between research and any other commercial activity.",
         "Performance reports and disclosures are available upon request.",
         "Full compliance with SEBI Research Analyst Regulations 2014 (including disclosures of interest).",
-        "Quarterly audit of recommendation accuracy and risk management processes.",
+        "Quarterly audit of research accuracy and risk management processes.",
       ],
     },
     {
       title: "Why Choose Us?",
       points: [
-        "Average success rate of 75% based on the past 12 months of verified trades.",
+        "Our research is based on verified trades from the past 12 months.",
         "Real-time alerts via SMS, email, and WhatsApp with instant execution updates.",
         "Dedicated research support for all subscribers with direct analyst access.",
-        "Clear risk-reward ratio in every recommendation (minimum 1:2 ratio maintained).",
+        "Clear risk-reward ratio in every research report (minimum 1:2 ratio maintained).",
         "Weekly performance review webinars and monthly portfolio health checks.",
         "Customized position sizing guidance based on your risk appetite.",
       ],
@@ -52,17 +52,16 @@ const BTST = () => {
         "Automated stop-loss triggers with 1% trailing mechanism.",
         "Volatility-adjusted position sizing based on ATR indicators.",
         "Blackout periods during earnings announcements and major economic events.",
-        "Three-tier verification process before any recommendation release.",
+        "Three-tier verification process before any research report is released.",
       ],
     },
     {
       title: "Subscription Plans",
       points: [
-        "Basic Plan: 5 BTST calls per week with SMS alerts (₹2,999/month)",
-        "Premium Plan: 10-15 BTST calls with WhatsApp priority (₹4,999/month)",
-        "Institutional Plan: Unlimited calls + dedicated analyst (₹9,999/month)",
+        "Basic Plan: 5 BTST research reports per week with SMS alerts (₹2,999/month)",
+        "Premium Plan: 10-15 BTST research reports with WhatsApp priority (₹4,999/month)",
+        "Institutional Plan: Unlimited research reports + dedicated analyst (₹9,999/month)",
         "All plans include weekend strategy sessions and monthly review reports.",
-        "15-day money-back guarantee for all first-time subscribers.",
       ],
     },
   ];
@@ -76,14 +75,14 @@ const BTST = () => {
       "OI buildup in 2900CE options indicating upward momentum",
       "Global crude prices trending favorably for energy sector"
     ],
-    recommendation: {
+    research: {
       entry: "₹2,865-2,880",
       target: "₹2,950 (2.4% upside)",
       stopLoss: "₹2,830 (1.7% downside)",
       holdingPeriod: "1 day",
       riskReward: "1:1.4"
     },
-    disclaimer: "This is for educational purpose only. Past performance is not indicative of future results. Consult your financial advisor before investing."
+    disclaimer: "This is for informational purposes only. Past performance is not indicative of future results. Consult a qualified financial professional before investing."
   };
 
   return (
@@ -123,19 +122,19 @@ const BTST = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-white/60">Entry Range</p>
-                    <p className="font-medium">{sampleReport.recommendation.entry}</p>
+                    <p className="font-medium">{sampleReport.research.entry}</p>
                   </div>
                   <div>
                     <p className="text-sm text-white/60">Target</p>
-                    <p className="font-medium text-green-400">{sampleReport.recommendation.target}</p>
+                    <p className="font-medium text-green-400">{sampleReport.research.target}</p>
                   </div>
                   <div>
                     <p className="text-sm text-white/60">Stop Loss</p>
-                    <p className="font-medium text-red-400">{sampleReport.recommendation.stopLoss}</p>
+                    <p className="font-medium text-red-400">{sampleReport.research.stopLoss}</p>
                   </div>
                   <div>
                     <p className="text-sm text-white/60">Risk/Reward</p>
-                    <p className="font-medium">{sampleReport.recommendation.riskReward}</p>
+                    <p className="font-medium">{sampleReport.research.riskReward}</p>
                   </div>
                 </div>
               </div>
@@ -260,11 +259,7 @@ const BTST = () => {
       >
         <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
           <h2 className="text-2xl font-bold mb-6 text-center">Performance Metrics (Last 6 Months)</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white/10 p-4 rounded-lg text-center">
-              <div className="text-3xl font-bold text-green-400">74.3%</div>
-              <div className="text-sm mt-2">Success Rate</div>
-            </div>
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white/10 p-4 rounded-lg text-center">
               <div className="text-3xl font-bold">2.8%</div>
               <div className="text-sm mt-2">Average Return per Trade</div>
@@ -275,7 +270,7 @@ const BTST = () => {
             </div>
           </div>
           <div className="mt-6 text-sm text-white/60 text-center">
-            *Based on 128 executed BTST recommendations between Jan-Jun 2025
+            *Past performance is not indicative of future results. Based on 128 executed BTST research reports between Jan-Jun 2025
           </div>
         </div>
       </motion.div>

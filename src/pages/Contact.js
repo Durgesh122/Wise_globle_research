@@ -30,6 +30,10 @@ function Contact() {
     try {
       // Save to the same location as the Home.js form
       await push(ref(db, 'homeFormSubmissions'), submissionData);
+      // Google Ads Conversion Tracking
+      if (window.gtag) {
+        window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
+      }
       toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
       setSuccess(true);
       setFormData({ name: '', email: '', phone: '', message: '' });
@@ -89,7 +93,7 @@ function Contact() {
         {/* ✅ Form Card */}
         <motion.form
           onSubmit={handleSubmit}
-          className="bg-white/20 p-8 rounded-xl backdrop-blur border border-white/30"
+          className="bg-white/30 p-8 rounded-xl backdrop-blur border border-white/30"
           variants={fadeInUp}
           custom={1}
         >

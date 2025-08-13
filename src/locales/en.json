@@ -1,0 +1,178 @@
+{
+  "footer": {
+    "copyright": "© 2024 Wise Global. All rights reserved.",
+    "selectLanguage": "Select Language",
+    "description": "WISE GLOBAL RESEARCH SERVICES PRIVATE LIMITED comprises seasoned and proficient research analysts specializing in the stock and commodity markets.",
+    "quickLinks": "Quick Links",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "payment": "Payment",
+    "investorCharter": "Investor Charter",
+    "currentOpenings": "Current Openings",
+    "guideForInvesting": "Guide For Investing",
+    "dailyRecommendation": "Daily Recommendation",
+    "usefulLinks": "Useful Links",
+    "disclaimer": "Disclaimer",
+    "disclosure": "Disclosure",
+    "privacyPolicy": "Privacy Policy",
+    "refundPolicy": "Refund Policy",
+    "complaintBox": "Complaint Box",
+    "complaintData": "Complaint Data",
+    "termsAndConditions": "Terms and Conditions",
+    "registrationDetails": "Our Registration Details",
+    "registeredName": "Registered Name",
+    "principalOfficer": "Principal Officer/Compliance Officer",
+    "gstNo": "GST No.",
+    "cinNumber": "CIN Number",
+    "typeOfRegistration": "Type of Registration",
+    "sebiRegistrationNo": "SEBI Registration Number",
+    "bseEnlistmentNo": "BSE Enlistment No.",
+    "validity": "Validity",
+    "sebiOfficeDetails": "SEBI Office Details",
+    "tollFree": "Toll Free",
+    "quickContact": "Quick Contact",
+    "registeredOfficeAddress": "Registered Office Address",
+    "selectWebsiteTheme": "Select Website Theme",
+    "paymentNote": "<strong>Note:</strong> Dear Client, payments will be accepted only if made to the account details listed on the Wise Global Research website.",
+    "poweredBy": "Powered by"
+  },
+  "navbar": {
+    "home": "Home",
+    "services": {
+      "title": "Services",
+      "cash": {
+        "title": "Cash",
+        "evaluationStockCash": "Evaluation Stock Cash",
+        "smartCash": "Smart Cash",
+        "cash": "Cash"
+      },
+      "option": {
+        "title": "Option",
+        "evaluationStockOption": "Evaluation Stock Option",
+        "impulseOption": "Impulse Option",
+        "smartFuture": "Smart Future",
+        "smartOptions": "Smart Options"
+      },
+      "specialization": {
+        "title": "Specialization",
+        "infinityClub": "Infinity Club",
+        "mcxSupreme": "MCX Supreme",
+        "galaxyMCX": "Galaxy MCX",
+        "universalCash": "Universal Cash"
+      },
+      "index": {
+        "title": "Index",
+        "evaluationIndexOptions": "Evaluation Index Options",
+        "impulseIndexOptions": "Impulse Index Options",
+        "smartIndexOption": "SmartIndexOption",
+        "index": "Index"
+      },
+      "mcx": {
+        "title": "MCX",
+        "mcx": "MCX",
+        "bullions": "Bullions",
+        "energy": "Energy",
+        "metal": "Metal",
+        "mcxOption": "MCX Option"
+      }
+    },
+    "company": {
+      "title": "Company",
+      "aboutUs": "About Us",
+      "ourTeam": "Our Team",
+      "visionMission": "Vision & Mission"
+    },
+    "hrZone": {
+      "title": "HR Zone",
+      "career": "Career",
+      "training": "Training"
+    },
+    "insights": {
+      "title": "Insights",
+      "blogs": "Blogs",
+      "marketNews": "Market News",
+      "complaintData": "Complaint Data",
+      "grievanceRedressalProcess": "Grievance Redressal Process"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "adminPanel": "Admin Panel",
+      "clientPanel": "Client Panel",
+      "clientServiceConsent": "Client Service Consent",
+      "investorChart": "Investor Chart",
+      "antiMoneyLaundering": "Anti-Money Laundering"
+    },
+    "payment": "Payment",
+    "complaintBox": "Complaint Box",
+    "contactUs": "Contact Us",
+    "researchReports": "Research Reports"
+  },
+  "home": {
+    "helmet": {
+      "title": "Wise Global Research Services - SEBI Registered Research Analyst",
+      "description": "Wise Global Research Services - SEBI Registered Research Analyst. Get expert stock market research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India.",
+      "ogDescription": "Get SEBI registered expert research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India.",
+      "twitterDescription": "Get SEBI registered expert research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India."
+    }
+  },
+  "about_page": {
+    "steps": [
+      {
+        "title": "Customer-Centric Approach",
+        "desc": "Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty, fostering long-term relationships."
+      },
+      {
+        "title": "Risk Mitigation",
+        "desc": "Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests."
+      },
+      {
+        "title": "Creative Solutions",
+        "desc": "Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success."
+      }
+    ],
+    "title": "About Us Wise Global Research",
+    "subtitle": "We prioritize what matters most in your life.",
+    "about_us_title": "About Us",
+    "about_us_desc": "Wise Global Research is a SEBI registered analyst company dedicated to empowering you with straightforward, meaningful, and actionable recommendations and solutions, enabling you to confidently build wealth for any purpose. Committed to offering unbiased opinions backed by thorough research, we focus on providing valuable insights to participants in the Indian market.",
+    "mission_title": "Mission",
+    "mission_desc": "To empower clients with clear, actionable, and unbiased research, helping them make confident financial decisions and achieve their goals.",
+    "vision_title": "Vision",
+    "vision_desc": "To be the most trusted research partner for wealth creation, recognized for integrity, expertise, and client-centricity.",
+    "need_help": "Need Help?",
+    "steps_title": "Steps We Follow During Work"
+  },
+  "aml_page": {
+    "title": "Anti-Money Laundering (AML) Policy",
+    "overview_alt": "Anti-Money Laundering Overview",
+    "description_1": "Anti-Money Laundering (AML) is a set of policies, procedures, and technologies that prevents money laundering. It is implemented within government systems and large financial institutions to monitor potentially fraudulent activity. Anti-Money Laundering (AML) policies are guidelines and processes developed by financial organizations to detect, prevent, and report potential money laundering activities. These rules maintain regulatory compliance and contribute to worldwide efforts to prevent financial crime.",
+    "description_2": "Anti-Money Laundering (AML) is a set of policies, procedures, and technologies that prevents money laundering.",
+    "description_3": "There are three major steps in money laundering (placement, layering, and integration), and various controls are put in place to monitor suspicious activity that could be involved in money laundering.",
+    "description_4": "Some anti-money laundering controls include knowing your customers, software filtering, and implementing holding periods.",
+    "process_title": "Money Laundering – Process",
+    "process_description": "The figure below shows the three steps in money laundering and some of the controls that are used to prevent it. Money laundering is carried out through placement in a financial institution carrying out a series of transactions to disguise its original source (layering) and obtaining/using the cleaned money (integration).",
+    "process_alt": "Money Laundering Process",
+    "controls_title": "Anti-Money Laundering – Controls",
+    "controls": [
+      {
+        "title": "Criminalization",
+        "desc": "Many governments, financial institutions, and businesses impose controls to prevent money laundering. The first is criminalization by the government. The United Nations Convention Against Transnational Organized Crime has set forth guidelines that help governments to prosecute individuals involved in money laundering schemes."
+      },
+      {
+        "title": "Know Your Customers",
+        "desc": "Financial institutions must also have “know your customer” policies in place to help prevent money laundering. This involves monitoring the activity of clients and understanding the types of transactions that should raise red flags. Financial institutions are required to report suspicious activity to a financial investigation unit."
+      },
+      {
+        "title": "Record Management and Software Filtering",
+        "desc": "Financial institutions and businesses also keep detailed records of transactions and implement software that can flag suspicious activity. Customer data can be classified based on varying levels of suspicion, and transactions denied if they meet certain criteria."
+      },
+      {
+        "title": "Holding Period",
+        "desc": "Many banks require deposits to remain in an account for a designated number of days (usually around five). This holding period helps manage risk associated with money being moved through banks to launder money."
+      },
+      {
+        "title": "New Technology",
+        "desc": "The technology used to identify suspicious activity linked to money laundering continues to evolve and become more accurate. Technologies, such as AI and Big Data software, allow these systems to become more sophisticated."
+      }
+    ]
+  }
+}

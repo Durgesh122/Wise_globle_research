@@ -18,7 +18,7 @@ const ServicesSection = () => {
       title: 'Derivatives',
       desc: 'Futures & options strategies for Nifty and Bank Nifty',
       icon: <FaExchangeAlt className="text-3xl sm:text-4xl text-purple-500" />,
-      features: ['Option Chain Analysis', 'F&O Strategies', 'Hedging Techniques'],
+      features: ['Option Chain Analysis','F&O Strategies', 'Hedging Techniques'],
     },
     {
       title: 'Commodities',
@@ -32,6 +32,7 @@ const ServicesSection = () => {
       icon: <FaChartBar className="text-3xl sm:text-4xl text-green-500" />,
       features: ['Chart Patterns', 'Indicators', 'Price Action'],
     },
+
     {
       title: 'Portfolio Management',
       desc: 'Customized portfolio strategies based on risk profile',

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { FiInfo } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
 const Index = () => {
@@ -335,31 +334,7 @@ const Index = () => {
         </motion.div>
       </div>
 
-      {/* Regulatory Disclaimer */}
-      
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
-        className="mt-8 p-4 rounded-lg text-sm backdrop-blur-sm"
-        style={{ 
-          backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)',
-          borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.2)',
-          borderWidth: '1px'
-        }}
-      >
-        <h4 className="font-bold mb-2" style={{ color: colors.textPrimary }}>
-          <FiInfo className="inline mr-2" />
-          Regulatory Information
-        </h4>
-        <p style={{ color: colors.textSecondary }}>
-          This information is provided for educational purposes only and should not be construed as investment advice. 
-          Market data is sourced from publicly available information and may be delayed. 
-          Past performance is not indicative of future results. 
-          Investors should consult with a qualified financial advisor before making any investment decisions.
-        </p>
-      </motion.div>
+      {/* Regulatory Disclaimer removed as per request */}
     </motion.div>
   );
 };

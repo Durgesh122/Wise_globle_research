@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiTrendingUp, FiTrendingDown, FiBell, FiBarChart2, FiDollarSign, FiPieChart, FiSearch } from 'react-icons/fi';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Link } from 'react-router-dom';
 
 // Main MCX component
 const Mcx = () => {
@@ -155,9 +156,9 @@ const Mcx = () => {
   );
 
   return (
-    <div className="min-h-screen bg-transparent text-white">
+    <div className="min-h-screen bg-transparent text-white pt-24">
       {/* Enhanced Navbar with Gradient and Lower Positioning */}
-      <header className="sticky top-0 z-50 py-6 px-4 sm:px-6 lg:px-8 bg-transparent shadow-lg mt-8 rounded-b-xl">
+      <header className="py-6 px-4 sm:px-6 lg:px-8 bg-transparent shadow-lg rounded-b-xl">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
           {/* Branding with Gradient */}
           <div className="flex items-center space-x-3">
@@ -283,7 +284,7 @@ const Mcx = () => {
                           <motion.div
                             key={commodity.id}
                             whileHover={{ y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
-                            className={`p-6 rounded-xl ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} border cursor-pointer`}
+                            className={`p-6 rounded-xl bg-white/30 border cursor-pointer`}
                             onClick={() => setExpandedCard(expandedCard === commodity.id ? null : commodity.id)}
                           >
                             <div className="flex justify-between items-start">
@@ -367,10 +368,11 @@ const Mcx = () => {
               {/* Service Toggle Buttons */}
               {activeTab === 'dashboard' && (
                 <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2 rounded-md shadow-sm bg-white/20 p-1 mb-6 w-full">
-                  <button
-                    onClick={() => setInfoView('supreme')}
-                    className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-md ${infoView === 'supreme' ? 'bg-gradient-to-r from-[#A1C4FD] to-[#D4A1FD] text-white' : 'text-white hover:bg-white/30'}`}
-                  >MCX Supreme</button>
+                  <Link to="/mcxsupreme">
+                    <button
+                      className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-md ${infoView === 'supreme' ? 'bg-gradient-to-r from-[#A1C4FD] to-[#D4A1FD] text-white' : 'text-white hover:bg-white/30'}`}
+                    >MCX Supreme</button>
+                  </Link>
                   <button
                     onClick={() => setInfoView('galaxy')}
                     className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-md ${infoView === 'galaxy' ? 'bg-gradient-to-r from-[#A1C4FD] to-[#D4A1FD] text-white' : 'text-white hover:bg-white/30'}`}
@@ -532,20 +534,11 @@ const Mcx = () => {
                       <li>Profit is what is booked; all else is book profits.</li>
                     </ul>
                     <h3 className="text-xl font-semibold mb-2 text-white">Pricing Plan For MCX Supreme:</h3>
-                    <table className="min-w-full divide-y divide-gray-200 mb-4">
-                      <thead className="bg-white/20">
-                        <tr>
-                          <th className="px-4 py-2 text-left text-sm font-medium text-white">Plan</th>
-                          <th className="px-4 py-2 text-left text-sm font-medium text-white">Price</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="bg-white/20">
-                          <td className="px-4 py-2 text-white">MCX Supreme</td>
-                          <td className="px-4 py-2 text-white">₹12,500 / Monthly</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div className="flex justify-center">
+                      <Link to="/mcxsupreme">
+                        <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2 mb-2">MCX Supreme Pricing & Payment</button>
+                      </Link>
+                    </div>
                     <p className="text-sm text-white/70">Note: Pricing are excluding GST (18%)</p>
                   </div>
                 </motion.div>

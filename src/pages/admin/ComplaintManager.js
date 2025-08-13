@@ -6,8 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiEdit } from 'react-icons/fi';
 import PropTypes from 'prop-types';
 
+
 import LoadingSpinner from '../../components/admin/LoadingSpinner';
-// ...existing imports...
+
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -141,14 +142,24 @@ const ComplaintManager = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editRowData, setEditRowData] = useState(null);
 
+  // Monthly Disposal Table State
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [isMonthlyEditOpen, setIsMonthlyEditOpen] = useState(false);
+  const [monthlyEditRow, setMonthlyEditRow] = useState(null);
+
+  // Annual Disposal Table State
+  const [annualData, setAnnualData] = useState([]);
+  const [isAnnualEditOpen, setIsAnnualEditOpen] = useState(false);
+  const [annualEditRow, setAnnualEditRow] = useState(null);
+
   useEffect(() => {
+    // Complaint Table
     const tableRef = ref(db, 'complaintTableData');
-    const unsubscribe = onValue(tableRef, (snapshot) => {
+    const unsub1 = onValue(tableRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         setTableData(Array.isArray(data) ? data : Object.values(data));
       } else {
-        // Default rows when no data
         setTableData([
           { srNo: 1, source: 'Directly from Investors', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
           { srNo: 2, source: 'SEBI (SCORES)', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
@@ -161,7 +172,51 @@ const ComplaintManager = () => {
       toast.error('Failed to load complaint data: ' + error.message);
       setIsLoading(false);
     });
-    return () => unsubscribe();
+
+    // Monthly Disposal Table
+    const monthlyRef = ref(db, 'monthlyDisposalTableData');
+    const unsub2 = onValue(monthlyRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setMonthlyData(Array.isArray(data) ? data : Object.values(data));
+      } else {
+        setMonthlyData([
+          { srNo: 1, month: 'April, 2025', carried: 1, received: 0, resolved: 1, pending: 0 },
+          { srNo: 2, month: 'May, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 3, month: 'June, 2025', carried: 0, received: 2, resolved: 2, pending: 0 },
+          { srNo: 4, month: 'July, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 5, month: 'Aug, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 6, month: 'Sep, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 7, month: 'Oct, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 8, month: 'Nov, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 9, month: 'Dec, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 10, month: 'Jan, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 11, month: 'Feb, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 12, month: 'March, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
+          { srNo: 'Grand Total', month: '', carried: 1, received: 2, resolved: 3, pending: 0 },
+        ]);
+      }
+    }, (error) => {
+      toast.error('Failed to load monthly disposal data: ' + error.message);
+    });
+
+    // Annual Disposal Table
+    const annualRef = ref(db, 'annualDisposalTableData');
+    const unsub3 = onValue(annualRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setAnnualData(Array.isArray(data) ? data : Object.values(data));
+      } else {
+        setAnnualData([
+          { srNo: 1, year: '2024 - 2025', carried: 0, received: 8, resolved: 7, pending: 1 },
+          { srNo: 'Grand Total', year: '', carried: 0, received: 8, resolved: 7, pending: 1 },
+        ]);
+      }
+    }, (error) => {
+      toast.error('Failed to load annual disposal data: ' + error.message);
+    });
+
+    return () => { unsub1(); unsub2(); unsub3(); };
   }, []);
 
   const handleEdit = (row) => {
@@ -182,13 +237,132 @@ const ComplaintManager = () => {
 
 
 
+  // Monthly Disposal Table (admin)
+  const handleMonthlyEdit = (row) => {
+    setMonthlyEditRow(row);
+    setIsMonthlyEditOpen(true);
+  };
+  const handleMonthlySave = async (editedRow) => {
+    try {
+      const updatedData = monthlyData.map(row => row.srNo === editedRow.srNo ? editedRow : row);
+      await set(ref(db, 'monthlyDisposalTableData'), updatedData);
+      toast.success('Monthly row updated successfully.');
+    } catch (error) {
+      toast.error('Failed to update monthly row: ' + error.message);
+    }
+    setIsMonthlyEditOpen(false);
+  };
+
+  // Annual Disposal Table (admin)
+  const handleAnnualEdit = (row) => {
+    setAnnualEditRow(row);
+    setIsAnnualEditOpen(true);
+  };
+  const handleAnnualSave = async (editedRow) => {
+    try {
+      const updatedData = annualData.map(row => row.srNo === editedRow.srNo ? editedRow : row);
+      await set(ref(db, 'annualDisposalTableData'), updatedData);
+      toast.success('Annual row updated successfully.');
+    } catch (error) {
+      toast.error('Failed to update annual row: ' + error.message);
+    }
+    setIsAnnualEditOpen(false);
+  };
+
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <h2 className="text-3xl font-bold text-white mb-6">Complaint Manager</h2>
       {isLoading ? <LoadingSpinner /> : (
-        <ComplaintTable tableData={tableData} handleEdit={handleEdit} />
+        <>
+          <ComplaintTable tableData={tableData} handleEdit={handleEdit} />
+
+          {/* Monthly Disposal Table (admin editable) */}
+          <div className="my-8">
+            <h2 className="text-xl font-bold text-white mb-4">Trend Of Monthly Disposal Of Complaints</h2>
+            <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
+              <table className="w-full border-collapse text-left text-xs sm:text-sm" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(15px)' }}>
+                <thead>
+                  <tr className="text-white" style={{ background: 'rgba(255,255,255,0.3)' }}>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Month</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Carried forward from previous month</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Received</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Resolved*</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Pending#</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(Array.isArray(monthlyData) ? monthlyData : Object.values(monthlyData || {})).map(row => (
+                    <tr key={row.srNo} className="transition-colors hover:bg-opacity-25" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.srNo}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.month}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.carried}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.received}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.resolved}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.pending}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">
+                        {row.srNo !== 'Grand Total' && (
+                          <button onClick={() => handleMonthlyEdit(row)} className="text-blue-500 hover:text-blue-700"><FiEdit size={16} /></button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-2 text-xs sm:text-sm text-gray-300">
+              *Inclusive of complaints of previous months resolved in the current month.<br />
+              #Inclusive of complaints pending as on the last day of the month.
+            </p>
+          </div>
+          {/* Annual Disposal Table (admin editable) */}
+          <div className="my-8">
+            <h2 className="text-xl font-bold text-white mb-4">Trend Of Annual Disposal Of Complaints</h2>
+            <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
+              <table className="w-full border-collapse text-left text-xs sm:text-sm" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(15px)' }}>
+                <thead>
+                  <tr className="text-white" style={{ background: 'rgba(255,255,255,0.3)' }}>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Year</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Carried forward from previous year</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Received</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Resolved*</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Pending#</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(Array.isArray(annualData) ? annualData : Object.values(annualData || {})).map(row => (
+                    <tr key={row.srNo} className="transition-colors hover:bg-opacity-25" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.srNo}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.year}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.carried}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.received}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.resolved}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.pending}</td>
+                      <td className="p-2 sm:p-3 border border-gray-200/30">
+                        {row.srNo !== 'Grand Total' && (
+                          <button onClick={() => handleAnnualEdit(row)} className="text-blue-500 hover:text-blue-700"><FiEdit size={16} /></button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-2 text-xs sm:text-sm text-gray-300">
+              *Inclusive of complaints of previous years resolved in the current year.<br />
+              #Inclusive of complaints pending as on the last day of the year. (as on 31st March)
+            </p>
+          </div>
+        </>
       )}
       <EditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} rowData={editRowData} onSave={handleSave} />
+      {/* Monthly Edit Modal */}
+      <EditModal isOpen={isMonthlyEditOpen} onClose={() => setIsMonthlyEditOpen(false)} rowData={monthlyEditRow} onSave={handleMonthlySave} />
+      {/* Annual Edit Modal */}
+      <EditModal isOpen={isAnnualEditOpen} onClose={() => setIsAnnualEditOpen(false)} rowData={annualEditRow} onSave={handleAnnualSave} />
     </motion.div>
   );
 };

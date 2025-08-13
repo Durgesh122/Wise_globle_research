@@ -1,5 +1,6 @@
 // src/pages/Blogs.js
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FaBookOpen, FaArrowRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -135,195 +136,203 @@ const Blogs = () => {
   };
 
   return (
-    <motion.div
-      className="container mx-auto py-12 px-4 max-w-7xl bg-transparent"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      style={{ perspective: '1000px' }}
-    >
-      {/* Header Section */}
-      <motion.div className="text-center mb-12" variants={itemVariants}>
-        <motion.div whileHover={{ scale: 1.02 }} className="inline-block mb-6">
-          <div className="text-sm font-semibold bg-blue-900 px-4 py-1 rounded-full mb-3 inline-block border border-blue-300">
-            <span className="text-white">Market Insights</span>
-          </div>
-        </motion.div>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-          Investment Insights & Market Trends
-        </h1>
-        <p className="text-lg text-white max-w-2xl mx-auto">
-          Stay informed with SEBI-compliant research articles curated by <span className="font-semibold text-blue-300">Wise Global Research</span> for Indian traders.
-        </p>
-      </motion.div>
-
-      {/* Featured Post Section */}
+    <>
+      <Helmet>
+        <title>Blogs | Wise Global Research</title>
+        <meta name="description" content="Read expert blogs from Wise Global Research on stock market strategies, SEBI compliance, and investment tips for Indian investors." />
+        <meta property="og:title" content="Blogs | Wise Global Research" />
+        <meta property="og:description" content="Read expert blogs from Wise Global Research on stock market strategies, SEBI compliance, and investment tips for Indian investors." />
+        <meta property="og:url" content="https://wiseglobalresearch.com/blogs" />
+        <meta property="og:image" content="https://wiseglobalresearch.com/og-image.jpg" />
+        <meta name="twitter:title" content="Blogs | Wise Global Research" />
+        <meta name="twitter:description" content="Read expert blogs from Wise Global Research on stock market strategies, SEBI compliance, and investment tips for Indian investors." />
+        <meta name="twitter:image" content="https://wiseglobalresearch.com/og-image.jpg" />
+      </Helmet>
       <motion.div
-        className="transform transition-transform duration-300 bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-8 mb-12"
-        style={{
-          WebkitBackdropFilter: 'blur(10px)',
-          backdropFilter: 'blur(10px)',
-        }}
-        variants={itemVariants}
+        className="container mx-auto py-12 px-4 max-w-7xl bg-transparent"
+        variants={containerVariants}
         initial="hidden"
         animate="visible"
-        whileHover="hover"
-    
+        style={{ perspective: '1000px' }}
       >
-        <h2 className="text-3xl font-bold text-white mb-4">Featured Post</h2>
+        {/* Header Section */}
+        <motion.div className="text-center mb-12" variants={itemVariants}>
+          <motion.div whileHover={{ scale: 1.02 }} className="inline-block mb-6">
+            <div className="text-sm font-semibold bg-blue-900 px-4 py-1 rounded-full mb-3 inline-block border border-blue-300">
+              <span className="text-white">Market Insights</span>
+            </div>
+          </motion.div>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+            Investment Insights & Market Trends
+          </h1>
+          <p className="text-lg text-white max-w-2xl mx-auto">
+            Stay informed with SEBI-compliant research articles curated by <span className="font-semibold text-blue-300">Wise Global Research</span> for Indian traders.
+          </p>
+        </motion.div>
+
+        {/* Featured Post Section */}
         <motion.div
-          className="flex flex-col md:flex-row gap-6"
-          variants={cardVariants}
+          className="transform transition-transform duration-300 bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-8 mb-12"
+          style={{
+            WebkitBackdropFilter: 'blur(10px)',
+            backdropFilter: 'blur(10px)',
+          }}
+          variants={itemVariants}
           initial="hidden"
           animate="visible"
           whileHover="hover"
         >
-          <img
-            src={featuredPost.image}
-            alt={featuredPost.title}
-            className="w-full md:w-1/3 h-64 object-cover rounded-lg"
-            onError={handleImageError}
-          />
-          <div className="flex-1">
-            <h3 className="text-2xl font-semibold text-white mb-2">{featuredPost.title}</h3>
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-sm text-white">{featuredPost.date}</span>
-              <span className="text-sm text-white">{featuredPost.readTime}</span>
+          <h2 className="text-3xl font-bold text-white mb-4">Featured Post</h2>
+          <motion.div
+            className="flex flex-col md:flex-row gap-6"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            whileHover="hover"
+          >
+            <img
+              src={featuredPost.image}
+              alt={featuredPost.title}
+              className="w-full md:w-1/3 h-64 object-cover rounded-lg"
+              onError={handleImageError}
+            />
+            <div className="flex-1">
+              <h3 className="text-2xl font-semibold text-white mb-2">{featuredPost.title}</h3>
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-sm text-white">{featuredPost.date}</span>
+                <span className="text-sm text-white">{featuredPost.readTime}</span>
+              </div>
+              <p className="text-white mb-4">{featuredPost.full}</p>
+              <p className="text-white text-sm">By {featuredPost.author} - {featuredPost.authorBio}</p>
             </div>
-            <p className="text-white mb-4">{featuredPost.full}</p>
-            <p className="text-white text-sm">By {featuredPost.author} - {featuredPost.authorBio}</p>
+          </motion.div>
+        </motion.div>
+
+        {/* Blog Categories Section */}
+        <motion.div className="mb-12" variants={containerVariants}>
+          <h2 className="text-3xl font-bold text-white mb-6 text-center">Explore Categories</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {categories.map((category) => (
+              <motion.div
+                key={category.id}
+                className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6 border-t-4 border-blue-500 text-center"
+                style={{
+                  WebkitBackdropFilter: 'blur(10px)',
+                  backdropFilter: 'blur(10px)',
+                }}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+              >
+                <FaBookOpen className="text-blue-300 text-4xl mb-4 mx-auto" />
+                <h3 className="text-xl font-semibold text-white mb-2">{category.name}</h3>
+                <p className="text-white">{category.description}</p>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
-      </motion.div>
 
-      {/* Blog Categories Section */}
-      <motion.div className="mb-12" variants={containerVariants}>
-        <h2 className="text-3xl font-bold text-white mb-6 text-center">Explore Categories</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {categories.map((category) => (
-            <motion.div
-              key={category.id}
-              className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6 border-t-4 border-blue-500 text-center"
-              style={{
-                WebkitBackdropFilter: 'blur(10px)',
-                backdropFilter: 'blur(10px)',
-              }}
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover="hover"
-      
-            >
-              <FaBookOpen className="text-blue-300 text-4xl mb-4 mx-auto" />
-              <h3 className="text-xl font-semibold text-white mb-2">{category.name}</h3>
-              <p className="text-white">{category.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Blog Posts Section */}
-      <motion.div className="mb-12" variants={containerVariants}>
-        <h2 className="text-3xl font-bold text-white mb-6 text-center">Recent Posts</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post, index) => (
-            <motion.div
-              key={post.id}
-              className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6 border-t-4 border-blue-500 flex flex-col"
-              style={{
-                WebkitBackdropFilter: 'blur(10px)',
-                backdropFilter: 'blur(10px)',
-              }}
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover="hover"
-    
-            >
-              <img
-                src={post.image}
-                alt={post.title}
-                className="w-full h-48 object-cover rounded-lg mb-4"
-                onError={handleImageError}
-              />
-              <div className="flex justify-between items-start mb-3">
-                <span className="text-xs font-medium bg-blue-900 px-2 py-1 rounded text-white">{post.readTime}</span>
-                <span className="text-xs text-white">{post.date}</span>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">{post.title}</h3>
-              <p className="text-white mb-4 text-sm flex-1">
-                {expandedIndex === index ? post.full : post.excerpt}
-              </p>
-              <div className="mt-auto">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-white">By {post.author}</span>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setExpandedIndex(index === expandedIndex ? null : index)}
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition border border-blue-300"
-                  >
-                    {expandedIndex === index ? 'Show Less' : 'Read More'}
-                  </motion.button>
+        {/* Blog Posts Section */}
+        <motion.div className="mb-12" variants={containerVariants}>
+          <h2 className="text-3xl font-bold text-white mb-6 text-center">Recent Posts</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post, index) => (
+              <motion.div
+                key={post.id}
+                className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg p-6 border-t-4 border-blue-500 flex flex-col"
+                style={{
+                  WebkitBackdropFilter: 'blur(10px)',
+                  backdropFilter: 'blur(10px)',
+                }}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+              >
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-48 object-cover rounded-lg mb-4"
+                  onError={handleImageError}
+                />
+                <div className="flex justify-between items-start mb-3">
+                  <span className="text-xs font-medium bg-blue-900 px-2 py-1 rounded text-white">{post.readTime}</span>
+                  <span className="text-xs text-white">{post.date}</span>
                 </div>
-                <p className="text-white text-sm">{post.authorBio}</p>
-                {expandedIndex === index && post.relatedPosts && (
-                  <div className="mt-4">
-                    <h4 className="text-lg font-semibold text-white mb-2">Related Posts</h4>
-                    <ul className="list-disc pl-6 text-white text-sm">
-                      {post.relatedPosts.map((relatedId) => {
-                        const relatedPost = posts.find((p) => p.id === relatedId);
-                        return (
-                          <li key={relatedId}>
-                            <button
-                              onClick={() => {
-                                // Replace this with the action you want to perform,
-                                // e.g., navigating to the related post in a modal or
-                                // expanding content on the page.
-                                console.log(`Clicked on related post: ${relatedPost?.title}`);
-                              }}
-                              className="text-blue-300 hover:text-blue-100"
-                              style={{ 
-                                textDecoration: 'none', 
-                                padding: 0, 
-                                border: 'none', 
-                                background: 'none', 
-                                cursor: 'pointer' }}
-                            >
-                              {relatedPost?.title}
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                <h3 className="text-xl font-bold text-white mb-3">{post.title}</h3>
+                <p className="text-white mb-4 text-sm flex-1">
+                  {expandedIndex === index ? post.full : post.excerpt}
+                </p>
+                <div className="mt-auto">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm text-white">By {post.author}</span>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setExpandedIndex(index === expandedIndex ? null : index)}
+                      className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition border border-blue-300"
+                    >
+                      {expandedIndex === index ? 'Show Less' : 'Read More'}
+                    </motion.button>
                   </div>
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+                  <p className="text-white text-sm">{post.authorBio}</p>
+                  {expandedIndex === index && post.relatedPosts && (
+                    <div className="mt-4">
+                      <h4 className="text-lg font-semibold text-white mb-2">Related Posts</h4>
+                      <ul className="list-disc pl-6 text-white text-sm">
+                        {post.relatedPosts.map((relatedId) => {
+                          const relatedPost = posts.find((p) => p.id === relatedId);
+                          return (
+                            <li key={relatedId}>
+                              <button
+                                onClick={() => {
+                                  // Replace this with the action you want to perform,
+                                  // e.g., navigating to the related post in a modal or
+                                  // expanding content on the page.
+                                  console.log(`Clicked on related post: ${relatedPost?.title}`);
+                                }}
+                                className="text-blue-300 hover:text-blue-100"
+                                style={{ 
+                                  textDecoration: 'none', 
+                                  padding: 0, 
+                                  border: 'none', 
+                                  background: 'none', 
+                                  cursor: 'pointer' }}
+                              >
+                                {relatedPost?.title}
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
-   
-
-      {/* Call to Action */}
-      <motion.div
-        className="text-center bg-transparent rounded-xl p-8 mb-12"
-        variants={itemVariants}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <h2 className="text-3xl font-bold text-white mb-4">Stay Ahead with Wise Global</h2>
-        <p className="text-white max-w-2xl mx-auto mb-6">
-          Contact our team to explore trading solutions like Smart Options and MCX Supreme, tailored for Indian markets.
-        </p>
-        <Link
-          to="/contact"
-          className="inline-block bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition"
+        {/* Call to Action */}
+        <motion.div
+          className="text-center bg-transparent rounded-xl p-8 mb-12"
+          variants={itemVariants}
+          style={{ transformStyle: 'preserve-3d' }}
         >
-          Contact Us <FaArrowRight className="inline ml-2" />
-        </Link>
+          <h2 className="text-3xl font-bold text-white mb-4">Stay Ahead with Wise Global</h2>
+          <p className="text-white max-w-2xl mx-auto mb-6">
+            Contact our team to explore trading solutions like Smart Options and MCX Supreme, tailored for Indian markets.
+          </p>
+          <Link
+            to="/contact"
+            className="inline-block bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition"
+          >
+            Contact Us <FaArrowRight className="inline ml-2" />
+          </Link>
+        </motion.div>
       </motion.div>
-      </motion.div>
+    </>
   );
 };
 export default Blogs;

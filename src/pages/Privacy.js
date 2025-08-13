@@ -1,5 +1,6 @@
 // src/pages/Privacy.js
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FaShieldAlt, FaEye, FaEnvelope, FaSync } from 'react-icons/fa';
 
@@ -15,7 +16,19 @@ const listVariants = {
 
 function Privacy() {
   return (
-    <motion.div
+    <>
+      <Helmet>
+        <title>Privacy Policy | Wise Global Research</title>
+        <meta name="description" content="Read the privacy policy of Wise Global Research Services. Learn how we protect your data and privacy as a SEBI registered research analyst." />
+        <meta property="og:title" content="Privacy Policy | Wise Global Research" />
+        <meta property="og:description" content="Read the privacy policy of Wise Global Research Services. Learn how we protect your data and privacy as a SEBI registered research analyst." />
+        <meta property="og:url" content="https://wiseglobalresearch.com/privacy" />
+        <meta property="og:image" content="https://wiseglobalresearch.com/og-image.jpg" />
+        <meta name="twitter:title" content="Privacy Policy | Wise Global Research" />
+        <meta name="twitter:description" content="Read the privacy policy of Wise Global Research Services. Learn how we protect your data and privacy as a SEBI registered research analyst." />
+        <meta name="twitter:image" content="https://wiseglobalresearch.com/og-image.jpg" />
+      </Helmet>
+      <motion.div
       className="container mx-auto py-12 px-4"
       style={{ backgroundColor: 'transparent' }}
       initial="hidden"
@@ -90,6 +103,7 @@ function Privacy() {
         </div>
       </motion.section>
     </motion.div>
+    </>
   );
 }
 

@@ -1,75 +1,57 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaBalanceScale, FaChartPie, FaBullseye, FaShieldAlt } from 'react-icons/fa';
-import { FiCheckCircle } from 'react-icons/fi';
-import { itemVariants, cardVariants } from '../utils/animationVariants';
+import step1 from '../assets/images/imgStep01.png';
+import step2 from '../assets/images/imgStep02.png';
+import step3 from '../assets/images/imgStep03.png';
 
-const MethodologySection = () => {
-  const methods = [
-    {
-      title: 'Fundamental Analysis',
-      icon: <FaBalanceScale className="text-2xl sm:text-3xl" />,
-      steps: ['Financial Statement Analysis', 'Valuation Metrics', 'Management Quality', 'Industry Positioning'],
-    },
-    {
-      title: 'Technical Analysis',
-      icon: <FaChartPie className="text-2xl sm:text-3xl" />,
-      steps: ['Price Action Study', 'Indicator Analysis', 'Volume Patterns', 'Support/Resistance'],
-    },
-    {
-      title: 'Sentiment Analysis',
-      icon: <FaBullseye className="text-2xl sm:text-3xl" />,
-      steps: ['Market Breadth', 'FII/DII Activity', 'Derivatives Data', 'News Flow'],
-    },
-    {
-      title: 'Risk Management',
-      icon: <FaShieldAlt className="text-2xl sm:text-3xl" />,
-      steps: ['Position Sizing', 'Stop Loss Strategy', 'Portfolio Allocation', 'Hedging'],
-    },
-  ];
+const steps = [
+  {
+    img: step1,
+    title: 'Customer-Centric Approach',
+    desc: 'Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty, fostering long-term relationships.'
+  },
+  {
+    img: step2,
+    title: 'Risk Mitigation',
+    desc: 'Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests.'
+  },
+  {
+    img: step3,
+    title: 'Creative Solutions',
+    desc: 'Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success.'
+  },
+];
 
-  return (
-    <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
-      <div className="container">
-        <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
-          variants={itemVariants}
-        >
-          Our Research Methodology
-        </motion.h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-          {methods.map((method, index) => (
-            <motion.div
-              key={index}
-              className="bg-white/20 backdrop-blur-lg rounded-xl p-4 sm:p-6 shadow-md border-2 border-white/30 hover:shadow-2xl"
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover="hover"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              <div className="flex items-center mb-4">
-                {method.icon}
-                <h3 className="text-lg sm:text-xl font-bold ml-3">{method.title}</h3>
-              </div>
-              <ul className="space-y-3">
-                {method.steps.map((step, i) => (
-                  <motion.li
-                    key={i}
-                    className="flex items-start text-sm sm:text-base"
-                    whileHover={{ x: 5 }}
-                  >
-                    <FiCheckCircle className="mt-1 mr-2 text-green-500 flex-shrink-0" />
-                    <span>{step}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
+const MethodologySection = () => (
+  <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
+    <div className="container">
+      <motion.h2
+        className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        Steps We Follow During Work
+      </motion.h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {steps.map((step, idx) => (
+          <motion.div
+            key={idx}
+            className="bg-white/20 backdrop-blur-lg rounded-xl p-6 shadow-md border-2 border-white/30 flex flex-col items-center text-center"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 * idx, duration: 0.5 }}
+            whileHover={{ scale: 1.05 }}
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            <img src={step.img} alt={step.title} className="w-20 h-20 mb-4 object-contain" />
+            <h3 className="text-lg sm:text-xl font-bold mb-2">{step.title}</h3>
+            <p className="text-sm sm:text-base text-gray-100">{step.desc}</p>
+          </motion.div>
+        ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default MethodologySection;

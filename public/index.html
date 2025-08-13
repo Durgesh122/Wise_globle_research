@@ -9,7 +9,7 @@
 
     <!-- ✅ Favicon -->
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <!-- ✅ Theme Colors -->
@@ -17,7 +17,10 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
-    <!-- ✅ Google Font -->
+    <!-- ✅ Google Font Optimization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap">
     <link
       href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -30,9 +33,38 @@
       integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
+      media="all"
+      onload="this.media='all'"
     />
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1137180109"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-1137180109');
+    </script>
+    <!-- Event snippet for Submit lead form conversion page -->
+    <script>
+      gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
+    </script>
     <!-- ✅ SEO Meta Tags -->
+    <meta name="description" content="Wise Global Research Services - SEBI Registered Research Analyst. Get expert stock market research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India." />
+    <meta name="keywords" content="Wise Global Research, SEBI, stock market, research analyst, trading, investment, India, equity, MCX, Nifty, Sensex, portfolio, financial services" />
+    <meta name="author" content="Wise Global Research Services Pvt Ltd" />
+    <link rel="canonical" href="https://wiseglobalresearch.com/" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Wise Global Research Services - SEBI Registered Research Analyst" />
+    <meta property="og:description" content="Get SEBI registered expert research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India." />
+    <meta property="og:url" content="https://wiseglobalresearch.com/" />
+    <meta property="og:image" content="https://wiseglobalresearch.com/og-image.jpg" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Wise Global Research Services - SEBI Registered Research Analyst" />
+    <meta name="twitter:description" content="Get SEBI registered expert research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India." />
+    <meta name="twitter:image" content="https://wiseglobalresearch.com/og-image.jpg" />
     <meta name="title" content="Wise Global Research – SEBI Registered Advisory" />
     <meta
       name="description"

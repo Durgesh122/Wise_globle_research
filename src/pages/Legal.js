@@ -1,11 +1,7 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 
-// Animation variants for smooth transitions
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-};
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -16,269 +12,77 @@ const staggerContainer = {
 };
 
 function Legal() {
+
   return (
-    <motion.div // Removed bg-transparent, text-gray-800, and min-h-screen
-      className="py-16 px-6 text-gray-800 dark:text-gray-200"
-      initial="hidden"
-      animate="visible"
-      variants={staggerContainer}
-    >
-      <div className="max-w-4xl mx-auto">
-        {/* Header Section */}
-        <motion.h1
-          className="text-3xl md:text-4xl font-bold font-josefin mb-8 text-center text-gray-900"
-          variants={fadeIn}
-        >
-          Legal Disclaimer & Terms of Use
-        </motion.h1>
-        <motion.p
-          className="text-sm md:text-base leading-relaxed text-gray-600 text-center mb-12"
-          variants={fadeIn}
-        >
-          Welcome to the Legal Disclaimer page of Wise Global Research Services Pvt. Ltd. Please read the following information carefully to understand the terms, conditions, and risks associated with the use of our services, website, and content.
-        </motion.p>
-
-        {/* General Disclaimer Section */}
-        <motion.section className="mb-12" variants={staggerContainer}>
-          <motion.h2
-            className="text-2xl md:text-3xl font-semibold font-josefin mb-4 text-gray-800"
-            variants={fadeIn}
-          >
-            General Disclaimer
-          </motion.h2>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            Wise Global Research Services Pvt. Ltd. (hereinafter referred to as "Wise Global Research") is a SEBI-registered research analyst (Reg. No.: INH000016719, BSE Enlistment No.: 6205, Validity: 24-June-2024 to Perpetual). Our services, including but not limited to research reports, market analytics, and insights for equity cash, equity futures, equity options, index futures, index options, commodities (MCX, NCDEX, bullion), and currencies, are provided for informational and educational purposes only.
-          </motion.p>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            Investment in securities, commodities, or currency markets is inherently subject to market risks. Past performance of any financial instrument or strategy is not indicative of future results. We strongly recommend consulting with SEBI-registered financial advisors or other qualified professionals before making any investment decisions. Wise Global Research does not guarantee any returns, profits, or financial outcomes under any circumstances.
-          </motion.p>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700" variants={fadeIn}>
-            Any financial decisions made based on our content are at your sole discretion and risk. Wise Global Research, its affiliates, employees, or representatives shall not be held liable for any direct, indirect, incidental, or consequential losses resulting from the use of our services, recommendations, or advice.
-          </motion.p>
-        </motion.section>
-
-        {/* Risk Disclosure Section */}
-        <motion.section className="mb-12" variants={staggerContainer}>
-          <motion.h2
-            className="text-2xl md:text-3xl font-semibold font-josefin mb-4 text-gray-800"
-            variants={fadeIn}
-          >
-            Risk Disclosure
-          </motion.h2>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            Investing in financial markets, including equity cash, equity futures, equity options, index futures, index options, commodities (MCX, NCDEX, bullion), and currencies, involves a high degree of risk. The value of investments may fluctuate significantly due to market volatility, economic conditions, geopolitical events, or other unforeseen factors.
-          </motion.p>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            Users should carefully evaluate their financial situation, investment objectives, and risk tolerance before engaging in any trading or investment activities. Our research services, such as data-driven insights for equity cash, in-depth analytics for equity futures, strategic analytics for equity options, and transparent analytics for index and commodity markets, are designed to assist informed decision-making but do not eliminate risks.
-          </motion.p>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700" variants={fadeIn}>
-            Wise Global Research shall not be liable for any losses or damages, including but not limited to financial losses, arising from the use of our services or reliance on our content. Users are solely responsible for their investment decisions and should not rely exclusively on our research or analytics.
-          </motion.p>
-        </motion.section>
-
-        {/* Terms of Use Section */}
-        <motion.section className="mb-12" variants={staggerContainer}>
-          <motion.h2
-            className="text-2xl md:text-3xl font-semibold font-josefin mb-4 text-gray-800"
-            variants={fadeIn}
-          >
-            Terms of Use
-          </motion.h2>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            By accessing or using the Wise Global Research website, services, or content, you agree to be bound by the following terms and conditions. If you do not agree with these terms, you should refrain from using our services.
-          </motion.p>
-          <motion.ul className="list-disc list-inside text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            <li className="mb-2">
-              The content provided on this website, including research reports and market analytics, is for general information and educational purposes only. It is not intended as financial, legal, or professional advice.
-            </li>
-            <li className="mb-2">
-              Wise Global Research reserves the right to modify, update, or discontinue any content, service, or feature at any time without prior notice.
-            </li>
-            <li className="mb-2">
-              Users are prohibited from reproducing, distributing, or using our content for commercial purposes without prior written consent from Wise Global Research.
-            </li>
-            <li className="mb-2">
-              Unauthorized use of our website, including hacking, data scraping, or any activity that disrupts the functionality of the site, is strictly prohibited and may result in legal action.
-            </li>
-            <li className="mb-2">
-              Payments for our services must be made only to the account details listed on the Wise Global Research website. We do not accept payments to any other accounts.
-            </li>
-          </motion.ul>
-        </motion.section>
-
-        {/* Intellectual Property Section */}
-        <motion.section className="mb-12" variants={staggerContainer}>
-          <motion.h2
-            className="text-2xl md:text-3xl font-semibold font-josefin mb-4 text-gray-800"
-            variants={fadeIn}
-          >
-            Intellectual Property
-          </motion.h2>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            All content on the Wise Global Research website, including text, graphics, logos, research reports, and analytics, is the intellectual property of Wise Global Research Services Pvt. Ltd. or its licensors. Unauthorized use, reproduction, or distribution of this content is strictly prohibited and may result in legal consequences.
-          </motion.p>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700" variants={fadeIn}>
-            Users may access and view the content for personal, non-commercial use only, provided they comply with all applicable copyright and intellectual property laws.
-          </motion.p>
-        </motion.section>
-
-        {/* Limitation of Liability Section */}
-        <motion.section className="mb-12" variants={staggerContainer}>
-          <motion.h2
-            className="text-2xl md:text-3xl font-semibold font-josefin mb-4 text-gray-800"
-            variants={fadeIn}
-          >
-            Limitation of Liability
-          </motion.h2>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            To the fullest extent permitted by law, Wise Global Research, its affiliates, employees, or representatives shall not be liable for any damages, including but not limited to direct, indirect, incidental, consequential, or punitive damages, arising from the use or inability to use our services or content.
-          </motion.p>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700" variants={fadeIn}>
-            We do not warrant that our website or services will be uninterrupted, error-free, or free from viruses or other harmful components. Users access our website at their own risk.
-          </motion.p>
-        </motion.section>
-
-        {/* Governing Law Section */}
-        <motion.section className="mb-12" variants={staggerContainer}>
-          <motion.h2
-            className="text-2xl md:text-3xl font-semibold font-josefin mb-4 text-gray-800"
-            variants={fadeIn}
-          >
-            Governing Law
-          </motion.h2>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            These terms and conditions are governed by the laws of India. Any disputes arising from the use of our services or content shall be subject to the exclusive jurisdiction of the courts in Indore, Madhya Pradesh, India.
-          </motion.p>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700" variants={fadeIn}>
-            If any provision of these terms is found to be invalid or unenforceable, the remaining provisions shall remain in full force and effect.
-          </motion.p>
-        </motion.section>
-
-        {/* SEBI Registration Details Section */}
-        <motion.section className="mb-12" variants={staggerContainer}>
-          <motion.h2
-            className="text-2xl md:text-3xl font-semibold font-josefin mb-4 text-gray-800"
-            variants={fadeIn}
-          >
-            SEBI Registration Details
-          </motion.h2>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            Wise Global Research Services Pvt. Ltd. is a SEBI-registered research analyst with the following details:
-          </motion.p>
-          <motion.ul className="list-disc list-inside text-sm md:text-base leading-relaxed text-gray-700" variants={fadeIn}>
-            <li className="mb-2">SEBI Registration No.: INH000016719</li>
-            <li className="mb-2">BSE Enlistment No.: 6205</li>
-            <li className="mb-2">Validity: 24-June-2024 to Perpetual</li>
-            <li className="mb-2">GST No.: 23AADCW7173Q1ZO</li>
-            <li className="mb-2">CIN: U66190MP2024PTC069199</li>
-            <li className="mb-2">SEBI Office: Bandra (E), Mumbai – 400051</li>
-            <li className="mb-2">Toll Free: 1800 22 7575</li>
-          </motion.ul>
-        </motion.section>
-
-        {/* Contact Information Section */}
-        <motion.section className="mb-12" variants={staggerContainer}>
-          <motion.h2
-            className="text-2xl md:text-3xl font-semibold font-josefin mb-4 text-gray-800"
-            variants={fadeIn}
-          >
-            Contact Us
-          </motion.h2>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            For any questions or concerns regarding this Legal Disclaimer, our Terms of Use, or our services, please contact us at:
-          </motion.p>
-          <motion.div className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            <p><strong>Email:</strong> support@wiseglobalresearch.com</p>
-            <p><strong>Phone:</strong> +91 9977909494</p>
-            <p><strong>Address:</strong> 18 AB Road, Onam Plaza, Office No 602, Indore, MP - 452001, India</p>
-          </motion.div>
-          {/* Contact Form */}
-          <motion.form
-            className="space-y-4"
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.div variants={fadeIn}>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                placeholder="Enter your name"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </motion.div>
-            <motion.div variants={fadeIn}>
-              <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
-                Mobile No
-              </label>
-              <input
-                type="tel"
-                id="mobile"
-                placeholder="Enter your mobile number"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </motion.div>
-            <motion.div variants={fadeIn}>
-              <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                City
-              </label>
-              <input
-                type="text"
-                id="city"
-                placeholder="Enter your city"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </motion.div>
-            <motion.div variants={fadeIn}>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                Message
-              </label>
-              <textarea
-                id="message"
-                placeholder="Type your message"
-                rows="4"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              ></textarea>
-            </motion.div>
-            <motion.button
-              type="submit"
-              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Send Message
-            </motion.button>
-          </motion.form>
-        </motion.section>
-
-        {/* Payment Disclaimer Section */}
-        <motion.section className="mb-12" variants={staggerContainer}>
-          <motion.h2
-            className="text-2xl md:text-3xl font-semibold font-josefin mb-4 text-gray-800"
-            variants={fadeIn}
-          >
-            Payment Disclaimer
-          </motion.h2>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700 mb-4" variants={fadeIn}>
-            कृपया ध्यान दें – प्रिय ग्राहक, आपके भुगतान स्वीकार किए जाएंगे अगर आप Wise Global Research वेबसाइट पर दी गई खाता जानकारी का उपयोग करेंगे। हम केवल Wise Global Research के अलावा किसी अन्य खातों में कोई भुगतान स्वीकार नहीं करते।
-          </motion.p>
-          <motion.p className="text-sm md:text-base leading-relaxed text-gray-700" variants={fadeIn}>
-            Note: Dear Client, payments will be accepted only if made to the account details listed on the Wise Global Research website. We do not accept payments to any other accounts.
-          </motion.p>
-        </motion.section>
-
-        {/* Footer Note */}
-        <motion.p
-          className="text-sm md:text-base leading-relaxed text-gray-600 text-center mt-12"
-          variants={fadeIn}
-        >
-          Last Updated: July 15, 2025
-        </motion.p>
-      </div>
-    </motion.div>
+    <>
+      <Helmet>
+        <title>Disclaimer | Wise Global Research</title>
+        <meta name="description" content="Read the disclaimer and important information for Wise Global Research Services Pvt. Ltd." />
+        <meta property="og:title" content="Disclaimer | Wise Global Research" />
+        <meta property="og:description" content="Read the disclaimer and important information for Wise Global Research Services Pvt. Ltd." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://wiseglobalresearch.com/legal" />
+        <meta name="twitter:title" content="Disclaimer | Wise Global Research" />
+        <meta name="twitter:description" content="Read the disclaimer and important information for Wise Global Research Services Pvt. Ltd." />
+      </Helmet>
+      <motion.div
+        className="py-16 px-6 text-white"
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+      >
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold mb-8 text-center">Disclaimer</h1>
+          <div className="space-y-6 text-base leading-relaxed">
+            <p>
+              Wise Global Research Services Pvt Ltd. provide are believed to be reliable, but we do not represent or warrant the accuracy, completeness, or reliability of the information contained in our Research Information, investors and clients are advised to independently evaluate the market conditions/ risks involved, before making any trading/investment decisions. The Research Information is not intended to be an exhaustive statement on the financial instruments, issuers, markets, or developments referred to therein. Reasonable care has been taken to ensure that the Research Information is not misleading or untrue at the time of publication. Any opinions expressed in the Research Information are subject to change without notice. The analysis contained in the Research Information is based on numerous assumptions. Different assumptions could result in materially different results. Information in the specific research reports is for the private use of the person to whom it has been provided without any liability whatsoever on the part of the company, its partners, employees, and associated entities. The research material published on this website does not constitute an offer or solicitation to buy or sell any securities referred to therein. It should not be so construed, nor should it or any part of it form the basis of, or be relied on in connection with, any contract or commitment whatsoever.
+            </p>
+            <p>
+              The information and views on this website Wise Global Research & all the services and reports that we provide are believed to be reliable, but we do not accept any responsibility (or liability) for errors of fact or opinion. Users have the right to choose the product/s that suit them/ their profile.
+            </p>
+            <p>
+              Investment/Trading in Securities markets has its own risks. Sincere efforts have been made to present the right investment perspective. The information contained here in is based on analysis and on sources that we consider reliable. We, however, do not vouch for the accuracy or the completeness there of. This material is for personal information and we are not responsible for any loss incurred due to it & take no responsibility whatsoever for any financial profits or loss which may arise from the recommendations above.
+            </p>
+            <p>
+              Registration granted by SEBI and certification from NISM in no way guarantee performance of the intermediary or provide any assurance of returns to investors.
+            </p>
+            <p>
+              You agree and understand that the information and material contained on this website imply and constitute your consent to the terms and conditions mentioned below. You also agree that Wise Global Research Services Pvt Ltd. can modify or alter the terms and conditions of the use of this service without any liability.
+            </p>
+            <p>
+              The content of the site and the interpretation of data are solely the personal views of the contributors. Wise Global Research Services Pvt Ltd. reserves the right to make modifications and alterations to the content of the website. Users are advised to use the data for the purpose of information only and rely on their own judgment while making investment decisions. The investments discussed or recommended may not be suitable for all investors. Wise Global Research Services Pvt Ltd. The analyst does not warranty the timeliness, accuracy, or quality of the electronic content.
+            </p>
+            <p>
+              Our clients (Paid or Unpaid), any third party, or anyone else has no right to forward or share our calls or SMS or Reports or any Information provided by us to/with anyone which is received directly or indirectly by them. If found so then Serious Legal Actions can be taken. By accessing Wise Global Research Services Pvt Ltd. you have read, understood, and agree to be legally bound by the terms of the following disclaimer and user agreement:
+            </p>
+            <p>
+              Wise Global Research Services Pvt Ltd. is not responsible for any errors, omissions, representations, or links on any of our pages. Wise Global Research Services Pvt Ltd. does not endorse any advertisers on our web pages. Please verify the veracity of all information on your own before undertaking any alliance. This website contains articles contributed by several individuals. The views are exclusively their own and do not necessarily represent the views of the website or its management. The linked sites are not under our control and we are not responsible for the contents of any linked site or any link contained in a linked site, or any changes or updates to such sites. Wise Global Research Services Pvt Ltd. analysis provides these links to you only as a convenience, and the inclusion of any link does not imply endorsement by us of the site.
+            </p>
+            <p>
+              The information on this website is updated from time to time. Wise Global Research Services Pvt Ltd. however excludes any warranties (whether expressed or implied), as to the quality, accuracy, efficacy, completeness, performance, fitness, or any of the contents of the website, including (but not limited to) any comments, feedback, and advertisements contained within the Site.
+            </p>
+            <p>
+              There are risks associated with utilizing internet and short messaging system (SMS) based information and research dissemination services. Subscribers are advised to understand that the services can fail due to the failure of hardware, software, and Internet connection. While we try our best that the messages are delivered in time to the subscriber’s Mobile Network, the delivery of these messages to the customer’s mobile phone/handset 1s the responsibility of the customer’s Mobile Network. SMS may be delayed and/or not delivered to the customer’s mobile phone/handset on certain days, owing to technical reasons and Wise Global Research Services Pvt Ltd. cannot be held responsible for the same.
+            </p>
+            <p>
+              Wise Global Research Services Pvt Ltd. hereby expressly disclaims any implied warranties imputed by the laws of any jurisdiction. We consider ourselves and intend to be subject to the jurisdiction only of the court of Indore in India. If you don’t agree with any of our disclaimers above please do not read the material on any of our pages. This site is specifically for users in the territory of India. Although access to users outside India is not denied, https://wiseglobalresearch.com shall have no legal liabilities whatsoever in any laws of any jurisdiction other than India. We reserve the right to make changes to our site and these disclaimers, terms, and conditions at any time.
+            </p>
+            <p>
+              All information is for educational and informational use only. You are solely responsible for making your own investment decisions.
+            </p>
+            <p>
+              Wise Global Research Services Pvt Ltd. , its management, its associate companies, and/or their employees take no responsibility for the veracity, validity, and correctness of the expert recommendations or other information or research. Although we attempt to research thoroughly on information provided herein, there are no guarantees in accuracy. The information presented on the site has been gathered from various sources believed to be providing correct information. Wise Global Research Services Pvt Ltd., groups, companies, associates, and/or employees are not responsible for errors, or inaccuracies if any in the content provided on the site. Any prediction made on the direction of the stock/commodity market or on the direction of individual stocks/commodities may prove to be incorrect. Users/visitors are expected to refer to other investment resources to verify the accuracy of the data posted on this site on their own.
+            </p>
+            <p>
+              Wise Global Research Services Pvt Ltd.  and its owners/affiliates are not liable for damages caused by any performance, failure of performance, error, omission, interruption, deletion, defect, delay in transmission or operations, computer virus, communications line failure, and unauthorized access to personal accounts. Wise Global Research Services Pvt Ltd. is not responsible for any technical failure or malfunctioning of the software or delays of any kind. The share price projections shown are not necessarily indicative of future price performance. The information herein, together with all estimates and forecasts, can change without notice. Analyst or any person related to Wise Global Research Services Pvt Ltd. might be holding positions in the securities recommended.
+            </p>
+            <p>
+              “We as a merchant shall be under no liability whatsoever in respect of any loss or damage arising directly or indirectly out of the decline of authorization for any Transaction, on Account of the Cardholder having exceeded the preset limit mutually agreed by us with our acquiring bank from time to time”. All disputes will be subject, first to mediation, and then by arbitration by a sole arbitrator by Wise Global Research Services Pvt Ltd. in accordance with Indian Law, Indian Arbitration and Conciliation Act, 1996, for the time being in force. The venue of arbitration or/and other further courts, legal and other proceedings will be in the jurisdiction of Indore,  Indore courts.”
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    </>
   );
 }
 

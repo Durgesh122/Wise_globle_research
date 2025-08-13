@@ -294,33 +294,6 @@ const Complaint = () => {
           )}
         </AnimatePresence>
 
-        {/* SEBI Compliance Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="mt-12 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-200"
-        >
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">SEBI Compliance Information</h2>
-          <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700 dark:text-gray-300">
-            <div>
-              <h3 className="font-semibold mb-2">Our Commitment:</h3>
-              <ul className="space-y-2">
-                <li>✓ SEBI Registration No: INH000016719</li>
-                <li>✓ All complaints recorded in grievance register</li>
-                <li>✓ Annual audit of research and complaints</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Investor Rights:</h3>
-              <ul className="space-y-2">
-                <li>• Right to escalate to SEBI if unsatisfied</li>
-                <li>• Right to transparent resolution process</li>
-                <li>• Right to access complaint status anytime</li>
-              </ul>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </motion.div>
   );

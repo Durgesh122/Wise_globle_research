@@ -41,12 +41,12 @@ const jobOpenings = [
   },
   {
     id: 2,
-    title: 'Financial Advisor',
+    title: 'Research Analyst',
     location: 'Indore, Madhya Pradesh',
-    description: 'Guide clients on investment strategies for stocks like RELIANCE and MCX commodities like GOLD, ensuring SEBI-compliant advice.',
+    description: 'Guide clients on investment strategies for stocks like RELIANCE and MCX commodities like GOLD, ensuring SEBI-compliant research.',
     requirements: [
       'Certified Financial Planner (CFP) or equivalent.',
-      '3+ years in financial advisory roles.',
+      '3+ years in financial research roles.',
       'Strong communication and client management skills.',
       'Familiarity with Indian stock markets.',
     ],

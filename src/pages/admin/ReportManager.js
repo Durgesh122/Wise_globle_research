@@ -44,6 +44,12 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
       toast.error('Please select a file.');
       return;
     }
+    // 10MB size limit
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    if (newReport.file.size > maxSize) {
+      toast.error('File size must be 10MB or less.');
+      return;
+    }
     setUploading(true);
     try {
       await onUpload(day, newReport);
@@ -152,7 +158,7 @@ const ReportManager = () => {
       title: reportData.title || 'Untitled Report',
       description: reportData.description || 'No description',
       category: reportData.category,
-      size: `${(file.size / (1024 * 1024)).toFixed(2)}MB`,
+      size: `${(file.size / (1024 * 1024)).toFixed(10)}MB`,
       fileData: fileDataUrl,
       filename: file.name,
       timestamp: Date.now(),

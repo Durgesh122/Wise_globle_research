@@ -67,7 +67,7 @@ const StockIndexOption = () => {
     {
       question: 'What is the minimum capital required?',
       answer:
-        '• ₹15,000–₹30,000: Start with single lots\n• ₹50,000–₹1.5 Lakh: Balanced hedging strategies\n• ₹3 Lakh+: Multi-strategy portfolios\n• No lock-in period',
+        '• ₹15,000–₹30,000: Start with single lots\n• ₹50,000–₹1.5 Lakh: Balanced hedging strategies\n• ₹3 Lakh+: Multi-strategy approaches\n• No lock-in period',
       icon: <FaRupeeSign className="text-yellow-500 text-xl" />,
     },
     {
@@ -164,7 +164,7 @@ const StockIndexOption = () => {
       rating: 5,
     },
     {
-      text: 'Hedging guidance saved my portfolio during market swings. Highly recommend!',
+      text: 'Hedging guidance saved me during market swings. Highly recommend!',
       author: 'Vikram Rao, Bangalore',
       rating: 4,
     },

@@ -35,68 +35,86 @@ const PaymentInfo = () => {
           Payment Information
         </motion.h2>
 
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10"
+        variants={fadeInUp}
+        custom={2}
+      >
+        {/* QR Payment Block - IDFC FIRST Bank */}
         <motion.div
-          className="grid md:grid-cols-2 gap-10"
+          className="bg-white/30 border border-white/30 p-4 sm:p-6 rounded-xl shadow-2xl backdrop-blur-xl hover:scale-105 transition duration-300 animate-float"
           variants={fadeInUp}
-          custom={2}
+          custom={3}
         >
-          {/* QR Payment Block */}
-          <motion.div
-            className="bg-white/30 border border-white/30 p-6 rounded-xl shadow-2xl backdrop-blur-xl hover:scale-105 transition duration-300 animate-float"
-            variants={fadeInUp}
-            custom={3}
-          >
-            <div className="bg-red-600 text-white font-semibold text-lg py-2 px-4 rounded mx-auto mb-4 shadow text-center w-fit">
-              IDFC FIRST Bank
-            </div>
-
-            <h3 className="font-semibold text-white mb-3 text-center">
-              Scan & Pay
-            </h3>
-
-            <div className="w-full flex justify-center items-center mb-4">
+          <div className="bg-red-600 text-white font-semibold text-base sm:text-lg py-2 px-3 sm:px-4 rounded mx-auto mb-4 shadow text-center w-fit">
+            IDFC FIRST Bank
+          </div>
+          <h3 className="font-semibold text-white mb-3 text-center text-base sm:text-lg">
+            Scan & Pay
+          </h3>
+          <div className="w-full flex justify-center items-center mb-4">
+            <div className="w-40 h-40 sm:w-60 sm:h-60 rounded-lg border border-white shadow-inner overflow-hidden">
               <img
                 src={qrImage}
                 alt="QR Code"
-                className="w-60 h-60 rounded-lg border border-white shadow-inner"
+                className="w-full h-full object-cover"
               />
             </div>
+          </div>
+        </motion.div>
 
-            <p className="text-sm text-center text-white">
-              <strong>UPI ID:</strong>{' '}
-              <span className="text-[#fdfdfd] font-medium">wiseglobal@idfcbank</span>
-            </p>
-          </motion.div>
+        {/* QR Payment Block - HDFC BANK */}
+        <motion.div
+          className="bg-white/30 border border-white/30 p-4 sm:p-6 rounded-xl shadow-2xl backdrop-blur-xl hover:scale-105 transition duration-300 animate-float"
+          variants={fadeInUp}
+          custom={3.5}
+        >
+          <div className="bg-blue-600 text-white font-semibold text-base sm:text-lg py-2 px-3 sm:px-4 rounded mx-auto mb-4 shadow text-center w-fit">
+            HDFC BANK
+          </div>
+          <h3 className="font-semibold text-white mb-3 text-center text-base sm:text-lg">
+            Scan & Pay
+          </h3>
+          <div className="w-full flex justify-center items-center mb-4">
+            <img
+              src={require('../assets/images/Hdfc1.png')}
+              alt="HDFC QR Code"
+              className="w-40 h-40 sm:w-60 sm:h-60 rounded-lg border border-white shadow-inner object-contain"
+            />
+          </div>
+        </motion.div>
 
-          {/* Bank Details Cards */}
-          <motion.div className="space-y-8" variants={fadeInUp} custom={4}>
-            <BankCard
-              title="HDFC BANK"
-              color="text-blue-400"
-              bg="bg-blue-100/20"
-              custom={4.1}
-              details={{
-                'Account Holder': 'Wise Global Research Services Pvt Ltd',
-                'Account Number': '50200098347178',
-                'IFSC Code': 'HDFC0008125',
-                'Account Type': 'Current',
-                Branch: 'AB Road, Indore',
-              }}
-            />
-            <BankCard
-              title="IDFC FIRST BANK"
-              color="text-red-400"
-              bg="bg-red-100/20"
-              custom={4.2}
-              details={{
-                'Account Holder': 'Wise Global Research Services Pvt Ltd',
-                'Account Number': '80123123121',
-                'IFSC Code': 'IDFB0041269',
-                'Account Type': 'Current',
-                Branch: 'Vijay Nagar, Indore',
-              }}
-            />
-          </motion.div>
+        {/* Bank Details Inline Section */}
+        <motion.div
+          className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-stretch mt-4 md:mt-6"
+          variants={fadeInUp}
+          custom={3.8}
+        >
+          {/* HDFC BANK Details */}
+          <div className="flex-1 bg-blue-100/20 border border-blue-400/30 rounded-xl p-3 sm:p-4 text-white shadow-md mx-0 md:mx-2 mb-3 md:mb-0">
+            <div className="font-bold text-blue-400 text-base sm:text-lg mb-2 text-center">HDFC BANK</div>
+            <div className="flex flex-wrap gap-x-2 gap-y-1 justify-center text-xs sm:text-sm">
+              <span><strong>Account Holder:</strong> Wise Global Research Services Pvt Ltd</span>
+              <span><strong>Account Number:</strong> 50200098347178</span>
+              <span><strong>IFSC Code:</strong> HDFC0008125</span>
+              <span><strong>Account Type:</strong> Current</span>
+              <span><strong>Branch:</strong> AB Road, Indore</span>
+            </div>
+          </div>
+          {/* IDFC FIRST BANK Details */}
+          <div className="flex-1 bg-red-100/20 border border-red-400/30 rounded-xl p-3 sm:p-4 text-white shadow-md mx-0 md:mx-2">
+            <div className="font-bold text-red-400 text-base sm:text-lg mb-2 text-center">IDFC FIRST BANK</div>
+            <div className="flex flex-wrap gap-x-2 gap-y-1 justify-center text-xs sm:text-sm">
+              <span><strong>Account Holder:</strong> Wise Global Research Services Pvt Ltd</span>
+              <span><strong>Account Number:</strong> 80123123121</span>
+              <span><strong>IFSC Code:</strong> IDFB0041269</span>
+              <span><strong>Account Type:</strong> Current</span>
+              <span><strong>Branch:</strong> Vijay Nagar, Indore</span>
+            </div>
+          </div>
+        </motion.div>
+
+          {/* ...existing code... */}
         </motion.div>
 
         {/* Payment Gateway Buttons */}
@@ -149,26 +167,5 @@ const PaymentInfo = () => {
   );
 };
 
-// ✅ Reusable BankCard Component
-const BankCard = ({ title, color, bg, details, custom }) => (
-  <motion.div
-    className={`border border-white/30 p-6 rounded-xl shadow-2xl backdrop-blur-xl hover:scale-[1.02] transition duration-300 animate-float ${bg}`}
-    variants={fadeInUp}
-    custom={custom}
-  >
-    <h3 className={`${color} font-bold text-xl text-center mb-6 underline underline-offset-4`}>
-      {title}
-    </h3>
-    {Object.entries(details).map(([label, value]) => (
-      <div
-        key={label}
-        className="flex justify-between text-sm py-1 text-white border-b border-white/10"
-      >
-        <span className="font-semibold">{label}:</span>
-        <span className="text-white/90">{value}</span>
-      </div>
-    ))}
-  </motion.div>
-);
 
 export default PaymentInfo;

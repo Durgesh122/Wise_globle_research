@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { cardVariants } from '../utils/animationVariants';
 
@@ -11,6 +12,7 @@ import slide3 from '../assets/images/slide3.png';
 const sliderImages = [slide1, slide2, slide3];
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const prevSlide = useCallback(() => {
@@ -77,7 +79,7 @@ const HeroSection = () => {
       >
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 animate-float">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
-            Smart Investing with SEBI-Registered Analysts
+            {t('hero.title')}
           </span>
         </h1>
         <motion.button
@@ -86,7 +88,7 @@ const HeroSection = () => {
           whileHover={{ scale: 1.05, rotateY: 10 }}
           whileTap={{ scale: 0.95 }}
         >
-          Get Started <FaArrowRight className="inline ml-2" />
+          {t('hero.getStarted')} <FaArrowRight className="inline ml-2" />
         </motion.button>
       </motion.div>
     </section>

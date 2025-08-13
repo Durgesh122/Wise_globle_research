@@ -46,7 +46,7 @@ const allocationData = {
   labels: ['Stocks', 'Bonds', 'ETFs', 'Mutual Funds'],
   datasets: [
     {
-      label: 'Portfolio Allocation',
+      label: 'Allocation',
       data: [40, 30, 20, 10],
       backgroundColor: ['#4F46E5', '#10B981', '#F59E0B', '#EF4444'],
       borderColor: '#ffffff',
@@ -80,8 +80,8 @@ const Equity = () => {
       icon: '📈',
     },
     {
-      title: 'Portfolio Management',
-      description: 'Customized portfolio strategies tailored to your goals.',
+      title: 'Management',
+      description: 'Customized strategies tailored to your goals.',
       icon: '📊',
     },
     {
@@ -104,7 +104,7 @@ const Equity = () => {
         'Advanced Equity Analysis',
         'Weekly Reports',
         'Priority Support',
-        'Portfolio Optimization',
+        'Optimization',
       ],
     },
     {
@@ -214,7 +214,7 @@ const Equity = () => {
             variants={itemVariants}
           >
             <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              Portfolio Allocation
+              Allocation
             </h3>
             <Bar
               data={allocationData}

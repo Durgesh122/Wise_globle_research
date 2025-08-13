@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { lazy, Suspense } from 'react';
+import ContactDataPage from './pages/ContactDataPage';
+import GrievanceRedressalProcess from './pages/GrievanceRedressalProcess';
+import GuideForInvesting from './pages/GuideForInvesting';
 
 // Theme Wrapper
 import TimeBasedThemeWrapper from './components/TimeBasedThemeWrapper';
@@ -13,13 +16,12 @@ import TimeBasedThemeWrapper from './components/TimeBasedThemeWrapper';
 // Core Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import WhatsAppButton from './components/WhatsAppButton';
-import ScrollToTopButton from './components/ScrollToTopButton';
-import ScrollToTop from './components/ScrollToTop';
 import ChatWidget from './components/ChatWidget';
 import FloatingPayButton from './components/FloatingPayButton';
 import ParticlesBackground from './components/ParticlesBackground';
 import AdminLayout from './pages/admin/AdminLayout';
+import WhatsAppButton from './components/WhatsAppButton';
+import ScrollToTop from './components/ScrollToTop';
 
 // Lazy Loaded Pages
 const Home = lazy(() => import('./pages/Home'));
@@ -28,6 +30,7 @@ const Services = lazy(() => import('./pages/Services'));
 const Demo = lazy(() => import('./pages/Demo'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Legal = lazy(() => import('./pages/Legal'));
+const Disclosure = lazy(() => import('./pages/Disclosure'));
 const LiveChart = lazy(() => import('./pages/LiveChart'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Reports = lazy(() => import('./pages/Reports'));
@@ -55,6 +58,19 @@ const Bullions = lazy(() => import('./pages/Bullions'));
 const Energy = lazy(() => import('./pages/Energy'));
 const Metal = lazy(() => import('./pages/Metal'));
 const MCXOption = lazy(() => import('./pages/MCXOption'));
+const SmartCash = lazy(() => import('./pages/SmartCash'));
+const EvaluationStockCash = lazy(() => import('./pages/EvaluationStockCash'));
+const SmartOptions = lazy(() => import('./pages/SmartOptions'));
+const ImpulseOption = lazy(() => import('./pages/ImpulseOption'));
+const SmartFuture = lazy(() => import('./pages/SmartFuture'));
+const EvaluationStockOption = lazy(() => import('./pages/EvaluationStockOption'));
+const EvaluationIndexOptions = lazy(() => import('./pages/EvaluationIndexOptions'));
+const ImpulseIndexOptions = lazy(() => import('./pages/ImpulseIndexOptions'));
+const SmartIndexOption = lazy(() => import('./pages/SmartIndexOption'));
+const UniversalCash = lazy(() => import('./pages/UniversalCash'));
+const InfinityClub = lazy(() => import('./pages/InfinityClub'));
+const MCXSupreme = lazy(() => import('./pages/MCXSupreme'));
+const GalaxyMCX = lazy(() => import('./pages/GalaxyMCX'));
 const NCDEX = lazy(() => import('./pages/NCDEX'));
 const Forex = lazy(() => import('./pages/Forex'));
 const Currency = lazy(() => import('./pages/Currency'));
@@ -62,10 +78,11 @@ const Comex = lazy(() => import('./pages/Comex'));
 const Terms = lazy(() => import('./pages/Terms'));
 const Refund = lazy(() => import('./pages/Refund'));
 const Privacy = lazy(() => import('./pages/Privacy'));
-const DailyRecommendation = lazy(() => import('./pages/DailyRecommendation'));
+const Recommendation = lazy(() => import('./pages/Recommendation'));
 const ClientServiceConsent = lazy(() => import('./pages/ClientServiceConsent'));
 const InvestorChart = lazy(() => import('./pages/InvestorChart'));
 const AntiMoneyLaundering = lazy(() => import('./pages/AntiMoneyLaundering'));
+const DailyRecommendation = lazy(() => import('./pages/DailyRecommendation'));
 
 // Lazy Loaded Admin Pages
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -93,19 +110,19 @@ function App() {
     };
 
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   return (
-    <TimeBasedThemeWrapper>
+    <HelmetProvider>
+      <TimeBasedThemeWrapper>
+      <ScrollToTop />
+
       {/* Toast Notifications */}
       <ToastContainer position="top-center" autoClose={3000} theme="colored" />
 
-      {/* Scroll to Top */}
-      <ScrollToTop />
 
       {/* Background Particles (Hidden on Mobile) */}
       {!isAdminPage && (
@@ -138,12 +155,39 @@ function App() {
           }
         >
           <Routes>
+            <Route path="/complaint-data" element={<ContactDataPage />} />
+            <Route path="/grievance-redressal-process" element={<GrievanceRedressalProcess />} />
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
+            {/* Direct premium service routes for Navbar */}
+            <Route path="/SmartCash" element={<SmartCash />} />
+            <Route path="/EvaluationIndexOptions" element={<EvaluationIndexOptions />} />
+            <Route path="/EvaluationStockCash" element={<EvaluationStockCash />} />
+            <Route path="/EvaluationStockOption" element={<EvaluationStockOption />} />
+            <Route path="/SmartFuture" element={<SmartFuture />} />
+            <Route path="/SmartOptions" element={<SmartOptions />} />
+            <Route path="/ImpulseIndexOptions" element={<ImpulseIndexOptions />} />
+            <Route path="/ImpulseOption" element={<ImpulseOption />} />
+            <Route path="/MCXSupreme" element={<MCXSupreme />} />
+            <Route path="/GalaxyMCX" element={<GalaxyMCX />} />
+            <Route path="/UniversalCash" element={<UniversalCash />} />
+            <Route path="/InfinityClub" element={<InfinityClub />} />
+            <Route path="/services/smart-cash" element={<SmartCash />} />
+            <Route path="/services/evaluation-stock-cash" element={<EvaluationStockCash />} />
+            <Route path="/services/smart-options" element={<SmartOptions />} />
+            <Route path="/services/impulse-option" element={<ImpulseOption />} />
+            <Route path="/services/smart-future" element={<SmartFuture />} />
+            <Route path="/services/evaluation-stock-option" element={<EvaluationStockOption />} />
+            <Route path="/services/evaluation-index-options" element={<EvaluationIndexOptions />} />
+            <Route path="/services/impulse-index-options" element={<ImpulseIndexOptions />} />
+            <Route path="/services/smart-index-option" element={<SmartIndexOption />} />
+            <Route path="/services/universal-cash" element={<UniversalCash />} />
+            <Route path="/services/infinity-club" element={<InfinityClub />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/legal" element={<Legal />} />
+            <Route path="/disclosure" element={<Disclosure />} />
             <Route path="/livechart" element={<LiveChart />} />
             <Route path="/team" element={<Team />} />
             <Route path="/vision" element={<Vision />} />
@@ -162,7 +206,7 @@ function App() {
             <Route path="/terms" element={<Terms />} />
             <Route path="/refund" element={<Refund />} />
             <Route path="/privacy" element={<Privacy />} />
-            <Route path="/recommendation" element={<DailyRecommendation />} />
+            <Route path="/recommendation" element={<Recommendation />} />
             <Route path="/services/equity/stock-option" element={<StockOption />} />
             <Route path="/services/equity/delivery" element={<Delivery />} />
             <Route path="/services/equity/index" element={<Index />} />
@@ -193,6 +237,8 @@ function App() {
             <Route path="/client-service-consent" element={<ClientServiceConsent />} />
             <Route path="/investor-chart" element={<InvestorChart />} />
             <Route path="/anti-money-laundering" element={<AntiMoneyLaundering />} />
+            <Route path="/daily" element={<DailyRecommendation />} />
+          <Route path="/guide" element={<GuideForInvesting />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
@@ -202,13 +248,13 @@ function App() {
       {!isAdminPage && (
         <>
           <Footer />
-          <WhatsAppButton />
-          <ScrollToTopButton />
           <ChatWidget />
           <FloatingPayButton />
+          <WhatsAppButton />
         </>
       )}
-    </TimeBasedThemeWrapper>
+      </TimeBasedThemeWrapper>
+    </HelmetProvider>
   );
 }
 

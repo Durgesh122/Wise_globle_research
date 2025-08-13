@@ -24,6 +24,12 @@ const PerformanceMetrics = () => {
       icon: <FaDatabase className="text-3xl sm:text-4xl text-green-500" />,
       desc: 'Stocks and derivatives covered in our research',
     },
+    {
+      title: 'Clients All Over India',
+      value: '5,000+',
+      icon: <FaHandshake className="text-3xl sm:text-4xl text-orange-400" />,
+      desc: 'Clients served across India',
+    },
   ];
 
   return (
@@ -33,7 +39,7 @@ const PerformanceMetrics = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
           variants={itemVariants}
         >
-          Our Performance Metrics
+          All Over India Metrics
         </motion.h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
           {metrics.map((metric, index) => (

@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "wiseglobalresearch-services"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }
