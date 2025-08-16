@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
@@ -7,6 +8,7 @@ import { motion, useAnimation } from "framer-motion";
 import logo from "../assets/images/w.png"; // Verify this path is correct
 
 const UserLogin = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -41,30 +43,30 @@ const UserLogin = () => {
     const newErrors = { email: "", password: "" };
 
     if (!email) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("login.email_required");
       isValid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email = t("login.email_invalid");
       isValid = false;
     }
 
     if (!password) {
-      newErrors.password = "Password is required";
+      newErrors.password = t("login.password_required");
       isValid = false;
     } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long";
+      newErrors.password = t("login.password_length");
       isValid = false;
     } else if (!/[A-Z]/.test(password)) {
-      newErrors.password = "Password must contain at least one uppercase letter";
+      newErrors.password = t("login.password_uppercase");
       isValid = false;
     } else if (!/[a-z]/.test(password)) {
-      newErrors.password = "Password must contain at least one lowercase letter";
+      newErrors.password = t("login.password_lowercase");
       isValid = false;
     } else if (!/[0-9]/.test(password)) {
-      newErrors.password = "Password must contain at least one number";
+      newErrors.password = t("login.password_number");
       isValid = false;
     } else if (!/[!@#$%^&*]/.test(password)) {
-      newErrors.password = "Password must contain at least one special character";
+      newErrors.password = t("login.password_special");
       isValid = false;
     }
 
@@ -84,16 +86,16 @@ const UserLogin = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      toast.success("Login successful!", { position: "top-center" });
+  toast.success(t("login.success"), { position: "top-center" });
       // onAuthStateChanged will handle the navigation automatically
     } catch (error) {
-      let errorMessage = "Login failed. Please try again.";
+      let errorMessage = t("login.failed");
       if (error.code === "auth/user-not-found") {
-        errorMessage = "No user found with this email.";
+        errorMessage = t("login.user_not_found");
       } else if (error.code === "auth/wrong-password") {
-        errorMessage = "Incorrect password.";
+        errorMessage = t("login.incorrect_password");
       } else if (error.code === "auth/too-many-requests") {
-        errorMessage = "Too many attempts. Please try again later.";
+        errorMessage = t("login.too_many_attempts");
       }
       toast.error(errorMessage, { position: "top-center" });
     } finally {
@@ -230,9 +232,9 @@ const UserLogin = () => {
           animate={textControls}
           onHoverStart={handleTextHover}
           onHoverEnd={handleTextHoverEnd}
-          aria-label="Admin Login"
+          aria-label={t("login.title")}
         >
-          Admin Login
+          {t("login.title")}
         </motion.h2>
 
         {/* Form */}
@@ -241,7 +243,7 @@ const UserLogin = () => {
           <div className="relative">
             <motion.input
               type="email"
-              placeholder="Enter Email"
+              placeholder={t("login.email_placeholder")}
               className="px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -249,7 +251,7 @@ const UserLogin = () => {
               variants={inputVariants}
               whileHover="hover"
               whileFocus="focus"
-              aria-label="Email address"
+              aria-label={t("login.email_label")}
               autoComplete="email"
             />
             {errors.email && (
@@ -263,7 +265,7 @@ const UserLogin = () => {
           <div className="relative">
             <motion.input
               type="password"
-              placeholder="Enter Password"
+              placeholder={t("login.password_placeholder")}
               className="px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -271,7 +273,7 @@ const UserLogin = () => {
               variants={inputVariants}
               whileHover="hover"
               whileFocus="focus"
-              aria-label="Password"
+              aria-label={t("login.password_label")}
               autoComplete="current-password"
             />
             {errors.password && (
@@ -291,9 +293,9 @@ const UserLogin = () => {
             variants={buttonVariants}
             whileHover={isLoading ? {} : "hover"}
             whileTap={isLoading ? {} : "tap"}
-            aria-label="Submit login form"
+            aria-label={t("login.submit_label")}
           >
-            {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? t("login.logging_in") : t("login.login_button")}
           </motion.button>
         </form>
       </motion.div>

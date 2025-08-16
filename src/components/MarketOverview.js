@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaChartLine } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 import { marketSymbols, generateChartData } from '../utils/chartUtils';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
 import AnimatedChart from './AnimatedChart';
 
 const MarketOverview = () => {
+  const { t } = useTranslation();
+  // ...existing code...
   const [marketData, setMarketData] = useState(
     marketSymbols.map((symbol) => ({
       ...symbol,
@@ -35,6 +38,7 @@ const MarketOverview = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // ...existing code...
   return (
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
       <div className="container">
@@ -42,7 +46,7 @@ const MarketOverview = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
           variants={itemVariants}
         >
-          Live Market Overview
+          {t('home.marketOverview.heading')}
         </motion.h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
           {marketData.map((item, index) => (

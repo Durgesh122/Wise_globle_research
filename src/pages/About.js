@@ -5,18 +5,18 @@ import { useTranslation } from 'react-i18next';
 const steps = [
   {
     img: 'https://images.unsplash.com/photo-1515168833906-d2a3b82b1e2e?auto=format&fit=facearea&w=128&q=80',
-    title: 'Customer-Centric Approach',
-    desc: 'Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty, fostering long-term relationships.'
+    titleKey: 'about_page.steps.0.title',
+    descKey: 'about_page.steps.0.desc'
   },
   {
     img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=128&q=80',
-    title: 'Risk Mitigation',
-    desc: 'Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests.'
+    titleKey: 'about_page.steps.1.title',
+    descKey: 'about_page.steps.1.desc'
   },
   {
     img: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=facearea&w=128&q=80',
-    title: 'Creative Solutions',
-    desc: 'Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success.'
+    titleKey: 'about_page.steps.2.title',
+    descKey: 'about_page.steps.2.desc'
   }
 ];
 
@@ -53,10 +53,10 @@ const About = () => {
         {steps.map((step, idx) => (
           <div key={idx} className="bg-white/30 rounded-xl p-6 text-center flex flex-col items-center shadow">
             <div className="w-16 h-16 mb-4 flex items-center justify-center bg-green-700 rounded-full overflow-hidden">
-              <img src={step.img} alt={t(`about_page.steps.${idx}.title`)} className="object-cover w-16 h-16" />
+              <img src={step.img} alt={t(step.titleKey)} className="object-cover w-16 h-16" />
             </div>
-            <h3 className="text-xl font-bold mb-2">{t(`about_page.steps.${idx}.title`)}</h3>
-            <p className="text-white/80">{t(`about_page.steps.${idx}.desc`)}</p>
+            <h3 className="text-xl font-bold mb-2">{t(step.titleKey)}</h3>
+            <p className="text-white/80">{t(step.descKey)}</p>
           </div>
         ))}
       </div>

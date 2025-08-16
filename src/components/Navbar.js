@@ -101,7 +101,7 @@ const navLinks = [
   { path: '/reports', labelKey: 'navbar.researchReports' },
 ];
 
-const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobile, mobileOpen, setMobileOpen }) => {
+const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobile, mobileOpen, setMobileOpen, closeDrawer }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const timeoutId = useRef(null);
@@ -132,6 +132,14 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
     }
   };
 
+  const handleLinkClick = () => {
+    if (isMobile) {
+      closeDrawer();
+    } else {
+      setIsOpen(false);
+    }
+  };
+
   if (!isMobile) {
     return (
       <div
@@ -153,24 +161,31 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
           className={`absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-lg border border-[var(--primary-green)] text-black shadow-lg rounded-xl z-50 flex flex-row p-4 w-[90vw] md:w-[80vw] max-w-[900px] transition-opacity duration-300 ${
             isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
           } animate-slideDown`}
+          style={{
+            overflowX: 'auto',
+            wordBreak: 'break-word',
+            minWidth: '250px',
+            maxWidth: '900px',
+          }}
           onMouseEnter={handleMenuMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           {categories.map((cat, idx) => (
             <React.Fragment key={cat.labelKey}>
-              <div className="min-w-[180px] px-2">
-                <div className="font-semibold text-sm md:text-base mb-2 text-[var(--primary-green)]">
+              <div className="min-w-[180px] max-w-[220px] px-2 break-words">
+                <div className="font-semibold text-sm md:text-base mb-2 text-[var(--primary-green)] break-words">
                   {t(cat.labelKey)}
                 </div>
-                <div className="space-y-1 text-xs md:text-sm">
+                <div className="space-y-1 text-xs md:text-sm break-words">
                   {cat.items.map((item) => (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`block hover:text-blue-600 py-1 transition-all duration-300 ${
+                      className={`block hover:text-blue-600 py-1 transition-all duration-300 break-words ${
                         location.pathname === item.path ? 'text-[var(--primary-green)] font-semibold' : ''
                       }`}
-                      onClick={() => setIsOpen(false)}
+                      onClick={handleLinkClick}
+                      style={{ wordBreak: 'break-word', whiteSpace: 'normal' }}
                     >
                       {t(item.labelKey)}
                     </Link>
@@ -187,6 +202,7 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
     );
   }
 
+  // Mobile MegaMenu
   return (
     <div className="w-full">
       <button
@@ -194,7 +210,6 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
         onClick={handleClick}
         aria-expanded={mobileOpen}
         aria-label={`Toggle ${t(labelKey)} menu`}
-        style={{ color: textColor }}
       >
         {t(labelKey)}
         <span className={`ml-2 transition-transform duration-200 ${mobileOpen ? 'rotate-90' : ''}`}>▶</span>
@@ -207,9 +222,8 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
               <Link
                 key={item.path}
                 to={item.path}
-                className="nav-item block py-1 pl-2"
-                onClick={() => setMobileOpen(false)}
-                style={{ color: textColor }}
+                className="nav-item block py-1 pl-2 text-gray-800"
+                onClick={handleLinkClick}
               >
                 {t(item.labelKey)}
               </Link>
@@ -225,16 +239,26 @@ function Navbar() {
   const { t } = useTranslation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [servicesMobileOpen, setServicesMobileOpen] = useState(false);
+  const [mobileDropdownsOpen, setMobileDropdownsOpen] = useState({});
   const location = useLocation();
   const drawerRef = useRef();
   const { theme, gradients } = useContext(ThemeContext);
   const { background, textColor } = gradients?.[theme] || gradients.default;
 
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+    setServicesMobileOpen(false);
+    setMobileDropdownsOpen({});
+  };
+
+  const toggleMobileDropdown = (key) => {
+    setMobileDropdownsOpen(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
-        setDrawerOpen(false);
-        setServicesMobileOpen(false);
+        closeDrawer();
       }
     };
     handleResize();
@@ -245,8 +269,7 @@ function Navbar() {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (drawerRef.current && !drawerRef.current.contains(e.target)) {
-        setDrawerOpen(false);
-        setServicesMobileOpen(false);
+        closeDrawer();
       }
     };
     if (drawerOpen) {
@@ -254,6 +277,25 @@ function Navbar() {
     }
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [drawerOpen]);
+
+  const mobileDrawerStyles = {
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    height: '100vh',
+    width: '80%',
+    maxWidth: '320px',
+    minWidth: '260px',
+    background: 'var(--bg-opacity)',
+    backdropFilter: 'blur(12px)',
+    color: 'var(--text-color)',
+    boxShadow: '0 0 15px rgba(0,0,0,0.2)',
+    zIndex: 9999,
+    transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
+    transition: 'transform 0.3s ease-in-out',
+    overflowY: 'auto',
+    display: 'block'
+  };
 
   return (
     <>
@@ -274,7 +316,7 @@ function Navbar() {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="desktop-menu hidden lg:flex space-x-2 xl:space-x-4 items-center font-medium">
+          <div className="desktop-menu hidden lg:flex lg:flex-wrap lg:justify-end space-x-2 xl:space-x-4 items-center font-medium">
             <Link
               to="/"
               className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname==='/' ? ' active' : ''}`}
@@ -283,10 +325,10 @@ function Navbar() {
               {t('navbar.home')}
             </Link>
 
-            <MegaMenu labelKey="navbar.services.title" categories={servicesMenu} location={location} textColor={textColor} isMobile={false} />
+            <MegaMenu labelKey="navbar.services.title" categories={servicesMenu} location={location} textColor={textColor} isMobile={false} closeDrawer={closeDrawer} />
 
-            {Object.values(dropdownLinks).map((dropdown) => (
-              <div className="relative group" key={dropdown.labelKey}>
+            {Object.entries(dropdownLinks).map(([key, dropdown]) => (
+              <div className="relative group" key={key}>
                 <button
                   className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${dropdown.items.some(item => location.pathname.startsWith(item.path)) ? ' active' : ''}`}
                   style={{ color: textColor }}
@@ -324,7 +366,7 @@ function Navbar() {
 
           {/* Mobile Hamburger */}
           <button
-            className="lg:hidden z-50 drawer-toggle"
+            className="lg:hidden z-[10000] drawer-toggle"
             onClick={() => setDrawerOpen(!drawerOpen)}
             aria-label="Toggle mobile menu"
           >
@@ -341,41 +383,48 @@ function Navbar() {
         </div>
       </nav>
 
-      {drawerOpen && (
-        <div className="mobile-overlay fixed inset-0 bg-black/40 z-40" onClick={() => setDrawerOpen(false)}></div>
-      )}
-      <div
-        className={`mobile-menu fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white text-black shadow-lg z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${drawerOpen ? 'translate-x-0' : 'translate-x-full'}`}
-        ref={drawerRef}
-        style={{ color: textColor }}
-      >
-        <div className="flex flex-col space-y-2 text-sm px-4 py-6">
+      {/* Mobile Menu with Inline Styles */}
+      <div style={mobileDrawerStyles} ref={drawerRef}>
+        <div style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <Link
             to="/"
             className="nav-item font-semibold py-1"
-            onClick={() => setDrawerOpen(false)}
-            style={{ color: textColor }}
+            onClick={closeDrawer}
           >
             {t('navbar.home')}
           </Link>
 
-          {/* Responsive Services Accordion */}
-          <MegaMenu labelKey="navbar.services.title" categories={servicesMenu} location={location} textColor={textColor} isMobile={true} mobileOpen={servicesMobileOpen} setMobileOpen={setServicesMobileOpen} />
+          <MegaMenu 
+            labelKey="navbar.services.title" 
+            categories={servicesMenu} 
+            location={location} 
+            isMobile={true} 
+            mobileOpen={servicesMobileOpen} 
+            setMobileOpen={setServicesMobileOpen} 
+            closeDrawer={closeDrawer} 
+          />
 
-          {Object.values(dropdownLinks).map((dropdown) => (
-            <div key={dropdown.labelKey}>
-              <div className="font-bold text-base mt-4 text-[var(--primary-green)]">{t(dropdown.labelKey)}</div>
-              {dropdown.items.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className="nav-item block py-1 pl-2 flex items-center gap-2"
-                  onClick={() => setDrawerOpen(false)}
-                  style={{ color: textColor }}
-                >
-                  {item.icon} {t(item.labelKey)}
-                </Link>
-              ))}
+          {Object.entries(dropdownLinks).map(([key, dropdown]) => (
+            <div key={key}>
+              <button
+                className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
+                onClick={() => toggleMobileDropdown(key)}
+              >
+                {t(dropdown.labelKey)}
+                <span className={`ml-2 transition-transform duration-200 ${mobileDropdownsOpen[key] ? 'rotate-90' : ''}`}>▶</span>
+              </button>
+              <div className={`overflow-hidden transition-all duration-300 ${mobileDropdownsOpen[key] ? 'max-h-96' : 'max-h-0'}`}>
+                {dropdown.items.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className="nav-item block py-1 pl-2 flex items-center gap-2"
+                    onClick={closeDrawer}
+                  >
+                    {item.icon} {t(item.labelKey)}
+                  </Link>
+                ))}
+              </div>
             </div>
           ))}
 
@@ -384,8 +433,7 @@ function Navbar() {
               key={link.path}
               to={link.path}
               className={`nav-item block py-1${location.pathname===link.path ? ' active' : ''}`}
-              onClick={() => setDrawerOpen(false)}
-              style={{ color: textColor }}
+              onClick={closeDrawer}
             >
               {t(link.labelKey)}
             </Link>

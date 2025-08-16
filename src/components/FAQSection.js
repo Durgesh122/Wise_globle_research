@@ -1,8 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
 
 const FAQSection = () => {
+  const { t } = useTranslation();
   const faqs = [
     {
       question: 'Are you SEBI registered research analysts?',
@@ -38,12 +40,12 @@ const FAQSection = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
           variants={itemVariants}
         >
-          Frequently Asked Questions (SEBI Compliant)
+          {t('faq.heading', 'Frequently Asked Questions (SEBI Compliant)')}
         </motion.h2>
         <div className="space-y-4">
-          {faqs.map((faq, index) => (
+          {faqs.map((faq) => (
             <motion.div
-              key={index}
+              key={faq.question}
               className="custom-box-bg rounded-xl p-4 sm:p-6 shadow-md border border-gray-200/20"
               variants={cardVariants}
               initial="hidden"

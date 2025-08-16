@@ -26,19 +26,13 @@
 .animate-slideDown { animation: slideDown 0.3s ease-in-out; will-change: transform, opacity; }
 .animate-slideIn { animation: slideIn 0.4s ease-in-out; will-change: transform; }
 
-/* Rocking animation */
-@keyframes rocking {
-  0% { transform: rotate(-5deg); }
-  50% { transform: rotate(5deg); }
-  100% { transform: rotate(-5deg); }
-}
-.animate-rocking { animation: rocking 0.5s ease-in-out infinite; transform-origin: center bottom; }
 /* Bouncing animation */
 @keyframes bounce {
   0%, 20%, 60%, 100% { transform: translateY(0); }
   40% { transform: translateY(-10px); }
   80% { transform: translateY(-5px); }
 }
+
 .nav-item:hover {
   animation: bounce 0.6s ease-in-out both;
   will-change: transform;
@@ -77,7 +71,6 @@
 .nav-item:focus::after {
   width: 100%;
 }
-
 
 /* Logo Animation */
 .rotate-logo:hover img {
@@ -135,17 +128,6 @@ svg {
 
   .mobile-menu.open {
     transform: translateX(0);
-  }
-
-  .mobile-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 9990;
   }
 
   .mobile-close-btn {
@@ -212,7 +194,6 @@ svg {
   }
 
   .mobile-menu,
-  .mobile-overlay,
   .hamburger {
     display: none !important;
   }
@@ -229,11 +210,11 @@ svg {
   }
 
   .mobile-menu,
-  .mobile-overlay,
   .hamburger {
     display: none !important;
   }
 }
+
 /* Active nav-item underline persistence */
 .nav-item.active::after {
   width: 100%;

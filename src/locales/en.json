@@ -1,4 +1,10 @@
 {
+  "hero": {
+    "title": "Research Analyst",
+    "getStarted": "Get Started",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
+  },
   "footer": {
     "copyright": "© 2024 Wise Global. All rights reserved.",
     "selectLanguage": "Select Language",
@@ -107,72 +113,292 @@
     "contactUs": "Contact Us",
     "researchReports": "Research Reports"
   },
+  "login": {
+    "title": "Admin Login",
+    "email_placeholder": "Enter Email",
+    "email_label": "Email address",
+    "password_placeholder": "Enter Password",
+    "password_label": "Password",
+    "submit_label": "Submit login form",
+    "logging_in": "Logging in...",
+    "login_button": "Login",
+    "email_required": "Email is required",
+    "email_invalid": "Please enter a valid email address",
+    "password_required": "Password is required",
+    "password_length": "Password must be at least 6 characters long",
+    "password_uppercase": "Password must contain at least one uppercase letter",
+    "password_lowercase": "Password must contain at least one lowercase letter",
+    "password_number": "Password must contain at least one number",
+    "password_special": "Password must contain at least one special character",
+    "success": "Login successful!",
+    "failed": "Login failed. Please try again.",
+    "user_not_found": "No user found with this email.",
+    "incorrect_password": "Incorrect password.",
+    "too_many_attempts": "Too many attempts. Please try again later."
+  },
+  "testimonials": {
+    "title": "What Our Clients Say",
+    "0": {
+      "name": "Rahul Sharma",
+      "role": "Investor (5+ years)",
+      "quote": "The research quality is exceptional. Helped me grow my portfolio last year."
+    },
+    "1": {
+      "name": "Priya Patel",
+      "role": "Trader (3+ years)",
+      "quote": "Accurate technical calls and excellent risk management suggestions."
+    },
+    "2": {
+      "name": "Amit Kumar",
+      "role": "Business Owner",
+      "quote": "Their SEBI registration gives me confidence in their recommendations."
+    }
+  },
   "home": {
     "helmet": {
-      "title": "Wise Global Research Services - SEBI Registered Research Analyst",
-      "description": "Wise Global Research Services - SEBI Registered Research Analyst. Get expert stock market research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India.",
-      "ogDescription": "Get SEBI registered expert research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India.",
-      "twitterDescription": "Get SEBI registered expert research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India."
+      "title": "Wise Global Research Services",
+      "description": "Market research, analytics, and data-driven insights for Indian traders and investors.",
+      "ogDescription": "Wise Global Research Services - Empowering Indian traders and investors with actionable insights.",
+      "twitterDescription": "Wise Global Research Services - Market research and analytics for Indian traders."
+    },
+    "alertBar": {
+      "hi": "कृपया ध्यान दें – प्रिय ग्राहक, आपके भुगतान स्वीकार किए जाएंगे अगर आप Wise Global Research वेबसाइट पर दी गई खाता जानकारी का उपयोग करेंगे। हम केवल Wise Global Research के अलावा किसी अन्य खातों में कोई भुगतान स्वीकार नहीं करते।",
+      "en": "Note: Dear Client, payments will be accepted only if made to the account details listed on the Wise Global Research website."
+    },
+    "heroSection": {
+      "title": "Research Analyst",
+      "getStarted": "Get Started",
+      "previousSlide": "Previous Slide",
+      "nextSlide": "Next Slide"
+    },
+    "whyChooseUs": {
+      "heading": "Why Choose Us",
+      "reasons": [
+        {
+          "title": "SEBI-Registered Expertise",
+          "desc": "Our analysts are certified by SEBI, ensuring compliance and reliability."
+        },
+        {
+          "title": "AI-Driven Insights",
+          "desc": "Leverage cutting-edge AI for precise market predictions."
+        },
+        {
+          "title": "Proven Track Record",
+          "desc": "Over 10 years of delivering profitable recommendations."
+        }
+      ]
+    },
+    "marketOverview": {
+      "heading": "Live Market Overview"
+    },
+    "teamSection": {
+      "heading": "Meet Our Expert Team",
+      "members": [
+        {
+          "name": "Rahul Verma",
+          "role": "Chief Analyst",
+          "experience": "15+ years in equity research",
+          "expertise": ["Fundamental Analysis", "Portfolio Strategy"]
+        },
+        {
+          "name": "Priya Sharma",
+          "role": "Technical Analyst",
+          "experience": "12+ years in technical research",
+          "expertise": ["Chart Patterns", "Derivatives"]
+        },
+        {
+          "name": "Amit Patel",
+          "role": "Quant Analyst",
+          "experience": "10+ years in algo trading",
+          "expertise": ["Algorithm Development", "Backtesting"]
+        },
+        {
+          "name": "Neha Gupta",
+          "role": "Research Head",
+          "experience": "18+ years in market research",
+          "expertise": ["Macro Analysis", "Sector Research"]
+        }
+      ]
+    },
+    "methodologySection": {
+      "heading": "Steps We Follow During Work",
+      "steps": [
+        {
+          "title": "Customer-Centric Approach",
+          "desc": "Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty, fostering long-term relationships."
+        },
+        {
+          "title": "Risk Mitigation",
+          "desc": "Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests."
+        },
+        {
+          "title": "Creative Solutions",
+          "desc": "Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success."
+        }
+      ]
+    },
+    "faqSection": {
+      "heading": "Frequently Asked Questions",
+      "questions": [
+        {
+          "q": "How will I receive the recommendations?",
+          "a": "All recommendations are sent via SMS to your registered mobile number."
+        },
+        {
+          "q": "Can I get support if I have questions?",
+          "a": "Yes, our support team is available from 09:00 AM to 06:00 PM for any queries."
+        },
+        {
+          "q": "Is there a refund policy?",
+          "a": "Please refer to our terms and conditions or contact support for refund-related queries."
+        }
+      ],
+      "contactButton": "Contact Us"
     }
   },
   "about_page": {
-    "steps": [
-      {
+    "title": "About Us",
+    "subtitle": "Learn more about Wise Global Research Services.",
+    "about_us_title": "Who We Are",
+    "about_us_desc": "We are a team of experienced research analysts specializing in stock and commodity markets.",
+    "mission_title": "Our Mission",
+    "mission_desc": "To provide reliable and insightful research to our clients.",
+      "vision": {
+        "page_title": "Our Vision & Mission",
+        "pillars": [
+          {"title": "Empowering Wealth Creation", "description": "We aim to empower Indian traders and investors with strategies to build wealth through NSE, BSE, and MCX markets, focusing on stocks like RELIANCE and commodities like GOLD."},
+          {"title": "Ethical Guidance", "description": "Our commitment to SEBI-compliant, transparent advice ensures trust and integrity in every recommendation, from Smart Options to MCX Supreme."},
+          {"title": "Education and Insights", "description": "We provide regular blogs, webinars, and demos to educate investors on market trends, helping them navigate NIFTY and BANKNIFTY with confidence."},
+          {"title": "Innovative Technology", "description": "Leveraging AI and real-time data, we deliver cutting-edge tools for Indian traders, enhancing profitability in services like Universal Cash and Infinity Club."}
+        ],
+        "core_values_title": "Core Values",
+        "core_values": [
+          {"title": "Transparency", "description": "We provide clear, honest, and SEBI-compliant advice, ensuring clients understand every recommendation and its risks."},
+          {"title": "Client-Centric Approach", "description": "Our strategies are tailored to the needs of Indian investors, from beginners in Mumbai to seasoned traders in Delhi."},
+          {"title": "Innovation", "description": "We use advanced analytics and AI to deliver high-probability trading signals for NSE, BSE, and MCX markets."},
+          {"title": "Education", "description": "We empower clients with knowledge through workshops, blogs, and market updates, fostering informed decision-making."},
+          {"title": "Integrity", "description": "Our commitment to ethical practices ensures we prioritize client trust and long-term success over short-term gains."},
+          {"title": "Excellence", "description": "We strive for excellence in every service, from daily recommendations to personalized support for Indian traders."}
+        ]
+      },
+    "need_help": "Need Help?",
+    "steps_title": "Our Approach",
+    "steps": {
+      "0": {
         "title": "Customer-Centric Approach",
         "desc": "Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty, fostering long-term relationships."
       },
-      {
+      "1": {
         "title": "Risk Mitigation",
         "desc": "Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests."
       },
-      {
+      "2": {
         "title": "Creative Solutions",
         "desc": "Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success."
       }
-    ],
-    "title": "About Us Wise Global Research",
-    "subtitle": "We prioritize what matters most in your life.",
-    "about_us_title": "About Us",
-    "about_us_desc": "Wise Global Research is a SEBI registered analyst company dedicated to empowering you with straightforward, meaningful, and actionable recommendations and solutions, enabling you to confidently build wealth for any purpose. Committed to offering unbiased opinions backed by thorough research, we focus on providing valuable insights to participants in the Indian market.",
-    "mission_title": "Mission",
-    "mission_desc": "To empower clients with clear, actionable, and unbiased research, helping them make confident financial decisions and achieve their goals.",
-    "vision_title": "Vision",
-    "vision_desc": "To be the most trusted research partner for wealth creation, recognized for integrity, expertise, and client-centricity.",
-    "need_help": "Need Help?",
-    "steps_title": "Steps We Follow During Work"
+    }
   },
-  "aml_page": {
-    "title": "Anti-Money Laundering (AML) Policy",
-    "overview_alt": "Anti-Money Laundering Overview",
-    "description_1": "Anti-Money Laundering (AML) is a set of policies, procedures, and technologies that prevents money laundering. It is implemented within government systems and large financial institutions to monitor potentially fraudulent activity. Anti-Money Laundering (AML) policies are guidelines and processes developed by financial organizations to detect, prevent, and report potential money laundering activities. These rules maintain regulatory compliance and contribute to worldwide efforts to prevent financial crime.",
-    "description_2": "Anti-Money Laundering (AML) is a set of policies, procedures, and technologies that prevents money laundering.",
-    "description_3": "There are three major steps in money laundering (placement, layering, and integration), and various controls are put in place to monitor suspicious activity that could be involved in money laundering.",
-    "description_4": "Some anti-money laundering controls include knowing your customers, software filtering, and implementing holding periods.",
-    "process_title": "Money Laundering – Process",
-    "process_description": "The figure below shows the three steps in money laundering and some of the controls that are used to prevent it. Money laundering is carried out through placement in a financial institution carrying out a series of transactions to disguise its original source (layering) and obtaining/using the cleaned money (integration).",
-    "process_alt": "Money Laundering Process",
-    "controls_title": "Anti-Money Laundering – Controls",
-    "controls": [
-      {
-        "title": "Criminalization",
-        "desc": "Many governments, financial institutions, and businesses impose controls to prevent money laundering. The first is criminalization by the government. The United Nations Convention Against Transnational Organized Crime has set forth guidelines that help governments to prosecute individuals involved in money laundering schemes."
-      },
-      {
-        "title": "Know Your Customers",
-        "desc": "Financial institutions must also have “know your customer” policies in place to help prevent money laundering. This involves monitoring the activity of clients and understanding the types of transactions that should raise red flags. Financial institutions are required to report suspicious activity to a financial investigation unit."
-      },
-      {
-        "title": "Record Management and Software Filtering",
-        "desc": "Financial institutions and businesses also keep detailed records of transactions and implement software that can flag suspicious activity. Customer data can be classified based on varying levels of suspicion, and transactions denied if they meet certain criteria."
-      },
-      {
-        "title": "Holding Period",
-        "desc": "Many banks require deposits to remain in an account for a designated number of days (usually around five). This holding period helps manage risk associated with money being moved through banks to launder money."
-      },
-      {
-        "title": "New Technology",
-        "desc": "The technology used to identify suspicious activity linked to money laundering continues to evolve and become more accurate. Technologies, such as AI and Big Data software, allow these systems to become more sophisticated."
+  "antiMoneyLaundering": {
+    "title": "Anti-Money Laundering (AML)",
+    "p1": "Anti-Money Laundering (AML) is a set of policies, procedures, and technologies that prevents money laundering. It is implemented within government systems and large financial institutions to monitor potentially fraudulent activity. Anti-Money Laundering (AML) policies are guidelines and processes developed by financial organizations to detect, prevent, and report potential money laundering activities. These rules maintain regulatory compliance and contribute to worldwide efforts to prevent financial crime.",
+    "p2": "Anti-Money Laundering (AML) is a set of policies, procedures, and technologies that prevents money laundering.",
+    "p3": "There are three major steps in money laundering (placement, layering, and integration), and various controls are put in place to monitor suspicious activity that could be involved in money laundering.",
+    "p4": "Some anti-money laundering controls include knowing your customers, software filtering, and implementing holding periods.",
+    "h2": "Money Laundering – Process",
+    "p5": "The figure below shows the three steps in money laundering and some of the controls that are used to prevent it. Money laundering is carried out through placement in a financial institution carrying out a series of transactions to disguise its original source (layering) and obtaining/using the cleaned money (integration).",
+    "h2_controls": "Anti-Money Laundering – Controls",
+    "li1": "<strong>Criminalization</strong>: Many governments, financial institutions, and businesses impose controls to prevent money laundering. The first is criminalization by the government. The United Nations Convention Against Transnational Organized Crime has set forth guidelines that help governments to prosecute individuals involved in money laundering schemes.",
+    "li2": "<strong>Know Your Customers</strong>: Financial institutions must also have “know your customer” policies in place to help prevent money laundering. This involves monitoring the activity of clients and understanding the types of transactions that should raise red flags. Financial institutions are required to report suspicious activity to a financial investigation unit.",
+    "li3": "<strong>Record Management and Software Filtering</strong>: Financial institutions and businesses also keep detailed records of transactions and implement software that can flag suspicious activity. Customer data can be classified based on varying levels of suspicion, and transactions denied if they meet certain criteria.",
+    "li4": "<strong>Holding Period</strong>: Many banks require deposits to remain in an account for a designated number of days (usually around five). This holding period helps manage risk associated with money being moved through banks to launder money.",
+    "li5": "<strong>New Technology</strong>: The technology used to identify suspicious activity linked to money laundering continues to evolve and become more accurate. Technologies, such as AI and Big Data software, allow these systems to become more sophisticated."
+  },
+  "evaluationStockCash": {
+    "title": "Evaluation Stock Cash",
+    "description": "Wise Global Research Analyst provides equity research in the NSE cash segment by dedicated and experienced Research Analysts after in-depth technical analysis. Our equity trading recommendations are produced after proper analysis of the stock market. These technical levels are generated for recommendations that can provide good movement in the market. In a volatile market, our customers should only focus on intraday research and should not carry forward any position for the next day.",
+    "whatYouWillGet": {
+      "title": "What You Will Get",
+      "points": [
+        "Daily pure intraday stock recommendations, frequency limited to 2 to 3 (as per market conditions).",
+        "Each recommendation will have 2 targets with proper stop loss.",
+        "Timely follow-ups of all trade signals.",
+        "Proper time for entry & exit in recommendations.",
+        "Careful analysis of market direction.",
+        "Recommendations are provided through SMS.",
+        "Swift real-time customer support (09:00 AM to 06:00 PM)."
+      ],
+      "description": "A pure intraday product, where customers receive stock recommendations in the NSE cash segment. This product is designed for new customers who want to evaluate our recommendations in the cash market.",
+      "sampleCall": {
+        "title": "Sample Call:",
+        "call": "BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505"
       }
-    ]
+    },
+    "tradingRules": {
+      "title": "Trading Rules Every Trader Must Follow",
+      "rules": [
+        "Do not over trade.",
+        "Only follow SMS research recommendations.",
+        "Trade each recommendation with the same quantity as advised by the Research Team.",
+        "Profit and loss are subject to market risk; there is no guarantee or assurance.",
+        "Never be emotional while trading.",
+        "Beware of overnight risk.",
+        "Always trade with a stop loss.",
+        "Don’t look back and regret past trades.",
+        "Don’t over-leverage in a volatile market.",
+        "Costs matter a lot when you are a trader.",
+        "Protect your capital first—trading begins with risk management.",
+        "Sometimes, not trading is also a valid strategy.",
+        "Profit is what is booked; all else is just on paper."
+      ]
+    },
+    "supportInfo": {
+      "support": "Swift real-time customer support:",
+      "hours": "09:00 AM to 06:00 PM",
+      "recommendations": "All recommendations are provided through SMS."
+    },
+    "pricing": {
+      "title": "Pricing Plan For Evaluation Stock Cash",
+      "packName": "Cash Evaluation Pack",
+      "price": "₹5,100",
+      "duration": "/ 10 Days",
+      "calls": "2 to 3 Calls in a Day",
+      "button": "Payment",
+      "note": "Note: Prices are excluding GST (18%)"
+    },
+    "whyChooseUs": {
+      "title": "Why Choose Evaluation Stock Cash?",
+      "reasons": [
+        {
+          "title": "Expert Research",
+          "description": "Our team combines technical and fundamental analysis for the most reliable stock recommendations."
+        },
+        {
+          "title": "Timely Updates",
+          "description": "Get instant trade signals and support during Indian market hours."
+        },
+        {
+          "title": "Trusted by Traders",
+          "description": "Hundreds of stock traders rely on our signals for consistent results."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "questions": [
+        {
+          "q": "Q: How will I receive the recommendations?",
+          "a": "A: All recommendations are sent via SMS to your registered mobile number."
+        },
+        {
+          "q": "Q: Can I get support if I have questions?",
+          "a": "A: Yes, our support team is available from 09:00 AM to 06:00 PM for any queries."
+        },
+        {
+          "q": "Q: Is there a refund policy?",
+          "a": "A: Please refer to our terms and conditions or contact support for refund-related queries."
+        }
+      ],
+      "contactButton": "Contact Us"
+    }
   }
 }

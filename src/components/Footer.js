@@ -31,13 +31,13 @@ function Footer() {
         className="relative z-30 transition-all duration-1000 pt-8 pb-4 px-4 mx-2 my-2 border-4 border-[#64ed37] rounded-xl shadow-xl"
       >
         {/* Language Selector */}
-        <div className="flex justify-end mb-2">
+        <div className="flex justify-center sm:justify-end mb-4">
           <div className="flex items-center gap-2 bg-white text-black rounded shadow-md px-2 py-1">
             <span className="font-semibold text-xs">{t('footer.selectLanguage') || 'Select Language'}:</span>
             <select
               value={i18n.language}
               onChange={e => i18n.changeLanguage(e.target.value)}
-              className="px-2 py-1 rounded focus:outline-none text-xs"
+              className="px-2 py-1 rounded focus:outline-none text-xs bg-transparent"
             >
               {languages.map(lang => (
                 <option key={lang.code} value={lang.code}>{lang.label}</option>
@@ -45,14 +45,14 @@ function Footer() {
             </select>
           </div>
         </div>
-        <div className="max-h-[calc(100vh-200px)] custom-scrollbar px-2">
-          <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10 text-sm">
+        <div className="md:max-h-[calc(100vh-200px)] custom-scrollbar px-2 sm:px-0">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 text-sm">
             {/* 🌟 Logo Section */}
             <div className="text-center md:text-left">
-              <div className="relative inline-block w-40 h-40 mx-auto md:mx-0 shine-hover">
+              <div className="relative inline-block w-32 h-32 sm:w-40 sm:h-40 mx-auto md:mx-0 shine-hover">
                 <div className="absolute inset-0 rounded-full bg-white/10 blur-lg shadow-2xl z-0" />
                 <div className="relative z-10 rounded-full border-4 shadow-xl transition duration-700" style={{ borderColor: '#4efc03' }}>
-                  <img src={wiseLogo} alt="Wise Global Logo" className="w-40 h-40 object-contain rounded-full" />
+                  <img src={wiseLogo} alt="Wise Global Logo" className="w-full h-full object-contain rounded-full" />
                 </div>
               </div>
               <p className="mt-4 text-sm" style={{ color: textColor }}>
@@ -115,16 +115,16 @@ function Footer() {
 
           <div className="border-t border-gray-700 my-6" />
 
-          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-4 text-sm">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 text-sm">
             <div className="space-y-2">
               <h3 className="font-semibold">{t('footer.quickContact')}</h3>
               <p><strong>WISE GLOBAL RESEARCH SERVICES PRIVATE LIMITED</strong></p>
               <p><FaEnvelope className="inline mr-2 text-yellow-400" /> support@wiseglobalresearch.com</p>
               <p><FaPhone className="inline mr-2 text-yellow-400" /> +91 9977909494</p>
-              <p><FaMapMarkerAlt className="inline mr-2 text-yellow-400" /> {t('footer.registeredOfficeAddress')}: 18 AB Road, Onam Plaza, Office No 602, Old Palasiya, Indore Tukoganj, Indore, Madhya Pradesh, 452001</p>
+              <p><FaMapMarkerAlt className="inline mr-2 text-yellow-400 align-baseline" /> {t('footer.registeredOfficeAddress')}: 18 AB Road, Onam Plaza, Office No 602, Old Palasiya, Indore Tukoganj, Indore, Madhya Pradesh, 452001</p>
             </div>
 
-            <div className="text-right md:text-left space-y-2">
+            <div className="space-y-2">
               <h3 className="font-semibold flex items-center gap-1"><FaPalette /> {t('footer.selectWebsiteTheme')}</h3>
               <div className="bg-white text-black rounded shadow-md overflow-hidden">
                 <select
@@ -159,7 +159,7 @@ function Footer() {
       {/* Durgesh Rathor - Website Developer Signature */}
       {/*
         This website was developed by Durgesh Rathor.
-        For verification or collaboration, contact: durgeshrathor.durgeshrathor05@gmail.com
+        For verification or collaboration, contact: durgeshrathor05@gmail.com
       */}
     </>
   );

@@ -1,9 +1,3 @@
-/**
- * ContactData.js
- * Admin panel for managing contact form submissions, report uploads, and complaint table data.
- * Features authentication, data fetching, report management, CSV export, and enhanced UI with animations.
- */
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ref, onValue, remove, push, update } from 'firebase/database';

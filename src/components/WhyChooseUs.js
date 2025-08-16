@@ -1,26 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaShieldAlt, FaLightbulb, FaChartLine } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
 
 const WhyChooseUs = () => {
-  const reasons = [
-    {
-      title: 'SEBI-Registered Expertise',
-      desc: 'Our analysts are certified by SEBI, ensuring compliance and reliability.',
-      icon: <FaShieldAlt className="text-3xl sm:text-4xl text-blue-500" />,
-    },
-    {
-      title: 'AI-Driven Insights',
-      desc: 'Leverage cutting-edge AI for precise market predictions.',
-      icon: <FaLightbulb className="text-3xl sm:text-4xl text-yellow-500" />,
-    },
-    {
-      title: 'Proven Track Record',
-      desc: 'Over 10 years of delivering profitable recommendations.',
-      icon: <FaChartLine className="text-3xl sm:text-4xl text-green-500" />,
-    },
+  const { t } = useTranslation();
+  const icons = [
+    <FaShieldAlt className="text-3xl sm:text-4xl text-blue-500" />,
+    <FaLightbulb className="text-3xl sm:text-4xl text-yellow-500" />,
+    <FaChartLine className="text-3xl sm:text-4xl text-green-500" />,
   ];
+  const reasons = t('home.whyChooseUs.reasons', { returnObjects: true });
 
   return (
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
@@ -29,7 +20,7 @@ const WhyChooseUs = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
           variants={itemVariants}
         >
-          Why Choose Us
+          {t('home.whyChooseUs.heading')}
         </motion.h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {reasons.map((item, index) => (
@@ -43,7 +34,7 @@ const WhyChooseUs = () => {
               style={{ transformStyle: 'preserve-3d' }}
             >
               <div className="flex items-center mb-4">
-                {item.icon}
+                {icons[index]}
                 <h3 className="text-lg sm:text-xl font-bold ml-4">{item.title}</h3>
               </div>
               <p className="text-sm sm:text-base">{item.desc}</p>
@@ -53,6 +44,6 @@ const WhyChooseUs = () => {
       </div>
     </section>
   );
-};
+}
 
 export default WhyChooseUs;

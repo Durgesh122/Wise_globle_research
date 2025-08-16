@@ -1,23 +1,25 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
 
 const TestimonialsSection = () => {
+  const { t } = useTranslation();
   const testimonials = [
     {
-      name: 'Rahul Sharma',
-      role: 'Investor (5+ years)',
-      quote: 'The research quality is exceptional. Helped me grow my portfolio last year.',
+      name: t('testimonials.0.name'),
+      role: t('testimonials.0.role'),
+      quote: t('testimonials.0.quote'),
     },
     {
-      name: 'Priya Patel',
-      role: 'Trader (3+ years)',
-      quote: 'Accurate technical calls and excellent risk management suggestions.',
+      name: t('testimonials.1.name'),
+      role: t('testimonials.1.role'),
+      quote: t('testimonials.1.quote'),
     },
     {
-      name: 'Amit Kumar',
-      role: 'Business Owner',
-      quote: 'Their SEBI registration gives me confidence in their recommendations.',
+      name: t('testimonials.2.name'),
+      role: t('testimonials.2.role'),
+      quote: t('testimonials.2.quote'),
     },
   ];
 
@@ -28,7 +30,7 @@ const TestimonialsSection = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
           variants={itemVariants}
         >
-          What Our Clients Say
+          {t('testimonials.title')}
         </motion.h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {testimonials.map((testimonial, index) => (
