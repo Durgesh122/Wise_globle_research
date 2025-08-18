@@ -1,0 +1,592 @@
+{
+  "hero": {
+    "title": "ஆராய்ச்சி ஆய்வாளர்",
+    "getStarted": "தொடங்கவும்",
+    "previousSlide": "முந்தைய ஸ்லைடு",
+    "nextSlide": "அடுத்த ஸ்லைடு"
+  },
+  "login": {
+    "title": "நிர்வாகி உள்நுழைவு",
+    "email_placeholder": "மின்னஞ்சலை உள்ளிடவும்",
+    "email_label": "மின்னஞ்சல் முகவரி",
+    "password_placeholder": "கடவுச்சொல்லை உள்ளிடவும்",
+    "password_label": "கடவுச்சொல்",
+    "submit_label": "உள்நுழைவு படிவத்தை சமர்ப்பிக்கவும்",
+    "logging_in": "உள்நுழைகிறது...",
+    "login_button": "உள்நுழை",
+    "email_required": "மின்னஞ்சல் தேவை",
+    "email_invalid": "தயவுசெய்து ஒரு சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்",
+    "password_required": "கடவுச்சொல் தேவை",
+    "password_length": "கடவுச்சொல் குறைந்தது 6 எழுத்துகள் நீளமாக இருக்க வேண்டும்",
+    "password_uppercase": "கடவுச்சொல்லில் குறைந்தது ஒரு பெரிய எழுத்து இருக்க வேண்டும்",
+    "password_lowercase": "கடவுச்சொல்லில் குறைந்தது ஒரு சிறிய எழுத்து இருக்க வேண்டும்",
+    "password_number": "கடவுச்சொல்லில் குறைந்தது ஒரு எண் இருக்க வேண்டும்",
+    "password_special": "கடவுச்சொல்லில் குறைந்தது ஒரு சிறப்பு எழுத்து இருக்க வேண்டும்",
+    "success": "உள்நுழைவு வெற்றி!",
+    "failed": "உள்நுழைவு தோல்வியடைந்தது. தயவுசெய்து மீண்டும் முயற்சிக்கவும்.",
+    "user_not_found": "இந்த மின்னஞ்சலுடன் எந்த பயனரும் காணப்படவில்லை.",
+    "incorrect_password": "Incorrect password.",
+    "too_many_attempts": "Too many attempts. Please try again later."
+  },
+  "testimonials": {
+    "0": {
+      "name": "Rahul Sharma",
+      "role": "Investor (5+ years)",
+      "quote": "The research quality is exceptional. Helped me grow my portfolio last year."
+    },
+    "1": {
+      "name": "Priya Patel",
+      "role": "Trader (3+ years)",
+      "quote": "Accurate technical calls and excellent risk management suggestions."
+    },
+    "2": {
+      "name": "Amit Kumar",
+      "role": "Business Owner",
+      "quote": "Their SEBI registration gives me confidence in their recommendations."
+    },
+    "title": "எங்கள் வாடிக்கையாளர்கள் என்ன சொல்கிறார்கள்",
+    "items": [
+      {
+        "name": "பிரியா படேல்",
+        "role": "வர்த்தகர் (3+ ஆண்டுகள்)",
+        "quote": "துல்லியமான தொழில்நுட்ப அழைப்புகள் மற்றும் சிறந்த இடர் மேலாண்மை பரிந்துரைகள்."
+      },
+      {
+        "name": "அமித் குமார்",
+        "role": "வணிக உரிமையாளர்",
+        "quote": "அவர்களின் செபி பதிவு அவர்களின் பரிந்துரைகளில் எனக்கு நம்பிக்கையை அளிக்கிறது."
+      }
+    ]
+  },
+  "copyright": "© 2024 வைஸ் குளோபல். அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.",
+  "about_page": {
+    "title": "எங்களைப் பற்றி",
+    "subtitle": "வைஸ் குளோபல் ஆராய்ச்சி சேவைகள் பற்றி மேலும் அறிக.",
+    "about_us_title": "நாங்கள் யார்",
+    "about_us_desc": "நாங்கள் பங்கு மற்றும் சரக்கு சந்தைகளில் நிபுணத்துவம் பெற்ற அனுபவமிக்க ஆராய்ச்சி ஆய்வாளர்களின் குழு.",
+    "mission_title": "எங்கள் நோக்கம்",
+    "mission_desc": "எங்கள் வாடிக்கையாளர்களுக்கு நம்பகமான மற்றும் ஆழமான ஆராய்ச்சியை வழங்குதல்.",
+    "vision_title": "எங்கள் பார்வை",
+    "vision_desc": "துறையில் மிகவும் நம்பகமான ஆராய்ச்சி கூட்டாளராக இருப்பது.",
+    "need_help": "உதவி வேண்டுமா?",
+    "steps_title": "எங்கள் அணுகுமுறை",
+    "steps": [
+      {
+        "title": "வாடிக்கையாளர் மைய அணுகுமுறை",
+        "desc": "தயாரிப்புகள்/சேவைகளைத் தனிப்பயனாக்க, திருப்தி மற்றும் விசுவாசத்தை அதிகரிக்க, நீண்டகால உறவுகளை வளர்க்க வாடிக்கையாளர் தேவைகள், விருப்பத்தேர்வுகள் மற்றும் பின்னூட்டங்களுக்கு முன்னுரிமை அளியுங்கள்."
+      },
+      {
+        "title": "இடர் குறைப்பு",
+        "desc": "செயல்பாடுகள், நிதி, நற்பெயர் மற்றும் பங்குதாரர்களின் நலன்களில் எதிர்மறையான தாக்கங்களைக் குறைக்க சாத்தியமான இடர்களை அடையாளம் கண்டு, மதிப்பீடு செய்து, நிவர்த்தி செய்யுங்கள்."
+      },
+      {
+        "title": "படைப்பு தீர்வுகள்",
+        "desc": "சவால்களுக்கு தனித்துவமான, பயனுள்ள பதில்களை உருவாக்க, கற்பனை, வளம் மற்றும் சிக்கல் தீர்க்கும் வெற்றிக்காக பல்வேறு கண்ணோட்டங்களைப் பயன்படுத்த புதுமையாக சிந்தியுங்கள்."
+      }
+    ],
+    "selectWebsiteTheme": "வலைத்தள கருப்பொருளைத் தேர்ந்தெடுக்கவும்",
+    "paymentNote": "<strong>குறிப்பு:</strong> அன்புள்ள வாடிக்கையாளரே, வைஸ் குளோபல் ரிசர்ச் இணையதளத்தில் பட்டியலிடப்பட்டுள்ள கணக்கு விவரங்களுக்கு பணம் செலுத்தினால் மட்டுமே அது ஏற்றுக்கொள்ளப்படும்.",
+    "poweredBy": "மூலம் இயக்கப்படுகிறது",
+    "admin": {
+      "title": "அட்மின் பேனல்",
+      "contacts": "தொடர்பு விவரங்கள்",
+      "date": "தேதி",
+      "name": "பெயர்",
+      "email": "மின்னஞ்சல்",
+      "phone": "தொலைபேசி",
+      "message": "சந்தேசு"
+    },
+    "common": {
+      "yes": "ஹاں",
+      "no": "இல்லை"
+    }
+  },
+  "navbar": {
+    "home": "முகப்பு",
+    "services": {
+      "title": "சேவைகள்",
+      "cash": {
+        "title": "பணம்",
+        "evaluationStockCash": "மதிப்பீட்டு பங்கு பணம்",
+        "smartCash": "ஸ்மார்ட் பணம்",
+        "cash": "பணம்"
+      },
+      "option": {
+        "title": "ஆப்ஷன்",
+        "evaluationStockOption": "மதிப்பீட்டு ஸ்டாக் ஆப்ஷன்",
+        "impulseOption": "இம்பல்ஸ் ஆப்ஷன்",
+        "smartFuture": "ஸ்மார்ட் ஃபியூச்சர்",
+        "smartOptions": "ஸ்மார்ட் ஆப்ஷன்கள்"
+      },
+      "specialization": {
+        "title": "நிபுணத்துவம்",
+        "infinityClub": "இன்ஃபினிட்டி கிளப்",
+        "mcxSupreme": "MCX சூப்ரீம்",
+        "galaxyMCX": "கேலக்சி MCX",
+        "universalCash": "யுனிவர்சல் காஷ்"
+      },
+      "index": {
+        "title": "இன்டெக்ஸ்",
+        "evaluationIndexOptions": "மதிப்பீட்டு இன்டெக்ஸ் ஆப்ஷன்கள்",
+        "impulseIndexOptions": "இம்பல்ஸ் இன்டெக்ஸ் ஆப்ஷன்கள்",
+        "smartIndexOption": "ஸ்மார்ட் இன்டெக்ஸ் ஆப்ஷன்",
+        "index": "இன்டெக்ஸ்"
+      },
+      "mcx": {
+        "title": "Navbar Services Mcx Title",
+        "mcx": "Navbar Services Mcx Mcx",
+        "bullions": "Bullions",
+        "energy": "Energy",
+        "metal": "உலோகம்",
+        "mcxOption": "எம்சிஎக்ஸ் விருப்பம்"
+      }
+    },
+    "company": {
+      "title": "நிறுவனம்",
+      "aboutUs": "எங்களைப் பற்றி",
+      "ourTeam": "எங்கள் குழு",
+      "visionMission": "பார்வை மற்றும் நோக்கம்"
+    },
+    "hrZone": {
+      "title": "மனிதவள மண்டலம்",
+      "career": "தொழில்",
+      "training": "பயிற்சி"
+    },
+    "insights": {
+      "title": "உள்ளுணர்வுகள்",
+      "blogs": "வலைப்பதிவுகள்",
+      "marketNews": "சந்தை செய்திகள்",
+      "complaintData": "புகார் தரவு",
+      "grievanceRedressalProcess": "குறை தீர்க்கும் செயல்முறை"
+    },
+    "dashboard": {
+      "title": "டாஷ்போர்டு",
+      "adminPanel": "நிர்வாகி குழு",
+      "clientPanel": "வாடிக்கையாளர் குழு",
+      "clientServiceConsent": "வாடிக்கையாளர் சேவை ஒப்புதல்",
+      "investorChart": "முதலீட்டாளர் விளக்கப்படம்",
+      "antiMoneyLaundering": "பணமோசடி தடுப்பு"
+    },
+    "payment": "கட்டணம்",
+    "complaintBox": "புகார் பெட்டி",
+    "contactUs": "எங்களைத் தொடர்பு கொள்ளவும்",
+    "researchReports": "ஆராய்ச்சி அறிக்கைகள்"
+  },
+  "home": {
+    "certifications": {
+      "heading": "எங்கள் சான்றிதழ்கள்",
+      "items": [
+        {
+          "name": "SSL",
+          "short": "பாதுகாப்பான குறியாக்கப்பட்ட இணைப்புகள்",
+          "about": "உங்கள் தரவையும் பணப்பயன்களையும் பாதுகாப்பதற்காக எங்கள் தளம் SSL குறியாக்தலைப் பயன்படுத்துகிறது."
+        },
+        {
+          "name": "Verified",
+          "short": "சரிபார்க்கப்பட்ட நிறுவனம்",
+          "about": "நாங்கள் தொடர்புடைய சந்தை விதிகள் மற்றும் தரநிலைகளை பூர்த்தி செய்கிறோம் மற்றும் சரிபார்க்கப்பட்டுள்ளோம்."
+        },
+        {
+          "name": "QVA",
+          "short": "தர சான்றிதழ்",
+          "about": "எங்கள் ஆராய்ச்சி செயல்முறைகள் உயர் தரநிலைகளை பூர்த்தி செய்கிறதென தர சோதனைகள் உறுதி செய்கின்றன."
+        },
+        {
+          "name": "NSIC",
+          "short": "NSIC பதிவு",
+          "about": "பொருத்தமான தரநிலைகள் மற்றும் இணக்கத்திற்காக NSIC இல் பதிவு செய்யப்பட்டுள்ளோம்."
+        },
+        {
+          "name": "MSME",
+          "short": "MSME சான்றிதழ்",
+          "about": "சிறு வணிக வர்த்தகத்திற்கான MSME பதிவினால் ஆதாரம் கிடைக்கிறது."
+        },
+        {
+          "name": "ISO",
+          "short": "ISO சான்றிதழ்",
+          "about": "தடைவின்றி தரம் மற்றும் பாதுகாப்பு நடைமுறைகளுக்கான ISO சான்றிதழ்."
+        },
+        {
+          "name": "GAAF",
+          "short": "GAAF அங்கீகாரம்",
+          "about": "நிர்வாகம் மற்றும் ஆய்வுக்கேட்பான நடைமுறைகளுக்கான GAAF அங்கீகாரம்."
+        }
+      ],
+      "footer": "These certifications and verifications demonstrate our commitment to quality, security, and compliance. Hover any logo to read a short explanation; on mobile the text appears below."
+    },
+    "economicCalendar": {
+      "title": "பொருளாதார காலண்டர்",
+      "embedded": "கீழே நேரடி பொருளாதார காலண்டர் சேர்க்கப்பட்டுள்ளது. அது ஏற்றப்படாமல் இருந்தால், சிமுலேட்டட் பார்வையைப் பயன்படுத்தவும்.",
+      "simulated": "விஜெட் தடைசெய்திருந்தால் அல்லது கிடைக்காவிட்டால், இது ஒரு சிமுலேட்டட் காலண்டர்; நேரங்கள் IST-இல் காட்டப்படுகின்றன."
+    },
+    "chat": {
+      "fallback": "I'm having trouble understanding. Could you rephrase that?",
+      "greetName": "Nice to meet you, {{name}}! Please share your mobile number.",
+      "invalidPhone": "Chat InvalidPhone",
+      "askCity": "Got it! Which city are you from?",
+      "welcomeFrom": "Welcome from {{city}}, {{name}}! How can I assist you today?",
+      "goodbye": "Chat Goodbye",
+      "widgetTitle": "Chat WidgetTitle",
+      "end": "Chat End",
+      "introTitle": "Hi there! I'm your AI assistant",
+      "introSubtitle": "Let's start with your name",
+      "labels": {
+        "name": "Name",
+        "phone": "Phone",
+        "city": "City"
+      },
+      "placeholders": {
+        "name": "Your full name...",
+        "phone": "10-digit mobile number...",
+        "city": "Your city...",
+        "ask": "Ask anything..."
+      }
+    },
+    "faqSection": {
+      "sebiFaqs": "FaqSection SebiFaqs",
+      "sebiHeading": "FaqSection SebiHeading",
+      "questions": [
+        {
+          "q": "How will I receive the recommendations?",
+          "a": "All recommendations are sent via SMS to your registered mobile number."
+        },
+        {
+          "q": "Can I get support if I have questions?",
+          "a": "Yes, our support team is available from 09:00 AM to 06:00 PM for any queries."
+        },
+        {
+          "q": "Is there a refund policy?",
+          "a": "Please refer to our terms and conditions or contact support for refund-related queries."
+        }
+      ],
+      "heading": "Frequently Asked Questions"
+    },
+    "marketOverview": {
+      "heading": "Live Market Overview"
+    },
+    "methodologySection": {
+      "steps": [
+        {
+          "title": "Customer-Centric Approach",
+          "desc": "Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty, fostering long-term relationships."
+        },
+        {
+          "title": "Risk Mitigation",
+          "desc": "Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests."
+        },
+        {
+          "title": "Creative Solutions",
+          "desc": "Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success."
+        }
+      ],
+      "heading": "Steps We Follow During Work"
+    },
+    "popupForm": {
+      "success": "Form submitted successfully. Our team will reach out soon.",
+      "experienceLevels": [
+        "Beginner",
+        "Intermediate",
+        "Advanced"
+      ],
+      "brand": "Wise Global Research Services",
+      "subtitle": "Contact Us for Stock Market Insights",
+      "labels": {
+        "name": "Full Name",
+        "mobile": "Mobile Number",
+        "city": "City",
+        "experience": "Investment Experience",
+        "newsletter": "Subscribe to newsletter"
+      },
+      "placeholders": {
+        "name": "Enter your full name",
+        "mobile": "Enter 10-digit mobile number",
+        "city": "Enter your city",
+        "select": "Select"
+      },
+      "buttons": {
+        "submit": "Submit Now"
+      }
+    },
+    "subscriptionPlans": {
+      "cta": "Get Started"
+    },
+    "teamSection": {
+      "members": [
+        {
+          "name": "Rahul Verma",
+          "role": "Chief Analyst",
+          "experience": "15+ years in equity research",
+          "expertise": [
+            "Fundamental Analysis",
+            "Portfolio Strategy"
+          ]
+        },
+        {
+          "name": "Priya Sharma",
+          "role": "Technical Analyst",
+          "experience": "12+ years in technical research",
+          "expertise": [
+            "Chart Patterns",
+            "Derivatives"
+          ]
+        },
+        {
+          "name": "Amit Patel",
+          "role": "Quant Analyst",
+          "experience": "10+ years in algo trading",
+          "expertise": [
+            "Algorithm Development",
+            "Backtesting"
+          ]
+        },
+        {
+          "name": "Neha Gupta",
+          "role": "Research Head",
+          "experience": "18+ years in market research",
+          "expertise": [
+            "Macro Analysis",
+            "Sector Research"
+          ]
+        }
+      ],
+      "heading": "Meet Our Expert Team"
+    },
+    "helmet": {
+      "title": "Wise Global Research Services",
+      "description": "Market research, analytics, and data-driven insights for Indian traders and investors.",
+      "ogDescription": "Wise Global Research Services - Empowering Indian traders and investors with actionable insights.",
+      "twitterDescription": "Wise Global Research Services - Market research and analytics for Indian traders."
+    }
+  },
+  "aml_page": {
+    "title": "பணமோசடி தடுப்பு (AML) கொள்கை",
+    "overview_alt": "பணமோசடி தடுப்பு தகவல்",
+    "description_1": "பணமோசடி தடுப்பு (AML) என்பது நிதி குற்றங்களைத் தடுக்க கொள்கைகள், நடைமுறைகள் மற்றும் தொழில்நுட்பங்களின் தொகுப்பாகும். இந்தக் கொள்கைகள் அரசாங்க நிறுவனங்கள் மற்றும் பெரிய நிதி நிறுவனங்களில் சாத்தியமான குற்றவியல் நடவடிக்கைகளைக் கண்காணிக்க செயல்படுத்தப்படுகின்றன. AML கொள்கைகள் நிதி நிறுவனங்களால் சாத்தியமான குற்றவியல் நடவடிக்கைகளை அடையாளம் காண, தடுக்க மற்றும் புகாரளிக்க வடிவமைக்கப்பட்ட வழிகாட்டுதல்கள் மற்றும் நடைமுறைகள் ஆகும். இந்த விதிகள் ஒழுங்குமுறை இணக்கத்தை பராமரிக்கின்றன மற்றும் உலகளாவிய நிதி குற்றங்களைத் தடுக்கும் முயற்சிகளுக்கு பங்களிக்கின்றன.",
+    "description_2": "பணமோசடி தடுப்பு (AML) என்பது நிதி குற்றங்களைத் தடுக்க கொள்கைகள், நடைமுறைகள் மற்றும் தொழில்நுட்பங்களின் தொகுப்பாகும்.",
+    "description_3": "நிதி குற்றங்களில் மூன்று முக்கிய படிகள் உள்ளன (வைப்பு, அடுக்குதல் மற்றும் ஒருங்கிணைத்தல்), மற்றும் சாத்தியமான சந்தேகத்திற்கிடமான நடவடிக்கைகளைக் கண்கானிக்க பல்வேறு கட்டுப்பாடுகள் செயல்படுத்தப்படுகின்றன.",
+    "description_4": "சில AML கட்டுப்பாடுகளில் உங்கள் வாடிக்கையாளர்களை அறிந்து கொள்வது, மென்பொருள் வடிகட்டுதல் மற்றும் வைத்திருக்கும் காலங்களை செயல்படுத்துதல் ஆகியவை அடங்கும்.",
+    "process_title": "நிதி குற்றம் – செயல்முறை",
+    "process_description": "கீழேயுள்ள படம் நிதி குற்றங்களின் மூன்று படிகளையும் அதைக் கட்டுப்படுத்தப் பயன்படுத்தப்படும் சில கட்டுப்பாடுகளையும் விளக்குகிறது. நிதி குற்றம் ஒரு நிதி நிறுவனத்தில் வைப்பு மூலம் செய்யப்படுகிறது, அதன் மூலத்தை மறைக்க தொடர்ச்சியான பரிவர்த்தனைகளை (அடுக்குதல்) செய்கிறது மற்றும் சுத்தமான பணத்தைப் பெறுகிறது/பயன்படுத்துகிறது (ஒருங்கிணைப்பு).",
+    "process_alt": "நிதி குற்ற செயல்முறை",
+    "controls_title": "பணமோசடி தடுப்பு – கட்டுப்பாடுகள்",
+    "controls": [
+      {
+        "title": "குற்றமாக்கல்",
+        "desc": "பல அரசாங்கங்கள், நிதி நிறுவனங்கள் மற்றும் வணிகங்கள் நிதி குற்றங்களைத் தடுக்க கட்டுப்பாடுகளை செயல்படுத்துகின்றன. முதல் கட்டுப்பாடு அரசாங்கத்தால் குற்றமாக்கப்படுவது. ஒழுங்கமைக்கப்பட்ட சர்வதேச குற்றங்களுக்கு எதிரான ஐக்கிய நாடுகளின் மாநாடு நிதி குற்ற திட்டங்களில் ஈடுபட்டுள்ள நபர்களுக்கு எதிராக வழக்குத் தொடர அரசாங்கங்களுக்கு உதவ வழிகாட்டுதல்களை வகுத்துள்ளது."
+      },
+      {
+        "title": "உங்கள் வாடிக்கையாளர்களை அறிந்து கொள்ளுங்கள்",
+        "desc": "நிதி குற்றங்களைத் தடுக்க நிதி நிறுவனங்கள் 'உங்கள் வாடிக்கையாளர்களை அறிந்து கொள்ளுங்கள்' கொள்கைகளைக் கொண்டிருக்க வேண்டும். இதில் வாடிக்கையாளர்களின் நடவடிக்கைகளைக் கண்காணிப்பது மற்றும் சந்தேகத்திற்கிடமான பரிவர்த்தனைகளின் வகைகளைப் புரிந்துகொள்வது அடங்கும். நிதி நிறுவனங்கள் சந்தேகத்திற்கிடமான நடவடிக்கைகளை நிதி புலனாய்வு பிரிவுக்கு புகாரளிக்க வேண்டும்."
+      },
+      {
+        "title": "பதிவு மேலாண்மை மற்றும் மென்பொருள் வடிகட்டுதல்",
+        "desc": "நிதி நிறுவனங்கள் மற்றும் வணிகங்கள் பரிவர்த்தனைகளின் விரிவான பதிவுகளை வைத்திருக்க வேண்டும் மற்றும் சந்தேகத்திற்கிடமான நடவடிக்கைகளை அடையாளம் காணக்கூடிய மென்பொருளை செயல்படுத்த வேண்டும். வாடிக்கையாளர் தரவு பல்வேறு சந்தேக நிலைகளின் அடிப்படையில் வகைப்படுத்தப்படலாம் மற்றும் குறிப்பிட்ட அளவுகோல்களைப் பூர்த்தி செய்யும் பரிவர்த்தனைகள் நிராகரிக்கப்படலாம்."
+      },
+      {
+        "title": "வைத்திருக்கும் காலம்",
+        "desc": "பல வங்கிகள் வைப்புத்தொகைகள் ஒரு குறிப்பிட்ட எண்ணிக்கையிலான நாட்களுக்கு (பொதுவாக ஐந்து நாட்கள்) கணக்கில் இருக்க வேண்டும் என்று கோருகின்றன. இந்த வைத்திருக்கும் காலம் நிதி குற்றங்களுடன் தொடர்புடைய அபாயங்களை நிர்வகிக்க உதவுகிறது."
+      },
+      {
+        "title": "புதிய தொழில்நுட்பம்",
+        "desc": "நிதி குற்றங்களுடன் தொடர்புடைய சந்தேகத்திற்கிடமான நடவடிக்கைகளை அடையாளம் காணப் பயன்படுத்தப்படும் தொழில்நுட்பம் தொடர்ந்து உருவாகி வருகிறது மற்றும் மேலும் துல்லியமாகி வருகிறது. AI மற்றும் பெரிய தரவு மென்பொருள் போன்ற தொழில்நுட்பங்கள் இந்த அமைப்புகளை மேலும் மேம்படுத்தி வருகின்றன."
+      }
+    ]
+  },
+  "antiMoneyLaundering": {
+    "title": "பண மோசடி தடுப்பு (ஏஎம்எல்)",
+    "p1": "பண மோசடி தடுப்பு (ஏஎம்எல்) என்பது பண மோசடியைத் தடுக்கும் கொள்கைகள், செயல்முறைகள் மற்றும் தொழில்நுட்பங்களின் ஒரு தொகுப்பாகும். இது அரசாங்க அமைப்புகளிலும் பெரிய நிதி நிறுவனங்களிலும் சாத்தியமான மோசடி நடவடிக்கைகளைக் கண்காணிக்க பயன்படுத்தப்படுகிறது. பண மோசடி தடுப்பு (ஏஎம்எல்) கொள்கைகள் என்பது நிதி நிறுவனங்களால் உருவாக்கப்பட்ட வழிகாட்டுதல்கள் மற்றும் செயலைப்புறைங்களாகும், இவை சாத்தியமான பண மோசடி நடவடிக்கைகளைக் கண்டறிய, தடுக்க மற்றும் அறிக்கையிட உதவுகின்றன. இந்த விதிகள் ஒழுங்குமுறை இணக்கத்தைப் பராமரிக்கின்றன மற்றும் நிதி குற்றங்களைத் தடுக்க உலகளாவிய முயற்சிகளுக்கு பங்களிக்கின்றன.",
+    "p2": "பண மோசடி தடுப்பு (ஏஎம்எல்) என்பது பண மோசடியைத் தடுக்கும் கொள்கைகள், செயல்முறைகள் மற்றும் தொழில்நுட்பங்களின் ஒரு தொகுப்பாகும்.",
+    "p3": "பண மோசடியில் மூன்று முக்கிய கட்டங்கள் உள்ளன (பிளேஸ்மென்ட், லேயரிங் மற்றும் ஒருங்கிணைப்பு), மற்றும் பண மோசடியுடன் தொடர்புடையதாக இருக்கக்கூடிய சந்தேகத்திற்கிடமான நடவடிக்கைகளைக் கண்காணிக்க பல்வேறு கட்டுப்பாட்டு அமைப்புகள் பயன்படுத்தப்படுகின்றன.",
+    "p4": "சில பண மோசடி தடுப்பு கட்டுப்பாடுகளில் வாடிக்கையாளர்களை அறிந்து கொள்வது, மென்பொருள் வடிகட்டல் மற்றும் ஹோல்டிங் காலத்தை செயல்படுத்துவது ஆகியவை அடங்கும்.",
+    "h2": "பண மோசடி – செயல்முறை",
+    "p5": "கீழே உள்ள படம் பண மோசடியின் மூன்று கட்டங்களையும், அதைத் தடுக்க பயன்படுத்தப்படும் சில கட்டுப்பாடுகளையும் காட்டுகிறது. பண மோசடி ஒரு நிதி நிறுவனத்தில் பணத்தை டெபாசிட் செய்வதன் மூலம் (பிளேஸ்மென்ட்), அதன் அசல் மூலத்தை மறைக்க பரிவர்த்தனைகளின் தொடர் (லேயரிங்) மற்றும் சுத்தமான பணத்தைப் பெறுவது/பயன்படுத்துவது (ஒருங்கிணைப்பு) ஆகியவற்றின் மூலம் மேற்கொள்ளப்படுகிறது.",
+    "h2_controls": "பண மோசடி தடுப்பு – கட்டுப்பாடுகள்",
+    "li1": "<strong>குற்றமாக்குதல்</strong>: பல அரசாங்கங்கள், நிதி நிறுவனங்கள் மற்றும் வணிகங்கள் பண மோசடியைத் தடுக்க கட்டுப்பாடுகளை விதிக்கின்றன. முதலாவது அரசாங்கத்தால் குற்றமாக்குதல். ஐக்கிய நாடுகளின் டிரான்ஸ்நேஷனல் ஒர்கனைஸ்டு க்ரைம் எதிர்ப்பு மாநாடு, பண மோசடி திட்டங்களில் ஈடுப்பட்டுள்ள நபர்களுக்கு எதிராக வழக்குத் தொடர அரசாங்கங்களுக்கு உதவும் வழிகாட்டுதல்களை வழங்கியது.",
+    "li2": "<strong>வாடிக்கையாளர்களை அறிந்து கொள்ளுங்கள்</strong>: நிதி நிறுவனங்கள் பண மோசடியைத் தடுக்க 'வாடிக்கையாளர்களை அறிந்து கொள்ளுங்கள்' கொள்கைகளை செயல்படுத்த வேண்டும். இதில் வாடிக்கையாளர்களின் நடவடிக்கைகளைக் கண்காணிப்பது மற்றும் சந்தேகத்திற்கிடமான பரிவர்த்தனைகளின் வகைகளைப் புரிந்துகொள்வது அடங்கும். நிதி நிறுவனங்கள் சந்தேகத்திற்கிடமான நடவடிக்கைகளைப் பற்றி நிதி புலனாய்வு பிரிவுக்கு அறிக்கையிட வேண்டும்.",
+    "li3": "<strong>பதிவு மேலாண்மை மற்றும் மென்பொருள் வடிகட்டல்</strong>: நிதி நிறுவனங்கள் மற்றும் வணிகங்கள் பரிவர்த்தனைகளின் விரிவான பதிவுகளை வைத்திருக்கின்றன மற்றும் சந்தேகத்திற்கிடமான நடவடிக்கைகளை அடையாளம் காணக்கூடிய மென்பொருளை செயல்படுத்துகின்றன. வாடிக்கையாளர் தரவு பல்வேறு சந்தேக நிலைகளின் அடிப்படையில் வகைப்படுத்தப்படலாம் மற்றும் குறிப்பிட்ட அளவுகோல்களைப் பூர்த்தி செய்யும் பரிவர்த்தனைகள் நிராகரிக்கப்படலாம்.",
+    "li4": "<strong>ஹோல்டிங் காலம்</strong>: பல வங்கிகள் டெபாசிட்களை ஒரு குறிப்பிட்ட காலத்திற்கு (பொதுவாக சுமார் ஐந்து நாட்கள்) கணக்கில் வைத்திருக்க வேண்டும் என்று கோருகின்றன. இந்த ஹோல்டிங் காலம், பண மோசடிக்காக வங்கிகள் மூலம் பணம் நகர்த்தப்படுவதற்கு தொடர்புடைய அபாயங்களை நிர்வகிக்க உதவுகிறது.",
+    "li5": "<strong>புதிய தொழில்நுட்பம்</strong>: பண மோசடியுடன் தொடர்புடைய சந்தேகத்திற்கிடமான நடவடிக்கைகளை அடையாளம் காண பயன்படுத்தப்படும் தொழில்நுட்பம் தொடர்ந்து மேம்படுத்தப்பட்டு மிகவும் துல்லியமாகி வருகிறது. ஏஐ மற்றும் பெரிய தரவு மென்பொருள் போன்ற தொழில்நுட்பங்கள் இந்த அமைப்புகளை மேலும் மேம்படுத்தி வருகின்றன."
+  },
+  "admin": {
+    "contactSubmissions": "Contact Submissions",
+    "table": {
+      "name": "Name",
+      "mobile": "Mobile",
+      "city": "City",
+      "experience": "Experience",
+      "newsletter": "Newsletter",
+      "submittedAt": "Submitted At"
+    }
+  },
+  "common": {
+    "yes": "Common Yes",
+    "no": "Common No"
+  },
+  "contactForm": {
+    "successMessage": "படிவம் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது! நாங்கள் விரைவில் உங்களைத் தொடர்புகொள்வோம்.",
+    "errorMessage": "படிவத்தை சமர்ப்பிக்க முடியவில்லை",
+    "title": "தொடர்பு கொள்ளுங்கள்",
+    "nameLabel": "பெயர்",
+    "validation": {
+      "nameRequired": "பெயர் தேவை",
+      "nameMinLength": "பெயர் குறைந்தது 2 எழுத்துகள் நீளமாக இருக்க வேண்டும்",
+      "emailRequired": "மின்னஞ்சல் தேவை",
+      "emailInvalid": "தவறான மின்னஞ்சல் முகவரி",
+      "phoneRequired": "தொலைபேசி எண் தேவை",
+      "phoneInvalid": "தொலைபேசி எண் 6, 7, 8, அல்லது 9 இல் தொடங்கி 10 இலக்க எண்ணாக இருக்க வேண்டும்",
+      "interestRequired": "தயவுசெய்து ஆர்வமுள்ள பகுதியைத் தேர்ந்தெடுக்கவும்",
+      "messageRequired": "செய்தி தேவை",
+      "messageMinLength": "செய்தி குறைந்தது 10 எழுத்துகள் நீளமாக இருக்க வேண்டும்"
+    },
+    "emailLabel": "மின்னஞ்சல்",
+    "phoneLabel": "தொலைபேசி",
+    "interestLabel": "ஆர்வம் உள்ள பகுதி",
+    "selectOption": "ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்",
+    "options": {
+      "equity": "பங்கு ஆராய்ச்சி",
+      "derivatives": "டெரிவேடிவ் உத்திகள்",
+      "technical": "தொழில்நுட்ப பகுப்பாய்வு",
+      "portfolio": "போர்ட்ஃபோலியோ மேலாண்மை",
+      "learning": "கற்றல் வளங்கள்"
+    },
+    "messageLabel": "செய்தி",
+    "submitting": "சமர்ப்பிக்கப்படுகிறது...",
+    "submitButton": "சமர்ப்பிக்கவும்"
+  },
+  "economicCalendar": {
+    "title": "EconomicCalendar Title",
+    "embedded": "EconomicCalendar Embedded",
+    "simulated": "EconomicCalendar Simulated"
+  },
+  "footer": {
+    "selectLanguage": "Select Language",
+    "description": "WISE GLOBAL RESEARCH SERVICES PRIVATE LIMITED comprises seasoned and proficient research analysts specializing in the stock and commodity markets.",
+    "quickLinks": "Quick Links",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "payment": "Payment",
+    "investorCharter": "Investor Charter",
+    "currentOpenings": "Current Openings",
+    "guideForInvesting": "Guide For Investing",
+    "dailyRecommendation": "Daily Recommendation",
+    "usefulLinks": "Useful Links",
+    "disclaimer": "Disclaimer",
+    "disclosure": "Disclosure",
+    "privacyPolicy": "Privacy Policy",
+    "refundPolicy": "Refund Policy",
+    "complaintBox": "Complaint Box",
+    "complaintData": "Complaint Data",
+    "termsAndConditions": "Terms and Conditions",
+    "registrationDetails": "Our Registration Details",
+    "registeredName": "Registered Name",
+    "principalOfficer": "Principal Officer/Compliance Officer",
+    "gstNo": "GST No.",
+    "cinNumber": "CIN Number",
+    "typeOfRegistration": "Type of Registration",
+    "sebiRegistrationNo": "SEBI Registration Number",
+    "bseEnlistmentNo": "BSE Enlistment No.",
+    "validity": "Validity",
+    "sebiOfficeDetails": "SEBI Office Details",
+    "tollFree": "Toll Free",
+    "quickContact": "Quick Contact",
+    "registeredOfficeAddress": "Registered Office Address",
+    "selectWebsiteTheme": "Select Website Theme",
+    "paymentNote": "<strong>Note:</strong> Dear Client, payments will be accepted only if made to the account details listed on the Wise Global Research website.",
+    "copyright": "© 2024 Wise Global. All rights reserved.",
+    "poweredBy": "Powered by"
+  },
+  "script": "Script",
+  "a": "A",
+  "clientName": "ClientName",
+  "fatherName": "FatherName",
+  "clientId": "ClientId",
+  "email": "Email",
+  "dob": "Dob",
+  "pan": "Pan",
+  "aadhaar": "Aadhaar",
+  "panFile": "PanFile",
+  "aadhaarFile": "AadhaarFile",
+  "signatureFile": "SignatureFile",
+  "symbol": "Symbol",
+  "name": "Name",
+  "price": "Price",
+  "change": "Change",
+  "sector": "Sector",
+  "volume": "Volume",
+  "T": "T",
+  "en-IN": "En IN",
+  "routes": {
+    "pages": {
+      "Home": "Pages Home",
+      "About": "Pages About",
+      "Services": "Pages Services",
+      "Demo": "Pages Demo",
+      "Contact": "Pages Contact",
+      "Legal": "Pages Legal",
+      "Disclosure": "Pages Disclosure",
+      "LiveChart": "Pages LiveChart",
+      "NotFound": "Pages NotFound",
+      "Reports": "Pages Reports",
+      "Complaint": "Pages Complaint",
+      "PaymentInfo": "Pages PaymentInfo",
+      "Team": "Pages Team",
+      "Vision": "Pages Vision",
+      "Equity": "Pages Equity",
+      "Intraday": "Pages Intraday",
+      "Mcx": "Pages Mcx",
+      "Career": "Pages Career",
+      "Training": "Pages Training",
+      "Blogs": "Pages Blogs",
+      "MarketNews": "Pages MarketNews",
+      "UserLogin": "Pages UserLogin",
+      "ClientPanel": "Pages ClientPanel",
+      "StockOption": "Pages StockOption",
+      "Delivery": "Pages Delivery",
+      "Index": "Pages Index",
+      "Future": "Pages Future",
+      "StockIndexOption": "Pages StockIndexOption",
+      "BTST": "Pages BTST",
+      "Cash": "Pages Cash",
+      "Bullions": "Pages Bullions",
+      "Energy": "Pages Energy",
+      "Metal": "Pages Metal",
+      "MCXOption": "Pages MCXOption",
+      "SmartCash": "Pages SmartCash",
+      "EvaluationStockCash": "Pages EvaluationStockCash",
+      "SmartOptions": "Pages SmartOptions",
+      "ImpulseOption": "Pages ImpulseOption",
+      "SmartFuture": "Pages SmartFuture",
+      "EvaluationStockOption": "Pages EvaluationStockOption",
+      "EvaluationIndexOptions": "Pages EvaluationIndexOptions",
+      "ImpulseIndexOptions": "Pages ImpulseIndexOptions",
+      "SmartIndexOption": "Pages SmartIndexOption",
+      "UniversalCash": "Pages UniversalCash",
+      "InfinityClub": "Pages InfinityClub",
+      "MCXSupreme": "Pages MCXSupreme",
+      "GalaxyMCX": "Pages GalaxyMCX",
+      "NCDEX": "Pages NCDEX",
+      "Forex": "Pages Forex",
+      "Currency": "Pages Currency",
+      "Comex": "Pages Comex",
+      "Terms": "Pages Terms",
+      "Refund": "Pages Refund",
+      "Privacy": "Pages Privacy",
+      "Recommendation": "Pages Recommendation",
+      "ClientServiceConsent": "Pages ClientServiceConsent",
+      "InvestorChart": "Pages InvestorChart",
+      "AntiMoneyLaundering": "Pages AntiMoneyLaundering",
+      "DailyRecommendation": "Pages DailyRecommendation",
+      "admin": {
+        "Dashboard": "Pages Admin Dashboard",
+        "ContactSubmissions": "Pages Admin ContactSubmissions",
+        "ConsentSubmissions": "Pages Admin ConsentSubmissions",
+        "ComplaintManager": "Pages Admin ComplaintManager",
+        "ReportManager": "Pages Admin ReportManager",
+        "PopupSubmissions": "Pages Admin PopupSubmissions"
+      }
+    },
+    "api": {
+      "ai-chat": "Api Ai Chat"
+    }
+  }
+}
