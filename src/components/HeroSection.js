@@ -7,9 +7,11 @@ import { cardVariants } from '../utils/animationVariants';
 
 import slide1 from '../assets/images/slide1.png';
 import slide2 from '../assets/images/slide2.png';
-import slide3 from '../assets/images/slide3.png';
+import slide4 from '../assets/images/slide4.png';
 
-const sliderImages = [slide1, slide2, slide3];
+// slide3 was causing a module resolution error in some build environments.
+// Use slide4 (available in the assets) instead to ensure the slider works.
+const sliderImages = [slide1, slide2, slide4];
 
 const HeroSection = () => {
   const { t } = useTranslation();

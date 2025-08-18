@@ -41,7 +41,7 @@ const servicesMenu = [
     items: [
       { path: '/EvaluationIndexOptions', labelKey: 'navbar.services.index.evaluationIndexOptions' },
       { path: '/ImpulseIndexOptions', labelKey: 'navbar.services.index.impulseIndexOptions' },
-      { path: '/SmartIndexOption', labelKey: 'navbar.services.index.smartIndexOption' },
+      { path: '/services/smart-index-option', labelKey: 'navbar.services.index.smartIndexOption' },
       { path: '/services/equity/index', labelKey: 'navbar.services.index.index' },
     ],
   },

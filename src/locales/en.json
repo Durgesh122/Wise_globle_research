@@ -74,8 +74,8 @@
         "index": "Index"
       },
       "mcx": {
-        "title": "MCX",
-        "mcx": "MCX",
+        "title": "Navbar Services Mcx Title",
+        "mcx": "Navbar Services Mcx Mcx",
         "bullions": "Bullions",
         "energy": "Energy",
         "metal": "Metal",
@@ -137,7 +137,6 @@
     "too_many_attempts": "Too many attempts. Please try again later."
   },
   "testimonials": {
-    "title": "What Our Clients Say",
     "0": {
       "name": "Rahul Sharma",
       "role": "Investor (5+ years)",
@@ -152,7 +151,8 @@
       "name": "Amit Kumar",
       "role": "Business Owner",
       "quote": "Their SEBI registration gives me confidence in their recommendations."
-    }
+    },
+    "title": "What Our Clients Say"
   },
   "home": {
     "helmet": {
@@ -174,18 +174,9 @@
     "whyChooseUs": {
       "heading": "Why Choose Us",
       "reasons": [
-        {
-          "title": "SEBI-Registered Expertise",
-          "desc": "Our analysts are certified by SEBI, ensuring compliance and reliability."
-        },
-        {
-          "title": "AI-Driven Insights",
-          "desc": "Leverage cutting-edge AI for precise market predictions."
-        },
-        {
-          "title": "Proven Track Record",
-          "desc": "Over 10 years of delivering profitable recommendations."
-        }
+        { "title": "SEBI-registered experts", "desc": "Our analysts are SEBI-certified, ensuring credibility and compliance." },
+        { "title": "AI-driven insights", "desc": "Leverage state-of-the-art AI for more accurate market signals." },
+        { "title": "Proven track record", "desc": "Providing profitable recommendations for 10+ years." }
       ]
     },
     "marketOverview": {
@@ -195,46 +186,37 @@
       "heading": "Meet Our Expert Team",
       "members": [
         {
-          "name": "Rahul Verma",
-          "role": "Chief Analyst",
-          "experience": "15+ years in equity research",
-          "expertise": ["Fundamental Analysis", "Portfolio Strategy"]
+          "name": "John Doe",
+          "role": "Senior Analyst",
+          "experience": "10+ years of experience in financial markets.",
+          "expertise": ["Equity Research", "Technical Analysis", "Portfolio Management"]
         },
         {
-          "name": "Priya Sharma",
-          "role": "Technical Analyst",
-          "experience": "12+ years in technical research",
-          "expertise": ["Chart Patterns", "Derivatives"]
+          "name": "Jane Smith",
+          "role": "Commodity Expert",
+          "experience": "8+ years specializing in commodities.",
+          "expertise": ["Metals", "Energy", "Agricultural Commodities"]
         },
         {
-          "name": "Amit Patel",
-          "role": "Quant Analyst",
-          "experience": "10+ years in algo trading",
-          "expertise": ["Algorithm Development", "Backtesting"]
+          "name": "Peter Jones",
+          "role": "Derivatives Strategist",
+          "experience": "12+ years in options and futures.",
+          "expertise": ["Options Trading", "Hedging Strategies", "Volatility Analysis"]
         },
         {
-          "name": "Neha Gupta",
-          "role": "Research Head",
-          "experience": "18+ years in market research",
-          "expertise": ["Macro Analysis", "Sector Research"]
+          "name": "Mary Johnson",
+          "role": "Market Researcher",
+          "experience": "5+ years in market analysis.",
+          "expertise": ["Data Analysis", "Economic Indicators", "Market Trends"]
         }
       ]
     },
     "methodologySection": {
       "heading": "Steps We Follow During Work",
       "steps": [
-        {
-          "title": "Customer-Centric Approach",
-          "desc": "Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty, fostering long-term relationships."
-        },
-        {
-          "title": "Risk Mitigation",
-          "desc": "Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests."
-        },
-        {
-          "title": "Creative Solutions",
-          "desc": "Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success."
-        }
+        { "title": "Customer-Centric Approach", "desc": "Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty." },
+        { "title": "Risk Mitigation", "desc": "Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests." },
+        { "title": "Creative Solutions", "desc": "Think innovatively to devise unique, effective answers to challenges, leveraging imagination and diverse perspectives." }
       ]
     },
     "faqSection": {
@@ -253,8 +235,93 @@
           "a": "Please refer to our terms and conditions or contact support for refund-related queries."
         }
       ],
-      "contactButton": "Contact Us"
+      "contactButton": "Contact Us",
+      "sebiFaqs": "FaqSection SebiFaqs",
+      "sebiHeading": "FaqSection SebiHeading"
+    },
+    "certifications": {
+      "heading": "We are Certified By",
+      "items": [
+        { "name": "SSL", "short": "SSL certified", "about": "Site security and encryption ensure data protection." },
+        { "name": "Verified", "short": "Verified", "about": "Verification of our services and identity." },
+        { "name": "QVA", "short": "Quality Verified", "about": "Adherence to quality and compliance standards." },
+        { "name": "NSIC", "short": "NSIC registered", "about": "Government recognition for small industries." },
+        { "name": "MSME", "short": "MSME registered", "about": "Indicates registration as a micro or small enterprise." },
+        { "name": "ISO", "short": "ISO certified", "about": "International quality management standards." },
+        { "name": "GAAF", "short": "GAAF certification", "about": "Industry-standard compliance and best practices." }
+      ],
+      "footer": "These certifications and verifications demonstrate our commitment to quality, security, and compliance. Hover any logo to read a short explanation; on mobile the text appears below."
+    },
+    "economicCalendar": {
+      "title": "Economic Calendar",
+      "embedded": "Live economic calendar is embedded below. If it fails to load, use the simulated view.",
+      "simulated": "This is a simulated calendar for environments where the widget is blocked or unavailable. Times are shown in IST."
+    },
+    "popupForm": {
+      "brand": "Wise Global Research Services",
+      "subtitle": "Contact Us for Stock Market Insights",
+      "labels": {
+        "name": "Full Name",
+        "mobile": "Mobile Number",
+        "city": "City",
+        "experience": "Investment Experience",
+        "newsletter": "Subscribe to newsletter"
+      },
+      "placeholders": {
+        "name": "Enter your full name",
+        "mobile": "Enter 10-digit mobile number",
+        "city": "Enter your city",
+        "select": "Select",
+        "selectExperience": "Select your experience level"
+      },
+      "experienceLevels": ["Beginner", "Intermediate", "Advanced"],
+      "buttons": {
+        "cancel": "Cancel",
+        "submit": "Submit Now"
+      },
+      "success": "Form submitted successfully. Our team will reach out soon."
+    },
+    "subscriptionPlans": {
+      "cta": "Get Started"
+    },
+    "chat": {
+      "introTitle": "Hi there! I'm your AI assistant",
+      "introSubtitle": "Let's start with your name",
+      "greetName": "Nice to meet you, {{name}}! Please share your mobile number.",
+      "askCity": "Got it! Which city are you from?",
+      "welcomeFrom": "Welcome from {{city}}, {{name}}! How can I assist you today?",
+      "fallback": "I'm having trouble understanding. Could you rephrase that?",
+      "labels": {
+        "name": "Name",
+        "phone": "Phone",
+        "city": "City"
+      },
+      "placeholders": {
+        "name": "Your full name...",
+        "phone": "10-digit mobile number...",
+        "city": "Your city...",
+        "ask": "Ask anything..."
+      },
+      "invalidPhone": "Chat InvalidPhone",
+      "goodbye": "Chat Goodbye",
+      "widgetTitle": "Chat WidgetTitle",
+      "end": "Chat End"
     }
+  },
+  "admin": {
+    "contactSubmissions": "Contact Submissions",
+    "table": {
+      "name": "Name",
+      "mobile": "Mobile",
+      "city": "City",
+      "experience": "Experience",
+      "newsletter": "Newsletter",
+      "submittedAt": "Submitted At"
+    }
+  },
+  "common": {
+    "yes": "Common Yes",
+    "no": "Common No"
   },
   "about_page": {
     "title": "About Us",
@@ -263,24 +330,24 @@
     "about_us_desc": "We are a team of experienced research analysts specializing in stock and commodity markets.",
     "mission_title": "Our Mission",
     "mission_desc": "To provide reliable and insightful research to our clients.",
-      "vision": {
-        "page_title": "Our Vision & Mission",
-        "pillars": [
-          {"title": "Empowering Wealth Creation", "description": "We aim to empower Indian traders and investors with strategies to build wealth through NSE, BSE, and MCX markets, focusing on stocks like RELIANCE and commodities like GOLD."},
-          {"title": "Ethical Guidance", "description": "Our commitment to SEBI-compliant, transparent advice ensures trust and integrity in every recommendation, from Smart Options to MCX Supreme."},
-          {"title": "Education and Insights", "description": "We provide regular blogs, webinars, and demos to educate investors on market trends, helping them navigate NIFTY and BANKNIFTY with confidence."},
-          {"title": "Innovative Technology", "description": "Leveraging AI and real-time data, we deliver cutting-edge tools for Indian traders, enhancing profitability in services like Universal Cash and Infinity Club."}
-        ],
-        "core_values_title": "Core Values",
-        "core_values": [
-          {"title": "Transparency", "description": "We provide clear, honest, and SEBI-compliant advice, ensuring clients understand every recommendation and its risks."},
-          {"title": "Client-Centric Approach", "description": "Our strategies are tailored to the needs of Indian investors, from beginners in Mumbai to seasoned traders in Delhi."},
-          {"title": "Innovation", "description": "We use advanced analytics and AI to deliver high-probability trading signals for NSE, BSE, and MCX markets."},
-          {"title": "Education", "description": "We empower clients with knowledge through workshops, blogs, and market updates, fostering informed decision-making."},
-          {"title": "Integrity", "description": "Our commitment to ethical practices ensures we prioritize client trust and long-term success over short-term gains."},
-          {"title": "Excellence", "description": "We strive for excellence in every service, from daily recommendations to personalized support for Indian traders."}
-        ]
-      },
+    "vision": {
+      "page_title": "Our Vision & Mission",
+      "pillars": [
+        { "title": "Customer Focus", "desc": "Design products and services around customer needs to build loyalty." },
+        { "title": "Integrity", "desc": "Operate transparently and ethically in all activities." },
+        { "title": "Innovation", "desc": "Use cutting-edge methods and technology to deliver better insights." },
+        { "title": "Excellence", "desc": "Strive for the highest standards in research and service delivery." }
+      ],
+      "core_values_title": "Core Values",
+      "core_values": [
+        { "title": "Honesty", "desc": "We provide unbiased research." },
+        { "title": "Quality", "desc": "Consistent high-quality analysis." },
+        { "title": "Customer-first", "desc": "Clients' needs guide our decisions." },
+        { "title": "Accountability", "desc": "We take responsibility for our advice." },
+        { "title": "Collaboration", "desc": "Teamwork across disciplines for better outcomes." },
+        { "title": "Continuous Improvement", "desc": "Regularly refine methods and learning." }
+      ]
+    },
     "need_help": "Need Help?",
     "steps_title": "Our Approach",
     "steps": {
@@ -296,7 +363,9 @@
         "title": "Creative Solutions",
         "desc": "Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success."
       }
-    }
+    },
+    "vision_title": "About Page Vision Title",
+    "vision_desc": "About Page Vision Desc"
   },
   "antiMoneyLaundering": {
     "title": "Anti-Money Laundering (AML)",
@@ -318,15 +387,7 @@
     "description": "Wise Global Research Analyst provides equity research in the NSE cash segment by dedicated and experienced Research Analysts after in-depth technical analysis. Our equity trading recommendations are produced after proper analysis of the stock market. These technical levels are generated for recommendations that can provide good movement in the market. In a volatile market, our customers should only focus on intraday research and should not carry forward any position for the next day.",
     "whatYouWillGet": {
       "title": "What You Will Get",
-      "points": [
-        "Daily pure intraday stock recommendations, frequency limited to 2 to 3 (as per market conditions).",
-        "Each recommendation will have 2 targets with proper stop loss.",
-        "Timely follow-ups of all trade signals.",
-        "Proper time for entry & exit in recommendations.",
-        "Careful analysis of market direction.",
-        "Recommendations are provided through SMS.",
-        "Swift real-time customer support (09:00 AM to 06:00 PM)."
-      ],
+      "points": "Daily pure intraday stock recommendations, frequency limited to 2 to 3 (as per market conditions).,Each recommendation will have 2 targets with proper stop loss.,Timely follow-ups of all trade signals.,Proper time for entry & exit in recommendations.,Careful analysis of market direction.,Recommendations are provided through SMS.,Swift real-time customer support (09:00 AM to 06:00 PM).",
       "description": "A pure intraday product, where customers receive stock recommendations in the NSE cash segment. This product is designed for new customers who want to evaluate our recommendations in the cash market.",
       "sampleCall": {
         "title": "Sample Call:",
@@ -335,21 +396,7 @@
     },
     "tradingRules": {
       "title": "Trading Rules Every Trader Must Follow",
-      "rules": [
-        "Do not over trade.",
-        "Only follow SMS research recommendations.",
-        "Trade each recommendation with the same quantity as advised by the Research Team.",
-        "Profit and loss are subject to market risk; there is no guarantee or assurance.",
-        "Never be emotional while trading.",
-        "Beware of overnight risk.",
-        "Always trade with a stop loss.",
-        "Don’t look back and regret past trades.",
-        "Don’t over-leverage in a volatile market.",
-        "Costs matter a lot when you are a trader.",
-        "Protect your capital first—trading begins with risk management.",
-        "Sometimes, not trading is also a valid strategy.",
-        "Profit is what is booked; all else is just on paper."
-      ]
+      "rules": "Do not over trade.,Only follow SMS research recommendations.,Trade each recommendation with the same quantity as advised by the Research Team.,Profit and loss are subject to market risk; there is no guarantee or assurance.,Never be emotional while trading.,Beware of overnight risk.,Always trade with a stop loss.,Don’t look back and regret past trades.,Don’t over-leverage in a volatile market.,Costs matter a lot when you are a trader.,Protect your capital first—trading begins with risk management.,Sometimes, not trading is also a valid strategy.,Profit is what is booked; all else is just on paper."
     },
     "supportInfo": {
       "support": "Swift real-time customer support:",
@@ -360,7 +407,7 @@
       "title": "Pricing Plan For Evaluation Stock Cash",
       "packName": "Cash Evaluation Pack",
       "price": "₹5,100",
-      "duration": "/ 10 Days",
+      "duration": "EvaluationStockCash Pricing Duration",
       "calls": "2 to 3 Calls in a Day",
       "button": "Payment",
       "note": "Note: Prices are excluding GST (18%)"
@@ -368,37 +415,149 @@
     "whyChooseUs": {
       "title": "Why Choose Evaluation Stock Cash?",
       "reasons": [
-        {
-          "title": "Expert Research",
-          "description": "Our team combines technical and fundamental analysis for the most reliable stock recommendations."
-        },
-        {
-          "title": "Timely Updates",
-          "description": "Get instant trade signals and support during Indian market hours."
-        },
-        {
-          "title": "Trusted by Traders",
-          "description": "Hundreds of stock traders rely on our signals for consistent results."
-        }
+        { "title": "Detailed Analysis", "desc": "In-depth equity research for intraday opportunities." },
+        { "title": "Clear Exit Rules", "desc": "Each recommendation includes stop-loss and targets." },
+        { "title": "Real-time Support", "desc": "Swift follow-ups and customer support during market hours." }
       ]
     },
     "faq": {
       "title": "Frequently Asked Questions",
       "questions": [
-        {
-          "q": "Q: How will I receive the recommendations?",
-          "a": "A: All recommendations are sent via SMS to your registered mobile number."
-        },
-        {
-          "q": "Q: Can I get support if I have questions?",
-          "a": "A: Yes, our support team is available from 09:00 AM to 06:00 PM for any queries."
-        },
-        {
-          "q": "Q: Is there a refund policy?",
-          "a": "A: Please refer to our terms and conditions or contact support for refund-related queries."
-        }
+        { "q": "How will I receive the recommendations?", "a": "All recommendations are sent via SMS to your registered mobile number." },
+        { "q": "What is the expected frequency of calls?", "a": "Frequency is typically 2-3 calls per day depending on market conditions." },
+        { "q": "Is there a refund policy?", "a": "Please refer to our terms and conditions or contact support for refund-related queries." }
       ],
       "contactButton": "Contact Us"
+    }
+  },
+  "contactForm": {
+    "successMessage": "Form submitted successfully! We will contact you soon.",
+    "errorMessage": "Failed to submit form",
+    "title": "Get in Touch",
+    "nameLabel": "Name",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameMinLength": "Name must be at least 2 characters",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Phone number must be 10 digits starting with 6, 7, 8, or 9",
+      "interestRequired": "Please select an area of interest",
+      "messageRequired": "Message is required",
+      "messageMinLength": "Message must be at least 10 characters"
+    },
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "interestLabel": "Area of Interest",
+    "selectOption": "Select an option",
+    "options": {
+      "equity": "Equity Research",
+      "derivatives": "Derivatives Strategies",
+      "technical": "Technical Analysis",
+      "portfolio": "Portfolio Management",
+      "learning": "Learning Resources"
+    },
+    "messageLabel": "Message",
+    "submitting": "Submitting...",
+    "submitButton": "Submit"
+  },
+  "economicCalendar": {
+    "title": "EconomicCalendar Title",
+    "embedded": "EconomicCalendar Embedded",
+    "simulated": "EconomicCalendar Simulated"
+  },
+  "script": "Script",
+  "a": "A",
+  "clientName": "ClientName",
+  "fatherName": "FatherName",
+  "clientId": "ClientId",
+  "email": "Email",
+  "dob": "Dob",
+  "pan": "Pan",
+  "aadhaar": "Aadhaar",
+  "panFile": "PanFile",
+  "aadhaarFile": "AadhaarFile",
+  "signatureFile": "SignatureFile",
+  "symbol": "Symbol",
+  "name": "Name",
+  "price": "Price",
+  "change": "Change",
+  "sector": "Sector",
+  "volume": "Volume",
+  "T": "T",
+  "en-IN": "En IN",
+  "routes": {
+    "pages": {
+      "Home": "Pages Home",
+      "About": "Pages About",
+      "Services": "Pages Services",
+      "Demo": "Pages Demo",
+      "Contact": "Pages Contact",
+      "Legal": "Pages Legal",
+      "Disclosure": "Pages Disclosure",
+      "LiveChart": "Pages LiveChart",
+      "NotFound": "Pages NotFound",
+      "Reports": "Pages Reports",
+      "Complaint": "Pages Complaint",
+      "PaymentInfo": "Pages PaymentInfo",
+      "Team": "Pages Team",
+      "Vision": "Pages Vision",
+      "Equity": "Pages Equity",
+      "Intraday": "Pages Intraday",
+      "Mcx": "Pages Mcx",
+      "Career": "Pages Career",
+      "Training": "Pages Training",
+      "Blogs": "Pages Blogs",
+      "MarketNews": "Pages MarketNews",
+      "UserLogin": "Pages UserLogin",
+      "ClientPanel": "Pages ClientPanel",
+      "StockOption": "Pages StockOption",
+      "Delivery": "Pages Delivery",
+      "Index": "Pages Index",
+      "Future": "Pages Future",
+      "StockIndexOption": "Pages StockIndexOption",
+      "BTST": "Pages BTST",
+      "Cash": "Pages Cash",
+      "Bullions": "Pages Bullions",
+      "Energy": "Pages Energy",
+      "Metal": "Pages Metal",
+      "MCXOption": "Pages MCXOption",
+      "SmartCash": "Pages SmartCash",
+      "EvaluationStockCash": "Pages EvaluationStockCash",
+      "SmartOptions": "Pages SmartOptions",
+      "ImpulseOption": "Pages ImpulseOption",
+      "SmartFuture": "Pages SmartFuture",
+      "EvaluationStockOption": "Pages EvaluationStockOption",
+      "EvaluationIndexOptions": "Pages EvaluationIndexOptions",
+      "ImpulseIndexOptions": "Pages ImpulseIndexOptions",
+      "SmartIndexOption": "Pages SmartIndexOption",
+      "UniversalCash": "Pages UniversalCash",
+      "InfinityClub": "Pages InfinityClub",
+      "MCXSupreme": "Pages MCXSupreme",
+      "GalaxyMCX": "Pages GalaxyMCX",
+      "NCDEX": "Pages NCDEX",
+      "Forex": "Pages Forex",
+      "Currency": "Pages Currency",
+      "Comex": "Pages Comex",
+      "Terms": "Pages Terms",
+      "Refund": "Pages Refund",
+      "Privacy": "Pages Privacy",
+      "Recommendation": "Pages Recommendation",
+      "ClientServiceConsent": "Pages ClientServiceConsent",
+      "InvestorChart": "Pages InvestorChart",
+      "AntiMoneyLaundering": "Pages AntiMoneyLaundering",
+      "DailyRecommendation": "Pages DailyRecommendation",
+      "admin": {
+        "Dashboard": "Pages Admin Dashboard",
+        "ContactSubmissions": "Pages Admin ContactSubmissions",
+        "ConsentSubmissions": "Pages Admin ConsentSubmissions",
+        "ComplaintManager": "Pages Admin ComplaintManager",
+        "ReportManager": "Pages Admin ReportManager",
+        "PopupSubmissions": "Pages Admin PopupSubmissions"
+      }
+    },
+    "api": {
+      "ai-chat": "Api Ai Chat"
     }
   }
 }

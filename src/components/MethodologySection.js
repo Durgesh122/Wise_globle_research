@@ -7,7 +7,12 @@ import step3 from '../assets/images/imgStep03.png';
 
 const MethodologySection = () => {
   const { t } = useTranslation();
-  const steps = t('home.methodologySection.steps', { returnObjects: true });
+  const rawSteps = t('home.methodologySection.steps', { returnObjects: true });
+  const steps = Array.isArray(rawSteps)
+    ? rawSteps
+    : (rawSteps && typeof rawSteps === 'object')
+      ? Object.values(rawSteps)
+      : [];
   const images = [step1, step2, step3];
 
   return (
@@ -32,7 +37,7 @@ const MethodologySection = () => {
               whileHover={{ scale: 1.05 }}
               style={{ transformStyle: 'preserve-3d' }}
             >
-              <img src={images[idx]} alt={step.title} className="w-20 h-20 mb-4 object-contain" />
+              <img src={images[idx] || images[0]} alt={step.title || ''} className="w-20 h-20 mb-4 object-contain" />
               <h3 className="text-lg sm:text-xl font-bold mb-2">{step.title}</h3>
               <p className="text-sm sm:text-base text-gray-100">{step.desc}</p>
             </motion.div>

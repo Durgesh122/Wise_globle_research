@@ -5,12 +5,9 @@ import { db } from '../firebase';
 import { ref, push } from 'firebase/database';
 import wImg from '../assets/images/w.png';
 
-// Investment experience levels
-const experienceLevels = [
-  'Beginner',
-  'Intermediate',
-  'Advanced',
-];
+// Investment experience levels are loaded from i18n keys
+import { useTranslation } from 'react-i18next';
+
 
 // Particle animation variants for logo hover
 const particleVariants = {
@@ -25,6 +22,8 @@ const particleVariants = {
 };
 
 const ContactForm = ({ onClose }) => {
+  const { t } = useTranslation();
+
   // State management
   const [form, setForm] = useState({
     name: '',
@@ -111,7 +110,7 @@ const ContactForm = ({ onClose }) => {
       if (window.gtag) {
         window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
       }
-      setSuccessMessage('Form submitted successfully. Our team will reach out soon.');
+  setSuccessMessage(t('home.popupForm.success'));
       setForm({
         name: '',
         mobile: '',
@@ -156,6 +155,7 @@ const ContactForm = ({ onClose }) => {
     return () => clearTimeout(timer);
   }, [location.pathname]);
   if (!visible) return null;
+  const experienceLevelsI18n = t('home.popupForm.experienceLevels', { returnObjects: true });
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center"
@@ -174,12 +174,8 @@ const ContactForm = ({ onClose }) => {
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         {/* Header with Company Name */}
-        <h2 className="text-2xl font-bold text-white text-center mb-4">
-          Wise Global Research Services
-        </h2>
-        <h3 className="text-lg font-semibold text-blue-300 text-center mb-6">
-          Contact Us for Stock Market Insights
-        </h3>
+  <h2 className="text-2xl font-bold text-white text-center mb-4">{t('home.popupForm.brand')}</h2>
+  <h3 className="text-lg font-semibold text-blue-300 text-center mb-6">{t('home.popupForm.subtitle')}</h3>
 
         {/* Logo with Particle Animation */}
         <div
@@ -242,12 +238,12 @@ const ContactForm = ({ onClose }) => {
 
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium mb-1">Full Name</label>
+            <label className="block text-sm font-medium mb-1">{t('home.popupForm.labels.name')}</label>
             <input
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder="Enter your full name"
+              placeholder={t('home.popupForm.placeholders.name')}
               className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.name ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
               required
             />
@@ -264,12 +260,12 @@ const ContactForm = ({ onClose }) => {
 
           {/* Mobile Number */}
           <div>
-            <label className="block text-sm font-medium mb-1">Mobile Number</label>
+            <label className="block text-sm font-medium mb-1">{t('home.popupForm.labels.mobile')}</label>
             <input
               name="mobile"
               value={form.mobile}
               onChange={handleChange}
-              placeholder="Enter 10-digit mobile number"
+              placeholder={t('home.popupForm.placeholders.mobile')}
               className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.mobile ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
               required
             />
@@ -286,12 +282,12 @@ const ContactForm = ({ onClose }) => {
 
           {/* City Input */}
           <div>
-            <label className="block text-sm font-medium mb-1">City</label>
+            <label className="block text-sm font-medium mb-1">{t('home.popupForm.labels.city')}</label>
             <input
               name="city"
               value={form.city}
               onChange={handleChange}
-              placeholder="Enter your city"
+              placeholder={t('home.popupForm.placeholders.city')}
               className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.city ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
               required
             />
@@ -308,7 +304,7 @@ const ContactForm = ({ onClose }) => {
 
           {/* Investment Experience */}
           <div>
-            <label className="block text-sm font-medium mb-1">Investment Experience</label>
+            <label className="block text-sm font-medium mb-1">{t('home.popupForm.labels.experience')}</label>
             <select
               name="experience"
               value={form.experience}
@@ -316,8 +312,8 @@ const ContactForm = ({ onClose }) => {
               className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.experience ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
               required
             >
-              <option value="">Select your experience level</option>
-              {experienceLevels.map((level) => (
+              <option value="">{t('home.popupForm.placeholders.select')}</option>
+              {experienceLevelsI18n.map((level) => (
                 <option key={level} value={level}>
                   {level}
                 </option>
@@ -343,9 +339,7 @@ const ContactForm = ({ onClose }) => {
               onChange={handleChange}
               className="h-5 w-5 text-blue-500 focus:ring-blue-500 border-gray-500 rounded"
             />
-            <label className="ml-2 text-sm font-medium">
-               checkbox
-            </label>
+            <label className="ml-2 text-sm font-medium">{t('home.popupForm.labels.newsletter')}</label>
           </div>
 
           {/* Submit Button */}
@@ -365,7 +359,7 @@ const ContactForm = ({ onClose }) => {
                 ⏳
               </motion.span>
             ) : (
-              'Submit Now'
+              t('home.popupForm.buttons.submit')
             )}
           </button>
 

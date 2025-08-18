@@ -29,6 +29,16 @@ const About = () => {
       <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-center">{t('about_page.title')}</h1>
       <p className="text-lg text-center mb-8 text-white/80">{t('about_page.subtitle')}</p>
 
+      <div className="max-w-3xl mx-auto text-center mb-8">
+        <h2 className="text-2xl font-extrabold mb-2 text-white">About Us — Wise Global Research</h2>
+        <p className="text-lg text-white/90">We prioritize what matters most in your life.</p>
+        <div className="mt-4 text-white/80 text-left md:text-center">
+          <p>
+            Wise Global Research is a SEBI registered analyst company dedicated to empowering you with straightforward, meaningful, and actionable recommendations and solutions, enabling you to confidently build wealth for any purpose. Committed to offering unbiased opinions backed by thorough research, we focus on providing valuable insights to participants in the Indian market.
+          </p>
+        </div>
+      </div>
+
       <div className="flex flex-col md:flex-row justify-center gap-8 mb-10">
         <div className="bg-white/30 rounded-xl p-6 flex-1 text-center">
           <h2 className="text-2xl font-bold mb-2">{t('about_page.about_us_title')}</h2>

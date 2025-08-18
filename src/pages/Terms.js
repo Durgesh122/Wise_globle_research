@@ -6,8 +6,7 @@ import { FaCheckCircle } from 'react-icons/fa';
 function Terms() {
   return (
     <div
-      className="container mx-auto py-12"
-      style={{ backgroundColor: 'transparent' }}
+      className="container mx-auto px-4 py-12 min-h-screen bg-transparent text-white"
       data-aos="fade-in"
     >
       <motion.h1
@@ -23,11 +22,11 @@ function Terms() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="terms-content text-white"
+        className="terms-content text-white leading-relaxed break-words max-w-3xl mx-auto"
       >
         <section className="mb-8">
-          <motion.p
-            className="mb-2"
+            <motion.p
+            className="mb-2 text-white/90"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
@@ -189,7 +188,7 @@ function Terms() {
 
         <section className="mb-8">
           <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.7, duration: 0.5 }}>
-            For all Terms & Conditions please refer our Webpage <a href="https://wiseglobalresearch.com.com" className="text-blue-500 hover:underline">https://wiseglobalresearch.com.com</a>
+            For all Terms & Conditions please refer our Webpage <a href="https://wiseglobalresearch.com" className="text-blue-500 hover:underline">https://wiseglobalresearch.com</a>
           </motion.p>
         </section>
 

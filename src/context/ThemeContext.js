@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-// Define an extensive set of vibrant, sexy gradients
+// Define an extensive set of vibrant, sexy gradients (restored) + premium dark themes
 const gradients = {
   default: {
     // Techy indigo-to-periwinkle gradient
@@ -8,46 +8,7 @@ const gradients = {
     textColor: '#ffffff',
     transition: 'background 0.5s ease-in-out',
   },
-  sunny: {
-    background: 'linear-gradient(to right, #f6d365, #fda085)',
-    textColor: '#333333',
-    transition: 'background 0.5s ease-in-out',
-  },
-  ocean: {
-    background: 'linear-gradient(to right, #2193b0, #6dd5ed)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
-  sunset: {
-    background: 'linear-gradient(to right, #0B486B, #F56217)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
-  forest: {
-    background: 'linear-gradient(to right, #5A3F37, #2C7744)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
-  fire: {
-    background: 'linear-gradient(to right, #F00000, #DC281E)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
-  ice: {
-    background: 'linear-gradient(to right, #83a4d4, #b6fbff)',
-    textColor: '#000000',
-    transition: 'background 0.5s ease-in-out',
-  },
-  gold: {
-    background: 'linear-gradient(to right, #fbd786, #f7797d)',
-    textColor: '#333333',
-    transition: 'background 0.5s ease-in-out',
-  },
-  purpleDream: {
-    background: 'linear-gradient(to right, #c471f5, #fa71cd)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
+  // ...removed two top colors (fire, purpleDream) per user request
   greenGlow: {
     background: 'linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12)',
     textColor: '#ffffff',
@@ -59,31 +20,7 @@ const gradients = {
     transition: 'background 0.5s ease-in-out',
   },
   // New Sexy Gradients
-  neonPulse: {
-    background: 'linear-gradient(to right, #00f260, #0575e6)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
-  cyberWave: {
-    background: 'linear-gradient(to right, #ff00cc, #333399)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
-  auroraGlow: {
-    background: 'linear-gradient(to right, #00dbde, #fc00ff)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
-  midnightMarket: {
-    background: 'linear-gradient(to right, #1e3c72, #2a5298)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
-  goldenHorizon: {
-    background: 'linear-gradient(to right, #f7971e, #ffd200)',
-    textColor: '#333333',
-    transition: 'background 0.5s ease-in-out',
-  },
+
   cosmicTrade: {
     background: 'linear-gradient(to right, #4b0082, #00b7eb)',
     textColor: '#ffffff',
@@ -94,51 +31,81 @@ const gradients = {
     textColor: '#333333',
     transition: 'background 0.5s ease-in-out',
   },
-  rubyBlaze: {
-    background: 'linear-gradient(to right, #e52d27, #b31217)',
+  
+  // User-added color palette
+  mintLeaf: {
+    background: 'linear-gradient(to right, #68ba7f, #5fae73)',
+    textColor: '#0b1220',
+    transition: 'background 0.5s ease-in-out',
+  },
+  deepForest: {
+    background: 'linear-gradient(to right, #253d2c, #273f2e)',
+    textColor: '#e6eef8',
+    transition: 'background 0.5s ease-in-out',
+  },
+  midnightBlueCustom: {
+    background: 'linear-gradient(to right, #0f0e47, #12124f)',
     textColor: '#ffffff',
     transition: 'background 0.5s ease-in-out',
   },
-  sapphireNight: {
-    background: 'linear-gradient(to right, #2b32b2, #1488cc)',
+  springGreen: {
+    background: 'linear-gradient(to right, #469110, #3f890f)',
     textColor: '#ffffff',
     transition: 'background 0.5s ease-in-out',
   },
-  tropicalVibe: {
-    background: 'linear-gradient(to right, #ff7e5f, #feb47b)',
-    textColor: '#333333',
+  mintPale: {
+    background: 'linear-gradient(to right, #badba2, #a8c990)',
+    textColor: '#0b1220',
     transition: 'background 0.5s ease-in-out',
   },
-  electricLime: {
-    background: 'linear-gradient(to right, #ccff00, #00ffcc)',
-    textColor: '#333333',
+  goldenSun: {
+    background: 'linear-gradient(to right, #ffb343, #ff9f1a)',
+    textColor: '#0b1220',
     transition: 'background 0.5s ease-in-out',
   },
-  starDust: {
-    background: 'linear-gradient(to right, #1a2980, #26d0ce)',
+  aquaSky: {
+    background: 'linear-gradient(to right, #42eaff, #3bd1f7)',
+    textColor: '#0b1220',
+    transition: 'background 0.5s ease-in-out',
+  },
+  electricRoyal: {
+    background: 'linear-gradient(to right, #4272ff, #365dff)',
     textColor: '#ffffff',
     transition: 'background 0.5s ease-in-out',
   },
-  velvetDusk: {
-    background: 'linear-gradient(to right, #6b206b, #ff6a88)',
+  tealStone: {
+    background: 'linear-gradient(to right, #245f73, #1f4f5f)',
     textColor: '#ffffff',
     transition: 'background 0.5s ease-in-out',
   },
-  aquaFlare: {
-    background: 'linear-gradient(to right, #00ddeb, #b0e0e6)',
-    textColor: '#333333',
+  warmTaupe: {
+    background: 'linear-gradient(to right, #80775c, #6f6752)',
+    textColor: '#0b1220',
     transition: 'background 0.5s ease-in-out',
   },
-  magmaCore: {
-    background: 'linear-gradient(to right, #ff4500, #ff8c00)',
-    textColor: '#ffffff',
+  // Premium dark themes (5 distinct options)
+  obsidianMarket: {
+    background: 'linear-gradient(90deg, #03051e 0%, #0b1220 50%, #111827 100%)',
+    textColor: '#e6eef8',
     transition: 'background 0.5s ease-in-out',
   },
+  nocturne: {
+    background: 'linear-gradient(90deg, #0a0f1a 0%, #131826 50%, #192233 100%)',
+    textColor: '#cfd9ee',
+    transition: 'background 0.5s ease-in-out',
+  },
+  deepGalaxy: {
+    background: 'linear-gradient(90deg, #071029 0%, #0e1833 50%, #12203f 100%)',
+    textColor: '#dbe9ff',
+    transition: 'background 0.5s ease-in-out',
+  },
+  // ...removed two bottom colors (velvetMidnight, carbonEdge) per user request
 };
 
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
+  // restore default theme to the original gradient
   const [theme, setTheme] = useState('default');
   const [previewTheme, setPreviewTheme] = useState(null); // For previewing themes
 

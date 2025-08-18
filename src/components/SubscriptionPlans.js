@@ -2,8 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FiCheckCircle } from 'react-icons/fi';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
+import { useTranslation } from 'react-i18next';
 
 const SubscriptionPlans = () => {
+  const { t } = useTranslation();
   const plans = [
     {
       name: 'Basic',
@@ -85,7 +87,7 @@ const SubscriptionPlans = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Get Started
+                {t('home.subscriptionPlans.cta')}
               </motion.button>
             </motion.div>
           ))}

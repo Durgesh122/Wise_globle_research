@@ -1,396 +1,677 @@
 {
   "hero": {
-    "title": "रिसर्च एनालिस्ट",
-    "getStarted": "शुरू करें",
-    "previousSlide": "पिछला स्लाइड",
-    "nextSlide": "अगला स्लाइड"
+    "title": "Research Analyst",
+    "getStarted": "Get Started",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
+  },
+  "footer": {
+    "copyright": "© 2024 Wise Global. All rights reserved.",
+    "selectLanguage": "Select Language",
+    "description": "WISE GLOBAL RESEARCH SERVICES PRIVATE LIMITED comprises seasoned and proficient research analysts specializing in the stock and commodity markets.",
+    "quickLinks": "Quick Links",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "payment": "Payment",
+    "investorCharter": "Investor Charter",
+    "currentOpenings": "Current Openings",
+    "guideForInvesting": "Guide For Investing",
+    "dailyRecommendation": "Daily Recommendation",
+    "usefulLinks": "Useful Links",
+    "disclaimer": "Disclaimer",
+    "disclosure": "Disclosure",
+    "privacyPolicy": "Privacy Policy",
+    "refundPolicy": "Refund Policy",
+    "complaintBox": "Complaint Box",
+    "complaintData": "Complaint Data",
+    "termsAndConditions": "Terms and Conditions",
+    "registrationDetails": "Our Registration Details",
+    "registeredName": "Registered Name",
+    "principalOfficer": "Principal Officer/Compliance Officer",
+    "gstNo": "GST No.",
+    "cinNumber": "CIN Number",
+    "typeOfRegistration": "Type of Registration",
+    "sebiRegistrationNo": "SEBI Registration Number",
+    "bseEnlistmentNo": "BSE Enlistment No.",
+    "validity": "Validity",
+    "sebiOfficeDetails": "SEBI Office Details",
+    "tollFree": "Toll Free",
+    "quickContact": "Quick Contact",
+    "registeredOfficeAddress": "Registered Office Address",
+    "selectWebsiteTheme": "Select Website Theme",
+    "paymentNote": "<strong>Note:</strong> Dear Client, payments will be accepted only if made to the account details listed on the Wise Global Research website.",
+    "poweredBy": "Powered by"
+  },
+  "navbar": {
+    "home": "Home",
+    "services": {
+      "title": "Services",
+      "cash": {
+        "title": "Cash",
+        "evaluationStockCash": "Evaluation Stock Cash",
+        "smartCash": "Smart Cash",
+        "cash": "Cash"
+      },
+      "option": {
+        "title": "Option",
+        "evaluationStockOption": "Evaluation Stock Option",
+        "impulseOption": "Impulse Option",
+        "smartFuture": "Smart Future",
+        "smartOptions": "Smart Options"
+      },
+      "specialization": {
+        "title": "Specialization",
+        "infinityClub": "Infinity Club",
+        "mcxSupreme": "MCX Supreme",
+        "galaxyMCX": "Galaxy MCX",
+        "universalCash": "Universal Cash"
+      },
+      "index": {
+        "title": "Index",
+        "evaluationIndexOptions": "Evaluation Index Options",
+        "impulseIndexOptions": "Impulse Index Options",
+        "smartIndexOption": "SmartIndexOption",
+        "index": "Index"
+      },
+      "mcx": {
+        "title": "Navbar Services Mcx Title",
+        "mcx": "Navbar Services Mcx Mcx",
+        "bullions": "Bullions",
+        "energy": "Energy",
+        "metal": "Metal",
+        "mcxOption": "MCX Option"
+      }
+    },
+    "company": {
+      "title": "Company",
+      "aboutUs": "About Us",
+      "ourTeam": "Our Team",
+      "visionMission": "Vision & Mission"
+    },
+    "hrZone": {
+      "title": "HR Zone",
+      "career": "Career",
+      "training": "Training"
+    },
+    "insights": {
+      "title": "Insights",
+      "blogs": "Blogs",
+      "marketNews": "Market News",
+      "complaintData": "Complaint Data",
+      "grievanceRedressalProcess": "Grievance Redressal Process"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "adminPanel": "Admin Panel",
+      "clientPanel": "Client Panel",
+      "clientServiceConsent": "Client Service Consent",
+      "investorChart": "Investor Chart",
+      "antiMoneyLaundering": "Anti-Money Laundering"
+    },
+    "payment": "Payment",
+    "complaintBox": "Complaint Box",
+    "contactUs": "Contact Us",
+    "researchReports": "Research Reports"
   },
   "login": {
-    "title": "एडमिन लॉगिन",
-    "email_placeholder": "ईमेल दर्ज करें",
-    "email_label": "ईमेल पता",
-    "password_placeholder": "पासवर्ड दर्ज करें",
-    "password_label": "पासवर्ड",
-    "submit_label": "लॉगिन फॉर्म सबमिट करें",
-    "logging_in": "लॉगिन हो रहा है...",
-    "login_button": "लॉगिन",
-    "email_required": "ईमेल आवश्यक है",
-    "email_invalid": "कृपया मान्य ईमेल पता दर्ज करें",
-    "password_required": "पासवर्ड आवश्यक है",
-    "password_length": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
-    "password_uppercase": "पासवर्ड में कम से कम एक कैपिटल अक्षर होना चाहिए",
-    "password_lowercase": "पासवर्ड में कम से कम एक छोटे अक्षर होना चाहिए",
-    "password_number": "पासवर्ड में कम से कम एक नंबर होना चाहिए",
-    "password_special": "पासवर्ड में कम से कम एक विशेष अक्षर होना चाहिए",
-    "success": "लॉगिन सफल!",
-    "failed": "लॉगिन विफल रहा। कृपया पुनः प्रयास करें।",
-    "user_not_found": "इस ईमेल से कोई यूज़र नहीं मिला।",
-    "incorrect_password": "गलत पासवर्ड।",
-    "too_many_attempts": "बहुत बार प्रयास किया गया। कृपया बाद में प्रयास करें।"
+    "title": "Admin Login",
+    "email_placeholder": "Enter Email",
+    "email_label": "Email address",
+    "password_placeholder": "Enter Password",
+    "password_label": "Password",
+    "submit_label": "Submit login form",
+    "logging_in": "Logging in...",
+    "login_button": "Login",
+    "email_required": "Email is required",
+    "email_invalid": "Please enter a valid email address",
+    "password_required": "Password is required",
+    "password_length": "Password must be at least 6 characters long",
+    "password_uppercase": "Password must contain at least one uppercase letter",
+    "password_lowercase": "Password must contain at least one lowercase letter",
+    "password_number": "Password must contain at least one number",
+    "password_special": "Password must contain at least one special character",
+    "success": "Login successful!",
+    "failed": "Login failed. Please try again.",
+    "user_not_found": "No user found with this email.",
+    "incorrect_password": "Incorrect password.",
+    "too_many_attempts": "Too many attempts. Please try again later."
   },
   "testimonials": {
-    "title": "हमारे क्लाइंट्स क्या कहते हैं",
     "0": {
-      "name": "राहुल शर्मा",
-      "role": "निवेशक (5+ वर्ष)",
-      "quote": "अनुसंधान की गुणवत्ता उत्कृष्ट है। पिछले साल मेरे पोर्टफोलियो को बढ़ाने में मदद मिली।"
+      "name": "Rahul Sharma",
+      "role": "Investor (5+ years)",
+      "quote": "The research quality is exceptional. Helped me grow my portfolio last year."
     },
     "1": {
-      "name": "प्रिया पटेल",
-      "role": "ट्रेडर (3+ वर्ष)",
-      "quote": "सटीक तकनीकी कॉल्स और बेहतरीन रिस्क मैनेजमेंट सुझाव।"
+      "name": "Priya Patel",
+      "role": "Trader (3+ years)",
+      "quote": "Accurate technical calls and excellent risk management suggestions."
     },
     "2": {
-      "name": "अमित कुमार",
-      "role": "व्यवसायी",
-      "quote": "इनकी सेबी रजिस्ट्रेशन से मुझे इनके सुझावों पर भरोसा होता है।"
-    }
+      "name": "Amit Kumar",
+      "role": "Business Owner",
+      "quote": "Their SEBI registration gives me confidence in their recommendations."
+    },
+    "title": "What Our Clients Say"
   },
   "home": {
     "helmet": {
-      "title": "वाइज ग्लोबल रिसर्च सर्विसेज",
-      "description": "भारतीय ट्रेडर्स और निवेशकों के लिए मार्केट रिसर्च, एनालिटिक्स और डेटा-ड्रिवन इनसाइट्स।",
-      "ogDescription": "वाइज ग्लोबल रिसर्च सर्विसेज - भारतीय ट्रेडर्स और निवेशकों को सशक्त बनाने के लिए।",
-      "twitterDescription": "वाइज ग्लोबल रिसर्च सर्विसेज - भारतीय ट्रेडर्स के लिए मार्केट रिसर्च और एनालिटिक्स।"
+      "title": "Wise Global Research Services",
+      "description": "Market research, analytics, and data-driven insights for Indian traders and investors.",
+      "ogDescription": "Wise Global Research Services - Empowering Indian traders and investors with actionable insights.",
+      "twitterDescription": "Wise Global Research Services - Market research and analytics for Indian traders."
     },
     "alertBar": {
       "hi": "कृपया ध्यान दें – प्रिय ग्राहक, आपके भुगतान स्वीकार किए जाएंगे अगर आप Wise Global Research वेबसाइट पर दी गई खाता जानकारी का उपयोग करेंगे। हम केवल Wise Global Research के अलावा किसी अन्य खातों में कोई भुगतान स्वीकार नहीं करते।",
-      "en": "नोट: भुगतान केवल Wise Global Research वेबसाइट पर दी गई खाता जानकारी के अनुसार स्वीकार किए जाएंगे।"
+      "en": "Note: Dear Client, payments will be accepted only if made to the account details listed on the Wise Global Research website."
     },
     "heroSection": {
-      "title": "रिसर्च एनालिस्ट",
-      "getStarted": "शुरू करें",
-      "previousSlide": "पिछला स्लाइड",
-      "nextSlide": "अगला स्लाइड"
+      "title": "Research Analyst",
+      "getStarted": "Get Started",
+      "previousSlide": "Previous Slide",
+      "nextSlide": "Next Slide"
     },
     "whyChooseUs": {
-      "heading": "क्यों चुनें हमें",
+      "heading": "Why Choose Us",
       "reasons": [
         {
-          "title": "सेबी-पंजीकृत विशेषज्ञता",
-          "desc": "हमारे विश्लेषक सेबी द्वारा प्रमाणित हैं, जिससे विश्वसनीयता और अनुपालन सुनिश्चित होता है।"
+          "title": "SEBI-registered experts",
+          "desc": "Our analysts are SEBI-certified, ensuring credibility and compliance."
         },
         {
-          "title": "एआई-आधारित इनसाइट्स",
-          "desc": "सटीक मार्केट प्रेडिक्शन के लिए अत्याधुनिक एआई का उपयोग करें।"
+          "title": "AI-driven insights",
+          "desc": "Leverage state-of-the-art AI for more accurate market signals."
         },
         {
-          "title": "सिद्ध ट्रैक रिकॉर्ड",
-          "desc": "10+ वर्षों से लाभकारी सिफारिशें प्रदान कर रहे हैं।"
+          "title": "Proven track record",
+          "desc": "Providing profitable recommendations for 10+ years."
         }
       ]
     },
     "marketOverview": {
-      "heading": "लाइव मार्केट ओवरव्यू"
+      "heading": "Live Market Overview"
     },
     "teamSection": {
-      "heading": "हमारी विशेषज्ञ टीम से मिलें",
+      "heading": "Meet Our Expert Team",
       "members": [
         {
-          "name": "राहुल वर्मा",
-          "role": "मुख्य विश्लेषक",
-          "experience": "15+ वर्षों का इक्विटी रिसर्च अनुभव",
-          "expertise": ["मूलभूत विश्लेषण", "पोर्टफोलियो रणनीति"]
+          "name": "John Doe",
+          "role": "Senior Analyst",
+          "experience": "10+ years of experience in financial markets.",
+          "expertise": [
+            "Equity Research",
+            "Technical Analysis",
+            "Portfolio Management"
+          ]
         },
         {
-          "name": "प्रिया शर्मा",
-          "role": "तकनीकी विश्लेषक",
-          "experience": "12+ वर्षों का तकनीकी रिसर्च अनुभव",
-          "expertise": ["चार्ट पैटर्न", "डेरिवेटिव्स"]
+          "name": "Jane Smith",
+          "role": "Commodity Expert",
+          "experience": "8+ years specializing in commodities.",
+          "expertise": [
+            "Metals",
+            "Energy",
+            "Agricultural Commodities"
+          ]
         },
         {
-          "name": "अमित पटेल",
-          "role": "क्वांट विश्लेषक",
-          "experience": "10+ वर्षों का एल्गो ट्रेडिंग अनुभव",
-          "expertise": ["एल्गोरिदम विकास", "बैकटेस्टिंग"]
+          "name": "Peter Jones",
+          "role": "Derivatives Strategist",
+          "experience": "12+ years in options and futures.",
+          "expertise": [
+            "Options Trading",
+            "Hedging Strategies",
+            "Volatility Analysis"
+          ]
         },
         {
-          "name": "नेहा गुप्ता",
-          "role": "रिसर्च हेड",
-          "experience": "18+ वर्षों का मार्केट रिसर्च अनुभव",
-          "expertise": ["मैक्रो विश्लेषण", "सेक्टर रिसर्च"]
+          "name": "Mary Johnson",
+          "role": "Market Researcher",
+          "experience": "5+ years in market analysis.",
+          "expertise": [
+            "Data Analysis",
+            "Economic Indicators",
+            "Market Trends"
+          ]
         }
       ]
     },
     "methodologySection": {
-      "heading": "हमारे कार्य के दौरान अपनाए गए कदम",
+      "heading": "Steps We Follow During Work",
       "steps": [
         {
-          "title": "ग्राहक-केंद्रित दृष्टिकोण",
-          "desc": "ग्राहक की आवश्यकताओं, पसंद और फीडबैक को प्राथमिकता दें, उत्पाद/सेवाओं को अनुकूलित करें, संतुष्टि और वफादारी बढ़ाएं, दीर्घकालिक संबंध बनाएं।"
+          "title": "Customer-Centric Approach",
+          "desc": "Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty."
         },
         {
-          "title": "जोखिम न्यूनीकरण",
-          "desc": "संभावित खतरों की पहचान, मूल्यांकन और समाधान करें ताकि संचालन, वित्त, प्रतिष्ठा और हितधारकों पर नकारात्मक प्रभाव कम हो सके।"
+          "title": "Risk Mitigation",
+          "desc": "Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests."
         },
         {
-          "title": "रचनात्मक समाधान",
-          "desc": "चुनौतियों के लिए अभिनव, प्रभावी उत्तर तैयार करें, कल्पना, संसाधनशीलता और विविध दृष्टिकोणों का लाभ उठाएं।"
+          "title": "Creative Solutions",
+          "desc": "Think innovatively to devise unique, effective answers to challenges, leveraging imagination and diverse perspectives."
         }
       ]
     },
     "faqSection": {
-      "heading": "अक्सर पूछे जाने वाले प्रश्न",
+      "heading": "Frequently Asked Questions",
       "questions": [
         {
-          "q": "मुझे सिफारिशें कैसे प्राप्त होंगी?",
-          "a": "सभी सिफारिशें आपके पंजीकृत मोबाइल नंबर पर एसएमएस द्वारा भेजी जाएंगी।"
+          "q": "How will I receive the recommendations?",
+          "a": "All recommendations are sent via SMS to your registered mobile number."
         },
         {
-          "q": "अगर मुझे सवाल हैं तो क्या मुझे सहायता मिलेगी?",
-          "a": "हाँ, हमारी सहायता टीम सुबह 9 बजे से शाम 6 बजे तक उपलब्ध है।"
+          "q": "Can I get support if I have questions?",
+          "a": "Yes, our support team is available from 09:00 AM to 06:00 PM for any queries."
         },
         {
-          "q": "क्या रिफंड नीति है?",
-          "a": "कृपया हमारी शर्तें देखें या रिफंड संबंधित प्रश्नों के लिए सहायता से संपर्क करें।"
+          "q": "Is there a refund policy?",
+          "a": "Please refer to our terms and conditions or contact support for refund-related queries."
         }
       ],
-      "contactButton": "संपर्क करें"
+      "contactButton": "Contact Us",
+      "sebiFaqs": "FaqSection SebiFaqs",
+      "sebiHeading": "FaqSection SebiHeading"
+    },
+    "certifications": {
+      "heading": "We are Certified By",
+      "items": [
+        {
+          "name": "SSL",
+          "short": "SSL certified",
+          "about": "Site security and encryption ensure data protection."
+        },
+        {
+          "name": "Verified",
+          "short": "Verified",
+          "about": "Verification of our services and identity."
+        },
+        {
+          "name": "QVA",
+          "short": "Quality Verified",
+          "about": "Adherence to quality and compliance standards."
+        },
+        {
+          "name": "NSIC",
+          "short": "NSIC registered",
+          "about": "Government recognition for small industries."
+        },
+        {
+          "name": "MSME",
+          "short": "MSME registered",
+          "about": "Indicates registration as a micro or small enterprise."
+        },
+        {
+          "name": "ISO",
+          "short": "ISO certified",
+          "about": "International quality management standards."
+        },
+        {
+          "name": "GAAF",
+          "short": "GAAF certification",
+          "about": "Industry-standard compliance and best practices."
+        }
+      ],
+      "footer": "These certifications and verifications demonstrate our commitment to quality, security, and compliance. Hover any logo to read a short explanation; on mobile the text appears below."
+    },
+    "economicCalendar": {
+      "title": "Economic Calendar",
+      "embedded": "Live economic calendar is embedded below. If it fails to load, use the simulated view.",
+      "simulated": "This is a simulated calendar for environments where the widget is blocked or unavailable. Times are shown in IST."
+    },
+    "popupForm": {
+      "brand": "Wise Global Research Services",
+      "subtitle": "Contact Us for Stock Market Insights",
+      "labels": {
+        "name": "Full Name",
+        "mobile": "Mobile Number",
+        "city": "City",
+        "experience": "Investment Experience",
+        "newsletter": "Subscribe to newsletter"
+      },
+      "placeholders": {
+        "name": "Enter your full name",
+        "mobile": "Enter 10-digit mobile number",
+        "city": "Enter your city",
+        "select": "Select",
+        "selectExperience": "Select your experience level"
+      },
+      "experienceLevels": [
+        "Beginner",
+        "Intermediate",
+        "Advanced"
+      ],
+      "buttons": {
+        "cancel": "Cancel",
+        "submit": "Submit Now"
+      },
+      "success": "Form submitted successfully. Our team will reach out soon."
+    },
+    "subscriptionPlans": {
+      "cta": "Get Started"
+    },
+    "chat": {
+      "introTitle": "Hi there! I'm your AI assistant",
+      "introSubtitle": "Let's start with your name",
+      "greetName": "Nice to meet you, {{name}}! Please share your mobile number.",
+      "askCity": "Got it! Which city are you from?",
+      "welcomeFrom": "Welcome from {{city}}, {{name}}! How can I assist you today?",
+      "fallback": "I'm having trouble understanding. Could you rephrase that?",
+      "labels": {
+        "name": "Name",
+        "phone": "Phone",
+        "city": "City"
+      },
+      "placeholders": {
+        "name": "Your full name...",
+        "phone": "10-digit mobile number...",
+        "city": "Your city...",
+        "ask": "Ask anything..."
+      },
+      "invalidPhone": "Chat InvalidPhone",
+      "goodbye": "Chat Goodbye",
+      "widgetTitle": "Chat WidgetTitle",
+      "end": "Chat End"
     }
   },
-  "footer": {
-    "copyright": "© 2025 वाइज ग्लोबल. सर्वाधिकार सुरक्षित।",
-    "selectLanguage": "भाषा चुनें",
-    "description": "वाइज ग्लोबल रिसर्च सर्विसेज प्राइवेट लिमिटेड में स्टॉक और कमोडिटी बाजारों में विशेषज्ञता रखने वाले अनुभवी और कुशल अनुसंधान विश्लेषक शामिल हैं।",
-    "quickLinks": "त्वरित लिंक",
-    "aboutUs": "हमारे बारे में",
-    "contact": "संपर्क करें",
-    "payment": "भुगतान",
-    "investorCharter": "निवेशक चार्टर",
-    "currentOpenings": "वर्तमान रिक्तियां",
-    "guideForInvesting": "निवेश के लिए गाइड",
-    "dailyRecommendation": "दैनिक सिफारिश",
-    "usefulLinks": "उपयोगी लिंक",
-    "disclaimer": "अस्वीकरण",
-    "disclosure": "प्रकटीकरण",
-    "privacyPolicy": "गोपनीयता नीति",
-    "refundPolicy": "धनवापसी नीति",
-    "complaintBox": "शिकायत बॉक्स",
-    "complaintData": "शिकायत डेटा",
-    "termsAndConditions": "नियम और शर्तें",
-    "registrationDetails": "हमारी पंजीकरण विवरण",
-    "registeredName": "पंजीकृत नाम",
-    "principalOfficer": "प्रधान अधिकारी/अनुपालन अधिकारी",
-    "gstNo": "जीएसटी संख्या",
-    "cinNumber": "सीआईएन संख्या",
-    "typeOfRegistration": "पंजीकरण का प्रकार",
-    "sebiRegistrationNo": "सेबी पंजीकरण संख्या",
-    "bseEnlistmentNo": "बीएसई सूचीकरण संख्या",
-    "validity": "वैधता",
-    "sebiOfficeDetails": "सेबी कार्यालय विवरण",
-    "tollFree": "टोल फ्री",
-    "quickContact": "त्वरित संपर्क",
-    "registeredOfficeAddress": "पंजीकृत कार्यालय का पता",
-    "selectWebsiteTheme": "वेबसाइट थीम चुनें",
-    "paymentNote": "<strong>कृपया ध्यान दें –</strong> प्रिय ग्राहक, आपके भुगतान स्वीकार किए जाएंगे अगर आप Wise Global Research वेबसाइट पर दी गई खाता जानकारी का उपयोग करेंगे। हम केवल Wise Global Research के अलावा किसी अन्य खातों में कोई भुगतान स्वीकार नहीं करते।",
-    "poweredBy": "द्वारा संचालित"
-  },
-  "navbar": {
-    "home": "होम",
-    "services": {
-      "title": "सेवाएं",
-      "cash": {
-        "title": "कैश",
-        "evaluationStockCash": "मूल्यांकन स्टॉक कैश",
-        "smartCash": "स्मार्ट कैश",
-        "cash": "कैश"
-      },
-      "option": {
-        "title": "ऑप्शन",
-        "evaluationStockOption": "मूल्यांकन स्टॉक ऑप्शन",
-        "impulseOption": "इम्पल्स ऑप्शन",
-        "smartFuture": "स्मार्ट फ्यूचर",
-        "smartOptions": "स्मार्ट ऑप्शंस"
-      },
-      "specialization": {
-        "title": "विशेषज्ञता",
-        "infinityClub": "इन्फिनिटी क्लब",
-        "mcxSupreme": "MCX सुप्रीम",
-        "galaxyMCX": "गैलेक्सी MCX",
-        "universalCash": "यूनिवर्सल कैश"
-      },
-      "index": {
-        "title": "इंडेक्स",
-        "evaluationIndexOptions": "मूल्यांकन इंडेक्स ऑप्शंस",
-        "impulseIndexOptions": "इम्पल्स इंडेक्स ऑप्शंस",
-        "smartIndexOption": "स्मार्ट इंडेक्स ऑप्शन",
-        "index": "इंडेक्स"
-      },
-      "mcx": {
-        "title": "MCX",
-        "mcx": "MCX",
-        "bullions": "बुलियंस",
-        "energy": "एनर्जी",
-        "metal": "मेटल",
-        "mcxOption": "MCX ऑप्शन"
-      }
-    },
-    "company": {
-      "title": "कंपनी",
-      "aboutUs": "हमारे बारे में",
-      "ourTeam": "हमारी टीम",
-      "visionMission": "विजन और मिशन"
-    },
-    "hrZone": {
-      "title": "एचआर जोन",
-      "career": "करियर",
-      "training": "प्रशिक्षण"
-    },
-    "insights": {
-      "title": "अंतर्दृष्टि",
-      "blogs": "ब्लॉग",
-      "marketNews": "बाजार समाचार",
-      "complaintData": "शिकायत डेटा",
-      "grievanceRedressalProcess": "शिकायत निवारण प्रक्रिया"
-    },
-    "dashboard": {
-      "title": "डैशबोर्ड",
-      "adminPanel": "एडमिन पैनल",
-      "clientPanel": "क्लाइंट पैनल",
-      "clientServiceConsent": "क्लाइंट सेवा सहमति",
-      "investorChart": "निवेशक चार्ट",
-      "antiMoneyLaundering": "एंटी-मनी लॉन्ड्रिंग"
-    },
-    "payment": "भुगतान",
-    "complaintBox": "शिकायत बॉक्स",
-    "contactUs": "हमसे संपर्क करें",
-    "researchReports": "अनुसंधान रिपोर्ट"
-  },
-  "home": {
-    "helmet": {
-      "title": "वाइज ग्लोबल रिसर्च सर्विसेज - सेबी पंजीकृत अनुसंधान विश्लेषक",
-      "description": "वाइज ग्लोबल रिसर्च सर्विसेज - सेबी पंजीकृत अनुसंधान विश्लेषक। विशेषज्ञ स्टॉक मार्केट अनुसंधान, ट्रेडिंग रणनीतियाँ और निवेश अंतर्दृष्टि प्राप्त करें। भारत में हजारों निवेशकों और व्यापारियों द्वारा विश्वसनीय।",
-      "ogDescription": "सेबी पंजीकृत विशेषज्ञ अनुसंधान, ट्रेडिंग रणनीतियाँ और निवेश अंतर्दृष्टि प्राप्त करें। भारत में हजारों निवेशकों और व्यापारियों द्वारा विश्वसनीय।",
-      "twitterDescription": "सेबी पंजीकृत विशेषज्ञ अनुसंधान, ट्रेडिंग रणनीतियाँ और निवेश अंतर्दृष्टि प्राप्त करें। भारत में हजारों निवेशकों और व्यापारियों द्वारा विश्वसनीय।"
+  "admin": {
+    "contactSubmissions": "Contact Submissions",
+    "table": {
+      "name": "Name",
+      "mobile": "Mobile",
+      "city": "City",
+      "experience": "Experience",
+      "newsletter": "Newsletter",
+      "submittedAt": "Submitted At"
     }
+  },
+  "common": {
+    "yes": "Common Yes",
+    "no": "Common No"
   },
   "about_page": {
-    "steps": [
-      {
-        "title": "ग्राहक-केंद्रित दृष्टिकोण",
-        "desc": "उत्पादों/सेवाओं को तैयार करने, संतुष्टि और वफादारी बढ़ाने, दीर्घकालिक संबंधों को बढ़ावा देने के लिए ग्राहकों की जरूरतों, वरीयताओं और प्रतिक्रिया को प्राथमिकता दें।"
-      },
-      {
-        "title": "जोखिम न्यूनीकरण",
-        "desc": "संचालन, वित्त, प्रतिष्ठा और हितधारकों के हितों पर नकारात्मक प्रभावों को कम करने के लिए संभावित खतरों को पहचानें, मूल्यांकन करें और संबोधित करें।"
-      },
-      {
-        "title": "रचनात्मक समाधान",
-        "desc": "चुनौतियों के अनूठे, प्रभावी उत्तर तैयार करने, कल्पना, संसाधनशीलता और समस्या-समाधान की सफलता के लिए विविध दृष्टिकोणों का लाभ उठाने के लिए नवीन रूप से सोचें।"
-      }
-    ],
-    "title": "हमारे बारे में वाइज ग्लोबल रिसर्च",
-    "subtitle": "हम आपके जीवन में सबसे महत्वपूर्ण चीजों को प्राथमिकता देते हैं।",
-    "about_us_title": "हमारे बारे में",
-    "about_us_desc": "वाइज ग्लोबल रिसर्च एक सेबी पंजीकृत विश्लेषक कंपनी है जो आपको किसी भी उद्देश्य के लिए आत्मविश्वास से धन बनाने के लिए सीधे, सार्थक और कार्रवाई योग्य सिफारिशों और समाधानों के साथ सशक्त बनाने के लिए समर्पित है। गहन शोध द्वारा समर्थित निष्पक्ष राय देने के लिए प्रतिबद्ध, हम भारतीय बाजार में प्रतिभागियों को बहुमूल्य अंतर्दृष्टि प्रदान करने पर ध्यान केंद्रित करते हैं।",
-    "mission_title": "मिशन",
-    "mission_desc": "ग्राहकों को स्पष्ट, कार्रवाई योग्य और निष्पक्ष अनुसंधान के साथ सशक्त बनाना, उन्हें आत्मविश्वास से वित्तीय निर्णय लेने और अपने लक्ष्यों को प्राप्त करने में मदद करना।",
-    "vision_title": "विजन",
-    "vision_desc": "धन सृजन के लिए सबसे भरोसेमंद अनुसंधान भागीदार बनना, जो अखंडता, विशेषज्ञता और ग्राहक-केंद्रितता के लिए पहचाना जाता है।",
-    "need_help": "मदद चाहिए?",
-    "steps_title": "काम के दौरान हम जिन चरणों का पालन करते हैं"
-  },
-"antiMoneyLaundering": {
-  "title": "मनी लॉन्ड्रिंग विरोधी (एएमएल)",
-  "p1": "मनी लॉन्ड्रिंग विरोधी (एएमएल) नीतियों, प्रक्रियाओं और तकनीकों का एक समूह है जो मनी लॉन्ड्रिंग को रोकता है। इसे सरकारी प्रणालियों और बड़ी वित्तीय संस्थाओं में संभावित धोखाधड़ी गतिविधियों की निगरानी के लिए लागू किया जाता है। मनी लॉन्ड्रिंग विरोधी (एएमएल) नीतियां वित्तीय संगठनों द्वारा विकसित दिशानिर्देश और प्रक्रियाएं हैं जो संभावित मनी लॉन्ड्रिंग गतिविधियों का पता लगाने, रोकने और रिपोर्ट करने में मदद करती हैं। ये नियम नियामक अनुपालन बनाए रखते हैं और वित्तीय अपराधों को रोकने के लिए वैश्विक प्रयासों में योगदान देते हैं।",
-  "p2": "मनी लॉन्ड्रिंग विरोधी (एएमएल) नीतियों, प्रक्रियाओं और तकनीकों का एक समूह है जो मनी लॉन्ड्रिंग को रोकता है।",
-  "p3": "मनी लॉन्ड्रिंग के तीन प्रमुख चरण हैं (प्लेसमेंट, लेयरिंग और एकीकरण), और संदिग्ध गतिविधियों की निगरानी के लिए विभिन्न नियंत्रण प्रणालियां लागू की जाती हैं जो मनी लॉन्ड्रिंग से संबंधित हो सकती हैं।",
-  "p4": "कुछ मनी लॉन्ड्रिंग विरोधी नियंत्रणों में ग्राहकों को जानना, सॉफ्टवेयर फ़िल्टरिंग और होल्डिंग अवधि लागू करना शामिल है।",
-  "h2": "मनी लॉन्ड्रिंग – प्रक्रिया",
-  "p5": "नीचे दिया गया चित्र मनी लॉन्ड्रिंग के तीन चरणों और इसे रोकने के लिए उपयोग किए जाने वाले कुछ नियंत्रणों को दर्शाता है। मनी लॉन्ड्रिंग वित्तीय संस्थान में धन जमा करने (प्लेसमेंट), इसके मूल स्रोत को छिपाने के लिए लेनदेन की श्रृंखला (लेयरिंग) और स्वच्छ धन प्राप्त करने/उपयोग करने (एकीकरण) के माध्यम से किया जाता है।",
-  "h2_controls": "मनी लॉन्ड्रिंग विरोधी – नियंत्रण",
-  "li1": "<strong>अपराधीकरण</strong>: कई सरकारें, वित्तीय संस्थान और व्यवसाय मनी लॉन्ड्रिंग को रोकने के लिए नियंत्रण लागू करते हैं। पहला है सरकार द्वारा अपराधीकरण। संयुक्त राष्ट्र का ट्रांसनेशनल ऑर्गनाइज्ड क्राइम के खिलाफ कन्वेंशन ऐसे दिशानिर्देश प्रदान करता है जो सरकारों को मनी लॉन्ड्रिंग योजनाओं में शामिल व्यक्तियों पर मुकदमा चलाने में मदद करते हैं।",
-  "li2": "<strong>ग्राहकों को जानें</strong>: वित्तीय संस्थानों को मनी लॉन्ड्रिंग को रोकने के लिए 'ग्राहकों को जानें' नीतियां लागू करनी होती हैं। इसमें ग्राहकों की गतिविधियों की निगरानी और संदिग्ध लेनदेन के प्रकार को समझना शामिल है। वित्तीय संस्थानों को संदिग्ध गतिविधियों के बारे में वित्तीय जांच इकाई को रिपोर्ट करना होता है।",
-  "li3": "<strong>रेकॉर्ड प्रबंधन और सॉफ्टवेयर फ़िल्टरिंग</strong>: वित्तीय संस्थान और व्यवसाय लेनदेन का विस्तृत रिकॉर्ड रखते हैं और ऐसा सॉफ्टवेयर लागू करते हैं जो संदिग्ध गतिविधियों को चिह्नित कर सकता है। ग्राहक डेटा को संदेह के विभिन्न स्तरों के आधार पर वर्गीकृत किया जा सकता है और विशिष्ट मानदंडों को पूरा करने पर लेनदेन अस्वीकार किए जा सकते हैं।",
-  "li4": "<strong>होल्डिंग अवधि</strong>: कई बैंक जमा राशि को एक निश्चित अवधि (आमतौर पर लगभग पांच दिन) के लिए खाते में रखने की आवश्यकता रखते हैं। यह होल्डिंग अवधि मनी लॉन्ड्रिंग के लिए बैंकों के माध्यम से धन हस्तांतरण से संबंधित जोखिमों के प्रबंधन में मदद करती है।",
-  "li5": "<strong>नई तकनीक</strong>: मनी लॉन्ड्रिंग से संबंधित संदिग्ध गतिविधियों की पहचान के लिए उपयोग की जाने वाली तकनीक लगातार सुधार रही है और अधिक सटीक हो रही है। एआई और बिग डेटा सॉफ्टवेयर जैसी तकनीकें इन प्रणालियों को और अधिक उन्नत बना रही हैं।"
-},
-"evaluationStockCash": {
-    "title": "मूल्यांकन स्टॉक कैश",
-    "description": "वाइज ग्लोबल रिसर्च एनालिस्ट गहन तकनीकी विश्लेषण के बाद समर्पित और अनुभवी रिसर्च एनालिस्ट द्वारा एनएसई कैश सेगमेंट में इक्विटी रिसर्च प्रदान करता है। हमारी इक्विटी ट्रेडिंग सिफारिशें शेयर बाजार के उचित विश्लेषण के बाद तैयार की जाती हैं। ये तकनीकी स्तर उन सिफारिशों के लिए उत्पन्न होते हैं जो बाजार में अच्छी हलचल प्रदान कर सकते हैं। एक अस्थिर बाजार में, हमारे ग्राहकों को केवल इंट्राडे रिसर्च पर ध्यान केंद्रित करना चाहिए और अगले दिन के लिए किसी भी स्थिति को आगे नहीं बढ़ाना चाहिए।",
-    "whatYouWillGet": {
-      "title": "आपको क्या मिलेगा",
-      "points": [
-        "दैनिक शुद्ध इंट्राडे स्टॉक सिफारिशें, आवृत्ति 2 से 3 तक सीमित (बाजार की स्थितियों के अनुसार)।",
-        "प्रत्येक सिफारिश में उचित स्टॉप लॉस के साथ 2 लक्ष्य होंगे।",
-        "सभी ट्रेड संकेतों का समय पर अनुवर्ती कार्रवाई।",
-        "सिफारिशों में प्रवेश और निकास के लिए उचित समय।",
-        "बाजार की दिशा का सावधानीपूर्वक विश्लेषण।",
-        "सिफारिशें एसएमएस के माध्यम से प्रदान की जाती हैं।",
-        "स्विफ्ट रियल-टाइम ग्राहक सहायता (सुबह 09:00 बजे से शाम 06:00 बजे तक)।"
+    "title": "About Us",
+    "subtitle": "Learn more about Wise Global Research Services.",
+    "about_us_title": "Who We Are",
+    "about_us_desc": "We are a team of experienced research analysts specializing in stock and commodity markets.",
+    "mission_title": "Our Mission",
+    "mission_desc": "To provide reliable and insightful research to our clients.",
+    "vision": {
+      "page_title": "Our Vision & Mission",
+      "pillars": [
+        {
+          "title": "Customer Focus",
+          "desc": "Design products and services around customer needs to build loyalty."
+        },
+        {
+          "title": "Integrity",
+          "desc": "Operate transparently and ethically in all activities."
+        },
+        {
+          "title": "Innovation",
+          "desc": "Use cutting-edge methods and technology to deliver better insights."
+        },
+        {
+          "title": "Excellence",
+          "desc": "Strive for the highest standards in research and service delivery."
+        }
       ],
-      "description": "एक शुद्ध इंट्राडे उत्पाद, जहां ग्राहकों को एनएसई कैश सेगमेंट में स्टॉक सिफारिशें मिलती हैं। यह उत्पाद नए ग्राहकों के लिए डिज़ाइन किया गया है जो कैश मार्केट में हमारी सिफारिशों का मूल्यांकन करना चाहते हैं।",
+      "core_values_title": "Core Values",
+      "core_values": [
+        {
+          "title": "Honesty",
+          "desc": "We provide unbiased research."
+        },
+        {
+          "title": "Quality",
+          "desc": "Consistent high-quality analysis."
+        },
+        {
+          "title": "Customer-first",
+          "desc": "Clients' needs guide our decisions."
+        },
+        {
+          "title": "Accountability",
+          "desc": "We take responsibility for our advice."
+        },
+        {
+          "title": "Collaboration",
+          "desc": "Teamwork across disciplines for better outcomes."
+        },
+        {
+          "title": "Continuous Improvement",
+          "desc": "Regularly refine methods and learning."
+        }
+      ]
+    },
+    "need_help": "Need Help?",
+    "steps_title": "Our Approach",
+    "steps": {
+      "0": {
+        "title": "Customer-Centric Approach",
+        "desc": "Prioritize customer needs, preferences, and feedback to tailor products/services, enhancing satisfaction and loyalty, fostering long-term relationships."
+      },
+      "1": {
+        "title": "Risk Mitigation",
+        "desc": "Identify, assess, and address potential threats to minimize negative impacts on operations, finances, reputation, and stakeholder interests."
+      },
+      "2": {
+        "title": "Creative Solutions",
+        "desc": "Think innovatively to devise unique, effective answers to challenges, leveraging imagination, resourcefulness, and diverse perspectives for problem-solving success."
+      }
+    },
+    "vision_title": "About Page Vision Title",
+    "vision_desc": "About Page Vision Desc"
+  },
+  "antiMoneyLaundering": {
+    "title": "Anti-Money Laundering (AML)",
+    "p1": "Anti-Money Laundering (AML) is a set of policies, procedures, and technologies that prevents money laundering. It is implemented within government systems and large financial institutions to monitor potentially fraudulent activity. Anti-Money Laundering (AML) policies are guidelines and processes developed by financial organizations to detect, prevent, and report potential money laundering activities. These rules maintain regulatory compliance and contribute to worldwide efforts to prevent financial crime.",
+    "p2": "Anti-Money Laundering (AML) is a set of policies, procedures, and technologies that prevents money laundering.",
+    "p3": "There are three major steps in money laundering (placement, layering, and integration), and various controls are put in place to monitor suspicious activity that could be involved in money laundering.",
+    "p4": "Some anti-money laundering controls include knowing your customers, software filtering, and implementing holding periods.",
+    "h2": "Money Laundering – Process",
+    "p5": "The figure below shows the three steps in money laundering and some of the controls that are used to prevent it. Money laundering is carried out through placement in a financial institution carrying out a series of transactions to disguise its original source (layering) and obtaining/using the cleaned money (integration).",
+    "h2_controls": "Anti-Money Laundering – Controls",
+    "li1": "<strong>Criminalization</strong>: Many governments, financial institutions, and businesses impose controls to prevent money laundering. The first is criminalization by the government. The United Nations Convention Against Transnational Organized Crime has set forth guidelines that help governments to prosecute individuals involved in money laundering schemes.",
+    "li2": "<strong>Know Your Customers</strong>: Financial institutions must also have “know your customer” policies in place to help prevent money laundering. This involves monitoring the activity of clients and understanding the types of transactions that should raise red flags. Financial institutions are required to report suspicious activity to a financial investigation unit.",
+    "li3": "<strong>Record Management and Software Filtering</strong>: Financial institutions and businesses also keep detailed records of transactions and implement software that can flag suspicious activity. Customer data can be classified based on varying levels of suspicion, and transactions denied if they meet certain criteria.",
+    "li4": "<strong>Holding Period</strong>: Many banks require deposits to remain in an account for a designated number of days (usually around five). This holding period helps manage risk associated with money being moved through banks to launder money.",
+    "li5": "<strong>New Technology</strong>: The technology used to identify suspicious activity linked to money laundering continues to evolve and become more accurate. Technologies, such as AI and Big Data software, allow these systems to become more sophisticated."
+  },
+  "evaluationStockCash": {
+    "title": "Evaluation Stock Cash",
+    "description": "Wise Global Research Analyst provides equity research in the NSE cash segment by dedicated and experienced Research Analysts after in-depth technical analysis. Our equity trading recommendations are produced after proper analysis of the stock market. These technical levels are generated for recommendations that can provide good movement in the market. In a volatile market, our customers should only focus on intraday research and should not carry forward any position for the next day.",
+    "whatYouWillGet": {
+      "title": "What You Will Get",
+      "points": "Daily pure intraday stock recommendations, frequency limited to 2 to 3 (as per market conditions).,Each recommendation will have 2 targets with proper stop loss.,Timely follow-ups of all trade signals.,Proper time for entry & exit in recommendations.,Careful analysis of market direction.,Recommendations are provided through SMS.,Swift real-time customer support (09:00 AM to 06:00 PM).",
+      "description": "A pure intraday product, where customers receive stock recommendations in the NSE cash segment. This product is designed for new customers who want to evaluate our recommendations in the cash market.",
       "sampleCall": {
-        "title": "नमूना कॉल:",
-        "call": "CENTURYPLY खरीदें 512 के ऊपर TARGET 518 524 STOPLOSS 505"
+        "title": "Sample Call:",
+        "call": "BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505"
       }
     },
     "tradingRules": {
-      "title": "ट्रेडिंग नियम जिनका हर ट्रेडर को पालन करना चाहिए",
-      "rules": [
-        "ओवर ट्रेड न करें।",
-        "केवल एसएमएस अनुसंधान सिफारिशों का पालन करें।",
-        "अनुसंधान दल द्वारा सलाह के अनुसार प्रत्येक सिफारिश को समान मात्रा में ट्रेड करें।",
-        "लाभ और हानि बाजार जोखिम के अधीन हैं; कोई गारंटी या आश्वासन नहीं है।",
-        "ट्रेडिंग करते समय कभी भी भावुक न हों।",
-        "रातोंरात जोखिम से सावधान रहें।",
-        "हमेशा स्टॉप लॉस के साथ ट्रेड करें।",
-        "पीछे मुड़कर न देखें और पिछले ट्रेडों पर पछतावा न करें।",
-        "एक अस्थिर बाजार में ओवर-लेवरेज न करें।",
-        "जब आप एक व्यापारी होते हैं तो लागत बहुत मायने रखती है।",
-        "पहले अपनी पूंजी की रक्षा करें-ट्रेडिंग जोखिम प्रबंधन से शुरू होती है।",
-        "कभी-कभी, ट्रेडिंग न करना भी एक वैध रणनीति है।",
-        "लाभ वही है जो बुक किया जाता है; बाकी सब सिर्फ कागज पर है।"
-      ]
+      "title": "Trading Rules Every Trader Must Follow",
+      "rules": "Do not over trade.,Only follow SMS research recommendations.,Trade each recommendation with the same quantity as advised by the Research Team.,Profit and loss are subject to market risk; there is no guarantee or assurance.,Never be emotional while trading.,Beware of overnight risk.,Always trade with a stop loss.,Don’t look back and regret past trades.,Don’t over-leverage in a volatile market.,Costs matter a lot when you are a trader.,Protect your capital first—trading begins with risk management.,Sometimes, not trading is also a valid strategy.,Profit is what is booked; all else is just on paper."
     },
     "supportInfo": {
-      "support": "स्विफ्ट रियल-टाइम ग्राहक सहायता:",
-      "hours": "सुबह 09:00 बजे से शाम 06:00 बजे तक",
-      "recommendations": "सभी सिफारिशें एसएमएस के माध्यम से प्रदान की जाती हैं।"
+      "support": "Swift real-time customer support:",
+      "hours": "09:00 AM to 06:00 PM",
+      "recommendations": "All recommendations are provided through SMS."
     },
     "pricing": {
-      "title": "मूल्यांकन स्टॉक कैश के लिए मूल्य निर्धारण योजना",
-      "packName": "कैश मूल्यांकन पैक",
+      "title": "Pricing Plan For Evaluation Stock Cash",
+      "packName": "Cash Evaluation Pack",
       "price": "₹5,100",
-      "duration": "/ 10 दिन",
-      "calls": "एक दिन में 2 से 3 कॉल",
-      "button": "भुगतान",
-      "note": "नोट: कीमतें जीएसटी (18%) को छोड़कर हैं"
+      "duration": "EvaluationStockCash Pricing Duration",
+      "calls": "2 to 3 Calls in a Day",
+      "button": "Payment",
+      "note": "Note: Prices are excluding GST (18%)"
     },
     "whyChooseUs": {
-      "title": "मूल्यांकन स्टॉक कैश क्यों चुनें?",
+      "title": "Why Choose Evaluation Stock Cash?",
       "reasons": [
         {
-          "title": "विशेषज्ञ अनुसंधान",
-          "description": "हमारी टीम सबसे विश्वसनीय स्टॉक सिफारिशों के लिए तकनीकी और मौलिक विश्लेषण को जोड़ती है।"
+          "title": "Detailed Analysis",
+          "desc": "In-depth equity research for intraday opportunities."
         },
         {
-          "title": "समय पर अपडेट",
-          "description": "भारतीय बाजार समय के दौरान तत्काल ट्रेड सिग्नल और समर्थन प्राप्त करें।"
+          "title": "Clear Exit Rules",
+          "desc": "Each recommendation includes stop-loss and targets."
         },
         {
-          "title": "व्यापारियों द्वारा विश्वसनीय",
-          "description": "सैकड़ों स्टॉक व्यापारी लगातार परिणामों के लिए हमारे संकेतों पर भरोसा करते हैं।"
+          "title": "Real-time Support",
+          "desc": "Swift follow-ups and customer support during market hours."
         }
       ]
     },
     "faq": {
-      "title": "अक्सर पूछे जाने वाले प्रश्न",
+      "title": "Frequently Asked Questions",
       "questions": [
         {
-          "q": "प्रश्न: मुझे सिफारिशें कैसे प्राप्त होंगी?",
-          "a": "उत्तर: सभी सिफारिशें आपके पंजीकृत मोबाइल नंबर पर एसएमएस के माध्यम से भेजी जाती हैं।"
+          "q": "How will I receive the recommendations?",
+          "a": "All recommendations are sent via SMS to your registered mobile number."
         },
         {
-          "q": "प्रश्न: यदि मेरे कोई प्रश्न हैं तो क्या मुझे समर्थन मिल सकता है?",
-          "a": "उत्तर: हां, हमारी सहायता टीम किसी भी प्रश्न के लिए सुबह 09:00 बजे से शाम 06:00 बजे तक उपलब्ध है।"
+          "q": "What is the expected frequency of calls?",
+          "a": "Frequency is typically 2-3 calls per day depending on market conditions."
         },
         {
-          "q": "प्रश्न: क्या कोई वापसी नीति है?",
-          "a": "उत्तर: कृपया हमारी शर्तों और शर्तों का संदर्भ लें या वापसी-संबंधी प्रश्नों के लिए समर्थन से संपर्क करें।"
+          "q": "Is there a refund policy?",
+          "a": "Please refer to our terms and conditions or contact support for refund-related queries."
         }
       ],
-      "contactButton": "हमसे संपर्क करें"
+      "contactButton": "Contact Us"
+    }
+  },
+  "contactForm": {
+    "successMessage": "फ़ॉर्म सफलतापूर्वक सबमिट हो गया! हम जल्द ही आपसे संपर्क करेंगे।",
+    "errorMessage": "फ़ॉर्म सबमिट करने में विफल",
+    "title": "संपर्क करें",
+    "nameLabel": "नाम",
+    "validation": {
+      "nameRequired": "नाम आवश्यक है",
+      "nameMinLength": "नाम कम से-कम 2 अक्षरों का होना चाहिए",
+      "emailRequired": "ईमेल आवश्यक है",
+      "emailInvalid": "अमान्य ईमेल पता",
+      "phoneRequired": "फ़ोन नंबर आवश्यक है",
+      "phoneInvalid": "फ़ोन नंबर 10 अंकों का होना चाहिए और 6, 7, 8, या 9 से शुरू होना चाहिए",
+      "interestRequired": "कृपया रुचि का क्षेत्र चुनें",
+      "messageRequired": "संदेश आवश्यक है",
+      "messageMinLength": "संदेश कम से-कम 10 अक्षरों का होना चाहिए"
+    },
+    "emailLabel": "ईमेल",
+    "phoneLabel": "फ़ोन",
+    "interestLabel": "रुचि का क्षेत्र",
+    "selectOption": "एक विकल्प चुनें",
+    "options": {
+      "equity": "इक्विटी अनुसंधान",
+      "derivatives": "डेरिवेटिव रणनीतियाँ",
+      "technical": "तकनीकी विश्लेषण",
+      "portfolio": "पोर्टफोलियो प्रबंधन",
+      "learning": "सीखने के संसाधन"
+    },
+    "messageLabel": "संदेश",
+    "submitting": "सबमिट हो रहा है...",
+    "submitButton": "सबमिट करें"
+  },
+  "economicCalendar": {
+    "title": "EconomicCalendar Title",
+    "embedded": "EconomicCalendar Embedded",
+    "simulated": "EconomicCalendar Simulated"
+  },
+  "script": "Script",
+  "a": "A",
+  "clientName": "ClientName",
+  "fatherName": "FatherName",
+  "clientId": "ClientId",
+  "email": "Email",
+  "dob": "Dob",
+  "pan": "Pan",
+  "aadhaar": "Aadhaar",
+  "panFile": "PanFile",
+  "aadhaarFile": "AadhaarFile",
+  "signatureFile": "SignatureFile",
+  "symbol": "Symbol",
+  "name": "Name",
+  "price": "Price",
+  "change": "Change",
+  "sector": "Sector",
+  "volume": "Volume",
+  "T": "T",
+  "en-IN": "En IN",
+  "routes": {
+    "pages": {
+      "Home": "Pages Home",
+      "About": "Pages About",
+      "Services": "Pages Services",
+      "Demo": "Pages Demo",
+      "Contact": "Pages Contact",
+      "Legal": "Pages Legal",
+      "Disclosure": "Pages Disclosure",
+      "LiveChart": "Pages LiveChart",
+      "NotFound": "Pages NotFound",
+      "Reports": "Pages Reports",
+      "Complaint": "Pages Complaint",
+      "PaymentInfo": "Pages PaymentInfo",
+      "Team": "Pages Team",
+      "Vision": "Pages Vision",
+      "Equity": "Pages Equity",
+      "Intraday": "Pages Intraday",
+      "Mcx": "Pages Mcx",
+      "Career": "Pages Career",
+      "Training": "Pages Training",
+      "Blogs": "Pages Blogs",
+      "MarketNews": "Pages MarketNews",
+      "UserLogin": "Pages UserLogin",
+      "ClientPanel": "Pages ClientPanel",
+      "StockOption": "Pages StockOption",
+      "Delivery": "Pages Delivery",
+      "Index": "Pages Index",
+      "Future": "Pages Future",
+      "StockIndexOption": "Pages StockIndexOption",
+      "BTST": "Pages BTST",
+      "Cash": "Pages Cash",
+      "Bullions": "Pages Bullions",
+      "Energy": "Pages Energy",
+      "Metal": "Pages Metal",
+      "MCXOption": "Pages MCXOption",
+      "SmartCash": "Pages SmartCash",
+      "EvaluationStockCash": "Pages EvaluationStockCash",
+      "SmartOptions": "Pages SmartOptions",
+      "ImpulseOption": "Pages ImpulseOption",
+      "SmartFuture": "Pages SmartFuture",
+      "EvaluationStockOption": "Pages EvaluationStockOption",
+      "EvaluationIndexOptions": "Pages EvaluationIndexOptions",
+      "ImpulseIndexOptions": "Pages ImpulseIndexOptions",
+      "SmartIndexOption": "Pages SmartIndexOption",
+      "UniversalCash": "Pages UniversalCash",
+      "InfinityClub": "Pages InfinityClub",
+      "MCXSupreme": "Pages MCXSupreme",
+      "GalaxyMCX": "Pages GalaxyMCX",
+      "NCDEX": "Pages NCDEX",
+      "Forex": "Pages Forex",
+      "Currency": "Pages Currency",
+      "Comex": "Pages Comex",
+      "Terms": "Pages Terms",
+      "Refund": "Pages Refund",
+      "Privacy": "Pages Privacy",
+      "Recommendation": "Pages Recommendation",
+      "ClientServiceConsent": "Pages ClientServiceConsent",
+      "InvestorChart": "Pages InvestorChart",
+      "AntiMoneyLaundering": "Pages AntiMoneyLaundering",
+      "DailyRecommendation": "Pages DailyRecommendation",
+      "admin": {
+        "Dashboard": "Pages Admin Dashboard",
+        "ContactSubmissions": "Pages Admin ContactSubmissions",
+        "ConsentSubmissions": "Pages Admin ConsentSubmissions",
+        "ComplaintManager": "Pages Admin ComplaintManager",
+        "ReportManager": "Pages Admin ReportManager",
+        "PopupSubmissions": "Pages Admin PopupSubmissions"
+      }
+    },
+    "api": {
+      "ai-chat": "Api Ai Chat"
     }
   }
 }

@@ -1,289 +1,131 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { FiCheckCircle, FiShield, FiCpu, FiActivity } from 'react-icons/fi';
+import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
-const SmartIndexOption = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
+const SmartIndexOption = () => (
+  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+    <h1 className="text-4xl font-extrabold mb-4 text-center text-white">Smart Index Option</h1>
+    <p className="text-lg mb-6 text-center text-white">
+      Smart Index Option service is specifically designed for option traders trading with precise technical research recommendation for Index Options. We provide the recommendations to intraday traders to optimize every market movement. It offers you nearly 1-2 intraday recommendations in a day as per market conditions with good market opportunity. The recommendations are given in Nifty and Bank Nifty Options only. Our timely generated technical recommendations provide adequate time to enter and exit in trades. We have a team of analysts who are specialized in Tracking the F&O market and keep a complete track of all the national and international events and Major Sectors and blend it with technical analysis to predict the market moves. If you are looking for Index Options research/recommendation and do not want to invest much of times then this pack are perfect for you.
+    </p>
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 100,
-      },
-    },
-  };
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-2 text-white">Smart Index Option Features</h2>
+      <ul className="list-disc pl-6 text-base mb-4 text-white">
+        <li>We provides 1-2 Intraday/Positional recommendation’s (as per market conditions)</li>
+        <li>All recommendation will have 2 TGT with proper Stop loss.</li>
+        <li>Timely Follow Ups of all the trade signals</li>
+        <li>Proper time for entry &amp; exit in recommendations.</li>
+        <li>Nifty and Bank Nifty Trend and Support and resistance.</li>
+        <li>Carefully Analysis Market direction.</li>
+        <li>Concise information of Domestic &amp; World Market.</li>
+        <li>Recommendations are provided through SMS.</li>
+        <li>Swift real time customer support between (09:00 AM to 06:00 PM).</li>
+      </ul>
+      <p className="text-base mb-2 text-white">Trading rules that every trader must studious follow.</p>
+    </div>
 
-  const cardHover = {
-    hover: {
-      scale: 1.05,
-      boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.1)',
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-      },
-    },
-  };
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-2 text-white">Trading Rules Every Trader Must Follow</h2>
+      <ul className="list-decimal pl-6 text-base mb-4 text-white">
+        <li>Do not over trade.</li>
+        <li>Only follow SMS research recommendations.</li>
+        <li>Have to trade on each Recommendation with same quantity according to Research Team.</li>
+        <li>Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</li>
+        <li>Never be emotional.</li>
+        <li>Beware of overnight risk.</li>
+        <li>Always trade with a stop loss.</li>
+        <li>Don’t look back and rue trades.</li>
+        <li>Don’t over leverage in a volatile market.</li>
+        <li>Costs matter a lot when you are a trader.</li>
+        <li>Trading begins with protecting your capital.</li>
+        <li>Not doing anything is also a trading strategy.</li>
+        <li>Profit is what is booked; all else is book profits.</li>
+      </ul>
+    </div>
 
-  return (
-    <motion.div
-      className="min-h-screen bg-gray-900 text-white"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Hero Section */}
-      <motion.section
-        className="bg-gradient-to-r from-indigo-500 to-purple-600 text-center py-20 lg:py-32"
-        variants={itemVariants}
-      >
-        <div className="container mx-auto px-4">
-          <motion.h1
-            className="text-4xl md:text-6xl font-bold mb-4"
-            variants={itemVariants}
-          >
-            Smart Index Option
-          </motion.h1>
-          <motion.p
-            className="text-lg md:text-xl max-w-3xl mx-auto"
-            variants={itemVariants}
-          >
-            Harness the power of AI to trade index options with precision. Get predictive insights and automated strategies to maximize your gains.
-          </motion.p>
-          <motion.button
-            className="mt-8 bg-white text-indigo-500 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300"
-            variants={itemVariants}
-            whileHover={{ scale: 1.1 }}
-          >
-            Start Trading Smarter
-          </motion.button>
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-2 text-white">Sample Calls</h2>
+      <div className="bg-white/10 rounded-lg p-4 text-center text-base text-white font-mono">
+        BUY BANKNIFTY 40700 CE ABOVE 360 TARGET 420 480 STOPLOSS 285
+      </div>
+    </div>
+
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-2 text-white">Pricing Plan For Smart Index Option</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
+        <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center">
+          <h3 className="text-xl font-bold mb-2 text-white">Smart Index Option</h3>
+          <div className="text-3xl font-extrabold text-white mb-2">₹12,500 <span className="text-base font-normal">/ Monthly</span></div>
+          <div className="mb-2 text-white">1 to 2 Calls in a Day</div>
+          <Link to="/payment">
+            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2">Payment</button>
+          </Link>
+          <div className="text-xs text-white mt-2">Note: Pricing are excluding GST (18%)</div>
         </div>
-      </motion.section>
-
-      {/* About Section */}
-      <motion.section className="py-20" variants={containerVariants}>
-        <div className="container mx-auto px-4">
-          <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12" variants={itemVariants}>
-            What is Smart Index Option?
-          </motion.h2>
-          <div className="flex flex-wrap -mx-4">
-            <motion.div className="w-full lg:w-1/2 px-4 mb-8 lg:mb-0" variants={itemVariants}>
-              <img src="https://via.placeholder.com/600x400" alt="Smart Index Option" className="rounded-lg shadow-lg" loading="lazy"/>
-            </motion.div>
-            <motion.div className="w-full lg:w-1/2 px-4" variants={itemVariants}>
-              <p className="text-lg mb-4">
-                Smart Index Option is an advanced trading platform that uses artificial intelligence to analyze index options and identify high-probability trading opportunities. Our proprietary algorithms scan the market in real-time to provide you with a significant edge.
-              </p>
-              <p className="text-lg">
-                We empower traders with predictive analytics, automated strategy execution, and comprehensive risk management tools, all designed to enhance your trading performance and profitability.
-              </p>
-            </motion.div>
-          </div>
+        <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center">
+          <h3 className="text-xl font-bold mb-2 text-white">Smart Index Option</h3>
+          <div className="text-3xl font-extrabold text-white mb-2">₹35,500 <span className="text-base font-normal">/ Quarterly</span></div>
+          <div className="mb-2 text-white">1 to 2 Calls in a Day</div>
+          <Link to="/payment">
+            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2">Payment</button>
+          </Link>
+          <div className="text-xs text-white mt-2">Note: Pricing are excluding GST (18%)</div>
         </div>
-      </motion.section>
+      </div>
+    </div>
 
-      {/* Key Features Section */}
-      <motion.section className="bg-gray-800 py-20" variants={containerVariants}>
-        <div className="container mx-auto px-4">
-          <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12" variants={itemVariants}>
-            Key Features
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <motion.div className="bg-gray-700 p-8 rounded-lg text-center" variants={itemVariants} {...cardHover}>
-              <FiCpu className="text-5xl text-indigo-500 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold mb-2">AI-Powered Insights</h3>
-              <p>Leverage our advanced AI to get predictive insights and trading signals for index options.</p>
-            </motion.div>
-            <motion.div className="bg-gray-700 p-8 rounded-lg text-center" variants={itemVariants} {...cardHover}>
-              <FiActivity className="text-5xl text-purple-500 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold mb-2">Automated Trading</h3>
-              <p>Execute your strategies with precision using our automated trading bots.</p>
-            </motion.div>
-            <motion.div className="bg-gray-700 p-8 rounded-lg text-center" variants={itemVariants} {...cardHover}>
-              <FiShield className="text-5xl text-blue-500 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold mb-2">Robust Risk Management</h3>
-              <p>Protect your capital with our integrated risk management and analysis tools.</p>
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
+    <div className="text-center text-sm text-white mt-8">
+      <strong>Swift real-time customer support:</strong> 09:00 AM to 06:00 PM | <strong>All recommendations are provided through SMS.</strong>
+    </div>
 
-      {/* How It Works Section */}
-      <motion.section className="py-20" variants={containerVariants}>
-        <div className="container mx-auto px-4">
-          <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12" variants={itemVariants}>
-            How It Works
-          </motion.h2>
-          <div className="flex flex-col md:flex-row justify-center items-center">
-            <motion.div className="w-full md:w-1/3 p-4 text-center" variants={itemVariants}>
-              <div className="bg-gray-800 p-8 rounded-full w-24 h-24 mx-auto flex items-center justify-center mb-4">
-                <span className="text-3xl font-bold">1</span>
-              </div>
-              <h3 className="text-2xl font-bold mb-2">Connect Your Broker</h3>
-              <p>Securely connect your brokerage account to our platform.</p>
-            </motion.div>
-            <motion.div className="w-full md:w-1/3 p-4 text-center" variants={itemVariants}>
-              <div className="bg-gray-800 p-8 rounded-full w-24 h-24 mx-auto flex items-center justify-center mb-4">
-                <span className="text-3xl font-bold">2</span>
-              </div>
-              <h3 className="text-2xl font-bold mb-2">Configure Your Strategy</h3>
-              <p>Set up your trading parameters and risk tolerance.</p>
-            </motion.div>
-            <motion.div className="w-full md:w-1/3 p-4 text-center" variants={itemVariants}>
-              <div className="bg-gray-800 p-8 rounded-full w-24 h-24 mx-auto flex items-center justify-center mb-4">
-                <span className="text-3xl font-bold">3</span>
-              </div>
-              <h3 className="text-2xl font-bold mb-2">Activate Smart Trading</h3>
-              <p>Let our AI engine trade on your behalf, 24/7.</p>
-            </motion.div>
-          </div>
+    {/* Why Choose Us Section */}
+    <div className="my-12">
+      <h2 className="text-2xl font-bold mb-4 text-center text-white">Why Choose Smart Index Option?</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+          <FaLightbulb className="text-4xl mb-2 text-yellow-300" />
+          <h3 className="font-bold text-lg mb-1 text-white">Expert Research</h3>
+          <p className="text-white text-center">Our analysts specialize in F&O market and combine technical & fundamental analysis for precise index option recommendations.</p>
         </div>
-      </motion.section>
+        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+          <FaBolt className="text-4xl mb-2 text-blue-300" />
+          <h3 className="font-bold text-lg mb-1 text-white">Timely Calls</h3>
+          <p className="text-white text-center">Receive 1-2 intraday/positional calls per day with clear entry, targets and stop loss.</p>
+        </div>
+        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+          <FaLock className="text-4xl mb-2 text-green-300" />
+          <h3 className="font-bold text-lg mb-1 text-white">Trusted Support</h3>
+          <p className="text-white text-center">Swift real time customer support between 09:00 AM to 06:00 PM for any queries.</p>
+        </div>
+      </div>
+    </div>
 
-      {/* Pricing Section */}
-      <motion.section className="bg-gray-800 py-20" variants={containerVariants}>
-        <div className="container mx-auto px-4">
-          <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12" variants={itemVariants}>
-            Our Plans
-          </motion.h2>
-          <div className="flex flex-wrap justify-center -mx-4">
-            <motion.div className="w-full md:w-1/2 lg:w-1/3 p-4" variants={itemVariants}>
-              <div className="bg-gray-700 p-8 rounded-lg text-center" {...cardHover}>
-                <h3 className="text-2xl font-bold mb-4">Essential</h3>
-                <p className="text-4xl font-bold mb-4">$199<span className="text-lg">/mo</span></p>
-                <ul className="text-left mb-8">
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-green-500 mr-2" /> AI-Powered Trading Signals</li>
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-green-500 mr-2" /> Basic Risk Analysis</li>
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-green-500 mr-2" /> Email Support</li>
-                </ul>
-                <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-full hover:bg-indigo-600 transition duration-300">Choose Plan</button>
-              </div>
-            </motion.div>
-            <motion.div className="w-full md:w-1/2 lg:w-1/3 p-4" variants={itemVariants}>
-              <div className="bg-purple-600 p-8 rounded-lg text-center" {...cardHover}>
-                <h3 className="text-2xl font-bold mb-4">Performance</h3>
-                <p className="text-4xl font-bold mb-4">$399<span className="text-lg">/mo</span></p>
-                <ul className="text-left mb-8">
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-white mr-2" /> Advanced AI Strategies</li>
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-white mr-2" /> Automated Trading Bots</li>
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-white mr-2" /> Priority Support</li>
-                  {/* Portfolio Analytics item removed as per request */}
-                </ul>
-                <button className="bg-white text-purple-600 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300">Choose Plan</button>
-              </div>
-            </motion.div>
-            <motion.div className="w-full md:w-1/2 lg:w-1/3 p-4" variants={itemVariants}>
-              <div className="bg-gray-700 p-8 rounded-lg text-center" {...cardHover}>
-                <h3 className="text-2xl font-bold mb-4">Alpha</h3>
-                <p className="text-4xl font-bold mb-4">Contact Us</p>
-                <ul className="text-left mb-8">
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-green-500 mr-2" /> All Performance Features</li>
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-green-500 mr-2" /> Dedicated Quant Analyst</li>
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-green-500 mr-2" /> Custom Strategy Backtesting</li>
-                  <li className="flex items-center mb-2"><FiCheckCircle className="text-green-500 mr-2" /> Institutional-Grade API</li>
-                </ul>
-                <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-full hover:bg-indigo-600 transition duration-300">Contact Us</button>
-              </div>
-            </motion.div>
-          </div>
+    {/* FAQ Section */}
+    <div className="my-12">
+      <h2 className="text-2xl font-bold mb-4 text-center text-white">Frequently Asked Questions</h2>
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-4">
+          <h3 className="font-semibold text-white">Q: Which symbols do you cover?</h3>
+          <p className="text-white">A: We cover Nifty and Bank Nifty options only for this pack.</p>
         </div>
-      </motion.section>
-
-      {/* Performance Section */}
-      <motion.section className="py-20" variants={containerVariants}>
-        <div className="container mx-auto px-4">
-          <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12" variants={itemVariants}>
-            Our Performance Edge
-          </motion.h2>
-          <div className="bg-gray-800 p-8 rounded-lg">
-            <img src="https://via.placeholder.com/1200x400" alt="Performance Chart" className="rounded-lg" loading="lazy"/>
-          </div>
+        <div className="mb-4">
+          <h3 className="font-semibold text-white">Q: How will I receive the recommendations?</h3>
+          <p className="text-white">A: All recommendations are sent via SMS to your registered mobile number.</p>
         </div>
-      </motion.section>
-
-      {/* Testimonials Section */}
-      <motion.section className="bg-gray-800 py-20" variants={containerVariants}>
-        <div className="container mx-auto px-4">
-          <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12" variants={itemVariants}>
-            What Our Clients Are Saying
-          </motion.h2>
-          <div className="flex flex-wrap -mx-4">
-            <motion.div className="w-full md:w-1/2 lg:w-1/3 p-4" variants={itemVariants}>
-              <div className="bg-gray-700 p-8 rounded-lg">
-                <p className="text-lg mb-4">"Smart Index Option has completely changed the way I trade. The AI is incredibly powerful and has significantly boosted my profits."</p>
-                <p className="font-bold">- Sarah K.</p>
-              </div>
-            </motion.div>
-            <motion.div className="w-full md:w-1/2 lg:w-1/3 p-4" variants={itemVariants}>
-              <div className="bg-gray-700 p-8 rounded-lg">
-                <p className="text-lg mb-4">"The automated trading feature is a game-changer. It executes my strategies flawlessly, even when I'm not watching the market."</p>
-                <p className="font-bold">- Mark R.</p>
-              </div>
-            </motion.div>
-            <motion.div className="w-full md:w-1/2 lg:w-1/3 p-4" variants={itemVariants}>
-              <div className="bg-gray-700 p-8 rounded-lg">
-                <p className="text-lg mb-4">"The level of analysis and support is top-notch. I feel much more confident in my trading decisions with Smart Index Option."</p>
-                <p className="font-bold">- Jennifer L.</p>
-              </div>
-            </motion.div>
-          </div>
+        <div className="mb-4">
+          <h3 className="font-semibold text-white">Q: Is there a refund policy?</h3>
+          <p className="text-white">A: Please refer to our terms and conditions or contact support for refund-related queries.</p>
         </div>
-      </motion.section>
-
-      {/* FAQ Section */}
-      <motion.section className="py-20" variants={containerVariants}>
-        <div className="container mx-auto px-4 max-w-4xl">
-          <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12" variants={itemVariants}>
-            Frequently Asked Questions
-          </motion.h2>
-          <div className="space-y-4">
-            <motion.div className="bg-gray-800 p-6 rounded-lg" variants={itemVariants}>
-              <h3 className="text-xl font-bold">Which indices do you support?</h3>
-              <p className="mt-2">We support all major global indices, including the S&P 500, NASDAQ, Dow Jones, FTSE 100, and more.</p>
-            </motion.div>
-            <motion.div className="bg-gray-800 p-6 rounded-lg" variants={itemVariants}>
-              <h3 className="text-xl font-bold">Is my brokerage account safe?</h3>
-              <p className="mt-2">Yes, we use bank-level encryption and secure API connections to protect your account. We never have direct access to your funds.</p>
-            </motion.div>
-            <motion.div className="bg-gray-800 p-6 rounded-lg" variants={itemVariants}>
-              <h3 className="text-xl font-bold">Can I customize the trading bots?</h3>
-              <p className="mt-2">Yes, our Pro and Alpha plans allow for full customization of trading bots to fit your specific strategies and risk tolerance.</p>
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Call to Action Section */}
-      <motion.section className="bg-gradient-to-r from-indigo-500 to-purple-600 text-center py-20" variants={itemVariants}>
-        <div className="container mx-auto px-4">
-          <motion.h2 className="text-3xl md:text-4xl font-bold mb-4" variants={itemVariants}>
-            Ready to Revolutionize Your Index Option Trading?
-          </motion.h2>
-          <motion.p className="text-lg md:text-xl max-w-3xl mx-auto mb-8" variants={itemVariants}>
-            Join Smart Index Option today and unlock the future of trading.
-          </motion.p>
-          <motion.button
-            className="bg-white text-indigo-500 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300"
-            variants={itemVariants}
-            whileHover={{ scale: 1.1 }}
-          >
-            Get Started Now
-          </motion.button>
-        </div>
-      </motion.section>
-    </motion.div>
-  );
-};
+      </div>
+      <div className="flex justify-center mt-8">
+        <Link to="/contact">
+          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">
+            Contact Us
+          </button>
+        </Link>
+      </div>
+    </div>
+  </div>
+);
 
 export default SmartIndexOption;
