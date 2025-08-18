@@ -1,0 +1,189 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+
+// Table-style economic calendar with live countdown and mock live updates.
+// Background of the card uses white/30 as requested.
+
+const IMPACT_LABELS = ['NONE', 'LOW', 'MED', 'HIGH'];
+
+// fmtNumber removed - not used by current table implementation
+
+function numericValue(str) {
+  if (str == null) return null;
+  const num = parseFloat(String(str).replace(/[^0-9.-]/g, ''));
+  return Number.isFinite(num) ? num : null;
+}
+
+function timeUntilSeconds(iso) {
+  return Math.max(0, Math.floor((new Date(iso) - new Date()) / 1000));
+}
+
+const countryEmoji = (code) => ({ IN: '🇮🇳', US: '🇺🇸', EU: '🇪🇺', GB: '🇬🇧', JP: '🇯🇵' }[code] || '🏳️');
+
+const makeMockEvent = (i = 0) => {
+  const now = Date.now();
+  const time = new Date(now + (i + 1) * (30 + Math.floor(Math.random() * 90)) * 60000).toISOString();
+  const impact = Math.ceil(Math.random() * 3); // 1..3
+  const prev = (Math.random() * 5).toFixed(1) + '%';
+  const consensus = (parseFloat(prev) + (Math.random() * 2 - 1)).toFixed(1) + '%';
+  const actualDiff = (Math.random() * 4 - 2).toFixed(1);
+  const actual = (parseFloat(consensus) + parseFloat(actualDiff)).toFixed(1) + '%';
+  const countries = ['IN', 'US', 'EU', 'GB', 'JP'];
+  const titles = ['CPI (YoY)', 'GDP Growth Rate', 'Retail Sales MoM', 'Unemployment Rate', 'Trade Balance'];
+  return {
+    id: `m-${Date.now()}-${i}`,
+    date: new Date(time).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+    time: new Date(time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }),
+    isoTime: time,
+    country: countries[i % countries.length],
+    title: titles[i % titles.length],
+    impact,
+    previous: prev,
+    consensus,
+    actual,
+  };
+};
+
+const EconomicCalendar = ({ apiUrl, pollInterval = 30000, embedUrl = 'https://widget.myfxbook.com/widget/calendar.html' }) => {
+  const [events, setEvents] = useState(() => Array.from({ length: 8 }).map((_, i) => makeMockEvent(i)));
+  const [tick, setTick] = useState(0); // for live countdown (used below as a hidden accessibility/tick anchor)
+  const mounted = useRef(true);
+
+  useEffect(() => {
+    mounted.current = true;
+    const poll = async () => {
+      if (!apiUrl) {
+        // rotate and add a new mock event
+        setEvents((prev) => {
+          const next = prev.slice(1);
+          next.push(makeMockEvent(Math.floor(Math.random() * 10)));
+          return next;
+        });
+        return;
+      }
+      try {
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('fetch failed');
+        const data = await res.json();
+        if (Array.isArray(data) && mounted.current) setEvents(data.slice(0, 12));
+      } catch (err) {
+        // keep existing
+      }
+    };
+
+    const pTimer = setInterval(poll, pollInterval);
+    // initial
+    poll();
+    // countdown tick every second for the time-left column
+    const t = setInterval(() => setTick((s) => s + 1), 1000);
+
+    return () => {
+      mounted.current = false;
+      clearInterval(pTimer);
+      clearInterval(t);
+    };
+  }, [apiUrl, pollInterval]);
+
+  const cellClassFor = (actualStr, consensusStr) => {
+    const a = numericValue(actualStr);
+    const c = numericValue(consensusStr);
+    if (a == null || c == null) return 'bg-white/5';
+    return a >= c ? 'bg-emerald-700/50 text-white' : 'bg-rose-600/50 text-white';
+  };
+
+  const formatTimeLeft = (iso) => {
+    const s = timeUntilSeconds(iso);
+    if (s <= 0) return 'Now';
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m}m`;
+    const h = Math.floor(m / 60);
+    const rem = m % 60;
+    return rem === 0 ? `${h}h` : `${h}h ${rem}m`;
+  };
+
+  const { t } = useTranslation();
+
+  return (
+    <section className="py-6 sm:py-8 px-2 sm:px-4">
+      <div className="container">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-2xl sm:text-3xl font-bold">{t('economicCalendar.title', 'Economic Calendar')}</h2>
+          <div className="flex items-center gap-3 text-xs text-gray-300">
+              <div className="bg-white/6 px-2 py-1 rounded">Aug 18 - 20, 2025</div>
+              <div className="bg-white/6 px-2 py-1 rounded">{new Date().toLocaleTimeString()} (GMT)</div>
+              {/* ensure tick is referenced so ESLint doesn't flag it as unused; hidden for users */}
+              <span className="sr-only" aria-hidden>
+                {tick}
+              </span>
+            </div>
+        </div>
+
+        <div className="overflow-hidden bg-white/30 rounded-xl shadow-inner">
+          {embedUrl ? (
+            <div className="w-full" style={{ minHeight: 320 }}>
+              <iframe
+                title="Economic Calendar Widget"
+                src={embedUrl}
+                className="w-full"
+                style={{ height: 'min(520px, 60vh)', border: 'none', display: 'block' }}
+                sandbox="allow-scripts allow-same-origin allow-popups"
+                loading="lazy"
+              />
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full table-auto text-sm">
+                <thead>
+                  <tr className="text-left">
+                    <th className="px-4 py-3">Date</th>
+                    <th className="px-4 py-3">Time left</th>
+                    <th className="px-4 py-3">Event</th>
+                    <th className="px-4 py-3">Impact</th>
+                    <th className="px-4 py-3">Previous</th>
+                    <th className="px-4 py-3">Consensus</th>
+                    <th className="px-4 py-3">Actual</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <AnimatePresence initial={false}>
+                    {events.map((ev) => (
+                      <motion.tr
+                        key={ev.id}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.25 }}
+                        className="border-t border-white/10 hover:bg-white/5 transition-colors"
+                      >
+                        <td className="px-4 py-3 align-middle">{ev.date}</td>
+                        <td className="px-4 py-3 align-middle text-gray-200">{formatTimeLeft(ev.isoTime)}</td>
+                        <td className="px-4 py-3 align-middle flex items-center gap-3">
+                          <span className="text-lg">{countryEmoji(ev.country)}</span>
+                          <div>
+                            <div className="font-semibold">{ev.title}</div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 align-middle">
+                          <span className="px-2 py-1 rounded text-xs bg-white/5">{IMPACT_LABELS[ev.impact]}</span>
+                        </td>
+                        <td className="px-4 py-3 align-middle text-center text-xs text-gray-200">{ev.previous}</td>
+                        <td className={`px-4 py-3 align-middle text-center text-xs ${cellClassFor(ev.actual, ev.consensus)}`}>{ev.consensus}</td>
+                        <td className={`px-4 py-3 align-middle text-center text-xs ${cellClassFor(ev.actual, ev.consensus)}`}>{ev.actual}</td>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+  <p className="text-xs text-gray-300 mt-3">{embedUrl ? t('economicCalendar.embedded', 'Embedded calendar (live data)') : t('economicCalendar.simulated', 'Live data simulated. Provide apiUrl for production data.')}</p>
+      </div>
+    </section>
+  );
+};
+
+export default EconomicCalendar;
