@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Trans } from '../../i18nShim';
 import { ref, onValue, remove } from 'firebase/database';
 import { db } from '../../firebase';
 import { toast } from 'react-toastify';
@@ -35,17 +36,17 @@ const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggl
     <table className="min-w-full table-auto text-white">
       <thead className="bg-gray-700/50">
         <tr>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Name</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Mobile</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">City</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Experience</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Newsletter</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.name">Name</Trans></th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.mobile">Mobile</Trans></th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.city">City</Trans></th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.experience">Experience</Trans></th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.newsletter">Newsletter</Trans></th>
           <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">
             <button onClick={handleSortToggle} className="hover:text-indigo-400 transition-colors">
               Timestamp {sortOrder === 'desc' ? '↓' : '↑'}
             </button>
           </th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Actions</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.actions">Actions</Trans></th>
         </tr>
       </thead>
       <tbody>
@@ -174,12 +175,11 @@ const ContactSubmissions = () => {
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
-      <h2 className="text-3xl font-bold text-white mb-6">Contact Submissions</h2>
+      <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions-1">Contact Submissions</Trans></Trans></h2>
       <div className="flex justify-between items-center mb-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search contacts..." />
         <motion.button onClick={handleExportCSV} className="bg-green-500/80 text-white px-4 py-2 rounded-lg flex items-center gap-2" variants={buttonVariants} whileHover="hover">
-          <FiDownload /> Export CSV
-        </motion.button>
+          <FiDownload /><Trans i18nKey="pages.admin_ContactSubmissions.export-csv">Export CSV</Trans></motion.button>
       </div>
       {isLoading ? <LoadingSpinner /> : (
         <>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
+// useTranslation removed from this file to rely on translateWithFallback helper
 import { Link, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import {
   FaTimes, FaBuilding, FaBriefcase, FaNewspaper, FaUserShield,
   FaChartLine, FaCoins, FaGlobe, FaUniversity, FaFileAlt, FaShieldAlt
@@ -8,6 +8,82 @@ import {
 import wiseLogo from '../assets/images/wise3.png';
 import './Navbar.css';
 import { ThemeContext } from '../context/ThemeContext';
+
+// Fallback helpers: when i18n is not loaded or a key isn't translated,
+// produce a readable label from the key (e.g. 'navbar.home' -> 'Home').
+function humanizeKey(key) {
+  if (!key || typeof key !== 'string') return '';
+  // Use last segment after dot or slash
+  const parts = key.split(/[./]/);
+  let last = parts[parts.length - 1];
+  // Replace dashes/underscores with spaces
+  last = last.replace(/[-_]/g, ' ');
+  // Split camelCase boundaries: fooBar -> foo Bar
+  last = last.replace(/([a-z])([A-Z])/g, '$1 $2');
+  // Split on non-alphanumeric and collapse spaces
+  const words = last.split(/[^A-Za-z0-9]+/).filter(Boolean);
+  return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+function translate(tFunc, key) {
+  try {
+    if (typeof tFunc === 'function') {
+      const translated = tFunc(key);
+      // If translation is missing react-i18next often returns the key itself.
+      if (translated && translated !== key && !/\S+\.\S+/.test(translated)) {
+        return translated;
+      }
+    }
+  } catch (e) {
+    // ignore and fallback
+  }
+  return humanizeKey(key);
+}
+
+// Central fallback wrapper used throughout the component.
+// Uses i18n translator when available, falls back to explicit labels or humanized key.
+function translateWithFallback(tFunc, key) {
+  if (!key) return '';
+  // Try translator first
+  try {
+    if (typeof tFunc === 'function') {
+      const translated = tFunc(key);
+      if (translated && translated !== key && !/\S+\.\S+/.test(translated)) {
+        return translated;
+      }
+    }
+  } catch (e) {
+    // ignore and fallback below
+  }
+
+  // If explicit fallback label exists, return it
+  if (labelsFallbacks && Object.prototype.hasOwnProperty.call(labelsFallbacks, key)) {
+    return labelsFallbacks[key];
+  }
+
+  // Reuse the safer translate() helper which will humanize the key
+  return translate(tFunc, key) || '';
+}
+
+// Explicit fallbacks for key labels that should show specific text
+const labelsFallbacks = {
+  'navbar.home': 'Home',
+  'navbar.services.title': 'Services',
+  'navbar.company.title': 'Company',
+  'navbar.hrZone.title': 'HR Zone',
+  'navbar.insights.title': 'Insights',
+  'navbar.dashboard.title': 'Dashboard',
+  'navbar.payment': 'Payment',
+  'navbar.complaintBox': 'Complaint Box',
+  'navbar.contactUs': 'Contact Us',
+  'navbar.researchReports': 'Research Reports',
+  // Explicit category titles for Services mega menu
+  'navbar.services.cash.title': 'Cash',
+  'navbar.services.option.title': 'Option',
+  'navbar.services.specialization.title': 'Specialization',
+  'navbar.services.index.title': 'Index',
+  'navbar.services.mcx.title': 'MCX',
+};
 
 const servicesMenu = [
   {
@@ -102,7 +178,6 @@ const navLinks = [
 ];
 
 const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobile, mobileOpen, setMobileOpen, closeDrawer }) => {
-  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const timeoutId = useRef(null);
   const menuRef = useRef(null);
@@ -152,10 +227,10 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
           className={`nav-item font-semibold text-sm md:text-base px-2 py-1${location.pathname.startsWith('/services') ? ' active' : ''}`}
           style={{ color: textColor }}
           aria-expanded={isOpen}
-          aria-label={`Toggle ${t(labelKey)} menu`}
+          aria-label={`Toggle ${translateWithFallback(null, labelKey)} menu`}
           onClick={handleClick}
         >
-          {t(labelKey)}
+          {translateWithFallback(null, labelKey)}
         </button>
         <div
           className={`absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-lg border border-[var(--primary-green)] text-black shadow-lg rounded-xl z-50 flex flex-row p-4 w-[90vw] md:w-[80vw] max-w-[900px] transition-opacity duration-300 ${
@@ -174,7 +249,7 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
             <React.Fragment key={cat.labelKey}>
               <div className="min-w-[180px] max-w-[220px] px-2 break-words">
                 <div className="font-semibold text-sm md:text-base mb-2 text-[var(--primary-green)] break-words">
-                  {t(cat.labelKey)}
+                  {translateWithFallback(null, cat.labelKey)}
                 </div>
                 <div className="space-y-1 text-xs md:text-sm break-words">
                   {cat.items.map((item) => (
@@ -187,7 +262,7 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
                       onClick={handleLinkClick}
                       style={{ wordBreak: 'break-word', whiteSpace: 'normal' }}
                     >
-                      {t(item.labelKey)}
+                      {translateWithFallback(null, item.labelKey)}
                     </Link>
                   ))}
                 </div>
@@ -209,15 +284,15 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
         className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
         onClick={handleClick}
         aria-expanded={mobileOpen}
-        aria-label={`Toggle ${t(labelKey)} menu`}
+  aria-label={`Toggle ${translateWithFallback(null, labelKey)} menu`}
       >
-        {t(labelKey)}
+  {translateWithFallback(null, labelKey)}
         <span className={`ml-2 transition-transform duration-200 ${mobileOpen ? 'rotate-90' : ''}`}>▶</span>
       </button>
       <div className={`overflow-hidden transition-all duration-300 ${mobileOpen ? 'max-h-[1000px] py-2' : 'max-h-0 py-0'}`}>
         {categories.map((cat) => (
           <div key={cat.labelKey} className="pl-2">
-            <div className="font-semibold text-sm mt-2 mb-1 text-[var(--primary-green)]">{t(cat.labelKey)}</div>
+            <div className="font-semibold text-sm mt-2 mb-1 text-[var(--primary-green)]">{translateWithFallback(null, cat.labelKey)}</div>
             {cat.items.map((item) => (
               <Link
                 key={item.path}
@@ -225,7 +300,7 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
                 className="nav-item block py-1 pl-2 text-gray-800"
                 onClick={handleLinkClick}
               >
-                {t(item.labelKey)}
+                      {translateWithFallback(null, item.labelKey)}
               </Link>
             ))}
           </div>
@@ -236,7 +311,8 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
 });
 
 function Navbar() {
-  const { t } = useTranslation();
+  // useTranslation was previously used; translateWithFallback provides fallbacks so
+  // we don't need to reference `t` directly here which removes an ESLint unused-var warning.
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [servicesMobileOpen, setServicesMobileOpen] = useState(false);
   const [mobileDropdownsOpen, setMobileDropdownsOpen] = useState({});
@@ -244,6 +320,7 @@ function Navbar() {
   const drawerRef = useRef();
   const { theme, gradients } = useContext(ThemeContext);
   const { background, textColor } = gradients?.[theme] || gradients.default;
+  const navRef = useRef(null);
 
   const closeDrawer = () => {
     setDrawerOpen(false);
@@ -278,11 +355,79 @@ function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [drawerOpen]);
 
+  // When Google Translate injects its top banner (usually an iframe with
+  // class `goog-te-banner-frame` or an iframe whose src contains `translate`),
+  // move the fixed navbar down so it doesn't overlap. This keeps behavior
+  // responsive and works on mobile.
+  useEffect(() => {
+    const navEl = navRef.current;
+    if (!navEl) return undefined;
+
+  // Smooth transition for top changes
+  navEl.style.transition = navEl.style.transition || 'top 0.18s ease';
+
+    const getBannerHeight = () => {
+      // Common selectors for Google Translate UI
+      const iframeByClass = document.querySelector('iframe.goog-te-banner-frame');
+      if (iframeByClass) return Math.round(iframeByClass.getBoundingClientRect().height) || 0;
+
+      // Fallback: any iframe that looks like a translate banner
+      const iframes = Array.from(document.querySelectorAll('iframe'));
+      for (const f of iframes) {
+        try {
+          const src = f.getAttribute('src') || '';
+          if (/translate|googlesyndication|translate.googleusercontent/.test(src)) {
+            const h = Math.round(f.getBoundingClientRect().height);
+            if (h > 0) return h;
+          }
+        } catch (e) {
+          // ignore cross-origin access errors
+        }
+      }
+
+      // Another possible element is the banner wrapper div
+      const bannerDiv = document.querySelector('.goog-te-banner-frame') || document.querySelector('.goog-te-banner');
+      if (bannerDiv) return Math.round(bannerDiv.getBoundingClientRect().height) || 0;
+
+      return 0;
+    };
+
+    // Apply by setting a CSS variable on the root element. The navbar
+    // and mobile drawer read `--nav-offset` so the layout updates
+    // responsively (desktop and mobile) without fighting utility classes.
+    const apply = () => {
+      const h = getBannerHeight();
+      const docEl = document.documentElement;
+      if (h) {
+        docEl.style.setProperty('--nav-offset', `${h}px`);
+      } else {
+        docEl.style.setProperty('--nav-offset', '0px');
+      }
+    };
+
+    // Observe DOM changes since translate banner is injected dynamically
+    const mo = new MutationObserver(() => apply());
+    mo.observe(document.documentElement || document.body, { childList: true, subtree: true });
+
+    // Also apply immediately and on resize
+    apply();
+    const onResize = () => apply();
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      mo.disconnect();
+      window.removeEventListener('resize', onResize);
+      const docEl = document.documentElement;
+      if (docEl) docEl.style.setProperty('--nav-offset', '0px');
+      if (navEl) navEl.style.top = '';
+    };
+  }, [navRef]);
+
   const mobileDrawerStyles = {
-    position: 'fixed',
-    top: 0,
-    right: 0,
-    height: '100vh',
+  position: 'fixed',
+  top: 'var(--nav-offset, 0px)',
+  right: 0,
+  height: 'calc(100vh - var(--nav-offset, 0px))',
     width: '80%',
     maxWidth: '320px',
     minWidth: '260px',
@@ -300,8 +445,9 @@ function Navbar() {
   return (
     <>
       <nav
+        ref={navRef}
         style={{ background, color: textColor }}
-        className="fixed w-full top-0 z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-b-xl"
+        className="fixed w-full z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-b-xl"
       >
         <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 flex justify-between items-center">
           <Link to="/" className="flex items-center rotate-logo">
@@ -317,24 +463,24 @@ function Navbar() {
 
           {/* Desktop Menu */}
           <div className="desktop-menu hidden lg:flex lg:flex-wrap lg:justify-end space-x-2 xl:space-x-4 items-center font-medium">
-            <Link
-              to="/"
-              className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname==='/' ? ' active' : ''}`}
-              style={{ color: textColor }}
-            >
-              {t('navbar.home')}
-            </Link>
+              <Link
+                to="/"
+                className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname==='/' ? ' active' : ''}`}
+                style={{ color: textColor }}
+              >
+                {translateWithFallback(null, 'navbar.home')}
+              </Link>
 
-            <MegaMenu labelKey="navbar.services.title" categories={servicesMenu} location={location} textColor={textColor} isMobile={false} closeDrawer={closeDrawer} />
+              <MegaMenu labelKey="navbar.services.title" categories={servicesMenu} location={location} textColor={textColor} isMobile={false} closeDrawer={closeDrawer} />
 
             {Object.entries(dropdownLinks).map(([key, dropdown]) => (
               <div className="relative group" key={key}>
                 <button
                   className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${dropdown.items.some(item => location.pathname.startsWith(item.path)) ? ' active' : ''}`}
                   style={{ color: textColor }}
-                  aria-label={`Toggle ${t(dropdown.labelKey)} menu`}
+                    aria-label={`Toggle ${translateWithFallback(null, dropdown.labelKey)} menu`}
                 >
-                  {t(dropdown.labelKey)}
+                    {translateWithFallback(null, dropdown.labelKey)}
                 </button>
                 <div className="absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-md border border-[var(--primary-green)] text-black shadow-md rounded-md z-50 group-hover:flex flex-col min-w-[180px] xl:min-w-[200px] p-2 hidden transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-hover:visible animate-slideDown">
                   {dropdown.items.map((item) => (
@@ -345,31 +491,31 @@ function Navbar() {
                         location.pathname === item.path ? 'text-[var(--primary-green)] font-semibold' : ''
                       }`}
                     >
-                      {item.icon} {t(item.labelKey)}
+                      {item.icon} {translateWithFallback(null, item.labelKey)}
                     </Link>
                   ))}
                 </div>
               </div>
             ))}
 
-            {navLinks.map((link) => (
+      {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname===link.path ? ' active' : ''}`}
                 style={{ color: textColor }}
               >
-                {t(link.labelKey)}
+  {translateWithFallback(null, link.labelKey)}
               </Link>
-            ))}
+      ))}
           </div>
 
           {/* Mobile Hamburger */}
-          <button
-            className="lg:hidden z-[10000] drawer-toggle"
-            onClick={() => setDrawerOpen(!drawerOpen)}
-            aria-label="Toggle mobile menu"
-          >
+            <button
+              className="lg:hidden z-[10000] drawer-toggle"
+              onClick={() => setDrawerOpen(!drawerOpen)}
+              aria-label="Toggle mobile menu"
+            >
             {drawerOpen ? (
               <FaTimes size={24} color={textColor} className="mobile-close-btn" />
             ) : (
@@ -391,7 +537,7 @@ function Navbar() {
             className="nav-item font-semibold py-1"
             onClick={closeDrawer}
           >
-            {t('navbar.home')}
+            {translateWithFallback(null, 'navbar.home')}
           </Link>
 
           <MegaMenu 
@@ -410,7 +556,7 @@ function Navbar() {
                 className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
                 onClick={() => toggleMobileDropdown(key)}
               >
-                {t(dropdown.labelKey)}
+                {translateWithFallback(null, dropdown.labelKey)}
                 <span className={`ml-2 transition-transform duration-200 ${mobileDropdownsOpen[key] ? 'rotate-90' : ''}`}>▶</span>
               </button>
               <div className={`overflow-hidden transition-all duration-300 ${mobileDropdownsOpen[key] ? 'max-h-96' : 'max-h-0'}`}>
@@ -421,7 +567,7 @@ function Navbar() {
                     className="nav-item block py-1 pl-2 flex items-center gap-2"
                     onClick={closeDrawer}
                   >
-                    {item.icon} {t(item.labelKey)}
+  {item.icon} {translateWithFallback(null, item.labelKey)}
                   </Link>
                 ))}
               </div>
@@ -435,7 +581,7 @@ function Navbar() {
               className={`nav-item block py-1${location.pathname===link.path ? ' active' : ''}`}
               onClick={closeDrawer}
             >
-              {t(link.labelKey)}
+  {translateWithFallback(null, link.labelKey)}
             </Link>
           ))}
         </div>

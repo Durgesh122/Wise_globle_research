@@ -1,5 +1,6 @@
 // src/pages/Services.js
 import React, { useState } from 'react';
+import { Trans, useTranslation } from '../i18nShim';
 import { Link } from 'react-router-dom';
 import { FaPlus, FaMinus, FaChartLine, FaRegLightbulb, FaStar, FaShieldAlt } from 'react-icons/fa';
 import { Helmet } from 'react-helmet-async';
@@ -101,6 +102,7 @@ const getServicePath = (name) => {
 
 // Main Services Page Component
 const ServicesPage = () => {
+  const { t } = useTranslation();
   const [expandedService, setExpandedService] = useState(null);
 
   const toggleService = (index) => {
@@ -110,7 +112,7 @@ const ServicesPage = () => {
   return (
     <>
       <Helmet>
-        <title>Our Services | Wise Global Research</title>
+        <title>{t('pages.Services.our-services-wise-global-research', 'Our Services | Wise Global Research')}</title>
         <meta name="description" content="Explore Wise Global Research's SEBI registered research services: equity, derivatives, MCX, Nifty, Sensex, and more. Trusted by thousands of investors and traders in India." />
         <meta property="og:title" content="Our Services | Wise Global Research" />
         <meta property="og:description" content="SEBI registered research services: equity, derivatives, MCX, Nifty, Sensex, and more. Trusted by thousands of investors and traders in India." />
@@ -124,12 +126,8 @@ const ServicesPage = () => {
         <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
           <div className="text-center mb-12">
-            <h1 className="text-5xl font-extrabold text-white leading-tight">
-              Our Research Services
-            </h1>
-            <p className="mt-4 text-lg text-white max-w-3xl mx-auto">
-              Wise Global Research Services is a SEBI Registered Research Analyst firm, committed to providing unbiased, data-driven insights to empower your financial decisions.
-            </p>
+            <h1 className="text-5xl font-extrabold text-white leading-tight"><Trans i18nKey="pages.Services.our-research-services">Our Research Services</Trans></h1>
+            <p className="mt-4 text-lg text-white max-w-3xl mx-auto"><Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi-"><Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi--1">Wise Global Research Services is a SEBI Registered Research Analyst firm, committed to providing unbiased, data-driven insights to empower your financial decisions.</Trans></Trans></p>
           </div>
 
           {/* Services Grid */}
@@ -149,9 +147,7 @@ const ServicesPage = () => {
                     <Link
                       to={getServicePath(service.name)}
                       className="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all duration-300"
-                    >
-                      View Plan
-                    </Link>
+                    ><Trans i18nKey="pages.Services.view-plan">View Plan</Trans></Link>
                     <button
                       onClick={() => toggleService(index)}
                       className="flex items-center text-white hover:text-gray-200 font-semibold transition-colors duration-300"
@@ -162,9 +158,7 @@ const ServicesPage = () => {
                   </div>
                   {expandedService === index && (
                     <div className="mt-6 border-t border-white/50 pt-4">
-                      <p className="text-sm text-white">
-                        This research service falls under the <span className="font-semibold">{service.category}</span> category. Our analysis is based on rigorous methodologies and market data.
-                      </p>
+                      <p className="text-sm text-white"><Trans i18nKey="pages.Services.this-research-service-falls-under-the"><Trans i18nKey="pages.Services.this-research-service-falls-under-the-1">This research service falls under the</Trans></Trans><span className="font-semibold">{service.category}</span><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro"><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro-1">category. Our analysis is based on rigorous methodologies and market data.</Trans></Trans></p>
                     </div>
                   )}
                 </div>
@@ -174,18 +168,13 @@ const ServicesPage = () => {
 
           {/* SEBI Disclaimer Section */}
           <div className="text-center p-8 bg-white/30 text-white rounded-2xl shadow-inner">
-            <h3 className="text-2xl font-bold mb-4">Important Disclosures</h3>
+            <h3 className="text-2xl font-bold mb-4"><Trans i18nKey="pages.Services.important-disclosures">Important Disclosures</Trans></h3>
             <div className="max-w-4xl mx-auto text-sm space-y-2">
               <p>
-                <span className="font-semibold">Wise Global Research Services</span> is a SEBI Registered Research Analyst.
-                <strong className="block mt-1">SEBI Registration No:INH000016719</strong>
+                <span className="font-semibold"><Trans i18nKey="pages.Services.wise-global-research-services"><Trans i18nKey="pages.Services.wise-global-research-services-1">Wise Global Research Services</Trans></Trans></span><Trans i18nKey="pages.Services.is-a-sebi-registered-research-analyst"><Trans i18nKey="pages.Services.is-a-sebi-registered-research-analyst-1">is a SEBI Registered Research Analyst.</Trans></Trans><strong className="block mt-1"><Trans i18nKey="pages.Services.sebi-registration-no-inh000016719"><Trans i18nKey="pages.Services.sebi-registration-no-inh000016719-1">SEBI Registration No:INH000016719</Trans></Trans></strong>
               </p>
-              <p>
-                The content and research reports provided are for informational purposes only and do not constitute investment advice. Investments in the securities market are subject to market risks. Please read all related documents carefully before investing.
-              </p>
-              <p>
-                The securities quoted are for illustration only and are not recommendatory. Past performance is not indicative of future results.
-              </p>
+              <p><Trans i18nKey="pages.Services.the-content-and-research-reports-provide"><Trans i18nKey="pages.Services.the-content-and-research-reports-provide-1">The content and research reports provided are for informational purposes only and do not constitute investment advice. Investments in the securities market are subject to market risks. Please read all related documents carefully before investing.</Trans></Trans></p>
+              <p><Trans i18nKey="pages.Services.the-securities-quoted-are-for-illustrati"><Trans i18nKey="pages.Services.the-securities-quoted-are-for-illustrati-1">The securities quoted are for illustration only and are not recommendatory. Past performance is not indicative of future results.</Trans></Trans></p>
             </div>
           </div>
         </div>

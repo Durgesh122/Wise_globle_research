@@ -8,7 +8,7 @@ const Card = ({ children, className = '', ...props }) => (
     variants={cardVariants}
     initial="hidden"
     animate="visible"
-    whileHover="hover"
+    whileHover={{ scale: 1.03 }}
     className={`${base} ${className}`}
     style={{ transformStyle: 'preserve-3d' }}
     {...props}

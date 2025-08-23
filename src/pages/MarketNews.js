@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Trans } from '../i18nShim';
 import { FiClock, FiBookmark, FiShare2 } from 'react-icons/fi';
 import { BsArrowUpRight, BsDot } from 'react-icons/bs';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -27,12 +28,12 @@ function MarketNews() {
     const fetchNews = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `https://newsapi.org/v2/everything?q=stock+market+OR+nifty+OR+sensex+OR+sebi&language=en&sortBy=publishedAt&apiKey=8c47ec2bd70a4bd3b5d9af8d22796172`
-        );
-        const data = await response.json();
+  // Use server-side proxy to avoid exposing API keys in client bundle
+  const proxyUrl = process.env.REACT_APP_NEWS_PROXY_URL || '/api/news?q=stock+market+OR+nifty+OR+sensex+OR+sebi';
+  const response = await fetch(proxyUrl);
+  const data = await response.json();
         
-        if (data.articles) {
+  if (data && data.articles) {
           const processedNews = data.articles.slice(0, 10).map((article, index) => ({
             id: index,
             title: article.title,
@@ -47,7 +48,7 @@ function MarketNews() {
           setNews(processedNews);
           setLastUpdated(new Date().toLocaleTimeString());
         }
-      } catch (error) {
+  } catch (error) {
         console.error("Error fetching news:", error);
         // Fallback to mock data if API fails
         setNews(getMockData());
@@ -156,9 +157,7 @@ function MarketNews() {
             transition={{ delay: 0.1 }}
             className="text-2xl md:text-3xl font-bold"
             style={{ color: colors.textPrimary }}
-          >
-            Live Market News
-            <motion.span 
+          ><Trans i18nKey="pages.MarketNews.live-market-news">Live Market News</Trans><motion.span 
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.3, type: 'spring' }}
@@ -167,9 +166,7 @@ function MarketNews() {
                 backgroundColor: isDarkMode ? 'rgba(96, 165, 250, 0.2)' : 'rgba(37, 99, 235, 0.1)',
                 color: colors.primary
               }}
-            >
-              REAL-TIME
-            </motion.span>
+            ><Trans i18nKey="pages.MarketNews.real-time">REAL-TIME</Trans></motion.span>
           </motion.h1>
         </div>
         <motion.div 
@@ -315,6 +312,8 @@ function MarketNews() {
                           alt={item.title}
                           className="w-24 h-24 object-cover rounded"
                           loading="lazy"
+                          decoding="async"
+                          onError={(e) => { e.currentTarget.onerror = null; }}
                         />
                       </motion.div>
                     )}
@@ -346,8 +345,7 @@ function MarketNews() {
                       whileHover={{ x: 5 }}
                       className="flex items-center text-sm font-medium"
                       style={{ color: colors.primary }}
-                    >
-                      Read full story <BsArrowUpRight className="ml-1" />
+                    ><Trans i18nKey="pages.MarketNews.read-full-story">Read full story</Trans><BsArrowUpRight className="ml-1" />
                     </motion.a>
                   </div>
                 </div>

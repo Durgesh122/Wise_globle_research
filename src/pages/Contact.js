@@ -1,5 +1,6 @@
 // src/pages/Contact.js
 import React, { useState, useEffect } from 'react';
+import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import {
   FaUser, FaEnvelope, FaPhone, FaCommentDots,
@@ -72,10 +73,8 @@ function Contact() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <h2 className="text-4xl font-bold text-green-300 mb-4">🎉 Thank you!</h2>
-        <p className="text-lg text-center max-w-md">
-          Your message has been successfully submitted. We'll contact you shortly.
-        </p>
+        <h2 className="text-4xl font-bold text-green-300 mb-4"><Trans i18nKey="pages.Contact.thank-you">🎉 Thank you!</Trans></h2>
+        <p className="text-lg text-center max-w-md"><Trans i18nKey="pages.Contact.your-message-has-been-successfully-submi"><Trans i18nKey="pages.Contact.your-message-has-been-successfully-submi-1">Your message has been successfully submitted. We'll contact you shortly.</Trans></Trans></p>
       </motion.div>
     );
   }
@@ -86,9 +85,7 @@ function Contact() {
       <div className="absolute inset-0 bg-transparent z-0" />
 
       <div className="relative z-10 max-w-3xl mx-auto">
-        <motion.h2 className="text-4xl font-extrabold text-center mb-6" variants={fadeInUp} custom={0}>
-          Let's Talk
-        </motion.h2>
+        <motion.h2 className="text-4xl font-extrabold text-center mb-6" variants={fadeInUp} custom={0}><Trans i18nKey="pages.Contact.let-s-talk">Let's Talk</Trans></motion.h2>
 
         {/* ✅ Form Card */}
         <motion.form

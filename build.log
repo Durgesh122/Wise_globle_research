@@ -1,0 +1,22 @@
+﻿
+> wise-global@0.1.0 build
+> react-scripts build
+
+node.exe : (node:12172) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+At D:\Node.js\npm.ps1:29 char:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:12172) [D...ts.F_OK instead:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    at D:\React\wise-global\node_modules\react-dev-utils\checkRequiredFiles.js:19:34
+    at Array.forEach (<anonymous>)
+    at checkRequiredFiles (D:\React\wise-global\node_modules\react-dev-utils\checkRequiredFiles.js:17:11)
+    at Object.<anonymous> (D:\React\wise-global\node_modules\react-scripts\scripts\build.js:50:6)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Module._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+Creating an optimized production build...

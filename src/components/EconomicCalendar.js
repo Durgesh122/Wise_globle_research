@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../i18nShim';
 
 // Table-style economic calendar with live countdown and mock live updates.
 // Background of the card uses white/30 as requested.
@@ -17,6 +17,18 @@ function numericValue(str) {
 
 function timeUntilSeconds(iso) {
   return Math.max(0, Math.floor((new Date(iso) - new Date()) / 1000));
+}
+
+// formatTimeLeft is used by the Countdown component below
+function formatTimeLeft(iso) {
+  const s = timeUntilSeconds(iso);
+  if (s <= 0) return 'Now';
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60);
+  const rem = m % 60;
+  return rem === 0 ? `${h}h` : `${h}h ${rem}m`;
 }
 
 const countryEmoji = (code) => ({ IN: '🇮🇳', US: '🇺🇸', EU: '🇪🇺', GB: '🇬🇧', JP: '🇯🇵' }[code] || '🏳️');
@@ -47,43 +59,54 @@ const makeMockEvent = (i = 0) => {
 
 const EconomicCalendar = ({ apiUrl, pollInterval = 30000, embedUrl = 'https://widget.myfxbook.com/widget/calendar.html' }) => {
   const [events, setEvents] = useState(() => Array.from({ length: 8 }).map((_, i) => makeMockEvent(i)));
-  const [tick, setTick] = useState(0); // for live countdown (used below as a hidden accessibility/tick anchor)
   const mounted = useRef(true);
+  const embedRef = useRef(null);
+  const [showEmbed, setShowEmbed] = useState(false);
 
   useEffect(() => {
     mounted.current = true;
     const poll = async () => {
-      if (!apiUrl) {
-        // rotate and add a new mock event
-        setEvents((prev) => {
-          const next = prev.slice(1);
-          next.push(makeMockEvent(Math.floor(Math.random() * 10)));
-          return next;
-        });
-        return;
-      }
       try {
-        const res = await fetch(apiUrl);
+        let res;
+        if (!apiUrl) {
+          // call the server proxy which will return mock or whitelisted data
+          res = await fetch('/api/economic');
+        } else {
+          // route external URLs through the server proxy to avoid exposing an open proxy in the client bundle
+          // The proxy validates hostnames using ECONOMIC_WHITELIST. We pass the external URL as a query param.
+          const encoded = encodeURIComponent(apiUrl);
+          res = await fetch(`/api/economic?url=${encoded}`);
+        }
         if (!res.ok) throw new Error('fetch failed');
         const data = await res.json();
         if (Array.isArray(data) && mounted.current) setEvents(data.slice(0, 12));
       } catch (err) {
-        // keep existing
+        // keep existing mock events if network fails
       }
     };
 
     const pTimer = setInterval(poll, pollInterval);
     // initial
     poll();
-    // countdown tick every second for the time-left column
-    const t = setInterval(() => setTick((s) => s + 1), 1000);
 
     return () => {
       mounted.current = false;
       clearInterval(pTimer);
-      clearInterval(t);
     };
   }, [apiUrl, pollInterval]);
+
+  // lazy-show iframe when near viewport to avoid heavy third-party load
+  useEffect(() => {
+    if (!embedRef.current || showEmbed || !('IntersectionObserver' in window)) return undefined;
+    const ob = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) {
+        setShowEmbed(true);
+        ob.disconnect();
+      }
+    }, { rootMargin: '400px' });
+    ob.observe(embedRef.current);
+    return () => ob.disconnect();
+  }, [showEmbed]);
 
   const cellClassFor = (actualStr, consensusStr) => {
     const a = numericValue(actualStr);
@@ -92,16 +115,23 @@ const EconomicCalendar = ({ apiUrl, pollInterval = 30000, embedUrl = 'https://wi
     return a >= c ? 'bg-emerald-700/50 text-white' : 'bg-rose-600/50 text-white';
   };
 
-  const formatTimeLeft = (iso) => {
-    const s = timeUntilSeconds(iso);
-    if (s <= 0) return 'Now';
-    if (s < 60) return `${s}s`;
-    const m = Math.floor(s / 60);
-    if (m < 60) return `${m}m`;
-    const h = Math.floor(m / 60);
-    const rem = m % 60;
-    return rem === 0 ? `${h}h` : `${h}h ${rem}m`;
-  };
+  // Countdown is a local memoized component that updates only itself every
+  // second, avoiding re-render of the whole EconomicCalendar.
+  const Countdown = React.memo(function Countdown({ iso }) {
+    const [text, setText] = useState(() => formatTimeLeft(iso));
+    useEffect(() => {
+      let mounted = true;
+      const tick = () => {
+        if (!mounted) return;
+        setText(formatTimeLeft(iso));
+      };
+      // update immediately and every second
+      tick();
+      const id = setInterval(tick, 1000);
+      return () => { mounted = false; clearInterval(id); };
+    }, [iso]);
+    return <span className="text-gray-200">{text}</span>;
+  });
 
   const { t } = useTranslation();
 
@@ -113,24 +143,25 @@ const EconomicCalendar = ({ apiUrl, pollInterval = 30000, embedUrl = 'https://wi
           <div className="flex items-center gap-3 text-xs text-gray-300">
               <div className="bg-white/6 px-2 py-1 rounded">Aug 18 - 20, 2025</div>
               <div className="bg-white/6 px-2 py-1 rounded">{new Date().toLocaleTimeString()} (GMT)</div>
-              {/* ensure tick is referenced so ESLint doesn't flag it as unused; hidden for users */}
-              <span className="sr-only" aria-hidden>
-                {tick}
-              </span>
+              {/* placeholder for accessibility; no global tick variable anymore */}
             </div>
         </div>
 
         <div className="overflow-hidden bg-white/30 rounded-xl shadow-inner">
           {embedUrl ? (
-            <div className="w-full" style={{ minHeight: 320 }}>
-              <iframe
-                title="Economic Calendar Widget"
-                src={embedUrl}
-                className="w-full"
-                style={{ height: 'min(520px, 60vh)', border: 'none', display: 'block' }}
-                sandbox="allow-scripts allow-same-origin allow-popups"
-                loading="lazy"
-              />
+            <div className="w-full" style={{ minHeight: 320 }} ref={embedRef}>
+              {showEmbed ? (
+                <iframe
+                  title="Economic Calendar Widget"
+                  src={embedUrl}
+                  className="w-full"
+                  style={{ height: 'min(520px, 60vh)', border: 'none', display: 'block' }}
+                  sandbox="allow-scripts allow-same-origin allow-popups"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-full h-[320px] bg-white/6 flex items-center justify-center text-gray-300">Loading calendar…</div>
+              )}
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -158,7 +189,7 @@ const EconomicCalendar = ({ apiUrl, pollInterval = 30000, embedUrl = 'https://wi
                         className="border-t border-white/10 hover:bg-white/5 transition-colors"
                       >
                         <td className="px-4 py-3 align-middle">{ev.date}</td>
-                        <td className="px-4 py-3 align-middle text-gray-200">{formatTimeLeft(ev.isoTime)}</td>
+                        <td className="px-4 py-3 align-middle text-gray-200"><Countdown iso={ev.isoTime} /></td>
                         <td className="px-4 py-3 align-middle flex items-center gap-3">
                           <span className="text-lg">{countryEmoji(ev.country)}</span>
                           <div>

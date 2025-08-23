@@ -1,5 +1,6 @@
 // src/pages/Comex.js
 import React, { useState, useEffect, useMemo } from 'react';
+import { Trans } from '../i18nShim';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaPlus, FaTrash } from 'react-icons/fa';
 import Contact from './Contact';
@@ -118,9 +119,7 @@ const Comex = () => {
           initial={{ y: -20 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.3 }}
-        >
-          Indian Stock Market - Comex Dashboard
-        </motion.h1>
+        ><Trans i18nKey="pages.Comex.indian-stock-market-comex-dashboard"><Trans i18nKey="pages.Comex.indian-stock-market-comex-dashboard-1">Indian Stock Market - Comex Dashboard</Trans></Trans></motion.h1>
 
         {/* Note on Data */}
 
@@ -164,7 +163,7 @@ const Comex = () => {
             animate={{ x: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <h2 className="text-xl font-semibold text-white mb-4">Stock List</h2>
+            <h2 className="text-xl font-semibold text-white mb-4"><Trans i18nKey="pages.Comex.stock-list">Stock List</Trans></h2>
             <div className="overflow-x-auto">
               <table className="w-full text-white">
                 <thead>
@@ -187,7 +186,7 @@ const Comex = () => {
                     <th className="p-3 cursor-pointer" onClick={() => handleSort('volume')}>
                       Volume {sortConfig.key === 'volume' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
-                    <th className="p-3">Action</th>
+                    <th className="p-3"><Trans i18nKey="pages.Comex.action">Action</Trans></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -217,8 +216,7 @@ const Comex = () => {
                             }}
                             className="text-blue-500 hover:text-blue-300"
                           >
-                            {watchlist.some((item) => item.symbol === stock.symbol) ? (
-                              <FaTrash />
+                            {watchlist.some((item) => item.symbol === stock.symbol) ? (<FaTrash />
                             ) : (
                               <FaPlus />
                             )}
@@ -234,9 +232,9 @@ const Comex = () => {
 
           {/* Watchlist */}
           <motion.div className="bg-white/30 backdrop-blur-md rounded-lg p-6" initial={{ x: 20 }} animate={{ x: 0 }} transition={{ duration: 0.3 }}>
-            <h2 className="text-xl font-semibold text-white mb-4">Watchlist</h2>
+            <h2 className="text-xl font-semibold text-white mb-4"><Trans i18nKey="pages.Comex.watchlist">Watchlist</Trans></h2>
             {watchlist.length === 0 ? (
-              <p className="text-gray-400">Your watchlist is empty.</p>
+              <p className="text-gray-400"><Trans i18nKey="pages.Comex.your-watchlist-is-empty">Your watchlist is empty.</Trans></p>
             ) : (
               <ul className="space-y-2">
                 <AnimatePresence>
@@ -272,7 +270,7 @@ const Comex = () => {
 
         {/* About COMEX Section */}
         <motion.section className="mt-8 mb-12 p-6 bg-white/30 backdrop-blur-md rounded-lg text-white" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-          <h2 className="text-2xl font-semibold mb-4">What Is COMEX?</h2>
+          <h2 className="text-2xl font-semibold mb-4"><Trans i18nKey="pages.Comex.what-is-comex">What Is COMEX?</Trans></h2>
           <p className="mb-4">
             The Commodity Exchange (COMEX) is a division of the New York Mercantile Exchange (NYMEX) and one of the world’s most prominent marketplaces for trading metals, including gold, silver, copper, and aluminum. Established in 1933, COMEX was created to standardize contract terms and provide a transparent venue for price discovery and risk management in the commodities sector.
           </p>
@@ -294,20 +292,14 @@ const Comex = () => {
           <p className="mb-4">
             COMEX prices serve as a global reference. Major financial news outlets, economic reports, and industry publications routinely cite COMEX settlement values as authoritative indicators of market sentiment. For example, the London Bullion Market Association (LBMA) uses COMEX quotes to inform its own price benchmarks.
           </p>
-          <p className="mb-4">
-            Beyond futures and options, COMEX offers micro-sized contracts and spreads, catering to smaller traders and advanced strategies. Micro gold and micro silver contracts provide one-tenth the size of standard contracts, making precious metals trading more accessible to individual investors.
-          </p>
+          <p className="mb-4"><Trans i18nKey="pages.Comex.beyond-futures-and-options-comex-offers-"><Trans i18nKey="pages.Comex.beyond-futures-and-options-comex-offers--1">Beyond futures and options, COMEX offers micro-sized contracts and spreads, catering to smaller traders and advanced strategies. Micro gold and micro silver contracts provide one-tenth the size of standard contracts, making precious metals trading more accessible to individual investors.</Trans></Trans></p>
           <p className="mb-4">
             Risk management tools on COMEX include daily price limits, margin requirements, and clearinghouse guarantees. Traders must deposit initial margin—collateral to cover potential losses—and maintain variation margin to meet daily mark-to-market adjustments. The COMEX clearinghouse stands between buyers and sellers, ensuring settlement and mitigating counterparty risk.
           </p>
-          <p className="mb-4">
-            With an average daily trading volume exceeding 100,000 contracts, COMEX boasts deep liquidity and tight bid-ask spreads. This high-volume environment attracts global participants and underpins price efficiency, making COMEX a cornerstone of the modern financial system.
-          </p>
+          <p className="mb-4"><Trans i18nKey="pages.Comex.with-an-average-daily-trading-volume-exc"><Trans i18nKey="pages.Comex.with-an-average-daily-trading-volume-exc-1">With an average daily trading volume exceeding 100,000 contracts, COMEX boasts deep liquidity and tight bid-ask spreads. This high-volume environment attracts global participants and underpins price efficiency, making COMEX a cornerstone of the modern financial system.</Trans></Trans></p>
           {/* CTA Button */}
           <div className="text-center mt-6">
-            <motion.button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setShowContactForm(true)}>
-              Contact Us to Learn More
-            </motion.button>
+            <motion.button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setShowContactForm(true)}><Trans i18nKey="pages.Comex.contact-us-to-learn-more">Contact Us to Learn More</Trans></motion.button>
           </div>
         </motion.section>
       </div>

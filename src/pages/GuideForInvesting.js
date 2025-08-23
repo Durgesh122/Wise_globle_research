@@ -1,45 +1,34 @@
 import React from 'react';
 
+import { Trans } from '../i18nShim';
 function GuideForInvesting() {
   return (
     <div className="max-w-3xl mx-auto py-8 px-2 sm:px-4 md:px-8 animate-fadein">
-      <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-white text-center drop-shadow-lg">Guide For Investing</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-white text-center drop-shadow-lg"><Trans i18nKey="pages.GuideForInvesting.guide-for-investing">Guide For Investing</Trans></h1>
       <div className="space-y-8 text-base sm:text-lg text-white">
         <section className="transition-transform duration-700 hover:scale-105 bg-white/30 rounded-xl p-4 shadow-lg">
-          <h2 className="text-2xl font-semibold mb-2 text-white">Be Consistent</h2>
-          <p>
-            Continue investing both your money and time for optimal returns, maintaining consistency in your efforts. Regularly assessing your investments is essential for understanding your evolving investment needs.
-          </p>
+          <h2 className="text-2xl font-semibold mb-2 text-white"><Trans i18nKey="pages.GuideForInvesting.be-consistent">Be Consistent</Trans></h2>
+          <p><Trans i18nKey="pages.GuideForInvesting.continue-investing-both-your-money-and-t"><Trans i18nKey="pages.GuideForInvesting.continue-investing-both-your-money-and-t-1">Continue investing both your money and time for optimal returns, maintaining consistency in your efforts. Regularly assessing your investments is essential for understanding your evolving investment needs.</Trans></Trans></p>
         </section>
         <section className="transition-transform duration-700 hover:scale-105 bg-white/30 rounded-xl p-4 shadow-lg">
-          <h2 className="text-2xl font-semibold mb-2 text-white">Don't put all your eggs in one basket</h2>
-          <p>
-            Diversify your investments across different asset classes and sectors to reduce risk. Spreading your investments helps protect your portfolio from market volatility.
-          </p>
+          <h2 className="text-2xl font-semibold mb-2 text-white"><Trans i18nKey="pages.GuideForInvesting.don-t-put-all-your-eggs-in-one-basket"><Trans i18nKey="pages.GuideForInvesting.don-t-put-all-your-eggs-in-one-basket-1">Don't put all your eggs in one basket</Trans></Trans></h2>
+          <p><Trans i18nKey="pages.GuideForInvesting.diversify-your-investments-across-differ"><Trans i18nKey="pages.GuideForInvesting.diversify-your-investments-across-differ-1">Diversify your investments across different asset classes and sectors to reduce risk. Spreading your investments helps protect your portfolio from market volatility.</Trans></Trans></p>
         </section>
         <section className="transition-transform duration-700 hover:scale-105 bg-white/30 rounded-xl p-4 shadow-lg">
-          <h2 className="text-2xl font-semibold mb-2 text-white">Stay Updated</h2>
-          <p>
-            Keep yourself informed about market trends, economic news, and changes in regulations. Staying updated enables you to make informed investment decisions.
-          </p>
+          <h2 className="text-2xl font-semibold mb-2 text-white"><Trans i18nKey="pages.GuideForInvesting.stay-updated">Stay Updated</Trans></h2>
+          <p><Trans i18nKey="pages.GuideForInvesting.keep-yourself-informed-about-market-tren"><Trans i18nKey="pages.GuideForInvesting.keep-yourself-informed-about-market-tren-1">Keep yourself informed about market trends, economic news, and changes in regulations. Staying updated enables you to make informed investment decisions.</Trans></Trans></p>
         </section>
         <section className="transition-transform duration-700 hover:scale-105 bg-white/30 rounded-xl p-4 shadow-lg">
-          <h2 className="text-2xl font-semibold mb-2 text-white">Be Disciplined</h2>
-          <p>
-            Stick to your investment plan and avoid making impulsive decisions based on short-term market movements. Discipline is key to long-term success.
-          </p>
+          <h2 className="text-2xl font-semibold mb-2 text-white"><Trans i18nKey="pages.GuideForInvesting.be-disciplined">Be Disciplined</Trans></h2>
+          <p><Trans i18nKey="pages.GuideForInvesting.stick-to-your-investment-plan-and-avoid-"><Trans i18nKey="pages.GuideForInvesting.stick-to-your-investment-plan-and-avoid--1">Stick to your investment plan and avoid making impulsive decisions based on short-term market movements. Discipline is key to long-term success.</Trans></Trans></p>
         </section>
         <section className="transition-transform duration-700 hover:scale-105 bg-white/30 rounded-xl p-4 shadow-lg">
-          <h2 className="text-2xl font-semibold mb-2 text-white">Keep aside your Emotions</h2>
-          <p>
-            Emotional investing can lead to poor decisions. Base your investment choices on logic, research, and your financial goals rather than emotions.
-          </p>
+          <h2 className="text-2xl font-semibold mb-2 text-white"><Trans i18nKey="pages.GuideForInvesting.keep-aside-your-emotions"><Trans i18nKey="pages.GuideForInvesting.keep-aside-your-emotions-1">Keep aside your Emotions</Trans></Trans></h2>
+          <p><Trans i18nKey="pages.GuideForInvesting.emotional-investing-can-lead-to-poor-dec"><Trans i18nKey="pages.GuideForInvesting.emotional-investing-can-lead-to-poor-dec-1">Emotional investing can lead to poor decisions. Base your investment choices on logic, research, and your financial goals rather than emotions.</Trans></Trans></p>
         </section>
         <section className="transition-transform duration-700 hover:scale-105 bg-white/30 rounded-xl p-4 shadow-lg">
-          <h2 className="text-2xl font-semibold mb-2 text-white">Seek Professional Help</h2>
-          <p>
-            If you are unsure about your investment strategy, consult a financial advisor. Professional guidance can help you align your investments with your goals and risk tolerance.
-          </p>
+          <h2 className="text-2xl font-semibold mb-2 text-white"><Trans i18nKey="pages.GuideForInvesting.seek-professional-help"><Trans i18nKey="pages.GuideForInvesting.seek-professional-help-1">Seek Professional Help</Trans></Trans></h2>
+          <p><Trans i18nKey="pages.GuideForInvesting.if-you-are-unsure-about-your-investment-"><Trans i18nKey="pages.GuideForInvesting.if-you-are-unsure-about-your-investment--1">If you are unsure about your investment strategy, consult a financial advisor. Professional guidance can help you align your investments with your goals and risk tolerance.</Trans></Trans></p>
         </section>
       </div>
       {/* Animation keyframes for fade-in */}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Trans } from '../i18nShim';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import {
@@ -75,7 +76,31 @@ const ClientServiceConsent = () => {
       // Save to Firebase Realtime Database
       const newRef = push(ref(db, 'clientServiceConsentForms'));
       await set(newRef, submissionData);
+      // After saving locally, attempt to create sign request via (server-side) Digio proxy
+      // Note: do NOT put API keys in frontend. Configure REACT_APP_DIGIO_PROXY_URL to point to
+      // a backend endpoint that performs the actual call to Digio with your credentials.
+      const digioPayload = createDigioPayload(submissionData);
+      try {
+        const digioResp = await sendDigioRequest(digioPayload);
+        // digioResp is expected to be an object parsed from JSON by the proxy
+        if (digioResp && digioResp.success) {
+          toast.success('Form submitted and sign request sent. Please check your email.');
+        } else {
+          // If proxy returns success:false, show returned message if any
+          const msg = digioResp && digioResp.message ? digioResp.message : 'Sign request could not be created';
+          toast.warn(msg);
+        }
+      } catch (e) {
+        // Proxy failed — log and show a clearer message so developer/user can debug
+        console.error('Digio request failed', e);
+        const msg = (e && e.message) ? e.message : 'Unknown error while sending sign request';
+        // Show message but avoid exposing sensitive headers/credentials
+        toast.error(`Sign request failed: ${msg}`);
+        // Optional: keep a friendly message as well
+        console.info('If this persists, check your Digio proxy server, DIGIO credentials, and network/CORS settings.');
+      }
 
+      // Reset form and files
       toast.success('Form submitted successfully!');
       reset();
       setPanFile(null);
@@ -87,6 +112,56 @@ const ClientServiceConsent = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Build Digio-compatible payload from form data. Matches PHP example structure.
+  const createDigioPayload = (submissionData) => {
+    const templateKey = process.env.REACT_APP_DIGIO_TEMPLATE_KEY || 'TMP250409085749067X19LUJRRQRYTGK';
+    return {
+      signers: [
+        {
+          identifier: submissionData.email,
+          name: submissionData.clientName,
+          sign_type: 'aadhaar',
+        },
+      ],
+      expire_in_days: 10,
+      send_sign_link: true,
+      notify_signers: true,
+      will_self_sign: false,
+      display_on_page: 'custom',
+      file_name: `${submissionData.clientName || 'document'}.pdf`,
+      templates: [
+        {
+          template_key: templateKey,
+          template_values: {
+            'client full name': submissionData.clientName || '',
+            clientId: submissionData.clientId || 'NA',
+            address: submissionData.address || '',
+            dob: submissionData.dob || '',
+            pan: submissionData.pan || '',
+            email: submissionData.email || '',
+          },
+        },
+      ],
+    };
+  };
+
+  // Send payload to a server-side proxy which will call Digio API with proper auth.
+  // Configure the proxy URL with REACT_APP_DIGIO_PROXY_URL. Default: '/api/digio'.
+  const sendDigioRequest = async (payload) => {
+  const proxyUrl = process.env.REACT_APP_DIGIO_PROXY_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3001/api/digio' : '/api/digio');
+    const resp = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!resp.ok) {
+      const text = await resp.text();
+      throw new Error(`Proxy request failed: ${resp.status} ${text}`);
+    }
+    return await resp.json();
   };
 
   // Render input field with icon
@@ -134,10 +209,7 @@ const ClientServiceConsent = () => {
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           {...register(id, {
             validate: {
-              fileSize: (fileList) =>
-                !fileList?.[0] ||
-                fileList[0].size <= 5000000 ||
-                'File size must be less than 5MB',
+              fileSize: (fileList) => !fileList?.[0] || fileList[0].size <= 10_000_000 || 'File size must be less than 10MB',
               fileType: (fileList) => {
                 if (!fileList?.[0]) return true;
                 const validTypes = accept.split(',').map((type) => type.trim());
@@ -158,8 +230,8 @@ const ClientServiceConsent = () => {
         {!file ? (
           <div className="flex flex-col items-center justify-center text-white/70">
             {icon}
-            <p className="mt-2 text-sm">Click or drag file to upload</p>
-            <p className="text-xs text-gray-400 mt-1">PDF, JPG, PNG (Max 5MB)</p>
+            <p className="mt-2 text-sm"><Trans i18nKey="pages.ClientServiceConsent.click-or-drag-file-to-upload"><Trans i18nKey="pages.ClientServiceConsent.click-or-drag-file-to-upload-1">Click or drag file to upload</Trans></Trans></p>
+            <p className="text-xs text-gray-400 mt-1"><Trans i18nKey="pages.ClientServiceConsent.pdf-jpg-png-max-10mb"><Trans i18nKey="pages.ClientServiceConsent.pdf-jpg-png-max-10mb-1">PDF, JPG, PNG (Max 10MB)</Trans></Trans></p>
           </div>
         ) : (
           <div className="flex items-center justify-between text-white">
@@ -200,11 +272,9 @@ const ClientServiceConsent = () => {
         variants={containerVariants}
       >
         <motion.div className="text-sm mb-8" variants={itemVariants}>
-          <Link to="/" className="hover:text-blue-400">
-            Home
-          </Link>
+          <Link to="/" className="hover:text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.home">Home</Trans></Link>
           <span className="mx-2">/</span>
-          <span className="text-blue-400">Client Service Consent</span>
+          <span className="text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent-2">Client Service Consent</Trans></Trans></span>
         </motion.div>
 
         <motion.div
@@ -212,12 +282,8 @@ const ClientServiceConsent = () => {
           variants={itemVariants}
         >
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-              Client Service Consent
-            </h2>
-            <p className="mt-2 text-gray-300">
-              Please fill out the form below and upload required documents.
-            </p>
+            <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent-1">Client Service Consent</Trans></Trans></h2>
+            <p className="mt-2 text-gray-300"><Trans i18nKey="pages.ClientServiceConsent.please-fill-out-the-form-below-and-uploa"><Trans i18nKey="pages.ClientServiceConsent.please-fill-out-the-form-below-and-uploa-1">Please fill out the form below and upload required documents.</Trans></Trans></p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -225,9 +291,7 @@ const ClientServiceConsent = () => {
               variants={containerVariants}
               className="p-6 rounded-lg bg-white/5 border border-white/10"
             >
-              <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2 mb-6">
-                Client Information
-              </h3>
+              <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2 mb-6"><Trans i18nKey="pages.ClientServiceConsent.client-information"><Trans i18nKey="pages.ClientServiceConsent.client-information-1">Client Information</Trans></Trans></h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {renderInput(
                   'clientName',
@@ -335,13 +399,11 @@ const ClientServiceConsent = () => {
               variants={containerVariants}
               className="p-6 rounded-lg bg-white/5 border border-white/10"
             >
-              <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2 mb-6">
-                Document Uploads
-              </h3>
+              <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2 mb-6"><Trans i18nKey="pages.ClientServiceConsent.document-uploads">Document Uploads</Trans></h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {renderFileInput(
                   'panFile',
-                  'PAN Card Upload',
+                  'PAN Card Upload (optional)',
                   <FaUpload size={24} />,
                   setPanFile,
                   panFile,
@@ -349,7 +411,7 @@ const ClientServiceConsent = () => {
                 )}
                 {renderFileInput(
                   'aadhaarFile',
-                  'Aadhaar Card Upload',
+                  'Aadhaar Card Upload (optional)',
                   <FaUpload size={24} />,
                   setAadhaarFile,
                   aadhaarFile,
@@ -357,7 +419,7 @@ const ClientServiceConsent = () => {
                 )}
                 {renderFileInput(
                   'signatureFile',
-                  'Signature Upload',
+                  'Signature Upload (optional)',
                   <FaUpload size={24} />,
                   setSignatureFile,
                   signatureFile,
@@ -369,9 +431,7 @@ const ClientServiceConsent = () => {
                 <label
                   htmlFor="address"
                   className="block text-sm font-medium text-white mb-2"
-                >
-                  Address*
-                </label>
+                ><Trans i18nKey="pages.ClientServiceConsent.address">Address*</Trans></label>
                 <textarea
                   id="address"
                   {...register('address', {

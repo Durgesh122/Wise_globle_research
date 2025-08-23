@@ -1,9 +1,10 @@
 import React from 'react';
 
+import { Trans } from '../i18nShim';
 function LiveChart() {
   return (
     <div className="min-h-screen pt-20 px-4 bg-[#0f172a] text-white">
-      <h1 className="text-3xl font-bold mb-6 text-center">📊 Live Market Chart</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center"><Trans i18nKey="pages.LiveChart.live-market-chart">📊 Live Market Chart</Trans></h1>
       <div className="w-full h-[600px] rounded-xl overflow-hidden">
         <iframe
           title="TradingView Live Chart"

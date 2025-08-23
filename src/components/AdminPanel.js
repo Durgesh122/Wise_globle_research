@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from '../i18nShim';
 import { db } from '../firebase';
 import { ref, onValue } from 'firebase/database';
 
@@ -35,7 +36,7 @@ const AdminPanel = () => {
     };
   }, []);
 
-  const { t } = require('react-i18next').useTranslation();
+  const { t } = useTranslation();
 
   return (
     <div className="p-6">

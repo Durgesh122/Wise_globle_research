@@ -40,6 +40,9 @@ const TrustWall = () => {
             src={trustImg}
             alt="Trusted by Users"
             className="w-full max-w-sm mx-auto md:mx-0"
+            decoding="async"
+            loading="lazy"
+            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Trusted'; }}
           />
         </div>
 

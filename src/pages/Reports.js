@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { Trans } from '../i18nShim';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
@@ -72,7 +73,9 @@ const PasswordModal = ({ isOpen, onClose, onConfirm, report }) => {
               Verify Password for {report?.title}
             </h3>
             <input
-              type="text"
+              type="password"
+              inputMode="numeric"
+              maxLength={4}
               placeholder="Enter 4-digit password"
               className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4"
               value={passwordInput}
@@ -89,9 +92,7 @@ const PasswordModal = ({ isOpen, onClose, onConfirm, report }) => {
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-              >
-                Verify
-              </motion.button>
+              ><Trans i18nKey="pages.Reports.verify">Verify</Trans></motion.button>
               <motion.button
                 onClick={() => {
                   setPasswordInput('');
@@ -101,9 +102,7 @@ const PasswordModal = ({ isOpen, onClose, onConfirm, report }) => {
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-              >
-                Cancel
-              </motion.button>
+              ><Trans i18nKey="pages.Reports.cancel">Cancel</Trans></motion.button>
             </div>
           </motion.div>
         </motion.div>
@@ -123,9 +122,9 @@ PasswordModal.propTypes = {
 };
 
 // Report preview modal with embedded PDF view
-const ReportPreviewModal = ({ isOpen, onClose, report }) => (
+const ReportPreviewModal = ({ isOpen, onClose, report = null, onDownload = null }) => (
   <AnimatePresence>
-    {isOpen && (
+    {isOpen && report && (
       <motion.div
         className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
         initial={{ opacity: 0 }}
@@ -147,16 +146,38 @@ const ReportPreviewModal = ({ isOpen, onClose, report }) => (
               whileHover="hover"
               whileTap="tap"
               aria-label="Close preview"
-            >
-              Close
-            </motion.button>
+            ><Trans i18nKey="pages.Reports.close">Close</Trans></motion.button>
           </div>
-          <div className="bg-white h-full rounded-md overflow-hidden">
-            <iframe
-              src={report?.fileData}
-              title={report?.title}
-              className="w-full h-full"
-            />
+          <div className="bg-white h-full rounded-md overflow-hidden flex flex-col">
+            <div className="flex-1 min-h-0">
+              <iframe
+                src={report?.file || report?.fileData}
+                title={report?.title}
+                className="w-full h-full"
+              />
+            </div>
+            <div className="p-3 border-t border-gray-200/10 bg-gray-50/5 flex justify-end gap-3">
+              {onDownload && (
+                <motion.button
+                  onClick={() => onDownload(report)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Trans i18nKey="pages.Reports.download">Download</Trans>
+                </motion.button>
+              )}
+              <motion.button
+                onClick={onClose}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <Trans i18nKey="pages.Reports.close">Close</Trans>
+              </motion.button>
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -164,39 +185,54 @@ const ReportPreviewModal = ({ isOpen, onClose, report }) => (
   </AnimatePresence>
 );
 
+// Defensive: ensure no .defaultProps exist on this function component
+// (some toolchains or HOCs may add it; React warns about defaultProps on
+// function components in future releases). We delete it proactively.
+if (ReportPreviewModal.defaultProps) {
+  try {
+    delete ReportPreviewModal.defaultProps;
+  } catch (e) {
+    /* ignore — defensive */
+  }
+}
+
 ReportPreviewModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  report: PropTypes.shape({ title: PropTypes.string }).isRequired,
+  // report may be null when modal is toggled; not required
+  report: PropTypes.shape({ title: PropTypes.string }),
+  onDownload: PropTypes.func,
 };
 
 // Day selector component
 const DaySelector = ({ activeDay, setActiveDay }) => (
   <motion.div
-    className="mb-8 flex justify-center"
+    className="mb-8"
     variants={itemVariants}
     data-aos="fade-up"
   >
-    <div className="inline-flex rounded-md shadow-sm">
-      {WEEK_DAYS.map((day) => (
-        <motion.button
-          key={day}
-          onClick={() => setActiveDay(day)}
-          className={`px-6 py-3 text-sm font-medium transition-all duration-300 ${
-            activeDay === day
-              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
-              : 'bg-white/10 text-white hover:bg-white/20'
-          } ${day === 'Monday' ? 'rounded-l-lg' : ''} ${
-            day === 'Friday' ? 'rounded-r-lg' : ''
-          }`}
-          variants={buttonVariants}
-          whileHover="hover"
-          whileTap="tap"
-          aria-label={`Select ${day}`}
-        >
-          {day}
-        </motion.button>
-      ))}
+    <div className="flex overflow-x-auto no-scrollbar px-2">
+      <div className="inline-flex rounded-md shadow-sm space-x-2">
+        {WEEK_DAYS.map((day) => (
+          <motion.button
+            key={day}
+            onClick={() => setActiveDay(day)}
+            className={`min-w-[80px] px-4 py-2 text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+              activeDay === day
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
+                : 'bg-white/10 text-white hover:bg-white/20'
+            } ${day === 'Monday' ? 'rounded-l-lg' : ''} ${
+              day === 'Friday' ? 'rounded-r-lg' : ''
+            }`}
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+            aria-label={`Select ${day}`}
+          >
+            {day}
+          </motion.button>
+        ))}
+      </div>
     </div>
   </motion.div>
 );
@@ -230,7 +266,7 @@ const SearchFilter = ({ searchTerm, setSearchTerm, selectedCategory, setSelected
       onChange={(e) => setSelectedCategory(e.target.value)}
       aria-label="Select report category"
     >
-      <option value="All">All Categories</option>
+      <option value="All"><Trans i18nKey="pages.Reports.all-categories">All Categories</Trans></option>
       {CATEGORIES.map((cat) => (
         <option key={cat} value={cat} className="bg-gray-800">
           {cat}
@@ -248,7 +284,7 @@ SearchFilter.propTypes = {
 };
 
 // Report card component
-const ReportCard = ({ report, isSelected, onVerify }) => (
+const ReportCard = ({ report, isSelected, onVerify, onPreview }) => (
   <motion.li
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
@@ -271,16 +307,26 @@ const ReportCard = ({ report, isSelected, onVerify }) => (
         {report.category}
       </span>
     </div>
-    <div className="mt-3 flex items-center gap-3">
+    <div className="mt-3 flex flex-col sm:flex-row items-center gap-3">
       <motion.button
         onClick={() => onVerify(report)}
-        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+        className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
         variants={buttonVariants}
         whileHover="hover"
         whileTap="tap"
         aria-label={`Verify password for ${report.title}`}
       >
-        <FiLock /> Verify
+        <FiLock /><Trans i18nKey="pages.Reports.verify">Verify</Trans>
+      </motion.button>
+      <motion.button
+        onClick={() => onPreview && onPreview(report)}
+        className="w-full sm:w-auto px-4 py-2 bg-white/10 text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2"
+        variants={buttonVariants}
+        whileHover="hover"
+        whileTap="tap"
+        aria-label={`Preview ${report.title}`}
+      >
+        <FiEye /><Trans i18nKey="pages.Reports.preview">Preview</Trans>
       </motion.button>
     </div>
   </motion.li>
@@ -487,12 +533,8 @@ function Reports() {
           variants={itemVariants}
           data-aos="fade-up"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
-            Research Reports
-          </h1>
-          <p className="mt-5 max-w-xl mx-auto text-xl text-gray-300">
-            Daily analysis and insights
-          </p>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight"><Trans i18nKey="pages.Reports.research-reports">Research Reports</Trans></h1>
+          <p className="mt-5 max-w-xl mx-auto text-xl text-white"><Trans i18nKey="pages.Reports.daily-analysis-and-insights">Daily analysis and insights</Trans></p>
         </motion.div>
 
         {/* Day Selector */}
@@ -518,8 +560,8 @@ function Reports() {
             onChange={(e) => setSortBy(e.target.value)}
             aria-label="Sort reports by"
           >
-            <option value="title">Sort by Title</option>
-            <option value="size">Sort by Size</option>
+            <option value="title"><Trans i18nKey="pages.Reports.sort-by-title">Sort by Title</Trans></option>
+            <option value="size"><Trans i18nKey="pages.Reports.sort-by-size">Sort by Size</Trans></option>
           </select>
           <motion.button
             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
@@ -557,12 +599,12 @@ function Reports() {
                           setSelectedReport(report);
                           setIsPasswordModalOpen(true);
                         }}
-                        onPreview={() => handlePreviewReport(report)}
+                        onPreview={handlePreviewReport}
                       />
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-gray-300 text-sm">No reports found.</p>
+                  <p className="text-gray-300 text-sm"><Trans i18nKey="pages.Reports.no-reports-found">No reports found.</Trans></p>
                 )}
               </div>
             </div>
@@ -599,17 +641,14 @@ function Reports() {
                           whileTap="tap"
                           aria-label="View report"
                         >
-                          <FiEye /> View Report
-                        </motion.button>
+                          <FiEye /><Trans i18nKey="pages.Reports.view-report">View Report</Trans></motion.button>
                         <p className="mt-2 text-sm text-gray-300">
                           {pdfPreview.title} ({pdfPreview.size})
                         </p>
                       </div>
                     </div>
                     <div className="px-6 py-4 border-t border-gray-200/20 bg-gray-900/50 text-right">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Available for download only
-                      </span>
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"><Trans i18nKey="pages.Reports.available-for-download-only">Available for download only</Trans></span>
                     </div>
                   </motion.div>
                 ) : (
@@ -629,10 +668,8 @@ function Reports() {
                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                         />
                       </svg>
-                      <h3 className="mt-2 text-sm font-medium text-white">No report selected</h3>
-                      <p className="mt-1 text-sm text-gray-300">
-                        Click on a report and verify the password to preview it
-                      </p>
+                      <h3 className="mt-2 text-sm font-medium text-white"><Trans i18nKey="pages.Reports.no-report-selected">No report selected</Trans></h3>
+                      <p className="mt-1 text-sm text-gray-300"><Trans i18nKey="pages.Reports.click-on-a-report-and-verify-the-passwor"><Trans i18nKey="pages.Reports.click-on-a-report-and-verify-the-passwor-1">Click on a report and verify the password to preview it</Trans></Trans></p>
                     </div>
                   </div>
                 )}
@@ -662,9 +699,12 @@ function Reports() {
       {/* Report Preview Modal */}
       <ReportPreviewModal
         isOpen={isPreviewOpen}
-        onClose={() => setIsPreviewOpen(false)}
+        onClose={() => {
+          setIsPreviewOpen(false);
+          setSelectedReport(null);
+        }}
         report={selectedReport}
-        onDownload={handleDownload}
+  onDownload={handleDownload}
       />
     </motion.div>
   );

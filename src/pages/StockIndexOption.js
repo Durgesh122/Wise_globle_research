@@ -1,5 +1,6 @@
 // Import required dependencies
 import React, { useState, useMemo } from 'react';
+import { Trans, useTranslation } from '../i18nShim';
 import { Helmet } from 'react-helmet';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,6 +14,7 @@ import {
 
 // Main StockIndexOption component
 const StockIndexOption = () => {
+  const { t } = useTranslation();
   // State for FAQ accordion
   const [openFAQ, setOpenFAQ] = useState(null);
   // State for WhatsApp button loading
@@ -214,7 +216,7 @@ const StockIndexOption = () => {
   return (
     <div className="bg-transparent text-white min-h-screen">
       <Helmet>
-        <title>Stock Index Options Trading India | Wise Global</title>
+        <title>{t('pages.StockIndexOption.stock-index-options-trading-india-wise-g', 'Stock Index Options Trading India | Wise Global')}</title>
         <meta
           name="description"
           content="Wise Global offers SEBI-registered stock index options advisory with research-driven calls, real-time alerts, and advanced strategies for Nifty and Bank Nifty. Start trading confidently."
@@ -280,24 +282,16 @@ const StockIndexOption = () => {
           animate={{ scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
  className="inline-block bg-transparent backdrop-blur-md text-white px-4 py-1 rounded-full text-sm font-medium mb-4"
-        >
-          SEBI-Registered Index Options Advisory
-        </motion.span>
-        <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 mb-6">
-          Excel in Stock Index Options Trading
-        </h1>
-        <p className="text-lg text-white mt-4 max-w-3xl mx-auto">
-          Leverage Wise Global’s expertise for research-driven Nifty and Bank Nifty options strategies, real-time alerts, and disciplined risk management.
-        </p>
+        ><Trans i18nKey="pages.StockIndexOption.sebi-registered-index-options-advisory"><Trans i18nKey="pages.StockIndexOption.sebi-registered-index-options-advisory-1">SEBI-Registered Index Options Advisory</Trans></Trans></motion.span>
+        <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 mb-6"><Trans i18nKey="pages.StockIndexOption.excel-in-stock-index-options-trading"><Trans i18nKey="pages.StockIndexOption.excel-in-stock-index-options-trading-1">Excel in Stock Index Options Trading</Trans></Trans></h1>
+        <p className="text-lg text-white mt-4 max-w-3xl mx-auto"><Trans i18nKey="pages.StockIndexOption.leverage-wise-global-s-expertise-for-res"><Trans i18nKey="pages.StockIndexOption.leverage-wise-global-s-expertise-for-res-1">Leverage Wise Global’s expertise for research-driven Nifty and Bank Nifty options strategies, real-time alerts, and disciplined risk management.</Trans></Trans></p>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           className="text-sm text-white mt-4"
         >
-          <FaExclamationTriangle className="inline mr-2" />
-          Index options trading carries high risks. Review all offer documents carefully.
-        </motion.div>
+          <FaExclamationTriangle className="inline mr-2" /><Trans i18nKey="pages.StockIndexOption.index-options-trading-carries-high-risks"><Trans i18nKey="pages.StockIndexOption.index-options-trading-carries-high-risks-1">Index options trading carries high risks. Review all offer documents carefully.</Trans></Trans></motion.div>
         <div className="flex flex-col sm:flex-row justify-center mt-10 gap-6">
           <motion.button
             whileHover={{ scale: 1.1, boxShadow: '0 0 20px rgba(0, 255, 255, 0.3)' }}
@@ -309,8 +303,7 @@ const StockIndexOption = () => {
           >
             {isLoading ? 'Connecting…' : (
               <>
-                <FaWhatsapp /> Explore 3 Introductory Calls
-              </>
+                <FaWhatsapp /><Trans i18nKey="pages.StockIndexOption.explore-3-introductory-calls"><Trans i18nKey="pages.StockIndexOption.explore-3-introductory-calls-1">Explore 3 Introductory Calls</Trans></Trans></>
             )}
           </motion.button>
           <motion.button
@@ -320,8 +313,7 @@ const StockIndexOption = () => {
             onClick={handleContactClick}
  className="flex items-center justify-center gap-2 bg-transparent backdrop-blur-md text-white border border-cyan-500 px-8 py-4 rounded-full font-semibold shadow-lg min-w-[260px] transition-all"
           >
-            <FaPhoneAlt /> Contact Research Team
-          </motion.button>
+            <FaPhoneAlt /><Trans i18nKey="pages.StockIndexOption.contact-research-team"><Trans i18nKey="pages.StockIndexOption.contact-research-team-1">Contact Research Team</Trans></Trans></motion.button>
         </div>
       </motion.section>
 
@@ -332,7 +324,7 @@ const StockIndexOption = () => {
         transition={{ duration: 0.8, delay: 0.3 }}
         className="container mx-auto mb-20"
       >
-        <h2 className="text-3xl font-bold text-center text-white mb-12">Our Index Options Track Record</h2>
+        <h2 className="text-3xl font-bold text-center text-white mb-12"><Trans i18nKey="pages.StockIndexOption.our-index-options-track-record"><Trans i18nKey="pages.StockIndexOption.our-index-options-track-record-1">Our Index Options Track Record</Trans></Trans></h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 px-4">
           {performanceStats.map((stat, index) => (
             <motion.div
@@ -357,9 +349,7 @@ const StockIndexOption = () => {
             transition={{ duration: 0.5, delay: 0.8 }}
             className="text-center text-sm text-white mt-6"
         >
-          <FaExclamationTriangle className="inline mr-2" />
-          Metrics are historical and not a guarantee of future results.
-        </motion.div>
+          <FaExclamationTriangle className="inline mr-2" /><Trans i18nKey="pages.StockIndexOption.metrics-are-historical-and-not-a-guarant"><Trans i18nKey="pages.StockIndexOption.metrics-are-historical-and-not-a-guarant-1">Metrics are historical and not a guarantee of future results.</Trans></Trans></motion.div>
       </motion.section>
 
       {/* Features Section */}
@@ -369,7 +359,7 @@ const StockIndexOption = () => {
         transition={{ duration: 0.8, delay: 0.4 }}
         className="container mx-auto mb-20 px-4"
       >
-        <h2 className="text-3xl font-bold text-center text-white mb-12">Our Index Options Services</h2>
+        <h2 className="text-3xl font-bold text-center text-white mb-12"><Trans i18nKey="pages.StockIndexOption.our-index-options-services"><Trans i18nKey="pages.StockIndexOption.our-index-options-services-1">Our Index Options Services</Trans></Trans></h2>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <motion.div
@@ -397,7 +387,7 @@ const StockIndexOption = () => {
         transition={{ duration: 0.8, delay: 0.5 }}
         className="container mx-auto mb-20 px-4"
       >
-        <h2 className="text-3xl font-bold text-center text-white mb-12">Market Insights for Index Options</h2>
+        <h2 className="text-3xl font-bold text-center text-white mb-12"><Trans i18nKey="pages.StockIndexOption.market-insights-for-index-options"><Trans i18nKey="pages.StockIndexOption.market-insights-for-index-options-1">Market Insights for Index Options</Trans></Trans></h2>
         <div className="grid md:grid-cols-3 gap-8">
           {marketInsights.map((insight, index) => (
             <motion.div
@@ -422,7 +412,7 @@ const StockIndexOption = () => {
         transition={{ duration: 0.8, delay: 0.6 }}
         className="container mx-auto mb-20 px-4"
       >
-        <h2 className="text-3xl font-bold text-center text-white mb-12">What Our Traders Say</h2>
+        <h2 className="text-3xl font-bold text-center text-white mb-12"><Trans i18nKey="pages.StockIndexOption.what-our-traders-say">What Our Traders Say</Trans></h2>
         <div className="relative">
           <motion.div
             key={currentTestimonial}
@@ -455,9 +445,7 @@ const StockIndexOption = () => {
           transition={{ duration: 0.5, delay: 0.8 }}
           className="text-center text-sm text-white mt-6"
         >
-          <FaExclamationTriangle className="inline mr-2" />
-          Testimonials reflect individual experiences and may not represent typical results.
-        </motion.div>
+          <FaExclamationTriangle className="inline mr-2" /><Trans i18nKey="pages.StockIndexOption.testimonials-reflect-individual-experien"><Trans i18nKey="pages.StockIndexOption.testimonials-reflect-individual-experien-1">Testimonials reflect individual experiences and may not represent typical results.</Trans></Trans></motion.div>
       </motion.section>
 
       {/* Risk Calculator Placeholder */}
@@ -467,23 +455,17 @@ const StockIndexOption = () => {
         transition={{ duration: 0.8, delay: 0.7 }}
         className="container mx-auto mb-20 px-4"
       >
-        <h2 className="text-3xl font-bold text-center text-white mb-12">Risk Calculator</h2>
+        <h2 className="text-3xl font-bold text-center text-white mb-12"><Trans i18nKey="pages.StockIndexOption.risk-calculator">Risk Calculator</Trans></h2>
         <div className="bg-white/20 backdrop-blur-lg p-8 rounded-xl border-2 border-white/30 hover:shadow-2xl text-center">
-          <p className="text-white mb-4">
-            Use our risk calculator to estimate potential losses and optimize position sizing for index options trading.
-          </p>
+          <p className="text-white mb-4"><Trans i18nKey="pages.StockIndexOption.use-our-risk-calculator-to-estimate-pote"><Trans i18nKey="pages.StockIndexOption.use-our-risk-calculator-to-estimate-pote-1">Use our risk calculator to estimate potential losses and optimize position sizing for index options trading.</Trans></Trans></p>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-semibold"
             onClick={() => toast.info('Risk Calculator coming soon!', { position: 'top-center' })}
-          >
-            Try Risk Calculator
-          </motion.button>
+          ><Trans i18nKey="pages.StockIndexOption.try-risk-calculator">Try Risk Calculator</Trans></motion.button>
           <p className="text-sm text-white mt-4">
-            <FaExclamationTriangle className="inline mr-2" />
-            Always assess risks before trading. Consult a financial advisor.
-          </p>
+            <FaExclamationTriangle className="inline mr-2" /><Trans i18nKey="pages.StockIndexOption.always-assess-risks-before-trading-consu"><Trans i18nKey="pages.StockIndexOption.always-assess-risks-before-trading-consu-1">Always assess risks before trading. Consult a financial advisor.</Trans></Trans></p>
         </div>
       </motion.section>
 
@@ -494,7 +476,7 @@ const StockIndexOption = () => {
         transition={{ duration: 0.8, delay: 0.8 }}
         className="container mx-auto mb-20 px-4"
       >
-        <h2 className="text-3xl font-bold text-center text-white mb-12">Stock Market Regulations</h2>
+        <h2 className="text-3xl font-bold text-center text-white mb-12"><Trans i18nKey="pages.StockIndexOption.stock-market-regulations"><Trans i18nKey="pages.StockIndexOption.stock-market-regulations-1">Stock Market Regulations</Trans></Trans></h2>
         <div className="grid md:grid-cols-2 gap-8">
           {regulations.map((regulation, index) => (
             <motion.div
@@ -522,7 +504,7 @@ const StockIndexOption = () => {
         transition={{ duration: 0.8, delay: 0.9 }}
         className="max-w-5xl mx-auto mb-20 px-4"
       >
-        <h2 className="text-3xl font-bold text-center text-white mb-12">Frequently Asked Questions</h2>
+        <h2 className="text-3xl font-bold text-center text-white mb-12"><Trans i18nKey="pages.StockIndexOption.frequently-asked-questions"><Trans i18nKey="pages.StockIndexOption.frequently-asked-questions-1">Frequently Asked Questions</Trans></Trans></h2>
         <div className="space-y-6">
           {faqList.map((faq, idx) => (
             <motion.div
@@ -572,10 +554,8 @@ const StockIndexOption = () => {
         transition={{ duration: 0.8, delay: 1.0 }}
         className="max-w-4xl mx-auto text-center mb-16 px-4"
       >
-        <h2 className="text-3xl font-bold text-white mb-6">Start Your Index Options Journey</h2>
-        <p className="text-white mb-8 text-lg">
-          Join Wise Global for SEBI-registered index options advisory with 3 introductory calls. Navigate Nifty and Bank Nifty markets with confidence.
-        </p>
+        <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.StockIndexOption.start-your-index-options-journey"><Trans i18nKey="pages.StockIndexOption.start-your-index-options-journey-1">Start Your Index Options Journey</Trans></Trans></h2>
+        <p className="text-white mb-8 text-lg"><Trans i18nKey="pages.StockIndexOption.join-wise-global-for-sebi-registered-ind"><Trans i18nKey="pages.StockIndexOption.join-wise-global-for-sebi-registered-ind-1">Join Wise Global for SEBI-registered index options advisory with 3 introductory calls. Navigate Nifty and Bank Nifty markets with confidence.</Trans></Trans></p>
         <motion.button
           whileHover={{ scale: 1.1, boxShadow: '0 0 20px rgba(0, 255, 255, 0.3)' }}
           whileTap={{ scale: 0.95 }}
@@ -586,8 +566,7 @@ const StockIndexOption = () => {
         >
           {isLoading ? 'Connecting…' : (
             <>
-              <FaWhatsapp /> Explore Introductory Calls
-            </>
+              <FaWhatsapp /><Trans i18nKey="pages.StockIndexOption.explore-introductory-calls"><Trans i18nKey="pages.StockIndexOption.explore-introductory-calls-1">Explore Introductory Calls</Trans></Trans></>
           )}
         </motion.button>
       </motion.section>
@@ -599,13 +578,11 @@ const StockIndexOption = () => {
         transition={{ duration: 0.8, delay: 1.1 }}
  className="container mx-auto text-center px-4 py-8 bg-transparent backdrop-blur-lg rounded-xl border-2 border-white/30 hover:shadow-2xl"
       >
-        <h3 className="text-xl font-semibold text-white mb-4">Important Disclosures</h3>
+        <h3 className="text-xl font-semibold text-white mb-4"><Trans i18nKey="pages.StockIndexOption.important-disclosures"><Trans i18nKey="pages.StockIndexOption.important-disclosures-1">Important Disclosures</Trans></Trans></h3>
         <p className="text-white text-sm mb-4">
-          <FaExclamationTriangle className="inline mr-2" />
-          Index options trading involves high risks due to leverage and volatility. Losses may exceed investments. Past performance is not indicative of future results. For subscription fees, visit <a href="https://x.ai/grok" className="text-cyan-400 hover:underline">our pricing page</a>.
+          <FaExclamationTriangle className="inline mr-2" /><Trans i18nKey="pages.StockIndexOption.index-options-trading-involves-high-risk"><Trans i18nKey="pages.StockIndexOption.index-options-trading-involves-high-risk-1">Index options trading involves high risks due to leverage and volatility. Losses may exceed investments. Past performance is not indicative of future results. For subscription fees, visit</Trans></Trans><a href="https://x.ai/grok" className="text-cyan-400 hover:underline"><Trans i18nKey="pages.StockIndexOption.our-pricing-page">our pricing page</Trans></a>.
         </p>
-        <p className="text-white text-sm">
-          For grievances, contact us at <a href="mailto:support@wiseglobal.com" className="text-cyan-400 hover:underline">support@wiseglobal.com</a> or file a complaint on SEBI’s SCORES platform at <a href="https://scores.gov.in" className="text-cyan-400 hover:underline">scores.gov.in</a>.
+        <p className="text-white text-sm"><Trans i18nKey="pages.StockIndexOption.for-grievances-contact-us-at"><Trans i18nKey="pages.StockIndexOption.for-grievances-contact-us-at-1">For grievances, contact us at</Trans></Trans><a href="mailto:support@wiseglobal.com" className="text-cyan-400 hover:underline"><Trans i18nKey="pages.StockIndexOption.support-wiseglobal-com"><Trans i18nKey="pages.StockIndexOption.support-wiseglobal-com-1">support@wiseglobal.com</Trans></Trans></a><Trans i18nKey="pages.StockIndexOption.or-file-a-complaint-on-sebi-s-scores-pla"><Trans i18nKey="pages.StockIndexOption.or-file-a-complaint-on-sebi-s-scores-pla-1">or file a complaint on SEBI’s SCORES platform at</Trans></Trans><a href="https://scores.gov.in" className="text-cyan-400 hover:underline"><Trans i18nKey="pages.StockIndexOption.scores-gov-in">scores.gov.in</Trans></a>.
         </p>
       </motion.section>
     </div>

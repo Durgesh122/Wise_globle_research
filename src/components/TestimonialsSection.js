@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
 

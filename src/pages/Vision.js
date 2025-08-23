@@ -83,7 +83,7 @@ const Vision = () => (
     </section>
 
     <section className="container mx-auto py-12">
-      <h2 className="text-2xl font-bold mb-6 text-center">Core Values</h2>
+  <h2 className="text-2xl font-bold mb-6 text-center">Core Values</h2>
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
         {coreValues.map(v => (
           <Card key={v.id} className="p-6">

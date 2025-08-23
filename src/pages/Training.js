@@ -150,20 +150,14 @@ const Training = () => {
     >
       {/* Header Section */}
       <motion.div className="text-center mb-12" variants={itemVariants}>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-          Training & Skill Development
-        </h1>
-        <p className="text-lg text-white max-w-2xl mx-auto">
-          At <span className="font-semibold text-blue-300">Wise Global Research</span>, we believe knowledge is the key to financial success. Our training programs empower aspiring traders and professionals in India’s stock markets.
-        </p>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">Training & Skill Development</h1>
+        <p className="text-lg text-white max-w-2xl mx-auto">At <span className="font-semibold text-blue-300">Wise Global Research</span>, we believe knowledge is the key to financial success. Our training programs empower aspiring traders and professionals in India’s stock markets.</p>
       </motion.div>
 
       {/* Introduction Section */}
       <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
-        <h2 className="text-3xl font-bold text-white mb-4">Why Choose Our Training?</h2>
-        <p className="text-white text-lg leading-7 mb-6">
-          Our programs are designed for beginners and seasoned traders alike, offering practical insights into NSE, BSE, and MCX markets. Learn from industry experts with 5+ years of experience, access recorded sessions, and earn a certificate upon completion.
-        </p>
+  <h2 className="text-3xl font-bold text-white mb-4">Why Choose Our Training?</h2>
+  <p className="text-white text-lg leading-7 mb-6">Our programs are designed for beginners and seasoned traders alike, offering practical insights into NSE, BSE, and MCX markets. Learn from industry experts with 5+ years of experience, access recorded sessions, and earn a certificate upon completion.</p>
         <img
           src={trainingImage}
           alt="Wise Global Research Training"
@@ -174,7 +168,7 @@ const Training = () => {
 
       {/* Training Programs Section */}
       <motion.div className="mb-12" variants={containerVariants}>
-        <h2 className="text-3xl font-bold text-white mb-6 text-center">What We Offer</h2>
+  <h2 className="text-3xl font-bold text-white mb-6 text-center">What We Offer</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {trainingPrograms.map((program) => (
             <motion.div
@@ -202,29 +196,24 @@ const Training = () => {
 
       {/* Benefits Section */}
       <motion.div className="mb-12" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-white mb-6 text-center">Benefits of Our Training</h2>
+    <h2 className="text-3xl font-bold text-white mb-6 text-center">Benefits of Our Training</h2>
         <ul className="list-disc pl-6 text-white space-y-2 max-w-2xl mx-auto">
           <motion.li variants={itemVariants}>
-            <span className="font-semibold">Expert Trainers:</span> Learn from professionals with 5+ years of experience in Indian markets.
-          </motion.li>
+      <span className="font-semibold">Expert Trainers:</span> Learn from professionals with 5+ years of experience in Indian markets.</motion.li>
           <motion.li variants={itemVariants}>
-            <span className="font-semibold">Interactive Learning:</span> Engage in real-time sessions and Q&A with market experts.
-          </motion.li>
+      <span className="font-semibold">Interactive Learning:</span> Engage in real-time sessions and Q&A with market experts.</motion.li>
           <motion.li variants={itemVariants}>
-            <span className="font-semibold">Comprehensive Resources:</span> Access recorded sessions, study materials, and market guides.
-          </motion.li>
+      <span className="font-semibold">Comprehensive Resources:</span> Access recorded sessions, study materials, and market guides.</motion.li>
           <motion.li variants={itemVariants}>
-            <span className="font-semibold">Certification:</span> Earn a recognized certificate upon course completion.
-          </motion.li>
+      <span className="font-semibold">Certification:</span> Earn a recognized certificate upon course completion.</motion.li>
           <motion.li variants={itemVariants}>
-            <span className="font-semibold">Placement Assistance:</span> Get support to kickstart your career in finance with our network.
-          </motion.li>
+      <span className="font-semibold">Placement Assistance:</span> Get support to kickstart your career in finance with our network.</motion.li>
         </ul>
       </motion.div>
 
       {/* Testimonials Section */}
       <motion.div className="mb-12" variants={containerVariants}>
-        <h2 className="text-3xl font-bold text-white mb-6 text-center">What Our Trainees Say</h2>
+  <h2 className="text-3xl font-bold text-white mb-6 text-center">What Our Trainees Say</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((testimonial) => (
             <motion.div
@@ -247,12 +236,10 @@ const Training = () => {
 
       {/* Registration Form Section */}
       <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
-        <h2 className="text-3xl font-bold text-white mb-6 text-center">Register for Training</h2>
+  <h2 className="text-3xl font-bold text-white mb-6 text-center">Register for Training</h2>
         <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
           <div>
-            <label htmlFor="name" className="block text-white font-semibold mb-2">
-              Your Name
-            </label>
+            <label htmlFor="name" className="block text-white font-semibold mb-2">Your Name</label>
             <input
               type="text"
               id="name"
@@ -265,9 +252,7 @@ const Training = () => {
             {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
           </div>
           <div>
-            <label htmlFor="email" className="block text-white font-semibold mb-2">
-              Your Email
-            </label>
+            <label htmlFor="email" className="block text-white font-semibold mb-2">Your Email</label>
             <input
               type="email"
               id="email"
@@ -280,9 +265,7 @@ const Training = () => {
             {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
           </div>
           <div>
-            <label htmlFor="phone" className="block text-white font-semibold mb-2">
-              Phone Number
-            </label>
+            <label htmlFor="phone" className="block text-white font-semibold mb-2">Phone Number</label>
             <input
               type="text"
               id="phone"
@@ -295,9 +278,7 @@ const Training = () => {
             {errors.phone && <p className="text-red-400 text-sm mt-1">{errors.phone}</p>}
           </div>
           <div>
-            <label htmlFor="course" className="block text-white font-semibold mb-2">
-              Select Course
-            </label>
+            <label htmlFor="course" className="block text-white font-semibold mb-2">Select Course</label>
             <select
               id="course"
               name="course"
@@ -315,9 +296,7 @@ const Training = () => {
             {errors.course && <p className="text-red-400 text-sm mt-1">{errors.course}</p>}
           </div>
           <div>
-            <label htmlFor="message" className="block text-white font-semibold mb-2">
-              Message
-            </label>
+            <label htmlFor="message" className="block text-white font-semibold mb-2">Message</label>
             <textarea
               id="message"
               name="message"
@@ -332,9 +311,7 @@ const Training = () => {
           <button
             type="submit"
             className="w-full bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition"
-          >
-            Register Now
-          </button>
+          >Register Now</button>
         </form>
       </motion.div>
 
@@ -345,15 +322,11 @@ const Training = () => {
         style={{ transformStyle: 'preserve-3d' }}
       >
         <h2 className="text-3xl font-bold text-white mb-4">Join Our Training Programs</h2>
-        <p className="text-white max-w-2xl mx-auto mb-6">
-          Take the first step toward financial freedom. Contact our team to learn more about our training programs tailored for Indian markets.
-        </p>
+        <p className="text-white max-w-2xl mx-auto mb-6">Take the first step toward financial freedom. Contact our team to learn more about our training programs tailored for Indian markets.</p>
         <a
           href="/contact"
           className="inline-block bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition"
-        >
-          Contact Us
-        </a>
+        >Contact Us</a>
       </motion.div>
 
       {/* Disclaimer */}
@@ -362,8 +335,7 @@ const Training = () => {
         className="text-center p-4 bg-white/30 rounded-lg"
       >
         <p className="text-white">
-          <strong>Disclaimer:</strong> Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global Research is not responsible for any profit or loss that may occur.
-        </p>
+          <strong>Disclaimer:</strong> Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global Research is not responsible for any profit or loss that may occur.</p>
       </motion.div>
     </motion.div>
   );

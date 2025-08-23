@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Trans } from '../../i18nShim';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiMail, FiFileText, FiAlertCircle, FiBarChart2, FiBell } from 'react-icons/fi';
@@ -37,9 +38,7 @@ const Dashboard = () => {
       <motion.h1
         className="text-3xl font-bold text-white mb-8"
         variants={itemVariants}
-      >
-        Admin Dashboard
-      </motion.h1>
+      ><Trans i18nKey="pages.admin_Dashboard.admin-dashboard">Admin Dashboard</Trans></motion.h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card, index) => (
           <motion.div key={index} variants={itemVariants}>

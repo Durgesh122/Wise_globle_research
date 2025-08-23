@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Trans } from '../../i18nShim';
 import { ref, onValue, remove } from 'firebase/database';
 import { getStorage, ref as storageRef, deleteObject } from 'firebase/storage';
 import { db } from '../../firebase';
@@ -35,14 +36,14 @@ const ConsentTable = ({ submissions, handleDelete }) => (
     <table className="min-w-full table-auto text-white">
       <thead className="bg-gray-700/50">
         <tr>
-          <th className="p-4 text-left text-sm font-semibold">Client Name</th>
-          <th className="p-4 text-left text-sm font-semibold">Client ID</th>
-          <th className="p-4 text-left text-sm font-semibold">Email</th>
-          <th className="hidden md:table-cell p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">PAN Card</th>
-          <th className="hidden md:table-cell p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Aadhaar Card</th>
-          <th className="hidden lg:table-cell p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Signature</th>
-          <th className="p-4 text-left text-sm font-semibold">Timestamp</th>
-          <th className="p-4 text-left text-sm font-semibold">Actions</th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.client-name">Client Name</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.client-id">Client ID</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.email">Email</Trans></th>
+          <th className="hidden md:table-cell p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.pan-card">PAN Card</Trans></th>
+          <th className="hidden md:table-cell p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.aadhaar-card">Aadhaar Card</Trans></th>
+          <th className="hidden lg:table-cell p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.signature">Signature</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.timestamp">Timestamp</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.actions">Actions</Trans></th>
         </tr>
       </thead>
       <tbody>
@@ -197,7 +198,7 @@ const ConsentSubmissions = () => {
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
-      <h2 className="text-3xl font-bold text-white mb-6">Consent Submissions</h2>
+      <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.admin_ConsentSubmissions.consent-submissions"><Trans i18nKey="pages.admin_ConsentSubmissions.consent-submissions-1">Consent Submissions</Trans></Trans></h2>
       <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search consents..." />
       {isLoading ? <LoadingSpinner /> : (
         <>

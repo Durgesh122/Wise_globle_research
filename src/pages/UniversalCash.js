@@ -4,75 +4,73 @@ import { Link } from 'react-router-dom';
 
 const UniversalCash = () => (
   <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
-    <h1 className="text-4xl font-extrabold mb-4 text-center text-white">Universal Cash</h1>
+  <h1 className="text-4xl font-extrabold mb-4 text-center text-white">Universal Cash</h1>
     <p className="text-lg mb-6 text-center text-white">
-      In Universal Cash, we provide you Cash, intraday/BTST/Positional recommendations with proper target &amp; Stop loss in NSE Stock Market. The Pack is specially designed for traders who’s working in Specially CASH segment of NSE market with proper research-based recommendations and believes in limited but quality trades. Our highly experienced teams always focus on proper entry and exit time of customer; we provide you research on the in-depth analysis using technical and fundamental analysis by using SMS system.
+      Universal Cash provides cash-segment recommendations (intraday / BTST / positional) for the NSE stock market with clear targets and stop‑loss levels. This pack is designed for traders focused on the cash segment who prefer a small number of high‑quality, research-backed trades. Our experienced research team provides in-depth technical and fundamental analysis and shares recommendations via SMS.
     </p>
 
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2 text-white">Infinity Club Features</h2>
-      <ul className="list-disc pl-6 text-base mb-4 text-white">
-        <li>We provides 2-3 Intraday/Positional recommendation’s (as per market conditions).</li>
-        <li>All recommendation will have 2 TGT with proper Stop loss.</li>
-        <li>Timely Follow Ups of all the trade signals</li>
-        <li>Proper time for entry &amp; exit in recommendations.</li>
-        <li>Nifty and Bank Nifty Trend and Support and resistance.</li>
-        <li>Carefully Analysis Market direction.</li>
-        <li>Concise information of Domestic &amp; World Market.</li>
-        <li>Recommendations are provided through SMS.</li>
-        <li>Swift real time customer support between (09:00 AM to 06:00 PM).</li>
-      </ul>
-      <p className="text-base mb-2 text-white">Trading rules that every trader must studious follow.</p>
+  <h2 className="text-2xl font-bold mb-2 text-white">Infinity Club Features</h2>
+    <ul className="list-disc pl-6 text-base mb-4 text-white">
+  <li>We provide 2–3 intraday/positional recommendations per day (subject to market conditions).</li>
+  <li>All recommendations include two targets and a clear stop‑loss.</li>
+  <li>Timely follow-ups for all trade signals.</li>
+  <li>Precise entry and exit timing for recommendations.</li>
+  <li>NIFTY and Bank NIFTY trend analysis with support and resistance levels.</li>
+  <li>Careful analysis of market direction.</li>
+  <li>Concise domestic and global market updates.</li>
+  <li>Recommendations are delivered via SMS.</li>
+  <li>Swift real‑time customer support: 09:00 AM to 06:00 PM.</li>
+    </ul>
+  <p className="text-base mb-2 text-white">Trading rules that every trader must studiously follow.</p>
     </div>
 
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2 text-white">Trading Rules Every Trader Must Follow</h2>
-      <ul className="list-decimal pl-6 text-base mb-4 text-white">
-        <li>Do not over trade.</li>
-        <li>Only follow SMS research recommendations.</li>
-        <li>Have to trade on each Recommendation with same quantity according to Research Team.</li>
-        <li>Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</li>
-        <li>Never be emotional.</li>
-        <li>Beware of overnight risk.</li>
-        <li>Always trade with a stop loss.</li>
-        <li>Don’t look back and rue trades.</li>
-        <li>Don’t over leverage in a volatile market.</li>
-        <li>Costs matter a lot when you are a trader.</li>
-        <li>Trading begins with protecting your capital.</li>
-        <li>Not doing anything is also a trading strategy.</li>
-        <li>Profit is what is booked; all else is book profits.</li>
-      </ul>
+  <h2 className="text-2xl font-bold mb-2 text-white">Trading Rules Every Trader Must Follow</h2>
+    <ul className="list-decimal pl-6 text-base mb-4 text-white">
+  <li>Do not overtrade.</li>
+  <li>Only follow SMS research recommendations.</li>
+  <li>Trade each recommendation with the same quantity as advised by the Research Team.</li>
+  <li>Profit and loss are subject to market risk; there is no guarantee.</li>
+  <li>Do not trade emotionally.</li>
+  <li>Be mindful of overnight risk.</li>
+  <li>Always use a stop‑loss.</li>
+  <li>Don't revisit closed trades to regret them.</li>
+  <li>Avoid over‑leveraging in volatile markets.</li>
+  <li>Minimize costs; they materially affect trading returns.</li>
+  <li>Protect your capital first.</li>
+  <li>Sometimes the best action is to do nothing.</li>
+  <li>Only booked profits count; unrealized gains are not realized until closed.</li>
+    </ul>
     </div>
 
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2 text-white">Sample Calls</h2>
-      <div className="bg-white/10 rounded-lg p-4 text-center text-base text-white font-mono">
-        BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50
-      </div>
+  <h2 className="text-2xl font-bold mb-2 text-white">Sample Calls</h2>
+  <div className="bg-white/10 rounded-lg p-4 text-center text-base text-white font-mono">BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50</div>
     </div>
 
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2 text-white">Pricing Plan For Universal Cash</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
-        <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center">
+  <h2 className="text-2xl font-bold mb-4 text-white text-center">Pricing Plan For Universal Cash</h2>
+      <div className="flex justify-center mb-4">
+        <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center w-full max-w-md mx-auto">
           <h3 className="text-xl font-bold mb-2 text-white">Universal Cash</h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹1,51,000 <span className="text-base font-normal">/ Quarterly</span></div>
           <div className="mb-2 text-white">2 to 3 Calls in a Day</div>
-          <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2">Payment</button>
+          <Link to="/payment" className="w-full">
+            <button className="w-full bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2">Payment</button>
           </Link>
-          <div className="text-xs text-white mt-2">Note: Pricing are excluding GST (18%)</div>
+          <div className="text-xs text-white mt-2">Note: Pricing excludes GST (18%)</div>
         </div>
       </div>
     </div>
 
     <div className="text-center text-sm text-white mt-8">
-      <strong>Swift real-time customer support:</strong> 09:00 AM to 06:00 PM | <strong>All recommendations are provided through SMS.</strong>
+  <strong>Swift real-time customer support:</strong> 09:00 AM to 06:00 PM | <strong>All recommendations are provided through SMS.</strong>
     </div>
 
     {/* Why Choose Us Section */}
     <div className="my-12">
-      <h2 className="text-2xl font-bold mb-4 text-center text-white">Why Choose Universal Cash?</h2>
+  <h2 className="text-2xl font-bold mb-4 text-center text-white">Why Choose Universal Cash?</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
           <FaLightbulb className="text-4xl mb-2 text-yellow-300" />
@@ -94,7 +92,7 @@ const UniversalCash = () => (
 
     {/* FAQ Section */}
     <div className="my-12">
-      <h2 className="text-2xl font-bold mb-4 text-center text-white">Frequently Asked Questions</h2>
+  <h2 className="text-2xl font-bold mb-4 text-center text-white">Frequently Asked Questions</h2>
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white">Q: How will I receive the recommendations?</h3>
@@ -111,9 +109,7 @@ const UniversalCash = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">
-            Contact Us
-          </button>
+          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Contact Us</button>
         </Link>
       </div>
     </div>

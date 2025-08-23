@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Trans } from '../i18nShim';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiTrendingUp, FiTrendingDown, FiBell, FiBarChart2, FiDollarSign, FiPieChart, FiSearch } from 'react-icons/fi';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
@@ -150,8 +151,7 @@ const Mcx = () => {
   };
 
   // Filter commodities based on search query
-  const filteredCommodities = marketData?.commodities.filter(commodity =>
-    commodity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  const filteredCommodities = marketData?.commodities.filter(commodity => commodity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     commodity.symbol.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -163,9 +163,7 @@ const Mcx = () => {
           {/* Branding with Gradient */}
           <div className="flex items-center space-x-3">
             <FiTrendingUp className="text-3xl text-white" />
-            <h1 className="text-3xl font-extrabold text-white">
-              MCX Service
-            </h1>
+            <h1 className="text-3xl font-extrabold text-white"><Trans i18nKey="pages.Mcx.mcx-service">MCX Service</Trans></h1>
           </div>
           {/* Navigation Tabs */}
           <nav className="flex flex-wrap justify-center gap-2 sm:gap-4">
@@ -276,9 +274,7 @@ const Mcx = () => {
                     className="rounded-2xl shadow-xl overflow-hidden bg-white/20"
                   >
                     <div className="p-6 sm:p-8">
-                      <h2 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
-                        Market Overview
-                      </h2>
+                      <h2 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}><Trans i18nKey="pages.Mcx.market-overview">Market Overview</Trans></h2>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {marketData?.commodities.map((commodity) => (
                           <motion.div
@@ -308,13 +304,13 @@ const Mcx = () => {
                             </div>
                             <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
                               <div>
-                                <span className="text-gray-500">OI:</span>{' '}
+                                <span className="text-gray-500"><Trans i18nKey="pages.Mcx.oi">OI:</Trans></span>{' '}
                                 <span className={`font-medium ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
                                   {(commodity.oi / 1000).toFixed(1)}K
                                 </span>
                               </div>
                               <div>
-                                <span className="text-gray-500">Volume:</span>{' '}
+                                <span className="text-gray-500"><Trans i18nKey="pages.Mcx.volume">Volume:</Trans></span>{' '}
                                 <span className={`font-medium ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
                                   {(commodity.volume / 1000).toFixed(1)}K
                                 </span>
@@ -330,18 +326,16 @@ const Mcx = () => {
                                 className="mt-4"
                               >
                                 <div className="border-t pt-4">
-                                  <h4 className={`text-sm font-semibold ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
-                                    Additional Details
-                                  </h4>
+                                  <h4 className={`text-sm font-semibold ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}><Trans i18nKey="pages.Mcx.additional-details">Additional Details</Trans></h4>
                                   <div className="grid grid-cols-2 gap-2 text-sm mt-2">
                                     <div>
-                                      <span className="text-gray-500">Support:</span>{' '}
+                                      <span className="text-gray-500"><Trans i18nKey="pages.Mcx.support">Support:</Trans></span>{' '}
                                       <span className={`font-medium ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
                                         {formatCurrency(commodity.support)}
                                       </span>
                                     </div>
                                     <div>
-                                      <span className="text-gray-500">Resistance:</span>{' '}
+                                      <span className="text-gray-500"><Trans i18nKey="pages.Mcx.resistance">Resistance:</Trans></span>{' '}
                                       <span className={`font-medium ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
                                         {formatCurrency(commodity.resistance)}
                                       </span>
@@ -371,12 +365,12 @@ const Mcx = () => {
                   <Link to="/mcxsupreme">
                     <button
                       className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-md ${infoView === 'supreme' ? 'bg-gradient-to-r from-[#A1C4FD] to-[#D4A1FD] text-white' : 'text-white hover:bg-white/30'}`}
-                    >MCX Supreme</button>
+                    ><Trans i18nKey="pages.Mcx.mcx-supreme">MCX Supreme</Trans></button>
                   </Link>
                   <button
                     onClick={() => setInfoView('galaxy')}
                     className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-md ${infoView === 'galaxy' ? 'bg-gradient-to-r from-[#A1C4FD] to-[#D4A1FD] text-white' : 'text-white hover:bg-white/30'}`}
-                  >Galaxy MCX</button>
+                  ><Trans i18nKey="pages.Mcx.galaxy-mcx">Galaxy MCX</Trans></button>
                 </div>
               )}
                           </motion.div>
@@ -393,9 +387,7 @@ const Mcx = () => {
                     className="rounded-2xl shadow-xl overflow-hidden bg-white/20"
                   >
                     <div className="p-6 sm:p-8">
-                      <h2 className="text-2xl font-bold mb-6 text-white">
-                        Technical Analysis
-                      </h2>
+                      <h2 className="text-2xl font-bold mb-6 text-white"><Trans i18nKey="pages.Mcx.technical-analysis">Technical Analysis</Trans></h2>
                       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div className="col-span-1 lg:col-span-2">
                           <LineChart
@@ -422,9 +414,7 @@ const Mcx = () => {
                           </LineChart>
                         </div>
                         <div>
-                          <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
-                            Recommendations
-                          </h3>
+                          <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}><Trans i18nKey="pages.Mcx.recommendations">Recommendations</Trans></h3>
                           <div className="space-y-3">
                             {Object.entries(marketData?.technicals || {}).map(([commodity, recommendation]) => (
                               <motion.div
@@ -457,9 +447,7 @@ const Mcx = () => {
                     className="rounded-2xl shadow-xl overflow-hidden bg-white/20"
                   >
                     <div className="p-6 sm:p-8">
-                      <h2 className="text-2xl font-bold mb-6 text-white">
-                        Market News
-                      </h2>
+                      <h2 className="text-2xl font-bold mb-6 text-white"><Trans i18nKey="pages.Mcx.market-news">Market News</Trans></h2>
                       <div className="space-y-4">
                         {marketData?.news.map((item) => (
                           <motion.div
@@ -503,43 +491,43 @@ const Mcx = () => {
                   className="rounded-2xl shadow-xl overflow-hidden bg-white/20"
                 >
                   <div className="p-6 sm:p-8">
-                    <h2 className="text-2xl font-bold mb-4 text-white">MCX Supreme</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-white"><Trans i18nKey="pages.Mcx.mcx-supreme">MCX Supreme</Trans></h2>
                     <p className="mb-4 text-white/80">
                       MCX Supreme is designed and destined to deliver recommendations with good market moves. It’s unique blend of technical and fundamentals research makes it most exciting and rewarding product. It provides you 1-2 intraday recommendations. The recommendations are given in Bullions, Base Metals and energy traded in MCX. Our timely generated technical recommendations provide adequate time to enter in trades. Our recommendations are supreme blend of Technical and globally covered fundamental research.
                     </p>
-                    <h3 className="text-xl font-semibold mb-2 text-white">MCX Supreme Features:</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-white"><Trans i18nKey="pages.Mcx.mcx-supreme-features">MCX Supreme Features:</Trans></h3>
                     <ul className="list-disc list-inside mb-4 text-white/80 space-y-1">
-                      <li>We provide 1-2 Intraday/Positional recommendations in Bullions, Base Metals and energy traded in MCX (as per market conditions).</li>
-                      <li>All recommendations have 2 TGT with proper Stop loss.</li>
-                      <li>Timely Follow Ups of all the trade signals.</li>
-                      <li>Proper time for entry & exit in recommendations.</li>
-                      <li>Nifty and Bank Nifty Trend and Support and resistance.</li>
-                      <li>Carefully Analysis Market direction.</li>
-                      <li>Concise information of Domestic & World Market.</li>
-                      <li>Recommendations are provided through SMS.</li>
-                      <li>Swift real time customer support between (09:00 AM to 06:00 PM).</li>
-                      <li>Trading rules that every trader must studious follow.</li>
-                      <li>Do not over trade.</li>
-                      <li>Only follow SMS research recommendations.</li>
-                      <li>Have to trade on each Recommendation with same quantity according to Research Team.</li>
-                      <li>Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</li>
-                      <li>Never be emotional.</li>
-                      <li>Beware of overnight risk.</li>
-                      <li>Always trade with a stop loss.</li>
-                      <li>Don’t look back and rue trades.</li>
-                      <li>Don’t over leverage in a volatile market.</li>
-                      <li>Costs matter a lot when you are a trader.</li>
-                      <li>Trading begins with protecting your capital.</li>
-                      <li>Not doing anything is also a trading strategy.</li>
-                      <li>Profit is what is booked; all else is book profits.</li>
+                      <li><Trans i18nKey="pages.Mcx.we-provide-1-2-intraday-positional-recom"><Trans i18nKey="pages.Mcx.we-provide-1-2-intraday-positional-recom-3">We provide 1-2 Intraday/Positional recommendations in Bullions, Base Metals and energy traded in MCX (as per market conditions).</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.all-recommendations-have-2-tgt-with-prop"><Trans i18nKey="pages.Mcx.all-recommendations-have-2-tgt-with-prop-2">All recommendations have 2 TGT with proper Stop loss.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.timely-follow-ups-of-all-the-trade-signa"><Trans i18nKey="pages.Mcx.timely-follow-ups-of-all-the-trade-signa-2">Timely Follow Ups of all the trade signals.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.proper-time-for-entry-exit-in-recommenda"><Trans i18nKey="pages.Mcx.proper-time-for-entry-exit-in-recommenda-2">Proper time for entry & exit in recommendations.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.nifty-and-bank-nifty-trend-and-support-a"><Trans i18nKey="pages.Mcx.nifty-and-bank-nifty-trend-and-support-a-1">Nifty and Bank Nifty Trend and Support and resistance.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.carefully-analysis-market-direction"><Trans i18nKey="pages.Mcx.carefully-analysis-market-direction-2">Carefully Analysis Market direction.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.concise-information-of-domestic-world-ma"><Trans i18nKey="pages.Mcx.concise-information-of-domestic-world-ma-2">Concise information of Domestic & World Market.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.recommendations-are-provided-through-sms"><Trans i18nKey="pages.Mcx.recommendations-are-provided-through-sms-2">Recommendations are provided through SMS.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.swift-real-time-customer-support-between"><Trans i18nKey="pages.Mcx.swift-real-time-customer-support-between-2">Swift real time customer support between (09:00 AM to 06:00 PM).</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.trading-rules-that-every-trader-must-stu"><Trans i18nKey="pages.Mcx.trading-rules-that-every-trader-must-stu-2">Trading rules that every trader must studious follow.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.do-not-over-trade">Do not over trade.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.only-follow-sms-research-recommendations"><Trans i18nKey="pages.Mcx.only-follow-sms-research-recommendations-2">Only follow SMS research recommendations.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.have-to-trade-on-each-recommendation-wit"><Trans i18nKey="pages.Mcx.have-to-trade-on-each-recommendation-wit-2">Have to trade on each Recommendation with same quantity according to Research Team.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.profit-and-loss-is-subject-to-market-ris"><Trans i18nKey="pages.Mcx.profit-and-loss-is-subject-to-market-ris-2">Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.never-be-emotional">Never be emotional.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.beware-of-overnight-risk">Beware of overnight risk.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.always-trade-with-a-stop-loss">Always trade with a stop loss.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.don-t-look-back-and-rue-trades">Don’t look back and rue trades.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.don-t-over-leverage-in-a-volatile-market"><Trans i18nKey="pages.Mcx.don-t-over-leverage-in-a-volatile-market-2">Don’t over leverage in a volatile market.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.costs-matter-a-lot-when-you-are-a-trader"><Trans i18nKey="pages.Mcx.costs-matter-a-lot-when-you-are-a-trader-2">Costs matter a lot when you are a trader.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.trading-begins-with-protecting-your-capi"><Trans i18nKey="pages.Mcx.trading-begins-with-protecting-your-capi-2">Trading begins with protecting your capital.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.not-doing-anything-is-also-a-trading-str"><Trans i18nKey="pages.Mcx.not-doing-anything-is-also-a-trading-str-2">Not doing anything is also a trading strategy.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.profit-is-what-is-booked-all-else-is-boo"><Trans i18nKey="pages.Mcx.profit-is-what-is-booked-all-else-is-boo-2">Profit is what is booked; all else is book profits.</Trans></Trans></li>
                     </ul>
-                    <h3 className="text-xl font-semibold mb-2 text-white">Pricing Plan For MCX Supreme:</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-white"><Trans i18nKey="pages.Mcx.pricing-plan-for-mcx-supreme">Pricing Plan For MCX Supreme:</Trans></h3>
                     <div className="flex justify-center">
                       <Link to="/mcxsupreme">
-                        <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2 mb-2">MCX Supreme Pricing & Payment</button>
+                        <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2 mb-2"><Trans i18nKey="pages.Mcx.mcx-supreme-pricing-payment">MCX Supreme Pricing & Payment</Trans></button>
                       </Link>
                     </div>
-                    <p className="text-sm text-white/70">Note: Pricing are excluding GST (18%)</p>
+                    <p className="text-sm text-white/70"><Trans i18nKey="pages.Mcx.note-pricing-are-excluding-gst-18">Note: Pricing are excluding GST (18%)</Trans></p>
                   </div>
                 </motion.div>
               )}
@@ -553,53 +541,53 @@ const Mcx = () => {
                   className="rounded-2xl shadow-xl overflow-hidden bg-white/20"
                 >
                   <div className="p-6 sm:p-8">
-                    <h2 className="text-2xl font-bold mb-4 text-white">Galaxy MCX</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-white"><Trans i18nKey="pages.Mcx.galaxy-mcx">Galaxy MCX</Trans></h2>
                     <p className="mb-4 text-white/80">
                       Our MCX Commodity Service provides real-time trading insights, research-backed recommendations, and expert research recommendations for F&O commodities such as gold, silver, crude oil, natural gas, and base metals. Designed for both beginners and experienced traders, whether you’re trading for short-term profits or long-term investments, our MCX Commodity Service is your reliable partner in navigating the Indian commodities market with confidence.
                     </p>
-                    <h3 className="text-xl font-semibold mb-2 text-white">Galaxy MCX Features:</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-white"><Trans i18nKey="pages.Mcx.galaxy-mcx-features">Galaxy MCX Features:</Trans></h3>
                     <ul className="list-disc list-inside mb-4 text-white/80 space-y-1">
-                      <li>We provide 1-2 Intraday/Positional recommendations in Bullions, Base Metals and energy traded in MCX F&O (as per market conditions).</li>
-                      <li>All recommendations have 2 TGT with proper Stop loss.</li>
-                      <li>Timely Follow Ups of all the trade signals.</li>
-                      <li>Proper time for entry & exit in recommendations.</li>
-                      <li>Carefully Analysis Market direction.</li>
-                      <li>Concise information of Domestic & World Market.</li>
-                      <li>Recommendations are provided through SMS.</li>
-                      <li>Swift real time customer support between (09:00 AM to 06:00 PM).</li>
-                      <li>Trading rules that every trader must studious follow.</li>
-                      <li>Do not over trade.</li>
-                      <li>Only follow SMS research recommendations.</li>
-                      <li>Have to trade on each Recommendation with same quantity according to Research Team.</li>
-                      <li>Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</li>
-                      <li>Never be emotional.</li>
-                      <li>Beware of overnight risk.</li>
-                      <li>Always trade with a stop loss.</li>
-                      <li>Don’t look back and rue trades.</li>
-                      <li>Don’t over leverage in a volatile market.</li>
-                      <li>Costs matter a lot when you are a trader.</li>
-                      <li>Trading begins with protecting your capital.</li>
-                      <li>Not doing anything is also a trading strategy.</li>
-                      <li>Profit is what is booked; all else is book profits.</li>
+                      <li><Trans i18nKey="pages.Mcx.we-provide-1-2-intraday-positional-recom-1"><Trans i18nKey="pages.Mcx.we-provide-1-2-intraday-positional-recom-2">We provide 1-2 Intraday/Positional recommendations in Bullions, Base Metals and energy traded in MCX F&O (as per market conditions).</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.all-recommendations-have-2-tgt-with-prop"><Trans i18nKey="pages.Mcx.all-recommendations-have-2-tgt-with-prop-1">All recommendations have 2 TGT with proper Stop loss.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.timely-follow-ups-of-all-the-trade-signa"><Trans i18nKey="pages.Mcx.timely-follow-ups-of-all-the-trade-signa-1">Timely Follow Ups of all the trade signals.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.proper-time-for-entry-exit-in-recommenda"><Trans i18nKey="pages.Mcx.proper-time-for-entry-exit-in-recommenda-1">Proper time for entry & exit in recommendations.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.carefully-analysis-market-direction"><Trans i18nKey="pages.Mcx.carefully-analysis-market-direction-1">Carefully Analysis Market direction.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.concise-information-of-domestic-world-ma"><Trans i18nKey="pages.Mcx.concise-information-of-domestic-world-ma-1">Concise information of Domestic & World Market.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.recommendations-are-provided-through-sms"><Trans i18nKey="pages.Mcx.recommendations-are-provided-through-sms-1">Recommendations are provided through SMS.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.swift-real-time-customer-support-between"><Trans i18nKey="pages.Mcx.swift-real-time-customer-support-between-1">Swift real time customer support between (09:00 AM to 06:00 PM).</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.trading-rules-that-every-trader-must-stu"><Trans i18nKey="pages.Mcx.trading-rules-that-every-trader-must-stu-1">Trading rules that every trader must studious follow.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.do-not-over-trade">Do not over trade.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.only-follow-sms-research-recommendations"><Trans i18nKey="pages.Mcx.only-follow-sms-research-recommendations-1">Only follow SMS research recommendations.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.have-to-trade-on-each-recommendation-wit"><Trans i18nKey="pages.Mcx.have-to-trade-on-each-recommendation-wit-1">Have to trade on each Recommendation with same quantity according to Research Team.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.profit-and-loss-is-subject-to-market-ris"><Trans i18nKey="pages.Mcx.profit-and-loss-is-subject-to-market-ris-1">Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.never-be-emotional">Never be emotional.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.beware-of-overnight-risk">Beware of overnight risk.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.always-trade-with-a-stop-loss">Always trade with a stop loss.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.don-t-look-back-and-rue-trades">Don’t look back and rue trades.</Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.don-t-over-leverage-in-a-volatile-market"><Trans i18nKey="pages.Mcx.don-t-over-leverage-in-a-volatile-market-1">Don’t over leverage in a volatile market.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.costs-matter-a-lot-when-you-are-a-trader"><Trans i18nKey="pages.Mcx.costs-matter-a-lot-when-you-are-a-trader-1">Costs matter a lot when you are a trader.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.trading-begins-with-protecting-your-capi"><Trans i18nKey="pages.Mcx.trading-begins-with-protecting-your-capi-1">Trading begins with protecting your capital.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.not-doing-anything-is-also-a-trading-str"><Trans i18nKey="pages.Mcx.not-doing-anything-is-also-a-trading-str-1">Not doing anything is also a trading strategy.</Trans></Trans></li>
+                      <li><Trans i18nKey="pages.Mcx.profit-is-what-is-booked-all-else-is-boo"><Trans i18nKey="pages.Mcx.profit-is-what-is-booked-all-else-is-boo-1">Profit is what is booked; all else is book profits.</Trans></Trans></li>
                     </ul>
-                    <h3 className="text-xl font-semibold mb-2 text-white">Sample Calls:</h3>
-                    <p className="mb-4 text-white/80">BUY CRUDE OIL 5800 CE ABOVE 181 TARGET 204 226 STOPLOSS 154</p>
-                    <h3 className="text-xl font-semibold mb-2 text-white">Pricing Plan For Galaxy MCX:</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-white"><Trans i18nKey="pages.Mcx.sample-calls">Sample Calls:</Trans></h3>
+                    <p className="mb-4 text-white/80"><Trans i18nKey="pages.Mcx.buy-crude-oil-5800-ce-above-181-target-2"><Trans i18nKey="pages.Mcx.buy-crude-oil-5800-ce-above-181-target-2-1">BUY CRUDE OIL 5800 CE ABOVE 181 TARGET 204 226 STOPLOSS 154</Trans></Trans></p>
+                    <h3 className="text-xl font-semibold mb-2 text-white"><Trans i18nKey="pages.Mcx.pricing-plan-for-galaxy-mcx">Pricing Plan For Galaxy MCX:</Trans></h3>
                     <table className="min-w-full divide-y divide-gray-200 mb-4">
                       <thead className="bg-white/20">
                         <tr>
-                          <th className="px-4 py-2 text-left text-sm font-medium text-white">Plan</th>
-                          <th className="px-4 py-2 text-left text-sm font-medium text-white">Price</th>
+                          <th className="px-4 py-2 text-left text-sm font-medium text-white"><Trans i18nKey="pages.Mcx.plan">Plan</Trans></th>
+                          <th className="px-4 py-2 text-left text-sm font-medium text-white"><Trans i18nKey="pages.Mcx.price">Price</Trans></th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="bg-white/20">
-                          <td className="px-4 py-2 text-white">Galaxy MCX</td>
-                          <td className="px-4 py-2 text-white">₹1,51,000 / Quarterly</td>
+                          <td className="px-4 py-2 text-white"><Trans i18nKey="pages.Mcx.galaxy-mcx">Galaxy MCX</Trans></td>
+                          <td className="px-4 py-2 text-white"><Trans i18nKey="pages.Mcx.1-51-000-quarterly">₹1,51,000 / Quarterly</Trans></td>
                         </tr>
                       </tbody>
                     </table>
-                    <p className="text-sm text-white/70">Note: Pricing are excluding GST (18%)</p>
+                    <p className="text-sm text-white/70"><Trans i18nKey="pages.Mcx.note-pricing-are-excluding-gst-18">Note: Pricing are excluding GST (18%)</Trans></p>
                   </div>
                 </motion.div>
               )}
@@ -613,9 +601,7 @@ const Mcx = () => {
                   className="rounded-2xl shadow-xl overflow-hidden bg-white/20"
                 >
                   <div className="p-6 sm:p-8">
-                    <h2 className="text-2xl font-bold mb-6 text-white">
-                      Commodities
-                    </h2>
+                    <h2 className="text-2xl font-bold mb-6 text-white"><Trans i18nKey="pages.Mcx.commodities">Commodities</Trans></h2>
                     {/* Search Bar */}
                     <div className="mb-6">
                       <div className="relative">
@@ -633,24 +619,12 @@ const Mcx = () => {
                       <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-white/20">
                           <tr>
-                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                              Commodity
-                            </th>
-                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                              Price
-                            </th>
-                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                              Change
-                            </th>
-                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                              OI
-                            </th>
-                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                              Volume
-                            </th>
-                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
-                              Support/Resistance
-                            </th>
+                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"><Trans i18nKey="pages.Mcx.commodity">Commodity</Trans></th>
+                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"><Trans i18nKey="pages.Mcx.price">Price</Trans></th>
+                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"><Trans i18nKey="pages.Mcx.change">Change</Trans></th>
+                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"><Trans i18nKey="pages.Mcx.oi-2">OI</Trans></th>
+                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"><Trans i18nKey="pages.Mcx.volume-3">Volume</Trans></th>
+                            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white"><Trans i18nKey="pages.Mcx.support-resistance">Support/Resistance</Trans></th>
                           </tr>
                         </thead>
                         <tbody className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
@@ -731,25 +705,15 @@ const Mcx = () => {
                   className="rounded-2xl shadow-xl overflow-hidden bg-white/20"
                 >
                   <div className="p-6 sm:p-8">
-                    <h2 className="text-2xl font-bold mb-6 text-white">
-                      Analytics
-                    </h2>
+                    <h2 className="text-2xl font-bold mb-6 text-white"><Trans i18nKey="pages.Mcx.analytics">Analytics</Trans></h2>
                     <div className="overflow-x-auto">
                       <table className="min-w-full divide-y divide-gray-200">
                         <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
                           <tr>
-                            <th className={`px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
-                              Commodity
-                            </th>
-                            <th className={`px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
-                              Current Price
-                            </th>
-                            <th className={`px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
-                              Day Range
-                            </th>
-                            <th className={`px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
-                              Avg Volume
-                            </th>
+                            <th className={`px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}><Trans i18nKey="pages.Mcx.commodity">Commodity</Trans></th>
+                            <th className={`px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}><Trans i18nKey="pages.Mcx.current-price">Current Price</Trans></th>
+                            <th className={`px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}><Trans i18nKey="pages.Mcx.day-range">Day Range</Trans></th>
+                            <th className={`px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}><Trans i18nKey="pages.Mcx.avg-volume">Avg Volume</Trans></th>
                           </tr>
                         </thead>
                         <tbody className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
@@ -792,9 +756,7 @@ const Mcx = () => {
                 >
                   <div className="p-6 sm:p-8">
                     <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-                      <h2 className={`text-2xl font-bold ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
-                        Alerts
-                      </h2>
+                      <h2 className={`text-2xl font-bold ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}><Trans i18nKey="pages.Mcx.alerts">Alerts</Trans></h2>
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -813,9 +775,7 @@ const Mcx = () => {
                         transition={{ duration: 0.3 }}
                         className="p-4 rounded-lg bg-white/20"
                       >
-                        <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}>
-                          Create New Alert
-                        </h3>
+                        <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-[#E5E7EB]' : 'text-[#1F2937]'}`}><Trans i18nKey="pages.Mcx.create-new-alert">Create New Alert</Trans></h3>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <select
                             value={newAlert.commodity}
@@ -831,8 +791,8 @@ const Mcx = () => {
                             onChange={(e) => setNewAlert({ ...newAlert, condition: e.target.value })}
                             className={`p-2 rounded-lg border ${darkMode ? 'bg-gray-600 border-gray-500 text-[#E5E7EB]' : 'bg-white border-gray-200 text-[#1F2937]'}`}
                           >
-                            <option value="above">Price Above</option>
-                            <option value="below">Price Below</option>
+                            <option value="above"><Trans i18nKey="pages.Mcx.price-above">Price Above</Trans></option>
+                            <option value="below"><Trans i18nKey="pages.Mcx.price-below">Price Below</Trans></option>
                           </select>
                           <input
                             type="number"
@@ -859,9 +819,7 @@ const Mcx = () => {
                             setShowAlertForm(false);
                           }}
                           className="mt-4 px-4 py-2 bg-gradient-to-r from-[#A1C4FD] to-[#D4A1FD] text-white rounded-md text-sm font-medium"
-                        >
-                          Save Alert
-                        </motion.button>
+                        ><Trans i18nKey="pages.Mcx.save-alert">Save Alert</Trans></motion.button>
                       </motion.div>
                     )}
                     <div className="space-y-4 mt-6">

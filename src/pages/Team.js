@@ -1,5 +1,6 @@
 // src/pages/Team.js
 import React from 'react';
+import { Trans, useTranslation } from '../i18nShim';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FaLinkedin, FaTwitter, FaEnvelope, FaUserTie, FaUserGraduate } from 'react-icons/fa';
@@ -169,10 +170,11 @@ const cta = {
 
 
 const Team = () => {
+  const { t } = useTranslation();
   return (
     <>
       <Helmet>
-        <title>Our Team | Wise Global Research</title>
+        <title>{t('pages.Team.our-team-wise-global-research', 'Our Team | Wise Global Research')}</title>
         <meta name="description" content="Meet the Wise Global Research team - SEBI registered research analysts, market experts, and investment strategists dedicated to your financial growth." />
         <meta property="og:title" content="Our Team | Wise Global Research" />
         <meta property="og:description" content="Meet the Wise Global Research team - SEBI registered research analysts, market experts, and investment strategists dedicated to your financial growth." />
@@ -192,12 +194,8 @@ const Team = () => {
         >
           {/* Header Section */}
           <motion.div className="text-center mb-12" variants={itemVariants}>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-              Meet Our Team
-            </h1>
-            <p className="text-lg text-white max-w-2xl mx-auto">
-              Meet the dedicated professionals behind Wise Global, driving innovation and success for traders across India.
-            </p>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4"><Trans i18nKey="pages.Team.meet-our-team">Meet Our Team</Trans></h1>
+            <p className="text-lg text-white max-w-2xl mx-auto"><Trans i18nKey="pages.Team.meet-the-dedicated-professionals-behind-"><Trans i18nKey="pages.Team.meet-the-dedicated-professionals-behind--1">Meet the dedicated professionals behind Wise Global, driving innovation and success for traders across India.</Trans></Trans></p>
           </motion.div>
 
           {/* Mission Statement */}
@@ -272,8 +270,7 @@ const Team = () => {
             className="text-center p-4 bg-white/30 rounded-lg"
           >
             <p className="text-white">
-              <strong>Disclaimer:</strong> Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global is not responsible for any profit or loss that may occur.
-            </p>
+              <strong><Trans i18nKey="pages.Team.disclaimer">Disclaimer:</Trans></strong><Trans i18nKey="pages.Team.investments-in-the-securities-market-are"><Trans i18nKey="pages.Team.investments-in-the-securities-market-are-1">Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global is not responsible for any profit or loss that may occur.</Trans></Trans></p>
           </motion.div>
         </motion.div>
       </Layout>

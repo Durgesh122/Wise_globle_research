@@ -1,5 +1,6 @@
 // src/pages/DailyRecommendation.js
 import React, { useState, useEffect } from 'react';
+import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { FaArrowUp, FaArrowDown, FaBullseye, FaStopCircle, FaPlus, FaMinus } from 'react-icons/fa';
 
@@ -115,9 +116,7 @@ const DailyRecommendation = () => {
     >
       {/* Recommendations Section */}
       <motion.div className="text-center mb-12" variants={itemVariants}>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-          Today's Market Recommendations
-        </h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4"><Trans i18nKey="pages.DailyRecommendation.today-s-market-recommendations"><Trans i18nKey="pages.DailyRecommendation.today-s-market-recommendations-1">Today's Market Recommendations</Trans></Trans></h1>
         <p className="text-lg text-gray-600">
           Expert calls for intraday and positional trades. Last updated: {new Date().toLocaleDateString()}
         </p>
@@ -150,19 +149,19 @@ const DailyRecommendation = () => {
               <div className="flex items-center">
                 {rec.type === 'BUY' ? <FaArrowUp className="mr-3 text-green-500" /> : <FaArrowDown className="mr-3 text-red-500" />}
                 <div>
-                  <strong>Entry Price:</strong> {rec.entry}
+                  <strong><Trans i18nKey="pages.DailyRecommendation.entry-price">Entry Price:</Trans></strong> {rec.entry}
                 </div>
               </div>
               <div className="flex items-center">
                 <FaBullseye className="mr-3 text-blue-500" />
                 <div>
-                  <strong>Target:</strong> {rec.target}
+                  <strong><Trans i18nKey="pages.DailyRecommendation.target">Target:</Trans></strong> {rec.target}
                 </div>
               </div>
               <div className="flex items-center">
                 <FaStopCircle className="mr-3 text-orange-500" />
                 <div>
-                  <strong>Stop Loss:</strong> {rec.stopLoss}
+                  <strong><Trans i18nKey="pages.DailyRecommendation.stop-loss">Stop Loss:</Trans></strong> {rec.stopLoss}
                 </div>
               </div>
             </div>
@@ -175,10 +174,8 @@ const DailyRecommendation = () => {
 
       {/* What We Offer Section */}
       <motion.div className="text-center mb-12" variants={itemVariants}>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-          What We Offer
-        </h1>
-        <p className="text-lg text-gray-600">Great Offer For Customers</p>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4"><Trans i18nKey="pages.DailyRecommendation.what-we-offer">What We Offer</Trans></h1>
+        <p className="text-lg text-gray-600"><Trans i18nKey="pages.DailyRecommendation.great-offer-for-customers"><Trans i18nKey="pages.DailyRecommendation.great-offer-for-customers-1">Great Offer For Customers</Trans></Trans></p>
       </motion.div>
 
       <motion.div
@@ -215,12 +212,10 @@ const DailyRecommendation = () => {
             >
               {expandedService === index ? (
                 <>
-                  <FaMinus className="mr-2" /> Hide Details
-                </>
+                  <FaMinus className="mr-2" /><Trans i18nKey="pages.DailyRecommendation.hide-details">Hide Details</Trans></>
               ) : (
                 <>
-                  <FaPlus className="mr-2" /> Read More
-                </>
+                  <FaPlus className="mr-2" /><Trans i18nKey="pages.DailyRecommendation.read-more">Read More</Trans></>
               )}
             </button>
           </motion.div>
@@ -228,7 +223,7 @@ const DailyRecommendation = () => {
       </motion.div>
 
       <motion.div variants={itemVariants} className="text-center mt-12 p-4 bg-yellow-100 text-yellow-800 rounded-lg">
-        <p><strong>Disclaimer:</strong> Investments in securities market are subject to market risks. Read all the related documents carefully before investing. We are not responsible for any profit or loss that may occur.</p>
+        <p><strong><Trans i18nKey="pages.DailyRecommendation.disclaimer">Disclaimer:</Trans></strong><Trans i18nKey="pages.DailyRecommendation.investments-in-securities-market-are-sub"><Trans i18nKey="pages.DailyRecommendation.investments-in-securities-market-are-sub-1">Investments in securities market are subject to market risks. Read all the related documents carefully before investing. We are not responsible for any profit or loss that may occur.</Trans></Trans></p>
       </motion.div>
     </motion.div>
   );

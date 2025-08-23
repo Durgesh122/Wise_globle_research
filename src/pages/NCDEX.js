@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import Contact from './Contact';
 import { Line, Pie } from 'react-chartjs-2';
@@ -87,12 +88,8 @@ const NCDEXPage = () => {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-        >
-          Empowering Bharat Through NCDEX
-        </motion.h1>
-        <p className="text-lg md:text-xl text-white max-w-3xl mx-auto">
-          Learn, understand and participate in the agri-commodity ecosystem through regulated, transparent markets.
-        </p>
+        ><Trans i18nKey="pages.NCDEX.empowering-bharat-through-ncdex">Empowering Bharat Through NCDEX</Trans></motion.h1>
+        <p className="text-lg md:text-xl text-white max-w-3xl mx-auto"><Trans i18nKey="pages.NCDEX.learn-understand-and-participate-in-the-"><Trans i18nKey="pages.NCDEX.learn-understand-and-participate-in-the--1">Learn, understand and participate in the agri-commodity ecosystem through regulated, transparent markets.</Trans></Trans></p>
       </section>
 
       {/* Why NCDEX */}
@@ -100,16 +97,12 @@ const NCDEXPage = () => {
         <Section title="Why NCDEX?">
           <div className="grid md:grid-cols-2 gap-6 text-left">
             <div>
-              <h3 className="text-xl font-semibold mb-2">India’s Agri Futures Market</h3>
-              <p>
-                NCDEX provides a robust, transparent and regulated platform to trade agri commodities – enabling better price discovery and risk management.
-              </p>
+              <h3 className="text-xl font-semibold mb-2"><Trans i18nKey="pages.NCDEX.india-s-agri-futures-market">India’s Agri Futures Market</Trans></h3>
+              <p><Trans i18nKey="pages.NCDEX.ncdex-provides-a-robust-transparent-and-"><Trans i18nKey="pages.NCDEX.ncdex-provides-a-robust-transparent-and--1">NCDEX provides a robust, transparent and regulated platform to trade agri commodities – enabling better price discovery and risk management.</Trans></Trans></p>
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-2">Support for Farmers</h3>
-              <p>
-                Through Farmer Producer Organizations (FPOs), NCDEX connects grassroots participants to national markets.
-              </p>
+              <h3 className="text-xl font-semibold mb-2"><Trans i18nKey="pages.NCDEX.support-for-farmers">Support for Farmers</Trans></h3>
+              <p><Trans i18nKey="pages.NCDEX.through-farmer-producer-organizations-fp"><Trans i18nKey="pages.NCDEX.through-farmer-producer-organizations-fp-1">Through Farmer Producer Organizations (FPOs), NCDEX connects grassroots participants to national markets.</Trans></Trans></p>
             </div>
           </div>
         </Section>
@@ -118,16 +111,14 @@ const NCDEXPage = () => {
       {/* Why Choose Us */}
       <Section title="Why Choose Us?">
         <div className="space-y-4">
-          <p>
-            We aim to spread awareness and education around the Indian agri-commodity ecosystem through NCDEX. Our goal is to empower farmers, agri-startups, and commodity enthusiasts with transparent market knowledge and digital tools.
-          </p>
+          <p><Trans i18nKey="pages.NCDEX.we-aim-to-spread-awareness-and-education"><Trans i18nKey="pages.NCDEX.we-aim-to-spread-awareness-and-education-1">We aim to spread awareness and education around the Indian agri-commodity ecosystem through NCDEX. Our goal is to empower farmers, agri-startups, and commodity enthusiasts with transparent market knowledge and digital tools.</Trans></Trans></p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>SEBI-compliant, knowledge-driven content</li>
-            <li>Educational material for farmers and rural cooperatives</li>
-            <li>Workshops and webinars on commodity markets</li>
-            <li>Market research and academic resources</li>
-            <li>Mobile dashboards for commodity tracking</li>
-            <li>Collaborations with agri-tech platforms</li>
+            <li><Trans i18nKey="pages.NCDEX.sebi-compliant-knowledge-driven-content"><Trans i18nKey="pages.NCDEX.sebi-compliant-knowledge-driven-content-1">SEBI-compliant, knowledge-driven content</Trans></Trans></li>
+            <li><Trans i18nKey="pages.NCDEX.educational-material-for-farmers-and-rur"><Trans i18nKey="pages.NCDEX.educational-material-for-farmers-and-rur-1">Educational material for farmers and rural cooperatives</Trans></Trans></li>
+            <li><Trans i18nKey="pages.NCDEX.workshops-and-webinars-on-commodity-mark"><Trans i18nKey="pages.NCDEX.workshops-and-webinars-on-commodity-mark-1">Workshops and webinars on commodity markets</Trans></Trans></li>
+            <li><Trans i18nKey="pages.NCDEX.market-research-and-academic-resources"><Trans i18nKey="pages.NCDEX.market-research-and-academic-resources-1">Market research and academic resources</Trans></Trans></li>
+            <li><Trans i18nKey="pages.NCDEX.mobile-dashboards-for-commodity-tracking"><Trans i18nKey="pages.NCDEX.mobile-dashboards-for-commodity-tracking-1">Mobile dashboards for commodity tracking</Trans></Trans></li>
+            <li><Trans i18nKey="pages.NCDEX.collaborations-with-agri-tech-platforms"><Trans i18nKey="pages.NCDEX.collaborations-with-agri-tech-platforms-1">Collaborations with agri-tech platforms</Trans></Trans></li>
           </ul>
         </div>
       </Section>
@@ -151,18 +142,12 @@ const NCDEXPage = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-        >
-          Ready to Learn More?
-        </motion.h2>
-        <p className="text-white mb-6">
-          Explore our knowledge hub and stay updated on India's agricultural market evolution.
-        </p>
+        ><Trans i18nKey="pages.NCDEX.ready-to-learn-more">Ready to Learn More?</Trans></motion.h2>
+        <p className="text-white mb-6"><Trans i18nKey="pages.NCDEX.explore-our-knowledge-hub-and-stay-updat"><Trans i18nKey="pages.NCDEX.explore-our-knowledge-hub-and-stay-updat-1">Explore our knowledge hub and stay updated on India's agricultural market evolution.</Trans></Trans></p>
         <button
           onClick={() => setShowContactForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full shadow transition inline-block"
-        >
-          Contact Us
-        </button>
+        ><Trans i18nKey="pages.NCDEX.contact-us">Contact Us</Trans></button>
       </section>
     </main>
   );

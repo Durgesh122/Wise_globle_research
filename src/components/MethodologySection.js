@@ -1,18 +1,26 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import step1 from '../assets/images/imgStep01.png';
 import step2 from '../assets/images/imgStep02.png';
 import step3 from '../assets/images/imgStep03.png';
 
 const MethodologySection = () => {
-  const { t } = useTranslation();
-  const rawSteps = t('home.methodologySection.steps', { returnObjects: true });
-  const steps = Array.isArray(rawSteps)
-    ? rawSteps
-    : (rawSteps && typeof rawSteps === 'object')
-      ? Object.values(rawSteps)
-      : [];
+  // removed react-i18next for this component per request
+  const heading = 'Methodology';
+  const steps = [
+    {
+      title: 'Data Collection',
+      desc: 'We gather verified data from multiple reliable sources to ensure coverage and accuracy.',
+    },
+    {
+      title: 'Analysis',
+      desc: 'Our team applies quantitative models and qualitative expertise to extract meaningful insights.',
+    },
+    {
+      title: 'Reporting',
+      desc: 'Insights are validated and presented as clear, actionable recommendations for stakeholders.',
+    },
+  ];
   const images = [step1, step2, step3];
 
   return (
@@ -24,7 +32,7 @@ const MethodologySection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {t('home.methodologySection.heading')}
+          {heading}
         </motion.h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {steps.map((step, idx) => (
@@ -37,7 +45,14 @@ const MethodologySection = () => {
               whileHover={{ scale: 1.05 }}
               style={{ transformStyle: 'preserve-3d' }}
             >
-              <img src={images[idx] || images[0]} alt={step.title || ''} className="w-20 h-20 mb-4 object-contain" />
+              <img
+                src={images[idx] || images[0]}
+                alt={step.title || ''}
+                className="w-20 h-20 mb-4 object-contain"
+                decoding="async"
+                loading="lazy"
+                onError={(e) => { e.currentTarget.onerror = null; }}
+              />
               <h3 className="text-lg sm:text-xl font-bold mb-2">{step.title}</h3>
               <p className="text-sm sm:text-base text-gray-100">{step.desc}</p>
             </motion.div>

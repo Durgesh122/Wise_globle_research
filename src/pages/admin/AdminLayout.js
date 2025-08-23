@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
+import { Trans } from '../../i18nShim';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { FaTachometerAlt, FaEnvelope, FaFileContract, FaExclamationCircle, FaChartBar, FaSignOutAlt, FaBullhorn } from 'react-icons/fa';
+import { FaTachometerAlt, FaEnvelope, FaFileContract, FaExclamationCircle, FaChartBar, FaSignOutAlt, FaBullhorn, FaComments } from 'react-icons/fa'; // Added FaComments
 import { motion } from 'framer-motion';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../firebase';
@@ -67,6 +68,7 @@ const AdminLayout = () => {
     { path: '/admin/consents', label: 'Consent Submissions', icon: <FaFileContract /> },
     { path: '/admin/complaints', label: 'Complaint Manager', icon: <FaExclamationCircle /> },
     { path: '/admin/reports', label: 'Report Manager', icon: <FaChartBar /> },
+    { path: '/admin/chatbot-data', label: 'Chatbot Data', icon: <FaComments /> }, // Added this line
   ];
 
   // Dummy complaint count, replace with real data
@@ -75,7 +77,7 @@ const AdminLayout = () => {
   return (
     <div className="flex min-h-screen bg-transparent text-white">
       <aside className="w-64 bg-gray-800/80 p-4 flex-shrink-0 border-r border-gray-700 flex flex-col">
-        <h2 className="text-2xl font-bold mb-8 text-center text-blue-400">Admin Panel</h2>
+        <h2 className="text-2xl font-bold mb-8 text-center text-blue-400"><Trans i18nKey="pages.admin_AdminLayout.admin-panel">Admin Panel</Trans></h2>
         <nav className="flex flex-col space-y-2 flex-grow">
           {navItems.map((item) => (
             <NavLink
@@ -104,7 +106,7 @@ const AdminLayout = () => {
           whileTap={{ scale: 0.95 }}
         >
           <FaHome />
-          <span>Home</span>
+          <span><Trans i18nKey="pages.admin_AdminLayout.home">Home</Trans></span>
         </motion.button>
         <motion.button
           onClick={handleLogout}
@@ -113,7 +115,7 @@ const AdminLayout = () => {
           whileTap={{ scale: 0.95 }}
         >
           <FaSignOutAlt />
-          <span>Logout</span>
+          <span><Trans i18nKey="pages.admin_AdminLayout.logout">Logout</Trans></span>
         </motion.button>
       </aside>
       <main className="flex-1 p-4 md:p-8 overflow-y-auto">

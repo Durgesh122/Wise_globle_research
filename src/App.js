@@ -20,10 +20,35 @@ import ChatWidget from './components/ChatWidget';
 import FloatingPayButton from './components/FloatingPayButton';
 import ParticlesBackground from './components/ParticlesBackground';
 import AdminLayout from './pages/admin/AdminLayout';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import WhatsAppButton from './components/WhatsAppButton';
 import ScrollToTop from './components/ScrollToTop';
 
 // Lazy Loaded Pages
+// Helper to retry dynamic imports when chunk loading fails (transient dev/server/cache issues)
+const lazyWithRetry = (importFunc, { retries = 3, interval = 500 } = {}) => {
+  return lazy(() => {
+    let attempts = 0;
+    const load = () =>
+      importFunc().catch((err) => {
+        const msg = err && err.message ? err.message : '';
+        const isChunkError = /Loading chunk|ChunkLoadError/.test(msg);
+        if (isChunkError && attempts < retries) {
+          attempts += 1;
+          console.warn(`Chunk load failed, retrying ${attempts}/${retries}...`, err);
+          return new Promise((resolve) => setTimeout(resolve, interval * attempts)).then(load);
+        }
+        if (isChunkError) {
+          // Last resort: reload the page to clear cached chunks
+          console.error('ChunkLoadError persists; reloading the page to recover.', err);
+          window.location.reload();
+        }
+        throw err;
+      });
+    return load();
+  });
+};
+
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Services = lazy(() => import('./pages/Services'));
@@ -45,7 +70,7 @@ const Career = lazy(() => import('./pages/Career'));
 const Training = lazy(() => import('./pages/Training'));
 const Blogs = lazy(() => import('./pages/Blogs'));
 const MarketNews = lazy(() => import('./pages/MarketNews'));
-const UserLogin = lazy(() => import('./pages/UserLogin'));
+const UserLogin = lazyWithRetry(() => import('./pages/UserLogin'));
 const ClientPanel = lazy(() => import('./pages/ClientPanel'));
 const StockOption = lazy(() => import('./pages/StockOption'));
 const Delivery = lazy(() => import('./pages/Delivery'));
@@ -91,6 +116,7 @@ const ConsentSubmissions = lazy(() => import('./pages/admin/ConsentSubmissions')
 const ComplaintManager = lazy(() => import('./pages/admin/ComplaintManager'));
 const ReportManager = lazy(() => import('./pages/admin/ReportManager'));
 const PopupSubmissions = lazy(() => import('./pages/admin/PopupSubmissions'));
+const ChatbotSubmissions = lazy(() => import('./pages/admin/ChatbotSubmissions')); // Added this line
 
 function App() {
   const [particleCount, setParticleCount] = React.useState(window.innerWidth <= 640 ? 20 : 50);
@@ -224,7 +250,7 @@ function App() {
             <Route path="/services/comex" element={<Comex />} />
             <Route 
               path="/admin" 
-              element={<AdminLayout />}
+              element={<ProtectedAdminRoute><AdminLayout /></ProtectedAdminRoute>}
             >
               <Route index element={<Dashboard />} />
               <Route path="dashboard" element={<Dashboard />} />
@@ -233,6 +259,7 @@ function App() {
               <Route path="consents" element={<ConsentSubmissions />} />
               <Route path="complaints" element={<ComplaintManager />} />
               <Route path="reports" element={<ReportManager />} />
+              <Route path="chatbot-data" element={<ChatbotSubmissions />} /> {/* Added this line */}
             </Route>
             <Route path="/client-service-consent" element={<ClientServiceConsent />} />
             <Route path="/investor-chart" element={<InvestorChart />} />

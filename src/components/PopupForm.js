@@ -5,10 +5,6 @@ import { db } from '../firebase';
 import { ref, push } from 'firebase/database';
 import wImg from '../assets/images/w.png';
 
-// Investment experience levels are loaded from i18n keys
-import { useTranslation } from 'react-i18next';
-
-
 // Particle animation variants for logo hover
 const particleVariants = {
   initial: { scale: 0, opacity: 0, x: 0, y: 0 },
@@ -21,15 +17,20 @@ const particleVariants = {
   }),
 };
 
-const ContactForm = ({ onClose }) => {
-  const { t } = useTranslation();
+const PopupForm = ({ onClose }) => {
+  // Interest options (replaces previous experienceLevels)
+  const interestOptions = [
+    'Equity',
+    'Derivatives',
+    'Commodity'
+  ];
 
   // State management
   const [form, setForm] = useState({
     name: '',
     mobile: '',
     city: '',
-    experience: '',
+  interest: '',
     newsletter: false,
     honeypot: '', // Hidden field for bot detection
   });
@@ -45,14 +46,14 @@ const ContactForm = ({ onClose }) => {
     if (touched.name && (!form.name.trim() || form.name.trim().split(' ').length < 2)) {
       errs.name = 'Please enter your full name (first and last)';
     }
-    if (touched.mobile && !/^\d{10}$/.test(form.mobile)) {
+    if (touched.mobile && !/^\\d{10}$/.test(form.mobile)) {
       errs.mobile = 'Enter a valid 10-digit mobile number';
     }
     if (touched.city && !form.city.trim()) {
       errs.city = 'Please enter your city';
     }
-    if (touched.experience && !form.experience) {
-      errs.experience = 'Please select your investment experience';
+    if (touched.interest && !form.interest) {
+      errs.interest = 'Please select your interest';
     }
     setErrors(errs);
   }, [form, touched]);
@@ -72,14 +73,14 @@ const ContactForm = ({ onClose }) => {
     if (!form.name.trim() || form.name.trim().split(' ').length < 2) {
       errs.name = 'Please enter your full name (first and last)';
     }
-    if (!/^\d{10}$/.test(form.mobile)) {
+    if (!/^\\d{10}$/.test(form.mobile)) {
       errs.mobile = 'Enter a valid 10-digit mobile number';
     }
     if (!form.city.trim()) {
       errs.city = 'Please enter your city';
     }
-    if (!form.experience) {
-      errs.experience = 'Please select your investment experience';
+    if (!form.interest) {
+      errs.interest = 'Please select your interest';
     }
     // Bot detection: If honeypot is filled, mark as error
     if (form.honeypot) {
@@ -92,7 +93,7 @@ const ContactForm = ({ onClose }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setTouched({ name: true, mobile: true, city: true, experience: true });
+  setTouched({ name: true, mobile: true, city: true, interest: true });
 
     if (!validate()) return;
 
@@ -110,12 +111,12 @@ const ContactForm = ({ onClose }) => {
       if (window.gtag) {
         window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
       }
-  setSuccessMessage(t('home.popupForm.success'));
+  setSuccessMessage('Thank you! Your submission was successful.');
       setForm({
         name: '',
         mobile: '',
         city: '',
-        experience: '',
+        interest: '',
         newsletter: false,
         honeypot: '',
       });
@@ -155,7 +156,6 @@ const ContactForm = ({ onClose }) => {
     return () => clearTimeout(timer);
   }, [location.pathname]);
   if (!visible) return null;
-  const experienceLevelsI18n = t('home.popupForm.experienceLevels', { returnObjects: true });
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center"
@@ -174,8 +174,8 @@ const ContactForm = ({ onClose }) => {
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         {/* Header with Company Name */}
-  <h2 className="text-2xl font-bold text-white text-center mb-4">{t('home.popupForm.brand')}</h2>
-  <h3 className="text-lg font-semibold text-blue-300 text-center mb-6">{t('home.popupForm.subtitle')}</h3>
+  <h2 className="text-2xl font-bold text-white text-center mb-4">Wise Global Research Services</h2>
+  <h3 className="text-lg font-semibold text-blue-300 text-center mb-6">Unlock Market Insights & Data-Driven Decisions</h3>
 
         {/* Logo with Particle Animation */}
         <div
@@ -187,9 +187,12 @@ const ContactForm = ({ onClose }) => {
             src={wImg}
             alt="Global Research Services Logo"
             className="h-full w-full object-contain"
+            decoding="async"
+            loading="lazy"
             initial={{ scale: 0.5 }}
             animate={{ scale: isLogoHovered ? 1.1 : 1 }}
             transition={{ duration: 0.3 }}
+            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'https://via.placeholder.com/96?text=Logo'; }}
           />
           {/* Particle Effect stays alive once hovered */}
           {isLogoHovered && (
@@ -238,12 +241,12 @@ const ContactForm = ({ onClose }) => {
 
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium mb-1">{t('home.popupForm.labels.name')}</label>
+            <label className="block text-sm font-medium mb-1">Full Name</label>
             <input
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder={t('home.popupForm.placeholders.name')}
+              placeholder="Enter your full name"
               className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.name ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
               required
             />
@@ -260,12 +263,12 @@ const ContactForm = ({ onClose }) => {
 
           {/* Mobile Number */}
           <div>
-            <label className="block text-sm font-medium mb-1">{t('home.popupForm.labels.mobile')}</label>
+            <label className="block text-sm font-medium mb-1">Mobile Number</label>
             <input
               name="mobile"
               value={form.mobile}
               onChange={handleChange}
-              placeholder={t('home.popupForm.placeholders.mobile')}
+              placeholder="Enter your 10-digit mobile number"
               className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.mobile ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
               required
             />
@@ -282,12 +285,12 @@ const ContactForm = ({ onClose }) => {
 
           {/* City Input */}
           <div>
-            <label className="block text-sm font-medium mb-1">{t('home.popupForm.labels.city')}</label>
+            <label className="block text-sm font-medium mb-1">City</label>
             <input
               name="city"
               value={form.city}
               onChange={handleChange}
-              placeholder={t('home.popupForm.placeholders.city')}
+              placeholder="Enter your city"
               className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.city ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
               required
             />
@@ -304,30 +307,30 @@ const ContactForm = ({ onClose }) => {
 
           {/* Investment Experience */}
           <div>
-            <label className="block text-sm font-medium mb-1">{t('home.popupForm.labels.experience')}</label>
-            <select
-              name="experience"
-              value={form.experience}
-              onChange={handleChange}
-              className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.experience ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
-              required
-            >
-              <option value="">{t('home.popupForm.placeholders.select')}</option>
-              {experienceLevelsI18n.map((level) => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
-            </select>
-            {errors.experience && (
-              <motion.p
-                className="text-red-400 text-sm mt-1"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+            <label className="block text-sm font-medium mb-1">Interest</label>
+              <select
+                name="interest"
+                value={form.interest}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.interest ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
+                required
               >
-                {errors.experience}
-              </motion.p>
-            )}
+                <option value="">Select your interest</option>
+                {interestOptions.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+              {errors.interest && (
+                <motion.p
+                  className="text-red-400 text-sm mt-1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  {errors.interest}
+                </motion.p>
+              )}
           </div>
 
           {/* Newsletter Subscription */}
@@ -339,16 +342,14 @@ const ContactForm = ({ onClose }) => {
               onChange={handleChange}
               className="h-5 w-5 text-blue-500 focus:ring-blue-500 border-gray-500 rounded"
             />
-            <label className="ml-2 text-sm font-medium">{t('home.popupForm.labels.newsletter')}</label>
+            <label className="ml-2 text-sm font-medium">Subscribe to our newsletter</label>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-3 rounded-lg text-white font-semibold transition-colors ${
-              isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-            }`}
+            className={`w-full py-3 rounded-lg text-white font-semibold transition-colors ${ isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
           >
             {isSubmitting ? (
               <motion.span
@@ -359,7 +360,7 @@ const ContactForm = ({ onClose }) => {
                 ⏳
               </motion.span>
             ) : (
-              t('home.popupForm.buttons.submit')
+              'Submit'
             )}
           </button>
 
@@ -398,4 +399,4 @@ const ContactForm = ({ onClose }) => {
   );
 };
 
-export default ContactForm;
+export default PopupForm;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Trans } from '../i18nShim';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Line, Pie } from 'react-chartjs-2';
@@ -117,29 +118,22 @@ const Forex = () => {
     >
       {/* Hero Section */}
       <motion.section className="text-center mb-16" variants={itemVariants}>
-        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-          Forex Market Awareness
-        </h1>
-        <p className="text-lg sm:text-xl text-white max-w-2xl mx-auto">
-          Educational insights into global currency behavior, economic influence, and financial systems. <br />
-          <strong>*We do not support or promote any kind of currency or forex trading.*</strong>
+        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4"><Trans i18nKey="pages.Forex.forex-market-awareness">Forex Market Awareness</Trans></h1>
+        <p className="text-lg sm:text-xl text-white max-w-2xl mx-auto"><Trans i18nKey="pages.Forex.educational-insights-into-global-currenc"><Trans i18nKey="pages.Forex.educational-insights-into-global-currenc-1">Educational insights into global currency behavior, economic influence, and financial systems.</Trans></Trans><br />
+          <strong><Trans i18nKey="pages.Forex.we-do-not-support-or-promote-any-kind-of"><Trans i18nKey="pages.Forex.we-do-not-support-or-promote-any-kind-of-1">*We do not support or promote any kind of currency or forex trading.*</Trans></Trans></strong>
         </p>
         <Link to="/contact">
           <motion.button
             className="mt-6 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-          >
-            Learn More
-          </motion.button>
+          ><Trans i18nKey="pages.Forex.learn-more">Learn More</Trans></motion.button>
         </Link>
       </motion.section>
 
       {/* Educational Topics */}
       <motion.section className="mb-16" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-white text-center mb-8">
-          What You Can Learn
-        </h2>
+        <h2 className="text-3xl font-bold text-white text-center mb-8"><Trans i18nKey="pages.Forex.what-you-can-learn">What You Can Learn</Trans></h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {topics.map((item, index) => (
             <motion.div
@@ -166,14 +160,10 @@ const Forex = () => {
 
       {/* Charts Section */}
       <motion.section className="mb-16" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-white text-center mb-8">
-          Sample Market Charts (Educational Only)
-        </h2>
+        <h2 className="text-3xl font-bold text-white text-center mb-8"><Trans i18nKey="pages.Forex.sample-market-charts-educational-only"><Trans i18nKey="pages.Forex.sample-market-charts-educational-only-1">Sample Market Charts (Educational Only)</Trans></Trans></h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <motion.div className="bg-white/20 p-6 rounded-lg shadow-lg" variants={itemVariants}>
-            <h3 className="text-xl font-semibold text-white mb-4">
-              Currency Trend Sample
-            </h3>
+            <h3 className="text-xl font-semibold text-white mb-4"><Trans i18nKey="pages.Forex.currency-trend-sample">Currency Trend Sample</Trans></h3>
             <Line
               data={currencyTrendData}
               options={{
@@ -186,9 +176,7 @@ const Forex = () => {
             />
           </motion.div>
           <motion.div className="bg-white/20 p-6 rounded-lg shadow-lg" variants={itemVariants}>
-            <h3 className="text-xl font-semibold text-white mb-4">
-              Simulated Volume Distribution
-            </h3>
+            <h3 className="text-xl font-semibold text-white mb-4"><Trans i18nKey="pages.Forex.simulated-volume-distribution">Simulated Volume Distribution</Trans></h3>
             <Pie
               data={tradingVolumeData}
               options={{
@@ -205,9 +193,7 @@ const Forex = () => {
 
       {/* FAQ Section */}
       <motion.section className="mb-16" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-white text-center mb-8">
-          Frequently Asked Questions
-        </h2>
+        <h2 className="text-3xl font-bold text-white text-center mb-8"><Trans i18nKey="pages.Forex.frequently-asked-questions">Frequently Asked Questions</Trans></h2>
         <div className="max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
             <motion.div
@@ -241,30 +227,20 @@ const Forex = () => {
 
       {/* CTA Section */}
       <motion.section className="text-center" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Want to Learn More?
-        </h2>
-        <p className="text-lg text-white mb-6">
-          Get in touch with us for more educational resources on finance.
-        </p>
+        <h2 className="text-3xl font-bold text-white mb-4"><Trans i18nKey="pages.Forex.want-to-learn-more">Want to Learn More?</Trans></h2>
+        <p className="text-lg text-white mb-6"><Trans i18nKey="pages.Forex.get-in-touch-with-us-for-more-educationa"><Trans i18nKey="pages.Forex.get-in-touch-with-us-for-more-educationa-1">Get in touch with us for more educational resources on finance.</Trans></Trans></p>
         <Link to="/contact">
           <motion.button
             className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-          >
-            Learn More
-          </motion.button>
+          ><Trans i18nKey="pages.Forex.learn-more">Learn More</Trans></motion.button>
         </Link>
       </motion.section>
 
       {/* Disclaimer */}
       <motion.section className="text-center mt-12" variants={itemVariants}>
-        <p className="text-sm text-white/80 max-w-xl mx-auto">
-          Disclaimer: This page is solely for educational and awareness purposes. <br />
-          We do not offer currency or forex trading services, financial advice, or brokerage support. <br />
-          Please consult a SEBI-registered financial advisor before making any financial decisions.
-        </p>
+        <p className="text-sm text-white/80 max-w-xl mx-auto"><Trans i18nKey="pages.Forex.disclaimer-this-page-is-solely-for-educa"><Trans i18nKey="pages.Forex.disclaimer-this-page-is-solely-for-educa-1">Disclaimer: This page is solely for educational and awareness purposes.</Trans></Trans><br /><Trans i18nKey="pages.Forex.we-do-not-offer-currency-or-forex-tradin"><Trans i18nKey="pages.Forex.we-do-not-offer-currency-or-forex-tradin-1">We do not offer currency or forex trading services, financial advice, or brokerage support.</Trans></Trans><br /><Trans i18nKey="pages.Forex.please-consult-a-sebi-registered-financi"><Trans i18nKey="pages.Forex.please-consult-a-sebi-registered-financi-1">Please consult a SEBI-registered financial advisor before making any financial decisions.</Trans></Trans></p>
       </motion.section>
     </motion.div>
   );

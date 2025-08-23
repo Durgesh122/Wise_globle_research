@@ -1,5 +1,6 @@
 // src/pages/Terms.js
 import React from 'react';
+import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { FaCheckCircle } from 'react-icons/fa';
 
@@ -14,9 +15,7 @@ function Terms() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-      >
-        Terms & Conditions
-      </motion.h1>
+      ><Trans i18nKey="pages.Terms.terms-conditions">Terms & Conditions</Trans></motion.h1>
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -38,8 +37,7 @@ function Terms() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <FaCheckCircle className="inline text-green-500 mr-1" /> Please go through the terms & conditions.
-          </motion.p>
+            <FaCheckCircle className="inline text-green-500 mr-1" /><Trans i18nKey="pages.Terms.please-go-through-the-terms-conditions"><Trans i18nKey="pages.Terms.please-go-through-the-terms-conditions-1">Please go through the terms & conditions.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
@@ -55,63 +53,43 @@ function Terms() {
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 0.5 }}>
-            Wise Global Research Services Pvt Ltd. will not be held responsible for any kind of delay in SMS for any reason (Due to 3rd Party technical failure, please read carefully this term in Disclaimer).
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 0.5 }}><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-wi"><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-wi-1">Wise Global Research Services Pvt Ltd. will not be held responsible for any kind of delay in SMS for any reason (Due to 3rd Party technical failure, please read carefully this term in Disclaimer).</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6, duration: 0.5 }}>
-            Client needs to trade on each & every recommendation/trading calls provided by us for better result.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6, duration: 0.5 }}><Trans i18nKey="pages.Terms.client-needs-to-trade-on-each-every-reco"><Trans i18nKey="pages.Terms.client-needs-to-trade-on-each-every-reco-1">Client needs to trade on each & every recommendation/trading calls provided by us for better result.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7, duration: 0.5 }}>
-            If you are encountering any issue immediately contact us at support@wiseglobalresearch.com
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7, duration: 0.5 }}><Trans i18nKey="pages.Terms.if-you-are-encountering-any-issue-immedi"><Trans i18nKey="pages.Terms.if-you-are-encountering-any-issue-immedi-1">If you are encountering any issue immediately contact us at support@wiseglobalresearch.com</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8, duration: 0.5 }}>
-            In order to enjoy full benefits of services client needs to complete his package.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8, duration: 0.5 }}><Trans i18nKey="pages.Terms.in-order-to-enjoy-full-benefits-of-servi"><Trans i18nKey="pages.Terms.in-order-to-enjoy-full-benefits-of-servi-1">In order to enjoy full benefits of services client needs to complete his package.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.9, duration: 0.5 }}>
-            Service will start post completion of KYC as per norms. Service tenure will be applicable as per the package.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.9, duration: 0.5 }}><Trans i18nKey="pages.Terms.service-will-start-post-completion-of-ky"><Trans i18nKey="pages.Terms.service-will-start-post-completion-of-ky-1">Service will start post completion of KYC as per norms. Service tenure will be applicable as per the package.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.0, duration: 0.5 }}>
-            Investment in NSE/BSE/MCX/Stock Market is subject to market risk. Client need to follow all the given technical levels & instructions in a strict manner.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.0, duration: 0.5 }}><Trans i18nKey="pages.Terms.investment-in-nse-bse-mcx-stock-market-i"><Trans i18nKey="pages.Terms.investment-in-nse-bse-mcx-stock-market-i-1">Investment in NSE/BSE/MCX/Stock Market is subject to market risk. Client need to follow all the given technical levels & instructions in a strict manner.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.1, duration: 0.5 }}>
-            We do not offer any type of guaranteed service, surety and fixed profit commitment plan. We do not have services related to any type of profit sharing or portfolio management services.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.1, duration: 0.5 }}><Trans i18nKey="pages.Terms.we-do-not-offer-any-type-of-guaranteed-s"><Trans i18nKey="pages.Terms.we-do-not-offer-any-type-of-guaranteed-s-1">We do not offer any type of guaranteed service, surety and fixed profit commitment plan. We do not have services related to any type of profit sharing or portfolio management services.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2, duration: 0.5 }}>
-            We suggest you not to work on personal recommendation given by associates of company. You have paid the service charges in the company to receive the recommendations on SMS.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2, duration: 0.5 }}><Trans i18nKey="pages.Terms.we-suggest-you-not-to-work-on-personal-r"><Trans i18nKey="pages.Terms.we-suggest-you-not-to-work-on-personal-r-1">We suggest you not to work on personal recommendation given by associates of company. You have paid the service charges in the company to receive the recommendations on SMS.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.3, duration: 0.5 }}>
-            You are not supposed to give your De-mat login id, password to any of our employees. Neither company nor any of the employees are responsible for your losses, it will be at your own risk.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.3, duration: 0.5 }}><Trans i18nKey="pages.Terms.you-are-not-supposed-to-give-your-de-mat"><Trans i18nKey="pages.Terms.you-are-not-supposed-to-give-your-de-mat-1">You are not supposed to give your De-mat login id, password to any of our employees. Neither company nor any of the employees are responsible for your losses, it will be at your own risk.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.4, duration: 0.5 }}>
-            Wise Global Research Services Pvt Ltd. takes all the necessary measures related to risk and rewards involved in markets before delivering any advice to client but we do not take the responsibility of any kind of losses occurred on trades.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.4, duration: 0.5 }}><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-ta"><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-ta-1">Wise Global Research Services Pvt Ltd. takes all the necessary measures related to risk and rewards involved in markets before delivering any advice to client but we do not take the responsibility of any kind of losses occurred on trades.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
@@ -121,9 +99,7 @@ function Terms() {
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.6, duration: 0.5 }}>
-            Kind Attention for all traders/investors: Wise Global Research Services Pvt Ltd. will render services only after receiving all credentials i.e., KYC for acknowledgement of mutual well-being.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.6, duration: 0.5 }}><Trans i18nKey="pages.Terms.kind-attention-for-all-traders-investors"><Trans i18nKey="pages.Terms.kind-attention-for-all-traders-investors-1">Kind Attention for all traders/investors: Wise Global Research Services Pvt Ltd. will render services only after receiving all credentials i.e., KYC for acknowledgement of mutual well-being.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
@@ -133,9 +109,7 @@ function Terms() {
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.8, duration: 0.5 }}>
-            By making a payment for Services on our site, you acknowledge that you have read and agreed to the above our Terms and Conditions along with Refund Policy.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.8, duration: 0.5 }}><Trans i18nKey="pages.Terms.by-making-a-payment-for-services-on-our-"><Trans i18nKey="pages.Terms.by-making-a-payment-for-services-on-our--1">By making a payment for Services on our site, you acknowledge that you have read and agreed to the above our Terms and Conditions along with Refund Policy.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
@@ -145,9 +119,7 @@ function Terms() {
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.0, duration: 0.5 }}>
-            Wise Global Research Services Pvt Ltd. does not suggest taking loan for investment purpose, as the investment in Equity/Derivative/Commodity market is risky by nature.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.0, duration: 0.5 }}><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-do"><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-do-1">Wise Global Research Services Pvt Ltd. does not suggest taking loan for investment purpose, as the investment in Equity/Derivative/Commodity market is risky by nature.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
@@ -157,9 +129,7 @@ function Terms() {
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.2, duration: 0.5 }}>
-            Wise Global Research Services Pvt Ltd. shall not be liable for any misrepresentation, falsification, and deception or for any lack of availability of services through the website, even if the same are advertised for on the website.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.2, duration: 0.5 }}><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-sh"><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-sh-1">Wise Global Research Services Pvt Ltd. shall not be liable for any misrepresentation, falsification, and deception or for any lack of availability of services through the website, even if the same are advertised for on the website.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
@@ -169,9 +139,7 @@ function Terms() {
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.4, duration: 0.5 }}>
-            Further, Wise Global Research Services Pvt Ltd. shall not be liable if the customer makes a copy, modifies, uploads, downloads, other notices or legends contained in any such information or otherwise distributes any service or content from this website.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.4, duration: 0.5 }}><Trans i18nKey="pages.Terms.further-wise-global-research-services-pv"><Trans i18nKey="pages.Terms.further-wise-global-research-services-pv-1">Further, Wise Global Research Services Pvt Ltd. shall not be liable if the customer makes a copy, modifies, uploads, downloads, other notices or legends contained in any such information or otherwise distributes any service or content from this website.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
@@ -181,21 +149,16 @@ function Terms() {
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.6, duration: 0.5 }}>
-            Registration: In order to use Wise Global Research Services Pvt Ltd., you must provide certain personal information as per regulations.
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.6, duration: 0.5 }}><Trans i18nKey="pages.Terms.registration-in-order-to-use-wise-global"><Trans i18nKey="pages.Terms.registration-in-order-to-use-wise-global-1">Registration: In order to use Wise Global Research Services Pvt Ltd., you must provide certain personal information as per regulations.</Trans></Trans></motion.p>
+        </section>
+
+        <section className="mb-8">
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.7, duration: 0.5 }}><Trans i18nKey="pages.Terms.for-all-terms-conditions-please-refer-ou"><Trans i18nKey="pages.Terms.for-all-terms-conditions-please-refer-ou-1">For all Terms & Conditions please refer our Webpage</Trans></Trans><a href="https://wiseglobalresearch.com" className="text-blue-500 hover:underline"><Trans i18nKey="pages.Terms.https-wiseglobalresearch-com">https://wiseglobalresearch.com</Trans></a>
           </motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.7, duration: 0.5 }}>
-            For all Terms & Conditions please refer our Webpage <a href="https://wiseglobalresearch.com" className="text-blue-500 hover:underline">https://wiseglobalresearch.com</a>
-          </motion.p>
-        </section>
-
-        <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.8, duration: 0.5 }}>
-            Any surfing and reading of the information are the acceptance of this Terms & Condition. All Rights Reserved with Wise Global Research Services Pvt Ltd.
-          </motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.8, duration: 0.5 }}><Trans i18nKey="pages.Terms.any-surfing-and-reading-of-the-informati"><Trans i18nKey="pages.Terms.any-surfing-and-reading-of-the-informati-1">Any surfing and reading of the information are the acceptance of this Terms & Condition. All Rights Reserved with Wise Global Research Services Pvt Ltd.</Trans></Trans></motion.p>
         </section>
       </motion.div>
     </div>

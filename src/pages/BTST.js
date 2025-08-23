@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 
 const BTST = () => {
@@ -103,7 +104,7 @@ const BTST = () => {
           >
             <div className="p-6 border-b border-white/10">
               <div className="flex justify-between items-center">
-                <h3 className="text-2xl font-bold">BTST Sample Report</h3>
+                <h3 className="text-2xl font-bold"><Trans i18nKey="pages.BTST.btst-sample-report">BTST Sample Report</Trans></h3>
                 <button 
                   onClick={() => setShowReport(false)}
                   className="text-white/50 hover:text-white"
@@ -121,26 +122,26 @@ const BTST = () => {
                 <h4 className="font-bold text-lg mb-2">{sampleReport.stock}</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-white/60">Entry Range</p>
+                    <p className="text-sm text-white/60"><Trans i18nKey="pages.BTST.entry-range">Entry Range</Trans></p>
                     <p className="font-medium">{sampleReport.research.entry}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-white/60">Target</p>
+                    <p className="text-sm text-white/60"><Trans i18nKey="pages.BTST.target">Target</Trans></p>
                     <p className="font-medium text-green-400">{sampleReport.research.target}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-white/60">Stop Loss</p>
+                    <p className="text-sm text-white/60"><Trans i18nKey="pages.BTST.stop-loss">Stop Loss</Trans></p>
                     <p className="font-medium text-red-400">{sampleReport.research.stopLoss}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-white/60">Risk/Reward</p>
+                    <p className="text-sm text-white/60"><Trans i18nKey="pages.BTST.risk-reward">Risk/Reward</Trans></p>
                     <p className="font-medium">{sampleReport.research.riskReward}</p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-bold mb-3">Technical Rationale</h4>
+                <h4 className="font-bold mb-3"><Trans i18nKey="pages.BTST.technical-rationale">Technical Rationale</Trans></h4>
                 <ul className="space-y-3">
                   {sampleReport.analysis.map((point, i) => (
                     <li key={i} className="flex items-start">
@@ -152,12 +153,12 @@ const BTST = () => {
               </div>
 
               <div className="bg-white/5 p-4 rounded-lg text-sm">
-                <h4 className="font-bold mb-2">Execution Guidelines</h4>
+                <h4 className="font-bold mb-2"><Trans i18nKey="pages.BTST.execution-guidelines">Execution Guidelines</Trans></h4>
                 <ul className="space-y-2 list-disc pl-5">
-                  <li>Enter only if price sustains above ₹2,860 for 15 minutes</li>
-                  <li>Book partial profits at ₹2,920 (50% position)</li>
-                  <li>Move stop-loss to cost if price reaches ₹2,900</li>
-                  <li>Do not carry position if global markets turn negative overnight</li>
+                  <li><Trans i18nKey="pages.BTST.enter-only-if-price-sustains-above-2-860"><Trans i18nKey="pages.BTST.enter-only-if-price-sustains-above-2-860-1">Enter only if price sustains above ₹2,860 for 15 minutes</Trans></Trans></li>
+                  <li><Trans i18nKey="pages.BTST.book-partial-profits-at-2-920-50-positio"><Trans i18nKey="pages.BTST.book-partial-profits-at-2-920-50-positio-1">Book partial profits at ₹2,920 (50% position)</Trans></Trans></li>
+                  <li><Trans i18nKey="pages.BTST.move-stop-loss-to-cost-if-price-reaches-"><Trans i18nKey="pages.BTST.move-stop-loss-to-cost-if-price-reaches--1">Move stop-loss to cost if price reaches ₹2,900</Trans></Trans></li>
+                  <li><Trans i18nKey="pages.BTST.do-not-carry-position-if-global-markets-"><Trans i18nKey="pages.BTST.do-not-carry-position-if-global-markets--1">Do not carry position if global markets turn negative overnight</Trans></Trans></li>
                 </ul>
               </div>
 
@@ -170,9 +171,7 @@ const BTST = () => {
               <button 
                 onClick={() => setShowReport(false)}
                 className="w-full py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition"
-              >
-                Close Report
-              </button>
+              ><Trans i18nKey="pages.BTST.close-report">Close Report</Trans></button>
             </div>
           </motion.div>
         </motion.div>
@@ -186,16 +185,10 @@ const BTST = () => {
         className="text-center mb-16 max-w-4xl mx-auto px-4"
       >
         <div className="inline-block mb-6">
-          <div className="text-sm font-semibold bg-white/10 px-4 py-1 rounded-full mb-3 border border-white/20">
-            Short-Term Trading Strategy
-          </div>
+          <div className="text-sm font-semibold bg-white/10 px-4 py-1 rounded-full mb-3 border border-white/20"><Trans i18nKey="pages.BTST.short-term-trading-strategy">Short-Term Trading Strategy</Trans></div>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold mb-6">
-          BTST (Buy Today, Sell Tomorrow)
-        </h1>
-        <p className="text-lg text-white/80 max-w-2xl mx-auto">
-          Maximize overnight opportunities with SEBI-compliant, data-backed research from certified analysts.
-        </p>
+        <h1 className="text-4xl md:text-5xl font-bold mb-6"><Trans i18nKey="pages.BTST.btst-buy-today-sell-tomorrow">BTST (Buy Today, Sell Tomorrow)</Trans></h1>
+        <p className="text-lg text-white/80 max-w-2xl mx-auto"><Trans i18nKey="pages.BTST.maximize-overnight-opportunities-with-se"><Trans i18nKey="pages.BTST.maximize-overnight-opportunities-with-se-1">Maximize overnight opportunities with SEBI-compliant, data-backed research from certified analysts.</Trans></Trans></p>
       </motion.div>
 
       {/* Content */}
@@ -241,12 +234,8 @@ const BTST = () => {
           whileTap={{ scale: 0.97 }}
           onClick={() => setShowReport(true)}
           className="px-8 py-3 font-semibold bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-all text-white"
-        >
-          View BTST Sample Report
-        </motion.button>
-        <p className="mt-3 text-sm text-white/60">
-          Only available to eligible retail and institutional investors under SEBI norms.
-        </p>
+        ><Trans i18nKey="pages.BTST.view-btst-sample-report">View BTST Sample Report</Trans></motion.button>
+        <p className="mt-3 text-sm text-white/60"><Trans i18nKey="pages.BTST.only-available-to-eligible-retail-and-in"><Trans i18nKey="pages.BTST.only-available-to-eligible-retail-and-in-1">Only available to eligible retail and institutional investors under SEBI norms.</Trans></Trans></p>
       </motion.div>
 
       {/* Performance Metrics */}
@@ -258,20 +247,18 @@ const BTST = () => {
         className="mt-24 max-w-5xl mx-auto"
       >
         <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-          <h2 className="text-2xl font-bold mb-6 text-center">Performance Metrics (Last 6 Months)</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center"><Trans i18nKey="pages.BTST.performance-metrics-last-6-months"><Trans i18nKey="pages.BTST.performance-metrics-last-6-months-1">Performance Metrics (Last 6 Months)</Trans></Trans></h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white/10 p-4 rounded-lg text-center">
               <div className="text-3xl font-bold">2.8%</div>
-              <div className="text-sm mt-2">Average Return per Trade</div>
+              <div className="text-sm mt-2"><Trans i18nKey="pages.BTST.average-return-per-trade">Average Return per Trade</Trans></div>
             </div>
             <div className="bg-white/10 p-4 rounded-lg text-center">
               <div className="text-3xl font-bold">1:2.1</div>
-              <div className="text-sm mt-2">Average Risk/Reward</div>
+              <div className="text-sm mt-2"><Trans i18nKey="pages.BTST.average-risk-reward">Average Risk/Reward</Trans></div>
             </div>
           </div>
-          <div className="mt-6 text-sm text-white/60 text-center">
-            *Past performance is not indicative of future results. Based on 128 executed BTST research reports between Jan-Jun 2025
-          </div>
+          <div className="mt-6 text-sm text-white/60 text-center"><Trans i18nKey="pages.BTST.past-performance-is-not-indicative-of-fu"><Trans i18nKey="pages.BTST.past-performance-is-not-indicative-of-fu-1">*Past performance is not indicative of future results. Based on 128 executed BTST research reports between Jan-Jun 2025</Trans></Trans></div>
         </div>
       </motion.div>
     </div>

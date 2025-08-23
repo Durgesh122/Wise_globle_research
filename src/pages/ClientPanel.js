@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import {
@@ -48,18 +49,14 @@ function ClientPanel() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-center text-white mb-6 leading-tight break-words max-w-full"
-          >
-            Coming Soon
-          </motion.h1>
+          ><Trans i18nKey="pages.ClientPanel.coming-soon">Coming Soon</Trans></motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="text-sm text-center text-white mb-6"
-          >
-            Enter your Client ID and password to access your panel.
-          </motion.p>
+          ><Trans i18nKey="pages.ClientPanel.enter-your-client-id-and-password-to-acc"><Trans i18nKey="pages.ClientPanel.enter-your-client-id-and-password-to-acc-1">Enter your Client ID and password to access your panel.</Trans></Trans></motion.p>
 
           <motion.form
             onSubmit={handleSubmit}
@@ -69,9 +66,7 @@ function ClientPanel() {
             className="space-y-6"
           >
             <div>
-              <label htmlFor="clientId" className="block text-white mb-1 text-sm">
-                Client ID
-              </label>
+              <label htmlFor="clientId" className="block text-white mb-1 text-sm"><Trans i18nKey="pages.ClientPanel.client-id">Client ID</Trans></label>
               <input
                 id="clientId"
                 type="text"
@@ -86,9 +81,7 @@ function ClientPanel() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-white mb-1 text-sm">
-                Password
-              </label>
+              <label htmlFor="password" className="block text-white mb-1 text-sm"><Trans i18nKey="pages.ClientPanel.password">Password</Trans></label>
               <input
                 id="password"
                 type="password"
@@ -108,9 +101,7 @@ function ClientPanel() {
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 300 }}
               className="w-full py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition"
-            >
-              Login
-            </motion.button>
+            ><Trans i18nKey="pages.ClientPanel.login">Login</Trans></motion.button>
           </motion.form>
 
           {/* Error Popup */}
@@ -125,9 +116,7 @@ function ClientPanel() {
                 <button
                   onClick={() => setLoginError('')}
                   className="px-4 py-2 bg-green-500 rounded hover:bg-green-600"
-                >
-                  OK
-                </button>
+                ><Trans i18nKey="pages.ClientPanel.ok">OK</Trans></button>
               </motion.div>
             </div>
           )}
@@ -140,7 +129,7 @@ function ClientPanel() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-gray-900 p-6 rounded-lg shadow-lg text-center text-white max-w-xs"
               >
-                <h3 className="text-xl font-bold mb-4">Contact Support</h3>
+                <h3 className="text-xl font-bold mb-4"><Trans i18nKey="pages.ClientPanel.contact-support">Contact Support</Trans></h3>
                 <div className="flex justify-center gap-4 mb-4 text-2xl">
                   <a href="https://www.facebook.com/people/MRXads/61576945584326/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500">
                     <FaFacebookF />
@@ -167,7 +156,7 @@ function ClientPanel() {
                 <button
                   onClick={() => setShowSupport(false)}
                   className="mt-2 px-4 py-2 bg-green-500 rounded hover:bg-green-600"
-                >Close</button>
+                ><Trans i18nKey="pages.ClientPanel.close">Close</Trans></button>
               </motion.div>
             </div>
           )}
@@ -178,7 +167,7 @@ function ClientPanel() {
             transition={{ delay: 0.5 }}
             className="text-sm text-center text-white mt-6"
           >
-            <p>Don't have an account? <span onClick={() => setShowSupport(true)} className="text-green-400 underline cursor-pointer">Contact Support</span></p>
+            <p><Trans i18nKey="pages.ClientPanel.don-t-have-an-account">Don't have an account?</Trans><span onClick={() => setShowSupport(true)} className="text-green-400 underline cursor-pointer"><Trans i18nKey="pages.ClientPanel.contact-support">Contact Support</Trans></span></p>
           </motion.div>
         </motion.div>
       </div>

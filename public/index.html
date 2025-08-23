@@ -37,17 +37,24 @@
       onload="this.media='all'"
     />
 
-    <!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js) - load script async, defer config and conversion until after load to avoid blocking LCP/TBT -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1137180109"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'AW-1137180109');
-    </script>
-    <!-- Event snippet for Submit lead form conversion page -->
-    <script>
-      gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
+      // Defer analytics configuration until after the page has loaded to reduce render-blocking work.
+      window.addEventListener('load', function(){
+        try {
+          gtag('js', new Date());
+          gtag('config', 'AW-1137180109');
+        } catch(e){
+          // ignore if gtag not available
+        }
+        // Defer conversion event further so it doesn't compete with LCP work
+        setTimeout(function(){
+          try { gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'}); } catch(e){}
+        }, 2000);
+      });
     </script>
     <!-- ✅ SEO Meta Tags -->
     <meta name="description" content="Wise Global Research Services - SEBI Registered Research Analyst. Get expert stock market research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India." />

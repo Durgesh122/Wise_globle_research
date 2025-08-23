@@ -1,119 +1,85 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+// Using static layout and Footer-style logo styling (no framer-motion)
 
 const images = [
-  { src: require('../assets/images/ssl.png') },
-  { src: require('../assets/images/Verified.png') },
-  { src: require('../assets/images/qva.png') },
-  { src: require('../assets/images/nsic.png') },
-  { src: require('../assets/images/msme.png') },
-  { src: require('../assets/images/ioslogo.jpg') },
-  { src: require('../assets/images/gaaf_logo.png') },
+  { src: require('../assets/images/ssl1.png') },
+  { src: require('../assets/images/qva1.png') },
+  { src: require('../assets/images/nsic1.png') },
+  { src: require('../assets/images/msme1.png') },
+  { src: require('../assets/images/ioslogo1.png') },
+  { src: require('../assets/images/gaaf_logo1.png') },
 ];
 
-const container = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 110, damping: 14 } },
-  hover: {},
-};
-
-const imageVariants = {
-  hidden: { rotate: 0 },
-  visible: { rotate: 0 },
-  hover: { rotate: 360, transition: { duration: 0.9, ease: 'easeInOut' } },
-};
-
-// (bg rotating text removed - replaced by image highlight on hover/focus)
-
-// overlayVariants removed (unused) — overlay uses CSS group-hover/group-focus instead
-
 const CertificationsSection = () => {
-  const { t } = useTranslation();
-  const items = t('home.certifications.items', { returnObjects: true });
-
-  // items should be an array with name/short/about per logo; fall back to empty values if not present
-  const localized = Array.isArray(items) ? items : [];
+  const localized = [
+    { name: 'SSL Certified', short: 'Secure connection', about: 'SSL encryption ensures secure data transmission.' },
+    { name: 'QVA', short: 'Quality Verified', about: 'Quality assurance and verification accreditation.' },
+    { name: 'NSIC', short: 'NSIC Registered', about: 'Registered with National Small Industries Corporation.' },
+    { name: 'MSME', short: 'MSME Registered', about: 'Micro, Small & Medium Enterprises registration.' },
+    { name: 'ISO', short: 'ISO Certified', about: 'International Organization for Standardization certification.' },
+    { name: 'GAAF', short: 'GAAF Member', about: 'Member of the Global Association for Accredited Firms.' },
+  ];
 
   return (
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
       <div className="container">
-        <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-        >
-          We are Certified By
-        </motion.h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12">We are Certified By</h2>
 
-        <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 items-start justify-items-center"
-          variants={container}
-          initial="hidden"
-          animate="visible"
+        {/* Single-line horizontal scroller for certification logos */}
+        <div
+          className="flex gap-6 overflow-x-auto py-2 px-2 snap-x snap-mandatory items-center"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+          aria-label="Certification logos scroll"
         >
           {images.map((img, idx) => {
             const L = localized[idx] || {};
-            // resolve src that may be either a module with .default or a string
             const resolvedSrc = img && (img.src && (img.src.default || img.src));
             return (
-            <motion.div
-              key={idx}
-              className="relative w-36 sm:w-40 md:w-44 lg:w-40 p-3 flex flex-col items-center group focus:outline-none"
-              variants={item}
-              whileHover="hover"
-              tabIndex={0}
-            >
-              {/* rotating background text removed; image will highlight on hover/focus */}
-
-              <motion.div
-                className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full bg-white/30 flex items-center justify-center overflow-hidden border border-white/10 p-3 transform transition-all duration-200 ease-out group-hover:scale-105 group-focus:scale-105 group-hover:bg-white/40 group-focus:bg-white/40 group-hover:shadow-xl group-focus:shadow-xl"
-                variants={imageVariants}
+              <div
+                key={idx}
+                className="group cursor-pointer flex-none min-w-[160px] sm:min-w-[180px] p-3 flex flex-col items-center snap-center focus:outline-none"
+                tabIndex={0}
               >
-                {resolvedSrc ? (
-                  <motion.img
-                    src={resolvedSrc}
-                    data-src={resolvedSrc}
-                    alt={L.name || ''}
-                    loading="lazy"
-                    onError={(e) => {
-                      // show placeholder if image fails to load
-                      e.currentTarget.style.display = 'none';
-                      const ph = document.createElement('div');
-                      ph.className = 'text-xs text-white/90 text-center';
-                      ph.textContent = L.name || 'logo';
-                      e.currentTarget.parentNode.appendChild(ph);
-                    }}
-                    className="w-3/4 h-3/4 object-contain z-10 transform transition-transform duration-200 ease-out group-hover:scale-110 group-focus:scale-110"
-                  />
-                ) : (
-                  <div className="w-3/4 h-3/4 flex items-center justify-center text-xs text-white/90">{L.name || 'logo'}</div>
-                )}
-              </motion.div>
+                <div className="relative inline-block w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto rounded-full p-1">
+                  <div
+                    className="relative z-10 rounded-full border-4 shadow-xl transition-transform duration-300 transform flex items-center justify-center bg-white/30"
+                    style={{ borderColor: '#4efc03', minHeight: '100%' }}
+                  >
+                    {resolvedSrc ? (
+                      <img
+                        src={resolvedSrc}
+                        alt={L.name || ''}
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          const ph = document.createElement('div');
+                          ph.className = 'text-xs text-white/90 text-center';
+                          ph.textContent = L.name || 'logo';
+                          e.currentTarget.parentNode.appendChild(ph);
+                        }}
+                        className="w-full h-full object-contain block"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xs text-white/90 rounded-full">{L.name || 'logo'}</div>
+                    )}
+                  </div>
+                </div>
 
-              <div className="mt-3 text-center">
-                <p className="font-semibold text-sm sm:text-base">{L.name || ''}</p>
-                <p className="text-xs text-gray-300 mt-1">{L.short || ''}</p>
+                <div className="mt-3 text-center">
+                  <p className="font-semibold text-sm sm:text-base">{L.name || ''}</p>
+                  <p className="text-xs text-gray-300 mt-1">{L.short || ''}</p>
+                </div>
+
+                <div className="mt-2 sm:hidden px-2">
+                  <div className="text-center text-xs text-gray-300">{L.about || ''}</div>
+                </div>
               </div>
-
-              {/* Mobile: show about text below (always visible on small screens) */}
-              <div className="mt-2 sm:hidden px-2">
-                <div className="text-center text-xs text-gray-300">{L.about || ''}</div>
-              </div>
-
-              {/* Desktop hover overlay removed - about text stays on mobile only */}
-            </motion.div>
             );
           })}
-        </motion.div>
+        </div>
 
-  <p className="text-center text-sm sm:text-base text-gray-200 mt-6 max-w-3xl mx-auto">{t('home.certifications.footer')}</p>
+        <p className="text-center text-sm sm:text-base text-gray-200 mt-6 max-w-3xl mx-auto">Recognized and certified by industry-leading organizations.</p>
       </div>
     </section>
   );

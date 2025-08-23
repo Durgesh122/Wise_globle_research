@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Trans } from '../i18nShim';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ref, push } from 'firebase/database';
 import { db } from '../firebase';
@@ -75,11 +76,8 @@ const Complaint = () => {
           >
             <RiCustomerService2Fill className="text-3xl" />
           </motion.div>
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-            Investor <span className="text-red-500">Grievance</span> Portal
-          </h1>
-          <p className="text-lg text-white-600 dark:text-white-300 max-w-2xl mx-auto">
-            Your concerns are our priority. We're SEBI-committed to resolving complaints within <span className="font-semibold">7 working days</span>.
+          <h1 className="text-4xl font-extrabold text-white mb-3"><Trans i18nKey="pages.Complaint.investor">Investor</Trans><span className="text-white"><Trans i18nKey="pages.Complaint.grievance">Grievance</Trans></span><Trans i18nKey="pages.Complaint.portal">Portal</Trans></h1>
+          <p className="text-lg text-white-600 dark:text-white-300 max-w-2xl mx-auto"><Trans i18nKey="pages.Complaint.your-concerns-are-our-priority-we-re-seb"><Trans i18nKey="pages.Complaint.your-concerns-are-our-priority-we-re-seb-1">Your concerns are our priority. We're SEBI-committed to resolving complaints within</Trans></Trans><span className="font-semibold"><Trans i18nKey="pages.Complaint.7-working-days">7 working days</Trans></span>.
           </p>
         </motion.div>
 
@@ -130,9 +128,7 @@ const Complaint = () => {
               {currentStep === 1 && (
                 <motion.div className="p-8">
                   <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2">
-                    <FaUserTie className="text-blue-500" />
-                    Your Information
-                  </h2>
+                    <FaUserTie className="text-blue-500" /><Trans i18nKey="pages.Complaint.your-information">Your Information</Trans></h2>
                   <div className="space-y-5">
                     {["name", "email", "mobile"].map((field, idx) => (
                       <div key={idx}>
@@ -156,9 +152,7 @@ const Complaint = () => {
                       onClick={nextStep}
                       className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400"
                       disabled={!formData.name || !formData.email || !formData.mobile}
-                    >
-                      Next: Complaint Details
-                    </button>
+                    ><Trans i18nKey="pages.Complaint.next-complaint-details">Next: Complaint Details</Trans></button>
                   </div>
                 </motion.div>
               )}
@@ -167,12 +161,10 @@ const Complaint = () => {
               {currentStep === 2 && (
                 <motion.div className="p-8">
                   <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2">
-                    <FaExclamationTriangle className="text-red-500" />
-                    Complaint Details
-                  </h2>
+                    <FaExclamationTriangle className="text-red-500" /><Trans i18nKey="pages.Complaint.complaint-details">Complaint Details</Trans></h2>
                   <div className="space-y-5">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nature of Complaint *</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><Trans i18nKey="pages.Complaint.nature-of-complaint">Nature of Complaint *</Trans></label>
                       <select
                         name="complaintType"
                         value={formData.complaintType}
@@ -180,14 +172,14 @@ const Complaint = () => {
                         required
                         className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white bg-white dark:bg-gray-800"
                       >
-                        <option value="">Select complaint type</option>
+                        <option value=""><Trans i18nKey="pages.Complaint.select-complaint-type">Select complaint type</Trans></option>
                         {complaintTypes.map((type) => (
                           <option key={type} value={type}>{type}</option>
                         ))}
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description *</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><Trans i18nKey="pages.Complaint.description">Description *</Trans></label>
                       <textarea
                         name="description"
                         value={formData.description}
@@ -198,7 +190,7 @@ const Complaint = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Preferred Resolution</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><Trans i18nKey="pages.Complaint.preferred-resolution">Preferred Resolution</Trans></label>
                       <input
                         type="text"
                         name="resolution"
@@ -213,17 +205,13 @@ const Complaint = () => {
                       type="button"
                       onClick={prevStep}
                       className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-                    >
-                      Back
-                    </button>
+                    ><Trans i18nKey="pages.Complaint.back">Back</Trans></button>
                     <button
                       type="button"
                       onClick={nextStep}
                       disabled={!formData.complaintType || !formData.description}
                       className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400"
-                    >
-                      Next: Review
-                    </button>
+                    ><Trans i18nKey="pages.Complaint.next-review">Next: Review</Trans></button>
                   </div>
                 </motion.div>
               )}
@@ -232,37 +220,31 @@ const Complaint = () => {
               {currentStep === 3 && (
                 <motion.div className="p-8">
                   <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2">
-                    <FaRegClock className="text-yellow-500" />
-                    Review Your Complaint
-                  </h2>
+                    <FaRegClock className="text-yellow-500" /><Trans i18nKey="pages.Complaint.review-your-complaint">Review Your Complaint</Trans></h2>
                   <div className="space-y-3 text-gray-700 dark:text-gray-200 text-sm">
-                    <p><strong>Name:</strong> {formData.name}</p>
-                    <p><strong>Email / Client ID:</strong> {formData.email}</p>
-                    <p><strong>Mobile:</strong> {formData.mobile}</p>
-                    <p><strong>Complaint Type:</strong> {formData.complaintType}</p>
-                    <p><strong>Description:</strong> {formData.description}</p>
+                    <p><strong><Trans i18nKey="pages.Complaint.name">Name:</Trans></strong> {formData.name}</p>
+                    <p><strong><Trans i18nKey="pages.Complaint.email-client-id">Email / Client ID:</Trans></strong> {formData.email}</p>
+                    <p><strong><Trans i18nKey="pages.Complaint.mobile">Mobile:</Trans></strong> {formData.mobile}</p>
+                    <p><strong><Trans i18nKey="pages.Complaint.complaint-type">Complaint Type:</Trans></strong> {formData.complaintType}</p>
+                    <p><strong><Trans i18nKey="pages.Complaint.description-1">Description:</Trans></strong> {formData.description}</p>
                     {formData.resolution && (
-                      <p><strong>Preferred Resolution:</strong> {formData.resolution}</p>
+                      <p><strong><Trans i18nKey="pages.Complaint.preferred-resolution-2">Preferred Resolution:</Trans></strong> {formData.resolution}</p>
                     )}
                   </div>
                   <div className="mt-6 flex items-start text-sm text-gray-600 dark:text-gray-300">
                     <input type="checkbox" required className="mr-2 mt-1" />
-                    <label>I confirm this complaint is genuine and understand it will be registered as per SEBI compliance.</label>
+                    <label><Trans i18nKey="pages.Complaint.i-confirm-this-complaint-is-genuine-and-"><Trans i18nKey="pages.Complaint.i-confirm-this-complaint-is-genuine-and--1">I confirm this complaint is genuine and understand it will be registered as per SEBI compliance.</Trans></Trans></label>
                   </div>
                   <div className="mt-8 flex justify-between">
                     <button
                       type="button"
                       onClick={prevStep}
                       className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-                    >
-                      Back
-                    </button>
+                    ><Trans i18nKey="pages.Complaint.back">Back</Trans></button>
                     <button
                       type="submit"
                       className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                    >
-                      Submit Complaint
-                    </button>
+                    ><Trans i18nKey="pages.Complaint.submit-complaint">Submit Complaint</Trans></button>
                   </div>
                 </motion.div>
               )}
@@ -271,15 +253,14 @@ const Complaint = () => {
               {currentStep === 4 && (
                 <motion.div className="p-8 text-center">
                   <FaPaperPlane className="text-blue-500 text-4xl mb-4 animate-bounce" />
-                  <p className="text-lg text-gray-700 dark:text-white">Submitting your complaint, please wait...</p>
+                  <p className="text-lg text-gray-700 dark:text-white"><Trans i18nKey="pages.Complaint.submitting-your-complaint-please-wait"><Trans i18nKey="pages.Complaint.submitting-your-complaint-please-wait-1">Submitting your complaint, please wait...</Trans></Trans></p>
                 </motion.div>
               )}
             </motion.form>
           ) : (
             <motion.div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl text-center p-12">
               <FaCheckCircle className="text-green-500 text-4xl mb-4 mx-auto" />
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white">Complaint Registered Successfully!</h2>
-              <p className="text-gray-600 dark:text-gray-300 mt-2 mb-6">Grievance ID: <span className="font-mono bg-yellow-100 px-2 py-1 rounded">SEBI-{Math.floor(Math.random()*90000)+10000}</span></p>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white"><Trans i18nKey="pages.Complaint.complaint-registered-successfully"><Trans i18nKey="pages.Complaint.complaint-registered-successfully-1">Complaint Registered Successfully!</Trans></Trans></h2>
               <button
                 onClick={() => {
                   setSubmitted(false);
@@ -287,9 +268,7 @@ const Complaint = () => {
                   setFormData({ name: '', email: '', mobile: '', complaintType: '', description: '', resolution: '' });
                 }}
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Submit Another Complaint
-              </button>
+              ><Trans i18nKey="pages.Complaint.submit-another-complaint">Submit Another Complaint</Trans></button>
             </motion.div>
           )}
         </AnimatePresence>

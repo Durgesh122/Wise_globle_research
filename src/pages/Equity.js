@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Trans } from '../i18nShim';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bar, Line } from 'react-chartjs-2';
 import {
@@ -146,27 +147,19 @@ const Equity = () => {
     >
       {/* Hero Section */}
       <motion.section className="text-center mb-16" variants={itemVariants}>
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-          Equity Services
-        </h1>
-        <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
-          Discover our comprehensive equity-related services and plans designed to
-          maximize your investment potential.
-        </p>
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4"><Trans i18nKey="pages.Equity.equity-services">Equity Services</Trans></h1>
+        <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto"><Trans i18nKey="pages.Equity.discover-our-comprehensive-equity-relate"><Trans i18nKey="pages.Equity.discover-our-comprehensive-equity-relate-1">Discover our comprehensive equity-related services and plans designed to
+          maximize your investment potential.</Trans></Trans></p>
         <motion.button
           className="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-        >
-          Get Started
-        </motion.button>
+        ><Trans i18nKey="pages.Equity.get-started">Get Started</Trans></motion.button>
       </motion.section>
 
       {/* Services Section */}
       <motion.section className="mb-16" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-          Our Services
-        </h2>
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8"><Trans i18nKey="pages.Equity.our-services">Our Services</Trans></h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <motion.div
@@ -187,17 +180,13 @@ const Equity = () => {
 
       {/* Charts Section */}
       <motion.section className="mb-16" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-          Equity Performance
-        </h2>
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8"><Trans i18nKey="pages.Equity.equity-performance">Equity Performance</Trans></h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <motion.div
             className="bg-white p-6 rounded-lg shadow-lg"
             variants={itemVariants}
           >
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              Growth Over Time
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4"><Trans i18nKey="pages.Equity.growth-over-time">Growth Over Time</Trans></h3>
             <Line
               data={equityPerformanceData}
               options={{
@@ -213,9 +202,7 @@ const Equity = () => {
             className="bg-white p-6 rounded-lg shadow-lg"
             variants={itemVariants}
           >
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              Allocation
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4"><Trans i18nKey="pages.Equity.allocation">Allocation</Trans></h3>
             <Bar
               data={allocationData}
               options={{
@@ -232,9 +219,7 @@ const Equity = () => {
 
       {/* Pricing Plans Section */}
       <motion.section className="mb-16" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-          Our Plans
-        </h2>
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8"><Trans i18nKey="pages.Equity.our-plans">Our Plans</Trans></h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
             <motion.div
@@ -260,9 +245,7 @@ const Equity = () => {
                 className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-              >
-                Choose Plan
-              </motion.button>
+              ><Trans i18nKey="pages.Equity.choose-plan">Choose Plan</Trans></motion.button>
             </motion.div>
           ))}
         </div>
@@ -270,9 +253,7 @@ const Equity = () => {
 
       {/* FAQ Section */}
       <motion.section className="mb-16" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-          Frequently Asked Questions
-        </h2>
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8"><Trans i18nKey="pages.Equity.frequently-asked-questions">Frequently Asked Questions</Trans></h2>
         <div className="max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
             <motion.div
@@ -306,19 +287,13 @@ const Equity = () => {
 
       {/* CTA Section */}
       <motion.section className="text-center" variants={itemVariants}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Ready to Invest?
-        </h2>
-        <p className="text-lg text-gray-600 mb-6">
-          Join thousands of investors who trust our equity services.
-        </p>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4"><Trans i18nKey="pages.Equity.ready-to-invest">Ready to Invest?</Trans></h2>
+        <p className="text-lg text-gray-600 mb-6"><Trans i18nKey="pages.Equity.join-thousands-of-investors-who-trust-ou"><Trans i18nKey="pages.Equity.join-thousands-of-investors-who-trust-ou-1">Join thousands of investors who trust our equity services.</Trans></Trans></p>
         <motion.button
           className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-        >
-          Start Investing Now
-        </motion.button>
+        ><Trans i18nKey="pages.Equity.start-investing-now">Start Investing Now</Trans></motion.button>
       </motion.section>
     </motion.div>
   );

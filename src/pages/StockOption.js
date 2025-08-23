@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans, useTranslation } from '../i18nShim';
 import { Helmet } from 'react-helmet';
 import {
   FaChartLine, FaShieldAlt, FaRupeeSign, 
@@ -8,10 +9,11 @@ import {
 import { motion } from 'framer-motion';
 
 function StockOption() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen bg-transparent">
       <Helmet>
-        <title>Professional Stock Options Trading | Wise Global</title>
+        <title>{t('pages.StockOption.professional-stock-options-trading-wise-', 'Professional Stock Options Trading | Wise Global')}</title>
         <meta name="description" content="SEBI-registered stock options advisory with proven strategies. Get expert calls, risk management techniques, and real-time alerts for maximum returns." />
         <meta name="keywords" content="stock options trading, Nifty options, Bank Nifty options, options strategies, SEBI registered advisor, options trading tips" />
         <meta property="og:title" content="Professional Stock Options Trading | Wise Global" />
@@ -26,11 +28,8 @@ function StockOption() {
           transition={{ duration: 0.6 }}
         >
          
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4">Advanced <span className="text-blue-600">Stock Options</span> Trading
-          </h1>
-          <p className="text-lg sm:text-xl text-white max-w-3xl mx-auto">
-            Professional options strategies with <span className="font-semibold text-green-600">75%+ accuracy</span> and complete risk management
-          </p>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4"><Trans i18nKey="pages.StockOption.advanced">Advanced</Trans><span className="text-blue-600"><Trans i18nKey="pages.StockOption.stock-options">Stock Options</Trans></span><Trans i18nKey="pages.StockOption.trading">Trading</Trans></h1>
+          <p className="text-lg sm:text-xl text-white max-w-3xl mx-auto"><Trans i18nKey="pages.StockOption.professional-options-strategies-with"><Trans i18nKey="pages.StockOption.professional-options-strategies-with-1">Professional options strategies with</Trans></Trans><span className="font-semibold text-green-600"><Trans i18nKey="pages.StockOption.75-accuracy">75%+ accuracy</Trans></span><Trans i18nKey="pages.StockOption.and-complete-risk-management"><Trans i18nKey="pages.StockOption.and-complete-risk-management-1">and complete risk management</Trans></Trans></p>
         </motion.div>
       </section>
 
@@ -60,9 +59,7 @@ function StockOption() {
 
       {/* Features Section */}
       <section className="py-12 px-4 max-w-7xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10 text-white">
-          Our <span className="text-blue-600">Options Trading</span> Features
-        </h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10 text-white"><Trans i18nKey="pages.StockOption.our">Our</Trans><span className="text-blue-600"><Trans i18nKey="pages.StockOption.options-trading">Options Trading</Trans></span><Trans i18nKey="pages.StockOption.features">Features</Trans></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             {
@@ -112,17 +109,13 @@ function StockOption() {
       {/* CTA Section */}
       <section className="py-16 px-4 bg-transparent text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Start Trading Options Like a Pro</h2>
-          <p className="text-white mb-8 max-w-2xl mx-auto">
-            Get your first 3 options trading calls free with our SEBI-registered advisory
-          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4"><Trans i18nKey="pages.StockOption.start-trading-options-like-a-pro"><Trans i18nKey="pages.StockOption.start-trading-options-like-a-pro-1">Start Trading Options Like a Pro</Trans></Trans></h2>
+          <p className="text-white mb-8 max-w-2xl mx-auto"><Trans i18nKey="pages.StockOption.get-your-first-3-options-trading-calls-f"><Trans i18nKey="pages.StockOption.get-your-first-3-options-trading-calls-f-1">Get your first 3 options trading calls free with our SEBI-registered advisory</Trans></Trans></p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button className="flex items-center justify-center gap-2 bg-white text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-full font-semibold shadow-md min-w-[240px]">
-              <FaWhatsapp /> Chat on WhatsApp
-            </button>
+              <FaWhatsapp /><Trans i18nKey="pages.StockOption.chat-on-whatsapp">Chat on WhatsApp</Trans></button>
             <button className="flex items-center justify-center gap-2 bg-transparent text-white border border-white hover:bg-blue-800 px-6 py-3 rounded-full font-semibold shadow-md min-w-[240px]">
-              <FaPhoneAlt /> Call Now
-            </button>
+              <FaPhoneAlt /><Trans i18nKey="pages.StockOption.call-now">Call Now</Trans></button>
           </div>
         </div>
       </section>
@@ -132,8 +125,7 @@ function StockOption() {
         <div className="max-w-7xl mx-auto flex items-start gap-2">
           <FaInfoCircle className="mt-0.5 flex-shrink-0" />
           <div>
-            <strong>Disclaimer:</strong> Trading in stock options involves risks. Past performance is not indicative of future results. Our services are for educational purposes only. Consult your financial advisor before trading.
-          </div>
+            <strong><Trans i18nKey="pages.StockOption.disclaimer">Disclaimer:</Trans></strong><Trans i18nKey="pages.StockOption.trading-in-stock-options-involves-risks-"><Trans i18nKey="pages.StockOption.trading-in-stock-options-involves-risks--1">Trading in stock options involves risks. Past performance is not indicative of future results. Our services are for educational purposes only. Consult your financial advisor before trading.</Trans></Trans></div>
         </div>
       </div>
     </div>

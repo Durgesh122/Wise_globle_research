@@ -1,4 +1,4 @@
-// File: src/components/TradingViewChart.js
+
 import React, { useEffect, useRef } from 'react';
 
 const TradingViewChart = ({ symbol }) => {

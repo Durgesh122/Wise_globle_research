@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans, useTranslation } from '../i18nShim';
 import {
   FaChartLine, FaRupeeSign, FaShieldAlt
 } from 'react-icons/fa';
@@ -10,6 +11,7 @@ import { Helmet } from 'react-helmet';
 import sebiImg from '../assets/images/sebi.png';
 
 const DeliveryTrading = () => {
+  const { t } = useTranslation();
   const features = [
     {
       icon: <FaChartLine className="text-blue-600 text-3xl" />,
@@ -52,7 +54,7 @@ const DeliveryTrading = () => {
   return (
     <>
       <Helmet>
-        <title>Delivery Trading | Wise Global</title>
+        <title>{t('pages.Delivery.delivery-trading-wise-global', 'Delivery Trading | Wise Global')}</title>
         <meta
           name="description"
           content="Explore SEBI-compliant, research-backed delivery trading strategies by Wise Global. Build long-term wealth with smart stock investments."
@@ -68,21 +70,15 @@ const DeliveryTrading = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: fastAnimation.duration }}
           className="text-4xl md:text-5xl font-bold mb-4 text-white"
-          >
-            Delivery Trading Services
-          </motion.h1>
-          <p className="text-xl text-white max-w-2xl mx-auto">
-            Invest smartly with Wise Global's long-term, research-driven trading approach.
-          </p>
+          ><Trans i18nKey="pages.Delivery.delivery-trading-services">Delivery Trading Services</Trans></motion.h1>
+          <p className="text-xl text-white max-w-2xl mx-auto"><Trans i18nKey="pages.Delivery.invest-smartly-with-wise-global-s-long-t"><Trans i18nKey="pages.Delivery.invest-smartly-with-wise-global-s-long-t-1">Invest smartly with Wise Global's long-term, research-driven trading approach.</Trans></Trans></p>
         </div>
       </div>
 
       {/* Features */}
       <div className="py-16 bg-transparent">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">
-            Why Choose Wise Global?
-          </h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-white"><Trans i18nKey="pages.Delivery.why-choose-wise-global">Why Choose Wise Global?</Trans></h2>
           <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <motion.div
@@ -111,14 +107,17 @@ const DeliveryTrading = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-8 md:mb-0 md:pr-8">
               <motion.img
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: fastAnimation.duration * 1.5 }}
-                viewport={{ once: true }}
-                src={sebiImg}
-                alt="SEBI Compliance"
-                className="rounded-xl shadow-2xl"
-              />
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: fastAnimation.duration * 1.5 }}
+                  viewport={{ once: true }}
+                  src={sebiImg}
+                  alt="SEBI Compliance"
+                  className="rounded-xl shadow-2xl"
+                  decoding="async"
+                  loading="lazy"
+                  onError={(e) => { e.currentTarget.onerror = null; }}
+                />
             </div>
             <div className="md:w-1/2">
               <motion.div
@@ -129,9 +128,7 @@ const DeliveryTrading = () => {
                 className="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-xl"
               >
                 <h2 className="text-3xl font-bold mb-6 text-white flex items-center">
-                  <MdSecurity className="inline-block mr-2 text-blue-600 text-4xl" />
-                  SEBI Compliant Dashboard
-                </h2>
+                  <MdSecurity className="inline-block mr-2 text-blue-600 text-4xl" /><Trans i18nKey="pages.Delivery.sebi-compliant-dashboard">SEBI Compliant Dashboard</Trans></h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {[
                     { label: "Complaints", value: "0", color: "green" },
@@ -165,9 +162,7 @@ const DeliveryTrading = () => {
       {/* Strategies */}
       <div className="py-16 bg-white/10 backdrop-blur-md">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">
-            Proven Trading Strategies
-          </h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-white"><Trans i18nKey="pages.Delivery.proven-trading-strategies">Proven Trading Strategies</Trans></h2>
           <div className="grid md:grid-cols-3 gap-8">
             {strategies.map((strategy, index) => (
               <motion.div

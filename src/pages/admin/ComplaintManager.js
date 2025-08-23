@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Trans } from '../../i18nShim';
 import { ref, onValue, set } from 'firebase/database';
 import { db } from '../../firebase';
 import { toast } from 'react-toastify';
@@ -77,8 +78,8 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
               ))}
             </div>
             <div className="flex justify-end gap-4 mt-6">
-              <motion.button onClick={onClose} className="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-600" variants={buttonVariants} whileHover="hover">Cancel</motion.button>
-              <motion.button onClick={handleSave} className="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600" variants={buttonVariants} whileHover="hover">Save</motion.button>
+              <motion.button onClick={onClose} className="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-600" variants={buttonVariants} whileHover="hover"><Trans i18nKey="pages.admin_ComplaintManager.cancel">Cancel</Trans></motion.button>
+              <motion.button onClick={handleSave} className="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600" variants={buttonVariants} whileHover="hover"><Trans i18nKey="pages.admin_ComplaintManager.save">Save</Trans></motion.button>
             </div>
           </motion.div>
         </motion.div>
@@ -99,15 +100,15 @@ const ComplaintTable = ({ tableData, handleEdit }) => (
     <table className="w-full text-white responsive-table">
       <thead className="bg-gray-700/50">
         <tr>
-          <th className="p-4 text-left text-sm font-semibold">Sr. No.</th>
-          <th className="p-4 text-left text-sm font-semibold">Received from</th>
-          <th className="p-4 text-left text-sm font-semibold">Pending last month</th>
-          <th className="p-4 text-left text-sm font-semibold">Received</th>
-          <th className="p-4 text-left text-sm font-semibold">Resolved</th>
-          <th className="p-4 text-left text-sm font-semibold">Pending</th>
-          <th className="p-4 text-left text-sm font-semibold">Pending  3 Months</th>
-          <th className="p-4 text-left text-sm font-semibold">Avg. Resolution time (days)</th>
-          <th className="p-4 text-left text-sm font-semibold">Actions</th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.received-from">Received from</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month-1">Pending last month</Trans></Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.resolved">Resolved</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending">Pending</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months-1">Pending  3 Months</Trans></Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days-1">Avg. Resolution time (days)</Trans></Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
         </tr>
       </thead>
       <tbody>
@@ -271,25 +272,25 @@ const ComplaintManager = () => {
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
-      <h2 className="text-3xl font-bold text-white mb-6">Complaint Manager</h2>
+      <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager-1">Complaint Manager</Trans></Trans></h2>
       {isLoading ? <LoadingSpinner /> : (
         <>
           <ComplaintTable tableData={tableData} handleEdit={handleEdit} />
 
           {/* Monthly Disposal Table (admin editable) */}
           <div className="my-8">
-            <h2 className="text-xl font-bold text-white mb-4">Trend Of Monthly Disposal Of Complaints</h2>
+            <h2 className="text-xl font-bold text-white mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints-1">Trend Of Monthly Disposal Of Complaints</Trans></Trans></h2>
             <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
               <table className="w-full border-collapse text-left text-xs sm:text-sm" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(15px)' }}>
                 <thead>
                   <tr className="text-white" style={{ background: 'rgba(255,255,255,0.3)' }}>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Month</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Carried forward from previous month</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Received</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Resolved*</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Pending#</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Actions</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.month">Month</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-month"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-month-1">Carried forward from previous month</Trans></Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.resolved-1">Resolved*</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.pending-2">Pending#</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -311,25 +312,22 @@ const ComplaintManager = () => {
                 </tbody>
               </table>
             </div>
-            <p className="mt-2 text-xs sm:text-sm text-gray-300">
-              *Inclusive of complaints of previous months resolved in the current month.<br />
-              #Inclusive of complaints pending as on the last day of the month.
-            </p>
+            <p className="mt-2 text-xs sm:text-sm text-gray-300"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-mont"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-mont-1">*Inclusive of complaints of previous months resolved in the current month.</Trans></Trans><br /><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th-2">#Inclusive of complaints pending as on the last day of the month.</Trans></Trans></p>
           </div>
           {/* Annual Disposal Table (admin editable) */}
           <div className="my-8">
-            <h2 className="text-xl font-bold text-white mb-4">Trend Of Annual Disposal Of Complaints</h2>
+            <h2 className="text-xl font-bold text-white mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints-1">Trend Of Annual Disposal Of Complaints</Trans></Trans></h2>
             <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
               <table className="w-full border-collapse text-left text-xs sm:text-sm" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(15px)' }}>
                 <thead>
                   <tr className="text-white" style={{ background: 'rgba(255,255,255,0.3)' }}>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Year</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Carried forward from previous year</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Received</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Resolved*</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Pending#</th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30">Actions</th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.year">Year</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-year"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-year-1">Carried forward from previous year</Trans></Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.resolved-1">Resolved*</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.pending-2">Pending#</Trans></th>
+                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -351,10 +349,7 @@ const ComplaintManager = () => {
                 </tbody>
               </table>
             </div>
-            <p className="mt-2 text-xs sm:text-sm text-gray-300">
-              *Inclusive of complaints of previous years resolved in the current year.<br />
-              #Inclusive of complaints pending as on the last day of the year. (as on 31st March)
-            </p>
+            <p className="mt-2 text-xs sm:text-sm text-gray-300"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-year"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-year-1">*Inclusive of complaints of previous years resolved in the current year.</Trans></Trans><br /><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th-3"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th-1">#Inclusive of complaints pending as on the last day of the year. (as on 31st March)</Trans></Trans></p>
           </div>
         </>
       )}

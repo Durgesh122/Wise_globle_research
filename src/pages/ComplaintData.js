@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Trans } from '../i18nShim';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../firebase';
 import { motion } from 'framer-motion';
@@ -47,13 +48,13 @@ const ComplaintData = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="container">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-white">
-          Complaint Data for July 2025
-        </h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-white"><Trans i18nKey="pages.ComplaintData.complaint-data-for-july-2025"><Trans i18nKey="pages.ComplaintData.complaint-data-for-july-2025-1">Complaint Data for July 2025</Trans></Trans></h2>
         {loadingTable ? (
-          <div className="flex justify-center items-center py-6">
-            <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-          </div>
+          <>
+            <div className="flex justify-center items-center py-6">
+              <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          </>
         ) : errorTable ? (
           <div className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center text-white">
             {errorTable}
@@ -66,14 +67,14 @@ const ComplaintData = () => {
             >
               <thead>
                 <tr className="bg-white/20">
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Received from</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Pending at the end of last month</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Received</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Resolved</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Pending</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Pending Complaints 3 Months</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Average Resolution time (in days)^</th>
+                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.sr-no">Sr. No.</Trans></th>
+                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.received-from">Received from</Trans></th>
+                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.pending-at-the-end-of-last-month"><Trans i18nKey="pages.ComplaintData.pending-at-the-end-of-last-month-1">Pending at the end of last month</Trans></Trans></th>
+                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.received">Received</Trans></th>
+                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.resolved">Resolved</Trans></th>
+                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.pending">Pending</Trans></th>
+                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.pending-complaints-3-months"><Trans i18nKey="pages.ComplaintData.pending-complaints-3-months-1">Pending Complaints 3 Months</Trans></Trans></th>
+                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.average-resolution-time-in-days"><Trans i18nKey="pages.ComplaintData.average-resolution-time-in-days-1">Average Resolution time (in days)^</Trans></Trans></th>
                 </tr>
               </thead>
               <tbody>
@@ -93,9 +94,7 @@ const ComplaintData = () => {
             </table>
           </div>
         )}
-        <p className="mt-4 text-xs sm:text-sm text-gray-300">
-          ^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.
-        </p>
+        <p className="mt-4 text-xs sm:text-sm text-gray-300"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total-1">^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.</Trans></Trans></p>
       </div>
     </motion.section>
   );

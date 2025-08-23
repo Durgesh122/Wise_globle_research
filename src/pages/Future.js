@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Trans } from '../i18nShim';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedChart from '../components/AnimatedChart';
 
@@ -67,12 +68,8 @@ const Future = () => {
         className="max-w-7xl mx-auto"
       >
         <header className="mb-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 mt-4">
-            Equity Futures Dashboard
-          </h1>
-          <p className="text-xl max-w-3xl mx-auto">
-            Comprehensive analytics and trading tools for index and stock futures
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-2 mt-4"><Trans i18nKey="pages.Future.equity-futures-dashboard">Equity Futures Dashboard</Trans></h1>
+          <p className="text-xl max-w-3xl mx-auto"><Trans i18nKey="pages.Future.comprehensive-analytics-and-trading-tool"><Trans i18nKey="pages.Future.comprehensive-analytics-and-trading-tool-1">Comprehensive analytics and trading tools for index and stock futures</Trans></Trans></p>
         </header>
 
         {/* Timeframe Selector */}
@@ -168,17 +165,15 @@ const Future = () => {
                               className="mt-4 pt-4 border-t border-gray-300 border-opacity-50"
                             >
                               <div className="flex justify-between text-sm">
-                                <span>Open Interest</span>
-                                <span className="font-medium">12.5M</span>
+                                <span><Trans i18nKey="pages.Future.open-interest">Open Interest</Trans></span>
+                                <span className="font-medium"><Trans i18nKey="pages.Future.12-5m">12.5M</Trans></span>
                               </div>
                               <div className="flex justify-between text-sm mt-2">
-                                <span>Volume</span>
-                                <span className="font-medium">8.2M</span>
+                                <span><Trans i18nKey="pages.Future.volume">Volume</Trans></span>
+                                <span className="font-medium"><Trans i18nKey="pages.Future.8-2m">8.2M</Trans></span>
                               </div>
                               <div className="mt-3">
-                                <button className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
-                                  View Chart
-                                </button>
+                                <button className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors"><Trans i18nKey="pages.Future.view-chart">View Chart</Trans></button>
                               </div>
                             </motion.div>
                           )}
@@ -193,21 +188,11 @@ const Future = () => {
                         <table className="min-w-full divide-y divide-gray-300 divide-opacity-50">
                           <thead className="bg-gray-100 bg-opacity-50">
                             <tr>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                Symbol
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                Last Price
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                Change
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                Open Interest
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                Action
-                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"><Trans i18nKey="pages.Future.symbol">Symbol</Trans></th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"><Trans i18nKey="pages.Future.last-price">Last Price</Trans></th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"><Trans i18nKey="pages.Future.change">Change</Trans></th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"><Trans i18nKey="pages.Future.open-interest">Open Interest</Trans></th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"><Trans i18nKey="pages.Future.action">Action</Trans></th>
                             </tr>
                           </thead>
                           <tbody className="bg-white bg-opacity-30 divide-y divide-gray-300 divide-opacity-50">
@@ -237,12 +222,8 @@ const Future = () => {
                                   </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                  <button className="text-blue-600 hover:text-blue-800 mr-3">
-                                    Buy
-                                  </button>
-                                  <button className="text-red-600 hover:text-red-800">
-                                    Sell
-                                  </button>
+                                  <button className="text-blue-600 hover:text-blue-800 mr-3"><Trans i18nKey="pages.Future.buy">Buy</Trans></button>
+                                  <button className="text-red-600 hover:text-red-800"><Trans i18nKey="pages.Future.sell">Sell</Trans></button>
                                 </td>
                               </tr>
                             ))}
@@ -307,17 +288,15 @@ const Future = () => {
                           <p className="text-gray-700 mb-4">{strategy.description}</p>
                           <div className="flex justify-between text-sm">
                             <div>
-                              <span className="text-gray-600">Risk:</span>{' '}
+                              <span className="text-gray-600"><Trans i18nKey="pages.Future.risk">Risk:</Trans></span>{' '}
                               <span className="font-medium">{strategy.risk}</span>
                             </div>
                             <div>
-                              <span className="text-gray-600">Reward:</span>{' '}
+                              <span className="text-gray-600"><Trans i18nKey="pages.Future.reward">Reward:</Trans></span>{' '}
                               <span className="font-medium">{strategy.reward}</span>
                             </div>
                           </div>
-                          <button className="mt-4 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
-                            Analyze Strategy
-                          </button>
+                          <button className="mt-4 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors"><Trans i18nKey="pages.Future.analyze-strategy">Analyze Strategy</Trans></button>
                         </motion.div>
                       ))}
                     </div>
@@ -330,10 +309,10 @@ const Future = () => {
 
         {/* Market Overview */}
         <div className="bg-white bg-opacity-30 rounded-xl shadow-xl p-6 mb-8" style={{ backdropFilter: 'blur(5px)' }}>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Market Overview</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6"><Trans i18nKey="pages.Future.market-overview">Market Overview</Trans></h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white bg-opacity-40 rounded-lg p-4 shadow">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">NIFTY 50</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2"><Trans i18nKey="pages.Future.nifty-50">NIFTY 50</Trans></h3>
               <div className="flex justify-between items-center">
                 <span className="text-2xl font-bold text-gray-900">19,556.25</span>
                 <span className="text-green-700 font-medium">+1.23%</span>
@@ -343,7 +322,7 @@ const Future = () => {
               </div>
             </div>
             <div className="bg-white bg-opacity-40 rounded-lg p-4 shadow">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">SENSEX</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2"><Trans i18nKey="pages.Future.sensex">SENSEX</Trans></h3>
               <div className="flex justify-between items-center">
                 <span className="text-2xl font-bold text-gray-900">65,656.25</span>
                 <span className="text-green-700 font-medium">+1.05%</span>
@@ -353,7 +332,7 @@ const Future = () => {
               </div>
             </div>
             <div className="bg-white bg-opacity-40 rounded-lg p-4 shadow">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Sector Performance</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2"><Trans i18nKey="pages.Future.sector-performance">Sector Performance</Trans></h3>
               <div className="space-y-3">
                 {[
                   { sector: 'IT', performance: '+2.3%' },

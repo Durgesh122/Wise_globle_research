@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Trans } from '../../i18nShim';
 import { ref, onValue, push, remove } from 'firebase/database';
 import { motion } from 'framer-motion';
 import { FiUpload, FiEye, FiTrash2 } from 'react-icons/fi';
@@ -78,7 +79,7 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
         </motion.button>
       </div>
       <div>
-        <h5 className="text-sm font-medium text-gray-300 mb-2">Uploaded Reports</h5>
+        <h5 className="text-sm font-medium text-gray-300 mb-2"><Trans i18nKey="pages.admin_ReportManager.uploaded-reports">Uploaded Reports</Trans></h5>
         {reports[day]?.length > 0 ? (
           <ul className="space-y-2">
             {reports[day].map((report) => (
@@ -91,11 +92,11 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
               </motion.li>
             ))}
           </ul>
-        ) : <p className="text-sm text-gray-400">No reports uploaded.</p>}
+        ) : <p className="text-sm text-gray-400"><Trans i18nKey="pages.admin_ReportManager.no-reports-uploaded"><Trans i18nKey="pages.admin_ReportManager.no-reports-uploaded-1">No reports uploaded.</Trans></Trans></p>}
       </div>
       {/* Display generated codes under upload button */}
       <div className="mb-4">
-        <h5 className="text-sm font-medium text-gray-300 mb-2">Report Codes</h5>
+        <h5 className="text-sm font-medium text-gray-300 mb-2"><Trans i18nKey="pages.admin_ReportManager.report-codes">Report Codes</Trans></h5>
         {reports[day]?.length > 0 ? (
           <ul className="space-y-1">
             {reports[day].map((report) => (
@@ -105,7 +106,7 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-gray-400">No codes generated.</p>
+          <p className="text-sm text-gray-400"><Trans i18nKey="pages.admin_ReportManager.no-codes-generated"><Trans i18nKey="pages.admin_ReportManager.no-codes-generated-1">No codes generated.</Trans></Trans></p>
         )}
       </div>
     </motion.div>
@@ -200,7 +201,7 @@ const ReportManager = () => {
       initial="hidden"
       animate="visible"
     >
-      <h2 className="text-3xl font-bold text-white mb-6">Report Manager</h2>
+      <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.admin_ReportManager.report-manager">Report Manager</Trans></h2>
       {isLoading ? <LoadingSpinner /> : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {WEEK_DAYS.map((day) => (

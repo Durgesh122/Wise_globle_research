@@ -1,5 +1,6 @@
 // src/pages/Blogs.js
 import React, { useState } from 'react';
+import { Trans, useTranslation } from '../i18nShim';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FaBookOpen, FaArrowRight } from 'react-icons/fa';
@@ -127,6 +128,7 @@ const featuredPost = posts[0];
 const fallbackImage = 'https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg?auto=compress&cs=tinysrgb&w=600';
 
 const Blogs = () => {
+  const { t } = useTranslation();
   const [expandedIndex, setExpandedIndex] = useState(null);
 
 
@@ -138,7 +140,7 @@ const Blogs = () => {
   return (
     <>
       <Helmet>
-        <title>Blogs | Wise Global Research</title>
+        <title>{t('pages.Blogs.blogs-wise-global-research', 'Blogs | Wise Global Research')}</title>
         <meta name="description" content="Read expert blogs from Wise Global Research on stock market strategies, SEBI compliance, and investment tips for Indian investors." />
         <meta property="og:title" content="Blogs | Wise Global Research" />
         <meta property="og:description" content="Read expert blogs from Wise Global Research on stock market strategies, SEBI compliance, and investment tips for Indian investors." />
@@ -159,15 +161,11 @@ const Blogs = () => {
         <motion.div className="text-center mb-12" variants={itemVariants}>
           <motion.div whileHover={{ scale: 1.02 }} className="inline-block mb-6">
             <div className="text-sm font-semibold bg-blue-900 px-4 py-1 rounded-full mb-3 inline-block border border-blue-300">
-              <span className="text-white">Market Insights</span>
+              <span className="text-white"><Trans i18nKey="pages.Blogs.market-insights">Market Insights</Trans></span>
             </div>
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-            Investment Insights & Market Trends
-          </h1>
-          <p className="text-lg text-white max-w-2xl mx-auto">
-            Stay informed with SEBI-compliant research articles curated by <span className="font-semibold text-blue-300">Wise Global Research</span> for Indian traders.
-          </p>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4"><Trans i18nKey="pages.Blogs.investment-insights-market-trends"><Trans i18nKey="pages.Blogs.investment-insights-market-trends-1">Investment Insights & Market Trends</Trans></Trans></h1>
+          <p className="text-lg text-white max-w-2xl mx-auto"><Trans i18nKey="pages.Blogs.stay-informed-with-sebi-compliant-resear"><Trans i18nKey="pages.Blogs.stay-informed-with-sebi-compliant-resear-1">Stay informed with SEBI-compliant research articles curated by</Trans></Trans><span className="font-semibold text-blue-300"><Trans i18nKey="pages.Blogs.wise-global-research">Wise Global Research</Trans></span><Trans i18nKey="pages.Blogs.for-indian-traders">for Indian traders.</Trans></p>
         </motion.div>
 
         {/* Featured Post Section */}
@@ -182,7 +180,7 @@ const Blogs = () => {
           animate="visible"
           whileHover="hover"
         >
-          <h2 className="text-3xl font-bold text-white mb-4">Featured Post</h2>
+          <h2 className="text-3xl font-bold text-white mb-4"><Trans i18nKey="pages.Blogs.featured-post">Featured Post</Trans></h2>
           <motion.div
             className="flex flex-col md:flex-row gap-6"
             variants={cardVariants}
@@ -210,7 +208,7 @@ const Blogs = () => {
 
         {/* Blog Categories Section */}
         <motion.div className="mb-12" variants={containerVariants}>
-          <h2 className="text-3xl font-bold text-white mb-6 text-center">Explore Categories</h2>
+          <h2 className="text-3xl font-bold text-white mb-6 text-center"><Trans i18nKey="pages.Blogs.explore-categories">Explore Categories</Trans></h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {categories.map((category) => (
               <motion.div
@@ -235,7 +233,7 @@ const Blogs = () => {
 
         {/* Blog Posts Section */}
         <motion.div className="mb-12" variants={containerVariants}>
-          <h2 className="text-3xl font-bold text-white mb-6 text-center">Recent Posts</h2>
+          <h2 className="text-3xl font-bold text-white mb-6 text-center"><Trans i18nKey="pages.Blogs.recent-posts">Recent Posts</Trans></h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, index) => (
               <motion.div
@@ -279,26 +277,22 @@ const Blogs = () => {
                   <p className="text-white text-sm">{post.authorBio}</p>
                   {expandedIndex === index && post.relatedPosts && (
                     <div className="mt-4">
-                      <h4 className="text-lg font-semibold text-white mb-2">Related Posts</h4>
+                      <h4 className="text-lg font-semibold text-white mb-2"><Trans i18nKey="pages.Blogs.related-posts">Related Posts</Trans></h4>
                       <ul className="list-disc pl-6 text-white text-sm">
                         {post.relatedPosts.map((relatedId) => {
                           const relatedPost = posts.find((p) => p.id === relatedId);
                           return (
                             <li key={relatedId}>
                               <button
-                                onClick={() => {
-                                  // Replace this with the action you want to perform,
-                                  // e.g., navigating to the related post in a modal or
-                                  // expanding content on the page.
-                                  console.log(`Clicked on related post: ${relatedPost?.title}`);
-                                }}
+                                onClick={() => console.log(`Clicked on related post: ${relatedPost?.title}`)}
                                 className="text-blue-300 hover:text-blue-100"
-                                style={{ 
-                                  textDecoration: 'none', 
-                                  padding: 0, 
-                                  border: 'none', 
-                                  background: 'none', 
-                                  cursor: 'pointer' }}
+                                style={{
+                                  textDecoration: 'none',
+                                  padding: 0,
+                                  border: 'none',
+                                  background: 'none',
+                                  cursor: 'pointer',
+                                }}
                               >
                                 {relatedPost?.title}
                               </button>
@@ -321,14 +315,11 @@ const Blogs = () => {
           style={{ transformStyle: 'preserve-3d' }}
         >
           <h2 className="text-3xl font-bold text-white mb-4">Stay Ahead with Wise Global</h2>
-          <p className="text-white max-w-2xl mx-auto mb-6">
-            Contact our team to explore trading solutions like Smart Options and MCX Supreme, tailored for Indian markets.
-          </p>
+          <p className="text-white max-w-2xl mx-auto mb-6">Contact our team to explore trading solutions like Smart Options and MCX Supreme, tailored for Indian markets.</p>
           <Link
             to="/contact"
             className="inline-block bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition"
-          >
-            Contact Us <FaArrowRight className="inline ml-2" />
+          ><Trans i18nKey="pages.Blogs.contact-us">Contact Us</Trans><FaArrowRight className="inline ml-2" />
           </Link>
         </motion.div>
       </motion.div>

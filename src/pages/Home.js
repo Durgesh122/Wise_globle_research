@@ -1,11 +1,10 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+// i18n removed: using static English strings in this page
 import { containerVariants } from '../utils/animationVariants';
 import HeroSection from '../components/HeroSection';
 import AlertBar from '../components/AlertBar';
-import TickerTape from '../components/TickerTape';
 import WhyChooseUs from '../components/WhyChooseUs';
 import MarketOverview from '../components/MarketOverview';
 import EconomicCalendar from '../components/EconomicCalendar';
@@ -25,7 +24,7 @@ import PopupForm from '../components/PopupForm';
 import WhatsAppButton from '../components/WhatsAppButton';
 
 const Home = () => {
-  const { t } = useTranslation();
+  // translations removed; using static English text below
   const contactFormRef = useRef(null);
   const [showScroll, setShowScroll] = useState(false);
   const [showPopup, setShowPopup] = useState(true);
@@ -54,14 +53,14 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>{t('home.helmet.title')}</title>
-        <meta name="description" content={t('home.helmet.description')} />
-        <meta property="og:title" content={t('home.helmet.title')} />
-        <meta property="og:description" content={t('home.helmet.ogDescription')} />
+        <title>Wise Global Research Services — Market Research & Insights</title>
+        <meta name="description" content="Wise Global Research Services delivers market research, analytics, and data-driven insights to help businesses make informed decisions." />
+        <meta property="og:title" content="Wise Global Research Services — Market Research & Insights" />
+        <meta property="og:description" content="Market research, analytics, and strategic insights from Wise Global Research Services." />
         <meta property="og:url" content="https://wiseglobalresearch.com/" />
         <meta property="og:image" content="https://wiseglobalresearch.com/og-image.jpg" />
-        <meta name="twitter:title" content={t('home.helmet.title')} />
-        <meta name="twitter:description" content={t('home.helmet.twitterDescription')} />
+        <meta name="twitter:title" content="Wise Global Research Services — Market Research & Insights" />
+        <meta name="twitter:description" content="Wise Global Research Services delivers market research, analytics, and data-driven insights to help businesses make informed decisions." />
         <meta name="twitter:image" content="https://wiseglobalresearch.com/og-image.jpg" />
       </Helmet>
       <motion.div
@@ -71,19 +70,18 @@ const Home = () => {
         animate="visible"
       >
   {showPopup && <PopupForm onClose={() => setShowPopup(false)} />}
-  <TickerTape />
-  <AlertBar />
+        <AlertBar />
         <HeroSection />
         <WhyChooseUs />
         <MarketOverview />
-  <EconomicCalendar />
+        <EconomicCalendar embedUrl="https://widget.myfxbook.com/widget/calendar.html" />
         {/* <ServicesSection /> removed as per request */}
-  <MarketInsights />
+        <MarketInsights />
         <MethodologySection />
-  <TeamSection />
+        <TeamSection />
         <CallToAction scrollToContactForm={scrollToContactForm} />
-  {/* <TimelineSection /> removed as per request */}
-  <CertificationsSection />
+         {/* <TimelineSection /> removed as per request */}
+        <CertificationsSection />
         <ContactFormSection contactFormRef={contactFormRef} />
         <ComplaintTable />
         {/* WhatsApp Chat Button on Main Screen */}

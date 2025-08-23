@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Trans } from '../i18nShim';
 import { useNavigate } from 'react-router-dom';
 import { ref, onValue, remove, push, update } from 'firebase/database';
 import { db, auth } from '../firebase';
@@ -81,18 +82,14 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => (
               variants={buttonVariants}
               whileHover="hover"
               whileTap="tap"
-            >
-              Cancel
-            </motion.button>
+            ><Trans i18nKey="pages.ContactData.cancel">Cancel</Trans></motion.button>
             <motion.button
               onClick={onConfirm}
               className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
               variants={buttonVariants}
               whileHover="hover"
               whileTap="tap"
-            >
-              Confirm
-            </motion.button>
+            ><Trans i18nKey="pages.ContactData.confirm">Confirm</Trans></motion.button>
           </div>
         </motion.div>
       </motion.div>
@@ -109,7 +106,7 @@ ConfirmationModal.propTypes = {
 };
 
 // Report preview modal component
-const ReportPreviewModal = ({ isOpen, onClose, report }) => (
+const ReportPreviewModal = ({ isOpen, onClose, report = null }) => (
   <AnimatePresence>
     {isOpen && (
       <motion.div
@@ -140,15 +137,23 @@ const ReportPreviewModal = ({ isOpen, onClose, report }) => (
               variants={buttonVariants}
               whileHover="hover"
               whileTap="tap"
-            >
-              Close
-            </motion.button>
+            ><Trans i18nKey="pages.ContactData.close">Close</Trans></motion.button>
           </div>
         </motion.div>
       </motion.div>
     )}
   </AnimatePresence>
 );
+
+
+// Defensive: ensure no .defaultProps exist on this function component
+if (ReportPreviewModal.defaultProps) {
+  try {
+    delete ReportPreviewModal.defaultProps;
+  } catch (e) {
+    /* ignore */
+  }
+}
 
 ReportPreviewModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
@@ -197,11 +202,11 @@ const SubmissionTable = ({ submissions, handleDeleteSubmission, handleSortToggle
     <table className="w-full text-white">
       <thead className="bg-gray-700/50">
         <tr>
-          <th className="p-4 text-left text-sm font-semibold">Name</th>
-          <th className="p-4 text-left text-sm font-semibold">Email</th>
-          <th className="p-4 text-left text-sm font-semibold">Phone</th>
-          <th className="p-4 text-left text-sm font-semibold">Interest</th>
-          <th className="p-4 text-left text-sm font-semibold">Message</th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.name">Name</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.email">Email</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.phone">Phone</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.interest">Interest</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.message">Message</Trans></th>
           <th className="p-4 text-left text-sm font-semibold">
             <button
               onClick={handleSortToggle}
@@ -211,7 +216,7 @@ const SubmissionTable = ({ submissions, handleDeleteSubmission, handleSortToggle
               Timestamp {sortOrder === 'desc' ? '↓' : '↑'}
             </button>
           </th>
-          <th className="p-4 text-left text-sm font-semibold">Actions</th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.actions">Actions</Trans></th>
         </tr>
       </thead>
       <tbody>
@@ -284,19 +289,19 @@ const ConsentSubmissionTable = ({ submissions, handleDelete }) => (
     <table className="w-full text-white">
       <thead className="bg-gray-700/50">
         <tr>
-          <th className="p-4 text-left text-sm font-semibold">Client Name</th>
-          <th className="p-4 text-left text-sm font-semibold">Father's Name</th>
-          <th className="p-4 text-left text-sm font-semibold">Client ID</th>
-          <th className="p-4 text-left text-sm font-semibold">Email</th>
-          <th className="p-4 text-left text-sm font-semibold">DOB</th>
-          <th className="p-4 text-left text-sm font-semibold">PAN</th>
-          <th className="p-4 text-left text-sm font-semibold">Aadhaar</th>
-          <th className="p-4 text-left text-sm font-semibold">Address</th>
-          <th className="p-4 text-left text-sm font-semibold">PAN Card</th>
-          <th className="p-4 text-left text-sm font-semibold">Aadhaar Card</th>
-          <th className="p-4 text-left text-sm font-semibold">Signature</th>
-          <th className="p-4 text-left text-sm font-semibold">Timestamp</th>
-          <th className="p-4 text-left text-sm font-semibold">Actions</th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.client-name">Client Name</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.father-s-name">Father's Name</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.client-id">Client ID</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.email">Email</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.dob">DOB</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.pan">PAN</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.aadhaar">Aadhaar</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.address">Address</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.pan-card">PAN Card</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.aadhaar-card">Aadhaar Card</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.signature">Signature</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.timestamp">Timestamp</Trans></th>
+          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.actions">Actions</Trans></th>
         </tr>
       </thead>
       <tbody>
@@ -318,17 +323,17 @@ const ConsentSubmissionTable = ({ submissions, handleDelete }) => (
             <td className="p-4 max-w-xs truncate">{submission.address || 'N/A'}</td>
             <td className="p-4">
               {submission.panDataUrl ? (
-                <a href={submission.panDataUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">View</a>
+                <a href={submission.panDataUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline"><Trans i18nKey="pages.ContactData.view">View</Trans></a>
               ) : 'N/A'}
             </td>
             <td className="p-4">
               {submission.aadhaarDataUrl ? (
-                <a href={submission.aadhaarDataUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">View</a>
+                <a href={submission.aadhaarDataUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline"><Trans i18nKey="pages.ContactData.view">View</Trans></a>
               ) : 'N/A'}
             </td>
             <td className="p-4">
               {submission.signatureDataUrl ? (
-                <a href={submission.signatureDataUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">View</a>
+                <a href={submission.signatureDataUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline"><Trans i18nKey="pages.ContactData.view">View</Trans></a>
               ) : 'N/A'}
             </td>
             <td className="p-4">
@@ -390,15 +395,15 @@ const ComplaintTable = ({ tableData, setTableData, handleEditTableRow, handleDel
       <table className="w-full text-white">
         <thead className="bg-gray-700/50">
           <tr>
-            <th className="p-4 text-left text-sm font-semibold">Sr. No.</th>
-            <th className="p-4 text-left text-sm font-semibold">Received from</th>
-            <th className="p-4 text-left text-sm font-semibold">Pending at the end of last month</th>
-            <th className="p-4 text-left text-sm font-semibold">Received</th>
-            <th className="p-4 text-left text-sm font-semibold">Resolved</th>
-            <th className="p-4 text-left text-sm font-semibold">Pending</th>
-            <th className="p-4 text-left text-sm font-semibold">Pending Complaints 3 Months</th>
-            <th className="p-4 text-left text-sm font-semibold">Average Resolution time (in days)</th>
-            <th className="p-4 text-left text-sm font-semibold">Actions</th>
+            <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.sr-no">Sr. No.</Trans></th>
+            <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.received-from">Received from</Trans></th>
+            <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.pending-at-the-end-of-last-month"><Trans i18nKey="pages.ContactData.pending-at-the-end-of-last-month-1">Pending at the end of last month</Trans></Trans></th>
+            <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.received">Received</Trans></th>
+            <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.resolved">Resolved</Trans></th>
+            <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.pending">Pending</Trans></th>
+            <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.pending-complaints-3-months"><Trans i18nKey="pages.ContactData.pending-complaints-3-months-1">Pending Complaints 3 Months</Trans></Trans></th>
+            <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.average-resolution-time-in-days"><Trans i18nKey="pages.ContactData.average-resolution-time-in-days-1">Average Resolution time (in days)</Trans></Trans></th>
+            <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.ContactData.actions">Actions</Trans></th>
           </tr>
         </thead>
         <tbody>
@@ -566,18 +571,14 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-              >
-                Cancel
-              </motion.button>
+              ><Trans i18nKey="pages.ContactData.cancel">Cancel</Trans></motion.button>
               <motion.button
                 onClick={handleSave}
                 className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-              >
-                Save
-              </motion.button>
+              ><Trans i18nKey="pages.ContactData.save">Save</Trans></motion.button>
             </div>
           </motion.div>
         </motion.div>
@@ -666,7 +667,7 @@ const ReportUploadCard = ({
       )}
     </div>
     <div>
-      <h5 className="text-sm font-medium text-gray-300 mb-2">Uploaded Reports</h5>
+      <h5 className="text-sm font-medium text-gray-300 mb-2"><Trans i18nKey="pages.ContactData.uploaded-reports">Uploaded Reports</Trans></h5>
       {reports[day]?.length > 0 ? (
         <ul className="space-y-2">
           {reports[day].map((report) => (
@@ -705,7 +706,7 @@ const ReportUploadCard = ({
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-gray-400">No reports uploaded.</p>
+        <p className="text-sm text-gray-400"><Trans i18nKey="pages.ContactData.no-reports-uploaded">No reports uploaded.</Trans></p>
       )}
     </div>
   </motion.div>
@@ -1223,9 +1224,7 @@ function ContactData() {
       animate="visible"
     >
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-4xl font-extrabold text-white tracking-tight">
-          Admin Panel - Contact & Reports
-        </h2>
+        <h2 className="text-4xl font-extrabold text-white tracking-tight"><Trans i18nKey="pages.ContactData.admin-panel-contact-reports"><Trans i18nKey="pages.ContactData.admin-panel-contact-reports-1">Admin Panel - Contact & Reports</Trans></Trans></h2>
         <motion.button
           onClick={handleLogout}
           className="bg-gradient-to-r from-red-500 to-red-700 text-white px-6 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
@@ -1234,9 +1233,7 @@ function ContactData() {
           whileTap="tap"
           data-aos="zoom-in"
           aria-label="Logout"
-        >
-          Logout
-        </motion.button>
+        ><Trans i18nKey="pages.ContactData.logout">Logout</Trans></motion.button>
       </div>
 
       {/* Search Bar */}
@@ -1264,13 +1261,15 @@ function ContactData() {
           data-aos="zoom-in"
           aria-label="Export to CSV"
         >
-          <FiDownload /> Export to CSV
-        </motion.button>
+          <FiDownload /><Trans i18nKey="pages.ContactData.export-to-csv">Export to CSV</Trans></motion.button>
       </div>
 
       {/* Contact Submissions */}
       {isLoading ? (
-        <LoadingSpinner />
+        <>
+          <LoadingSpinner />
+          <Trans i18nKey="pages.ContactData.error" />
+        </>
       ) : error ? (
         <motion.div
           className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center text-white"
@@ -1281,15 +1280,13 @@ function ContactData() {
         </motion.div>
       ) : (
         <>
-          <h3 className="text-2xl font-semibold text-white mb-4">Contact Submissions</h3>
+          <h3 className="text-2xl font-semibold text-white mb-4"><Trans i18nKey="pages.ContactData.contact-submissions">Contact Submissions</Trans></h3>
           {filteredSubmissions.length === 0 ? (
             <motion.div
               className="bg-gray-800/30 rounded-xl p-6 shadow-lg border border-gray-200/20 text-center text-white"
               variants={itemVariants}
               data-aos="fade-up"
-            >
-              No submissions to display.
-            </motion.div>
+            ><Trans i18nKey="pages.ContactData.no-submissions-to-display">No submissions to display.</Trans></motion.div>
           ) : (
             <SubmissionTable
               submissions={currentSubmissions}
@@ -1300,9 +1297,12 @@ function ContactData() {
           )}
 
           {/* Client Service Consent Submissions */}
-          <h3 className="text-2xl font-semibold text-white mb-4 mt-12">Client Service Consent Submissions</h3>
+          <h3 className="text-2xl font-semibold text-white mb-4 mt-12"><Trans i18nKey="pages.ContactData.client-service-consent-submissions"><Trans i18nKey="pages.ContactData.client-service-consent-submissions-1">Client Service Consent Submissions</Trans></Trans></h3>
           {loadingConsent ? (
-            <LoadingSpinner />
+            <div>
+              <LoadingSpinner />
+              <Trans i18nKey="pages.ContactData.errorconsent" />
+            </div>
           ) : errorConsent ? (
             <motion.div
               className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center text-white"
@@ -1318,9 +1318,7 @@ function ContactData() {
                   className="bg-gray-800/30 rounded-xl p-6 shadow-lg border border-gray-200/20 text-center text-white"
                   variants={itemVariants}
                   data-aos="fade-up"
-                >
-                  No consent submissions to display.
-                </motion.div>
+                ><Trans i18nKey="pages.ContactData.no-consent-submissions-to-display"><Trans i18nKey="pages.ContactData.no-consent-submissions-to-display-1">No consent submissions to display.</Trans></Trans></motion.div>
               ) : (
                 <ConsentSubmissionTable submissions={consentSubmissions} handleDelete={handleDeleteConsentSubmission} />
               )}
@@ -1328,7 +1326,7 @@ function ContactData() {
           )}
 
           {/* Complaint Table */}
-          <h3 className="text-2xl font-semibold text-white mb-4">Complaint Table Data</h3>
+          <h3 className="text-2xl font-semibold text-white mb-4"><Trans i18nKey="pages.ContactData.complaint-table-data">Complaint Table Data</Trans></h3>
           <ComplaintTable
             tableData={tableData}
             setTableData={setTableData}
@@ -1337,7 +1335,7 @@ function ContactData() {
           />
 
           {/* Reports Section */}
-          <h3 className="text-2xl font-semibold text-white mb-4">Upload Reports</h3>
+          <h3 className="text-2xl font-semibold text-white mb-4"><Trans i18nKey="pages.ContactData.upload-reports">Upload Reports</Trans></h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {WEEK_DAYS.map((day) => (
               <ReportUploadCard

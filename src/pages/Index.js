@@ -59,15 +59,13 @@ const Index = () => {
       pe: 23.85,
       pb: 3.95,
       dividendYield: 1.12,
-      description: "SENSEX is India's oldest stock market index comprising 30 well-established and financially sound companies across key sectors, representing about 45% of the BSE's free float market capitalization.",
-      constituents: ["RELIANCE", "HDFC", "ICICIBANK", "INFY", "HDFCBANK", "TCS", "ITC", "LT", "BHARTIARTL", "KOTAKBANK"],
-      sectorWeights: ["Financial Services (37.8%)", "IT (15.8%)", "Oil & Gas (12.2%)", "Consumer Goods (9.2%)", "Healthcare (6.5%)"],
+  description: "SENSEX is India's oldest stock market index comprising 30 well-established and financially sound companies across key sectors, representing about 45% of the BSE's free float market capitalization.",
+  sectorWeights: ["Financial Services (37.8%)", "IT (15.8%)", "Oil & Gas (12.2%)", "Consumer Goods (9.2%)", "Healthcare (6.5%)"],
       lastUpdated: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + ', ' + new Date().toLocaleDateString('en-IN')
     },
     niftyBank: {
-      name: "NIFTY BANK",
-      current: 50245.60,
-      change: 685.90,
+  name: "NIFTY BANK",
+  current: 50245.60,
       percentChange: 1.38,
       high: 50280.25,
       low: 49520.40,
@@ -103,7 +101,7 @@ const Index = () => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }} 
+          transition={{ delay: 0.2 }}
           className="text-lg"
           style={{ color: colors.textSecondary }}
         >
@@ -176,9 +174,9 @@ const Index = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           <div className="p-4 rounded-lg backdrop-blur-sm" style={{ backgroundColor: colors.mutedBg }}>
-            <div className="mb-2" style={{ color: colors.textSecondary }}>
-              <span className="font-medium">Today's Range</span>
-            </div>
+              <div className="mb-2" style={{ color: colors.textSecondary }}>
+                <span className="font-medium">Today's Range</span>
+              </div>
             <div className="flex justify-between">
               <div>
                 <p className="text-sm" style={{ color: colors.textSecondary }}>High</p>
@@ -288,9 +286,7 @@ const Index = () => {
           }}
         >
           <div className="mb-6">
-            <h3 className="text-xl font-bold mb-4" style={{ color: colors.textPrimary }}>
-              Top Constituent Stocks
-            </h3>
+            <h3 className="text-xl font-bold mb-4" style={{ color: colors.textPrimary }}>Top Constituent Stocks</h3>
             <div className="flex flex-wrap gap-2">
               {activeIndex.constituents.map((stock, index) => (
                 <span 
@@ -308,9 +304,7 @@ const Index = () => {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-4" style={{ color: colors.textPrimary }}>
-              Sector Allocation
-            </h3>
+            <h3 className="text-xl font-bold mb-4" style={{ color: colors.textPrimary }}>Sector Allocation</h3>
             <div className="space-y-3">
               {activeIndex.sectorWeights.map((sector, index) => (
                 <div key={index}>

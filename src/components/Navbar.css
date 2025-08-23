@@ -4,6 +4,8 @@
   --hover-yellow: #facc15;
   --text-color: #ffffff;
   --bg-opacity: rgba(255, 255, 255, 0.1);
+  /* Offset applied when external banners (eg. Google Translate) appear */
+  --nav-offset: 0px;
 }
 
 /* Animations */
@@ -25,6 +27,12 @@
 .animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
 .animate-slideDown { animation: slideDown 0.3s ease-in-out; will-change: transform, opacity; }
 .animate-slideIn { animation: slideIn 0.4s ease-in-out; will-change: transform; }
+
+/* Ensure the fixed navbar respects any top offset from external banners */
+nav.fixed, nav {
+  top: var(--nav-offset, 0px);
+  transition: top 0.18s ease;
+}
 
 /* Bouncing animation */
 @keyframes bounce {
@@ -107,12 +115,12 @@ svg {
 
   .mobile-menu {
     position: fixed;
-    top: 0;
+    top: var(--nav-offset, 0px);
     right: 0;
     width: 80%;
     min-width: 260px;
     max-width: 320px;
-    height: 100vh;
+    height: calc(100vh - var(--nav-offset, 0px));
     background: var(--bg-opacity);
     backdrop-filter: blur(12px);
     color: var(--text-color);

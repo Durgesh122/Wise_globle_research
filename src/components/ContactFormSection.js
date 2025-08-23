@@ -5,7 +5,7 @@ import { ref, push } from 'firebase/database';
 import { toast } from 'react-toastify';
 import { db } from '../firebase';
 import { itemVariants } from '../utils/animationVariants';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../i18nShim';
 
 const ContactForm = ({ contactFormRef }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();

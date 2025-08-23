@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FiCheckCircle } from 'react-icons/fi';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../i18nShim';
 
 const SubscriptionPlans = () => {
   const { t } = useTranslation();

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
@@ -8,7 +7,7 @@ import { motion, useAnimation } from "framer-motion";
 import logo from "../assets/images/w.png"; // Verify this path is correct
 
 const UserLogin = () => {
-  const { t } = useTranslation();
+  // Translations removed; using static English strings
   const location = useLocation();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -43,30 +42,30 @@ const UserLogin = () => {
     const newErrors = { email: "", password: "" };
 
     if (!email) {
-      newErrors.email = t("login.email_required");
+      newErrors.email = "Email is required.";
       isValid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = t("login.email_invalid");
+      newErrors.email = "Please enter a valid email address.";
       isValid = false;
     }
 
     if (!password) {
-      newErrors.password = t("login.password_required");
+      newErrors.password = "Password is required.";
       isValid = false;
     } else if (password.length < 6) {
-      newErrors.password = t("login.password_length");
+      newErrors.password = "Password must be at least 6 characters.";
       isValid = false;
     } else if (!/[A-Z]/.test(password)) {
-      newErrors.password = t("login.password_uppercase");
+      newErrors.password = "Password must contain at least one uppercase letter.";
       isValid = false;
     } else if (!/[a-z]/.test(password)) {
-      newErrors.password = t("login.password_lowercase");
+      newErrors.password = "Password must contain at least one lowercase letter.";
       isValid = false;
     } else if (!/[0-9]/.test(password)) {
-      newErrors.password = t("login.password_number");
+      newErrors.password = "Password must contain at least one number.";
       isValid = false;
     } else if (!/[!@#$%^&*]/.test(password)) {
-      newErrors.password = t("login.password_special");
+      newErrors.password = "Password must contain at least one special character (!@#$%^&*).";
       isValid = false;
     }
 
@@ -86,16 +85,16 @@ const UserLogin = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-  toast.success(t("login.success"), { position: "top-center" });
+  toast.success("Login successful.", { position: "top-center" });
       // onAuthStateChanged will handle the navigation automatically
     } catch (error) {
-      let errorMessage = t("login.failed");
+      let errorMessage = "Login failed. Please try again.";
       if (error.code === "auth/user-not-found") {
-        errorMessage = t("login.user_not_found");
+        errorMessage = "User not found.";
       } else if (error.code === "auth/wrong-password") {
-        errorMessage = t("login.incorrect_password");
+        errorMessage = "Incorrect password.";
       } else if (error.code === "auth/too-many-requests") {
-        errorMessage = t("login.too_many_attempts");
+        errorMessage = "Too many unsuccessful login attempts. Please try again later.";
       }
       toast.error(errorMessage, { position: "top-center" });
     } finally {
@@ -219,22 +218,25 @@ const UserLogin = () => {
             alt="Company Logo"
             className="w-20 h-20 object-contain"
             style={{ filter: "drop-shadow(0 0 8px rgba(234, 179, 8, 0.4))" }}
+            decoding="async"
+            loading="lazy"
             onError={(e) => {
-              e.target.src = "https://via.placeholder.com/80?text=Logo"; // Fallback image
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://via.placeholder.com/80?text=Logo"; // Fallback image
               console.error("Failed to load logo at ../assets/images/w.png");
             }}
           />
         </motion.div>
 
         {/* Title */}
-        <motion.h2
+          <motion.h2
           className="text-2xl text-white font-semibold text-center mb-6"
           animate={textControls}
           onHoverStart={handleTextHover}
           onHoverEnd={handleTextHoverEnd}
-          aria-label={t("login.title")}
+          aria-label={"Admin Login"}
         >
-          {t("login.title")}
+          {"Admin Login"}
         </motion.h2>
 
         {/* Form */}
@@ -243,7 +245,7 @@ const UserLogin = () => {
           <div className="relative">
             <motion.input
               type="email"
-              placeholder={t("login.email_placeholder")}
+              placeholder={"Email address"}
               className="px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -251,7 +253,7 @@ const UserLogin = () => {
               variants={inputVariants}
               whileHover="hover"
               whileFocus="focus"
-              aria-label={t("login.email_label")}
+              aria-label={"Email"}
               autoComplete="email"
             />
             {errors.email && (
@@ -265,7 +267,7 @@ const UserLogin = () => {
           <div className="relative">
             <motion.input
               type="password"
-              placeholder={t("login.password_placeholder")}
+              placeholder={"Password"}
               className="px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -273,7 +275,7 @@ const UserLogin = () => {
               variants={inputVariants}
               whileHover="hover"
               whileFocus="focus"
-              aria-label={t("login.password_label")}
+              aria-label={"Password"}
               autoComplete="current-password"
             />
             {errors.password && (
@@ -293,9 +295,9 @@ const UserLogin = () => {
             variants={buttonVariants}
             whileHover={isLoading ? {} : "hover"}
             whileTap={isLoading ? {} : "tap"}
-            aria-label={t("login.submit_label")}
+            aria-label={"Submit login"}
           >
-            {isLoading ? t("login.logging_in") : t("login.login_button")}
+            {isLoading ? "Signing in..." : "Sign In"}
           </motion.button>
         </form>
       </motion.div>

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaChartLine } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next';
 import { marketSymbols, generateChartData } from '../utils/chartUtils';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
 import AnimatedChart from './AnimatedChart';
 
 const MarketOverview = () => {
-  const { t } = useTranslation();
+  // removed react-i18next for this component per request
   // ...existing code...
   const [marketData, setMarketData] = useState(
     marketSymbols.map((symbol) => ({
@@ -46,7 +45,7 @@ const MarketOverview = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
           variants={itemVariants}
         >
-          {t('home.marketOverview.heading')}
+          Market Overview
         </motion.h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
           {marketData.map((item, index) => (

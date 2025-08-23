@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Trans } from '../../i18nShim';
 import { db } from '../../firebase';
 import { ref, onValue, off, remove } from 'firebase/database';
 import { motion } from 'framer-motion';
@@ -137,7 +138,7 @@ const PopupSubmissions = () => {
       className="bg-gray-800/50 p-6 rounded-lg shadow-lg"
     >
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-white">Popup Form Submissions</h1>
+        <h1 className="text-2xl font-bold text-white"><Trans i18nKey="pages.admin_PopupSubmissions.popup-form-submissions"><Trans i18nKey="pages.admin_PopupSubmissions.popup-form-submissions-1">Popup Form Submissions</Trans></Trans></h1>
         <motion.button
           onClick={handleExportCSV}
           className="bg-green-500/80 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-600/90 transition-colors"
@@ -145,14 +146,14 @@ const PopupSubmissions = () => {
           whileTap={{ scale: 0.95 }}
         >
           <FiDownload />
-          <span>Export CSV</span>
+          <span><Trans i18nKey="pages.admin_PopupSubmissions.export-csv">Export CSV</Trans></span>
         </motion.button>
       </div>
       <div className="mb-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search submissions..." />
       </div>
       {filteredSubmissions.length === 0 ? (
-        <p className="text-gray-400">No submissions yet.</p>
+        <p className="text-gray-400"><Trans i18nKey="pages.admin_PopupSubmissions.no-submissions-yet"><Trans i18nKey="pages.admin_PopupSubmissions.no-submissions-yet-1">No submissions yet.</Trans></Trans></p>
       ) : (
         <>
           <div className="overflow-x-auto">
@@ -164,12 +165,12 @@ const PopupSubmissions = () => {
                       Timestamp {sortOrder === 'desc' ? '↓' : '↑'}
                     </button>
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Mobile</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">City</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Experience</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Newsletter</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.name">Name</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.mobile">Mobile</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.city">City</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.experience">Experience</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.newsletter">Newsletter</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.actions">Actions</Trans></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700">

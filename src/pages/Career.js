@@ -1,5 +1,6 @@
 // src/pages/Career.js
 import React, { useState } from 'react';
+import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { FaBriefcase, FaUpload, FaBuilding, FaChartLine } from 'react-icons/fa';
 
@@ -158,20 +159,14 @@ const Career = () => {
     >
       {/* Header Section */}
       <motion.div className="text-center mb-12" variants={itemVariants}>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-          Career Opportunities
-        </h1>
-        <p className="text-lg text-white max-w-2xl mx-auto">
-          Join <span className="font-semibold text-blue-300">Wise Global Research</span> and build a rewarding career in India’s financial markets.
-        </p>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4"><Trans i18nKey="pages.Career.career-opportunities">Career Opportunities</Trans></h1>
+        <p className="text-lg text-white max-w-2xl mx-auto"><Trans i18nKey="pages.Career.join">Join</Trans><span className="font-semibold text-blue-300"><Trans i18nKey="pages.Career.wise-global-research">Wise Global Research</Trans></span><Trans i18nKey="pages.Career.and-build-a-rewarding-career-in-india-s-"><Trans i18nKey="pages.Career.and-build-a-rewarding-career-in-india-s--1">and build a rewarding career in India’s financial markets.</Trans></Trans></p>
       </motion.div>
 
       {/* Introduction Section */}
       <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
-        <h2 className="text-3xl font-bold text-white mb-4">Wise Global Research as a Career</h2>
-        <p className="text-white text-lg leading-7 mb-6">
-          Wise Global Research is not just a Research Analyst company but a vibrant place to grow your career in finance. We value innovation, professionalism, and teamwork, and we’re committed to providing our employees with the resources to succeed.
-        </p>
+        <h2 className="text-3xl font-bold text-white mb-4"><Trans i18nKey="pages.Career.wise-global-research-as-a-career"><Trans i18nKey="pages.Career.wise-global-research-as-a-career-1">Wise Global Research as a Career</Trans></Trans></h2>
+        <p className="text-white text-lg leading-7 mb-6"><Trans i18nKey="pages.Career.wise-global-research-is-not-just-a-resea"><Trans i18nKey="pages.Career.wise-global-research-is-not-just-a-resea-1">Wise Global Research is not just a Research Analyst company but a vibrant place to grow your career in finance. We value innovation, professionalism, and teamwork, and we’re committed to providing our employees with the resources to succeed.</Trans></Trans></p>
         <img
           src={careerImage}
           alt="Wise Global Research Career"
@@ -182,7 +177,7 @@ const Career = () => {
 
       {/* Current Openings Section */}
       <motion.div className="mb-12" variants={containerVariants}>
-        <h2 className="text-3xl font-bold text-white mb-6 text-center">Current Openings</h2>
+        <h2 className="text-3xl font-bold text-white mb-6 text-center"><Trans i18nKey="pages.Career.current-openings">Current Openings</Trans></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {jobOpenings.map((job) => (
             <motion.div
@@ -198,7 +193,7 @@ const Career = () => {
               <h3 className="text-xl font-semibold text-white mb-2">{job.title}</h3>
               <p className="text-white mb-2">{job.location}</p>
               <p className="text-white mb-4">{job.description}</p>
-              <h4 className="text-lg font-semibold text-white mb-2">Requirements:</h4>
+              <h4 className="text-lg font-semibold text-white mb-2"><Trans i18nKey="pages.Career.requirements">Requirements:</Trans></h4>
               <ul className="list-disc pl-6 text-white space-y-1">
                 {job.requirements.map((req, index) => (
                   <li key={index}>{req}</li>
@@ -211,12 +206,10 @@ const Career = () => {
 
       {/* Application Form Section */}
       <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
-        <h2 className="text-3xl font-bold text-white mb-6 text-center">Apply Now</h2>
+        <h2 className="text-3xl font-bold text-white mb-6 text-center"><Trans i18nKey="pages.Career.apply-now">Apply Now</Trans></h2>
         <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
           <div>
-            <label htmlFor="name" className="block text-white font-semibold mb-2">
-              Your Name
-            </label>
+            <label htmlFor="name" className="block text-white font-semibold mb-2"><Trans i18nKey="pages.Career.your-name">Your Name</Trans></label>
             <input
               type="text"
               id="name"
@@ -229,9 +222,7 @@ const Career = () => {
             {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
           </div>
           <div>
-            <label htmlFor="email" className="block text-white font-semibold mb-2">
-              Your Email
-            </label>
+            <label htmlFor="email" className="block text-white font-semibold mb-2"><Trans i18nKey="pages.Career.your-email">Your Email</Trans></label>
             <input
               type="email"
               id="email"
@@ -244,9 +235,7 @@ const Career = () => {
             {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
           </div>
           <div>
-            <label htmlFor="phone" className="block text-white font-semibold mb-2">
-              Phone Number
-            </label>
+            <label htmlFor="phone" className="block text-white font-semibold mb-2"><Trans i18nKey="pages.Career.phone-number">Phone Number</Trans></label>
             <input
               type="text"
               id="phone"
@@ -259,9 +248,7 @@ const Career = () => {
             {errors.phone && <p className="text-red-400 text-sm mt-1">{errors.phone}</p>}
           </div>
           <div>
-            <label htmlFor="resume" className="block text-white font-semibold mb-2">
-              Upload Your Resume
-            </label>
+            <label htmlFor="resume" className="block text-white font-semibold mb-2"><Trans i18nKey="pages.Career.upload-your-resume">Upload Your Resume</Trans></label>
             <div className="flex items-center">
               <input
                 type="file"
@@ -275,16 +262,13 @@ const Career = () => {
                 htmlFor="resume"
                 className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600"
               >
-                <FaUpload className="mr-2" /> Choose File
-              </label>
+                <FaUpload className="mr-2" /><Trans i18nKey="pages.Career.choose-file">Choose File</Trans></label>
               <span className="ml-4 text-white">{fileName}</span>
             </div>
             {errors.resume && <p className="text-red-400 text-sm mt-1">{errors.resume}</p>}
           </div>
           <div>
-            <label htmlFor="whyHire" className="block text-white font-semibold mb-2">
-              Why Should We Hire You?
-            </label>
+            <label htmlFor="whyHire" className="block text-white font-semibold mb-2"><Trans i18nKey="pages.Career.why-should-we-hire-you">Why Should We Hire You?</Trans></label>
             <textarea
               id="whyHire"
               name="whyHire"
@@ -299,9 +283,7 @@ const Career = () => {
           <button
             type="submit"
             className="w-full bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition"
-          >
-            Submit Application
-          </button>
+          ><Trans i18nKey="pages.Career.submit-application">Submit Application</Trans></button>
         </form>
       </motion.div>
 
@@ -311,16 +293,12 @@ const Career = () => {
         variants={itemVariants}
         style={{ transformStyle: 'preserve-3d' }}
       >
-        <h2 className="text-3xl font-bold text-white mb-4">Join Our Team</h2>
-        <p className="text-white max-w-2xl mx-auto mb-6">
-          Ready to make an impact in India’s financial markets? Contact our HR team to learn more about career opportunities at Wise Global Research.
-        </p>
+        <h2 className="text-3xl font-bold text-white mb-4"><Trans i18nKey="pages.Career.join-our-team">Join Our Team</Trans></h2>
+        <p className="text-white max-w-2xl mx-auto mb-6"><Trans i18nKey="pages.Career.ready-to-make-an-impact-in-india-s-finan"><Trans i18nKey="pages.Career.ready-to-make-an-impact-in-india-s-finan-1">Ready to make an impact in India’s financial markets? Contact our HR team to learn more about career opportunities at Wise Global Research.</Trans></Trans></p>
         <a
           href="/contact"
           className="inline-block bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition"
-        >
-          Contact Us
-        </a>
+        ><Trans i18nKey="pages.Career.contact-us">Contact Us</Trans></a>
       </motion.div>
 
       {/* Disclaimer */}
@@ -329,8 +307,7 @@ const Career = () => {
         className="text-center p-4 bg-white/30 text-white rounded-lg"
       >
         <p>
-          <strong>Disclaimer:</strong> Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global Research is not responsible for any profit or loss that may occur.
-        </p>
+          <strong><Trans i18nKey="pages.Career.disclaimer">Disclaimer:</Trans></strong><Trans i18nKey="pages.Career.investments-in-the-securities-market-are"><Trans i18nKey="pages.Career.investments-in-the-securities-market-are-1">Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global Research is not responsible for any profit or loss that may occur.</Trans></Trans></p>
       </motion.div>
     </motion.div>
   );
