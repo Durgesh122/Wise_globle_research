@@ -89,19 +89,19 @@ function Footer() {
 
       <footer
         style={{ background, color: textColor }}
-        className="relative z-30 transition-all duration-1000 pt-8 pb-4 px-4 mx-2 my-2 border-4 border-[#64ed37] rounded-xl shadow-xl"
+        className="relative z-30 transition-all duration-1000 pt-8 pb-4 px-4 mx-2 my-2 border-4 border-[#64ed37] rounded-xl shadow-xl overflow-x-hidden"
       >
   {/* Language selector removed — app uses static English text */}
-        <div className="md:max-h-[calc(100vh-200px)] custom-scrollbar px-2 sm:px-0">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 text-sm">
+        <div className="custom-scrollbar px-2 sm:px-0">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-sm">
             {/* 🌟 Logo Section */}
             <div className="text-center md:text-left">
-              <div className="relative inline-block w-32 h-32 sm:w-40 sm:h-40 mx-auto md:mx-0">
-                <div className="relative z-10 rounded-full border-4 shadow-xl transition duration-700" style={{ borderColor: '#4efc03' }}>
-                  <img src={wiseLogo} alt="Wise Global Logo" className="w-full h-full object-contain rounded-full" />
+              <div className="relative inline-block w-24 h-24 sm:w-32 sm:h-32 mx-auto md:mx-0">
+                <div className="relative z-10 rounded-full border-4 shadow-xl transition duration-700 bg-white p-1" style={{ borderColor: '#4efc03' }}>
+                  <img src={wiseLogo} alt="Wise Global Logo" className="w-full h-full object-contain rounded-full bg-white" />
                 </div>
               </div>
-              <p className="mt-4 text-sm" style={{ color: textColor }}>
+              <p className="mt-3 text-sm break-words" style={{ color: textColor }}>
                 Wise Global Research Services — market research, analytics, and investment insights.
               </p>
               <div className="flex gap-4 justify-center md:justify-start mt-4">
@@ -172,15 +172,15 @@ function Footer() {
             <div>
               <h3 className="text-lg font-semibold mb-3" style={{ color: textColor }}>Registration Details</h3>
               <ul className="space-y-1 text-sm">
-                <li><strong>Registered Name:</strong> WISE GLOBAL RESEARCH SERVICES PRIVATE LIMITED</li>
-                <li><strong>Principal Officer:</strong> Hemraj Singh Sikarwar</li>
+                <li className="break-words"><strong>Registered Name:</strong> WISE GLOBAL RESEARCH SERVICES PRIVATE LIMITED</li>
+                <li className="break-words"><strong>Principal Officer/Compliance Officer:</strong> Hemraj Singh Sikarwar</li>
                 <li><strong>GST No:</strong> 23AADCW7173Q1ZO</li>
                 <li><strong>CIN Number:</strong> U66190MP2024PTC069199</li>
                 <li><strong>Type of Registration:</strong> Non – Individual</li>
                 <li><strong>SEBI Registration No:</strong> INH000016719</li>
                 <li><strong>BSE Enlistment No:</strong> 6205</li>
-                <li><strong>Validity:</strong> 24-June-2024 to Perpetual</li>
-                <li><strong>SEBI Office Details:</strong> Securities and Exchange Board of India, SEBI Bhavan. Plot No. C4-A, ‘G’ Block, Bandra-Kurla Complex, Bandra (E), Mumbai – 400051.</li>
+                <li className="break-words"><strong>Validity:</strong> 24-June-2024 to Perpetual</li>
+                <li className="break-words"><strong>SEBI Office Details:</strong> Securities and Exchange Board of India, SEBI Bhavan. Plot No. C4-A, ‘G’ Block, Bandra-Kurla Complex, Bandra (E), Mumbai – 400051.</li>
                 <li><strong>Toll Free:</strong> 1800 22 7575</li>
               </ul>
             </div>
@@ -192,9 +192,9 @@ function Footer() {
             <div className="space-y-2">
               <h3 className="font-semibold">Quick Contact</h3>
               <p><strong>WISE GLOBAL RESEARCH SERVICES PRIVATE LIMITED</strong></p>
-              <p><FaEnvelope className="inline mr-2 text-yellow-400" /> support@wiseglobalresearch.com</p>
+              <p className="break-words"><FaEnvelope className="inline mr-2 text-yellow-400" /> support@wiseglobalresearch.com</p>
               <p><FaPhone className="inline mr-2 text-yellow-400" /> +91 9977909494</p>
-              <p><FaMapMarkerAlt className="inline mr-2 text-yellow-400 align-baseline" /> Registered Office Address: 18 AB Road, Onam Plaza, Office No 602, Old Palasiya, Indore Tukoganj, Indore, Madhya Pradesh, 452001</p>
+              <p className="break-words"><FaMapMarkerAlt className="inline mr-2 text-yellow-400 align-baseline" /> Registered Office Address: 18 AB Road, Onam Plaza, Office No 602, Old Palasiya, Indore Tukoganj, Indore, Madhya Pradesh, 452001</p>
             </div>
 
             <div className="space-y-2">
@@ -217,13 +217,13 @@ function Footer() {
       </footer>
 
       {/* Alert Marquee */}
-      <div className="w-full py-2 border-t border-yellow-400 overflow-hidden" style={{ backgroundColor: '#2eed1c' }}>
-        <div className="whitespace-nowrap animate-scroll text-sm">
-          <p className="inline-block text-black font-medium">कृपया ध्यान दें प्रिय ग्राहक, आपके भुगतान स्वीकार किए जाएंगे अगर आप Wise Global Research वेबसाइट पर दी गई खाता जानकारी का उपयोग करेंगे। हम केवल Wise Global Research के अलावा किसी अन्य खातों में कोई भुगतान स्वीकार नहीं करते। Wise Global Research केवल अपने खाते में प्राप्त होने वाली राशियों के लिए सेवाएं प्रदान करने के लिए जिम्मेदार होगा। Pay close attention—Dear Client, your payments will be accepted if you use the account information listed on the Wise Global Research website. We do not accept any payment in any other accounts besides Wise Global Research. Wise Global Research will only be liable to provide services for the amounts received in its account.</p>
+      <div className="w-full h-8 border-t border-yellow-400 overflow-hidden" style={{ backgroundColor: '#2eed1c' }}>
+        <div className="whitespace-nowrap animate-scroll text-sm flex items-center h-full">
+          <p className="inline-block text-black font-medium px-4">कृपया ध्यान दें प्रिय ग्राहक, आपके भुगतान स्वीकार किए जाएंगे अगर आप Wise Global Research वेबसाइट पर दी गई खाता जानकारी का उपयोग करेंगे। हम केवल Wise Global Research के अलावा किसी अन्य खातों में कोई भुगतान स्वीकार नहीं करते। Wise Global Research केवल अपने खाते में प्राप्त होने वाली राशियों के लिए सेवाएं प्रदान करने के लिए जिम्मेदार होगा। Pay close attention—Dear Client, your payments will be accepted if you use the account information listed on the Wise Global Research website. We do not accept any payment in any other accounts besides Wise Global Research. Wise Global Research will only be liable to provide services for the amounts received in its account.</p>
         </div>
       </div>
 
-      <div className="bg-black text-white text-center text-xs py-2">
+      <div className="bg-black text-white text-center text-xs py-2 px-2 break-words">
         Copyright 2024, Wise Global Research. All Rights Reserved &nbsp;|&nbsp; Powered by <a href="https://mrxads.com" target="_blank" rel="noopener noreferrer" className="text-yellow-400 underline">MRXADS</a>
       </div>
 

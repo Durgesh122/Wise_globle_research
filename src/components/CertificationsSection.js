@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 // Using static layout and Footer-style logo styling (no framer-motion)
 
 const images = [
@@ -35,15 +36,21 @@ const CertificationsSection = () => {
             const L = localized[idx] || {};
             const resolvedSrc = img && (img.src && (img.src.default || img.src));
             return (
-              <div
+              <motion.div
                 key={idx}
-                className="group cursor-pointer flex-none min-w-[160px] sm:min-w-[180px] p-3 flex flex-col items-center snap-center focus:outline-none"
+                className="cursor-pointer flex-none min-w-[160px] sm:min-w-[180px] p-3 flex flex-col items-center snap-center focus:outline-none"
                 tabIndex={0}
+                initial={{ y: 0 }}
+                whileHover={{ y: -6, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: 'spring', stiffness: 280, damping: 22 }}
               >
                 <div className="relative inline-block w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto rounded-full p-1">
-                  <div
+                  <motion.div
                     className="relative z-10 rounded-full border-4 shadow-xl transition-transform duration-300 transform flex items-center justify-center bg-white/30"
                     style={{ borderColor: '#4efc03', minHeight: '100%' }}
+                    whileHover={{ scale: 1.06, rotate: 3 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                   >
                     {resolvedSrc ? (
                       <img
@@ -63,7 +70,7 @@ const CertificationsSection = () => {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xs text-white/90 rounded-full">{L.name || 'logo'}</div>
                     )}
-                  </div>
+                  </motion.div>
                 </div>
 
                 <div className="mt-3 text-center">
@@ -74,7 +81,7 @@ const CertificationsSection = () => {
                 <div className="mt-2 sm:hidden px-2">
                   <div className="text-center text-xs text-gray-300">{L.about || ''}</div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

@@ -12,6 +12,7 @@ import EconomicCalendar from '../components/EconomicCalendar';
 import MarketInsights from '../components/MarketInsights';
 import MethodologySection from '../components/MethodologySection';
 import TeamSection from '../components/TeamSection';
+import TradingViewTicker from './TradingViewTicker';
 
 // ...TestimonialsSection removed from home page
 // import SubscriptionPlans from '../components/SubscriptionPlans';
@@ -71,6 +72,7 @@ const Home = () => {
       >
   {showPopup && <PopupForm onClose={() => setShowPopup(false)} />}
         <AlertBar />
+       <TradingViewTicker />
         <HeroSection />
         <WhyChooseUs />
         <MarketOverview />

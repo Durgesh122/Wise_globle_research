@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "wiseglobalresearch-services"
+    "default": "wiseglobalresearch-services",
+    "y": "wiseglobalresearch-services"
   },
   "targets": {},
   "etags": {}

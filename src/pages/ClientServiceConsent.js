@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import { Trans } from '../i18nShim';
-import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import {
   FaUser, FaUserTie, FaIdCard, FaEnvelope, FaCalendarAlt,
-  FaAddressCard, FaRegAddressCard, FaArrowRight, FaUpload, FaFilePdf, FaFileImage, FaTimesCircle
+  FaAddressCard, FaRegAddressCard, FaArrowRight
 } from 'react-icons/fa';
-import { ref, push, set } from 'firebase/database';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'; // Added for Storage
-import { toast } from 'react-toastify';
-import { db, storage } from '../firebase'; // Import storage
 import { Link } from 'react-router-dom';
 
 // Animation variants for container and items
@@ -33,139 +28,64 @@ const itemVariants = {
 };
 
 const ClientServiceConsent = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
+  const [formData, setFormData] = useState({
+    clientName: '',
+    clientId: '',
+    fatherName: '',
+    email: '',
+    dob: '',
+    pan: '',
+    aadhaar: '',
+    address: ''
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [panFile, setPanFile] = useState(null);
-  const [aadhaarFile, setAadhaarFile] = useState(null);
-  const [signatureFile, setSignatureFile] = useState(null);
+  const [message, setMessage] = useState({ type: '', text: '' });
+  // no file fields: only form inputs
 
-  // Handle file upload to Firebase Storage and get download URL
-  const uploadFileToStorage = async (file, path) => {
-    if (!file) return null;
-    const fileRef = storageRef(storage, path);
-    await uploadBytes(fileRef, file);
-    return await getDownloadURL(fileRef);
+  // No file uploads — form only
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submission
-  const onSubmit = async (data) => {
+  // Handle form submission (posts to local server like the provided ClientForm.jsx)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setIsSubmitting(true);
+    setMessage({ type: '', text: '' });
+
     try {
-      // Upload files to Firebase Storage
-      const timestamp = Date.now();
-      const [panUrl, aadhaarUrl, signatureUrl] = await Promise.all([
-        uploadFileToStorage(panFile, `clientServiceConsent/pan/${timestamp}_${panFile?.name || 'pan'}`),
-        uploadFileToStorage(aadhaarFile, `clientServiceConsent/aadhaar/${timestamp}_${aadhaarFile?.name || 'aadhaar'}`),
-        uploadFileToStorage(signatureFile, `clientServiceConsent/signature/${timestamp}_${signatureFile?.name || 'signature'}`),
-      ]);
+      const response = await fetch('http://localhost:3001/api/submit-client-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
 
-      // Prepare submission payload
-      const submissionData = {
-        ...data,
-        panUrl: panUrl || null,
-        aadhaarUrl: aadhaarUrl || null,
-        signatureUrl: signatureUrl || null,
-        timestamp,
-      };
+      const data = await response.json();
 
-      // Save to Firebase Realtime Database
-      const newRef = push(ref(db, 'clientServiceConsentForms'));
-      await set(newRef, submissionData);
-      // After saving locally, attempt to create sign request via (server-side) Digio proxy
-      // Note: do NOT put API keys in frontend. Configure REACT_APP_DIGIO_PROXY_URL to point to
-      // a backend endpoint that performs the actual call to Digio with your credentials.
-      const digioPayload = createDigioPayload(submissionData);
-      try {
-        const digioResp = await sendDigioRequest(digioPayload);
-        // digioResp is expected to be an object parsed from JSON by the proxy
-        if (digioResp && digioResp.success) {
-          toast.success('Form submitted and sign request sent. Please check your email.');
-        } else {
-          // If proxy returns success:false, show returned message if any
-          const msg = digioResp && digioResp.message ? digioResp.message : 'Sign request could not be created';
-          toast.warn(msg);
-        }
-      } catch (e) {
-        // Proxy failed — log and show a clearer message so developer/user can debug
-        console.error('Digio request failed', e);
-        const msg = (e && e.message) ? e.message : 'Unknown error while sending sign request';
-        // Show message but avoid exposing sensitive headers/credentials
-        toast.error(`Sign request failed: ${msg}`);
-        // Optional: keep a friendly message as well
-        console.info('If this persists, check your Digio proxy server, DIGIO credentials, and network/CORS settings.');
+      if (data.success) {
+        setMessage({ type: 'success', text: '✅ Please check your mail. Redirecting...' });
+        setTimeout(() => {
+          window.location.href = 'https://wiseglobalresearch.com/client-service-consent-form/';
+        }, 2000);
+      } else {
+        const errorCode = data.error && data.error.code ? data.error.code : 'UNKNOWN_ERROR';
+        const errorMessage = data.error && data.error.message ? data.error.message : 'An unknown error occurred.';
+        const errorDetails = data.error && data.error.details ? `Details: ${data.error.details}` : '';
+        setMessage({ type: 'error', text: `❌ Error Code: ${errorCode}. Message: ${errorMessage} ${errorDetails}` });
       }
-
-      // Reset form and files
-      toast.success('Form submitted successfully!');
-      reset();
-      setPanFile(null);
-      setAadhaarFile(null);
-      setSignatureFile(null);
     } catch (err) {
-      console.error('Submission error:', err);
-      toast.error('Submission failed: ' + err.message);
+      setMessage({ type: 'error', text: `❌ Network error: ${err.message}. कृपया सुनिश्चित करें कि server चल रहा है।` });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   // Build Digio-compatible payload from form data. Matches PHP example structure.
-  const createDigioPayload = (submissionData) => {
-    const templateKey = process.env.REACT_APP_DIGIO_TEMPLATE_KEY || 'TMP250409085749067X19LUJRRQRYTGK';
-    return {
-      signers: [
-        {
-          identifier: submissionData.email,
-          name: submissionData.clientName,
-          sign_type: 'aadhaar',
-        },
-      ],
-      expire_in_days: 10,
-      send_sign_link: true,
-      notify_signers: true,
-      will_self_sign: false,
-      display_on_page: 'custom',
-      file_name: `${submissionData.clientName || 'document'}.pdf`,
-      templates: [
-        {
-          template_key: templateKey,
-          template_values: {
-            'client full name': submissionData.clientName || '',
-            clientId: submissionData.clientId || 'NA',
-            address: submissionData.address || '',
-            dob: submissionData.dob || '',
-            pan: submissionData.pan || '',
-            email: submissionData.email || '',
-          },
-        },
-      ],
-    };
-  };
-
-  // Send payload to a server-side proxy which will call Digio API with proper auth.
-  // Configure the proxy URL with REACT_APP_DIGIO_PROXY_URL. Default: '/api/digio'.
-  const sendDigioRequest = async (payload) => {
-  const proxyUrl = process.env.REACT_APP_DIGIO_PROXY_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3001/api/digio' : '/api/digio');
-    const resp = await fetch(proxyUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
-    if (!resp.ok) {
-      const text = await resp.text();
-      throw new Error(`Proxy request failed: ${resp.status} ${text}`);
-    }
-    return await resp.json();
-  };
-
-  // Render input field with icon
-  const renderInput = (id, label, icon, type = 'text', validation, note) => (
+  // Render input field with icon (binds to formData and handleChange)
+  const renderInput = (id, label, icon, type = 'text', attrs = {}, note) => (
     <motion.div variants={itemVariants} className="w-full">
       <label htmlFor={id} className="block text-sm font-medium text-white mb-2">
         {label}
@@ -176,92 +96,20 @@ const ClientServiceConsent = () => {
         </span>
         <input
           id={id}
+          name={id}
           type={type}
-          {...register(id, validation)}
-          placeholder={`Enter your ${label.replace('*', '').toLowerCase()}`}
-          className={`w-full pl-11 pr-4 py-3 rounded-lg border custom-box-bg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ${
-            errors[id] ? 'border-red-500 ring-red-500/50' : 'border-gray-300/50'
-          }`}
+          value={formData[id] || ''}
+          onChange={handleChange}
+          placeholder={attrs.placeholder || `Enter your ${label.replace('*', '').toLowerCase()}`}
+          className={`w-full pl-11 pr-4 py-3 rounded-lg border custom-box-bg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
+          {...attrs}
         />
       </div>
       {note && <p className="text-xs text-gray-400 mt-1">{note}</p>}
-      {errors[id] && (
-        <p className="text-red-400 text-xs mt-1">{errors[id].message}</p>
-      )}
     </motion.div>
   );
 
-  // Render file input with preview and remove option
-  const renderFileInput = (id, label, icon, setFile, file, accept) => (
-    <motion.div variants={itemVariants} className="w-full">
-      <label htmlFor={id} className="block text-sm font-medium text-white mb-2">
-        {label}
-      </label>
-      <div
-        className={`relative border-2 border-dashed rounded-lg p-4 text-center transition-all duration-300 ${
-          errors[id] ? 'border-red-500' : 'border-gray-300/50 hover:border-blue-500'
-        } ${isSubmitting ? 'opacity-50' : ''}`}
-      >
-        <input
-          id={id}
-          type="file"
-          accept={accept}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          {...register(id, {
-            validate: {
-              fileSize: (fileList) => !fileList?.[0] || fileList[0].size <= 10_000_000 || 'File size must be less than 10MB',
-              fileType: (fileList) => {
-                if (!fileList?.[0]) return true;
-                const validTypes = accept.split(',').map((type) => type.trim());
-                return (
-                  validTypes.some((type) => fileList[0].type.includes(type)) ||
-                  'Invalid file type. Accepted: PDF, JPG, PNG'
-                );
-              },
-            },
-          })}
-          onChange={(e) => {
-            if (e.target.files && e.target.files[0]) {
-              setFile(e.target.files[0]);
-            }
-          }}
-          disabled={isSubmitting}
-        />
-        {!file ? (
-          <div className="flex flex-col items-center justify-center text-white/70">
-            {icon}
-            <p className="mt-2 text-sm"><Trans i18nKey="pages.ClientServiceConsent.click-or-drag-file-to-upload"><Trans i18nKey="pages.ClientServiceConsent.click-or-drag-file-to-upload-1">Click or drag file to upload</Trans></Trans></p>
-            <p className="text-xs text-gray-400 mt-1"><Trans i18nKey="pages.ClientServiceConsent.pdf-jpg-png-max-10mb"><Trans i18nKey="pages.ClientServiceConsent.pdf-jpg-png-max-10mb-1">PDF, JPG, PNG (Max 10MB)</Trans></Trans></p>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between text-white">
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              {file.type.includes('pdf') ? (
-                <FaFilePdf className="text-red-400 text-2xl" />
-              ) : (
-                <FaFileImage className="text-blue-400 text-2xl" />
-              )}
-              <span className="text-sm font-medium truncate overflow-hidden">
-                {file.name}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setFile(null)}
-              className="text-red-500 hover:text-red-400 transition-colors ml-2 flex-shrink-0"
-              aria-label="Remove file"
-              disabled={isSubmitting}
-            >
-              <FaTimesCircle size={20} />
-            </button>
-          </div>
-        )}
-      </div>
-      {errors[id] && (
-        <p className="text-red-400 text-xs mt-1">{errors[id].message}</p>
-      )}
-    </motion.div>
-  );
+  // no file inputs required anymore
 
   return (
     <div className="py-12">
@@ -283,10 +131,10 @@ const ClientServiceConsent = () => {
         >
           <div className="text-center mb-8">
             <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent-1">Client Service Consent</Trans></Trans></h2>
-            <p className="mt-2 text-gray-300"><Trans i18nKey="pages.ClientServiceConsent.please-fill-out-the-form-below-and-uploa"><Trans i18nKey="pages.ClientServiceConsent.please-fill-out-the-form-below-and-uploa-1">Please fill out the form below and upload required documents.</Trans></Trans></p>
+            <p className="mt-2 text-gray-300">Please fill out the form below.</p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
             <motion.div
               variants={containerVariants}
               className="p-6 rounded-lg bg-white/5 border border-white/10"
@@ -297,100 +145,51 @@ const ClientServiceConsent = () => {
                   'clientName',
                   'Client Name*',
                   <FaUser />,
-                  'text',
-                  {
-                    required: 'Client name is required',
-                    minLength: {
-                      value: 2,
-                      message: 'Client name must be at least 2 characters',
-                    },
-                  }
+      'text',
+      { required: true, placeholder: 'Enter Name' }
                 )}
                 {renderInput(
                   'fatherName',
                   "Father's Name*",
                   <FaUserTie />,
-                  'text',
-                  {
-                    required: "Father's name is required",
-                    minLength: {
-                      value: 2,
-                      message: "Father's name must be at least 2 characters",
-                    },
-                  }
+      'text',
+      { required: true, placeholder: "Enter Father's Name" }
                 )}
                 {renderInput(
                   'clientId',
                   'Client ID*',
                   <FaIdCard />,
-                  'text',
-                  {
-                    required: 'Client ID is required',
-                    pattern: {
-                      value: /^[A-Za-z0-9]{4,}$/,
-                      message: 'Client ID must be alphanumeric and at least 4 characters',
-                    },
-                  },
-                  'Ask your representative for the client ID.'
+      'text',
+      { maxLength: 50, placeholder: 'Enter Client Id' },
+      'Ask your representative for the client ID.'
                 )}
                 {renderInput(
                   'email',
                   'Email ID*',
                   <FaEnvelope />,
-                  'email',
-                  {
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Invalid email address',
-                    },
-                  }
+      'email',
+      { required: true, placeholder: 'Enter Email' }
                 )}
                 {renderInput(
                   'dob',
                   'Date Of Birth*',
                   <FaCalendarAlt />,
-                  'date',
-                  {
-                    required: 'Date of birth is required',
-                    validate: {
-                      pastDate: (value) => {
-                        const today = new Date();
-                        const inputDate = new Date(value);
-                        return inputDate < today || 'Date of birth must be in the past';
-                      },
-                    },
-                  }
+      'text',
+      { required: true, placeholder: '31-12-2000' }
                 )}
                 {renderInput(
                   'pan',
                   'PAN*',
                   <FaAddressCard />,
-                  'text',
-                  {
-                    required: 'PAN is required',
-                    pattern: {
-                      value: /[A-Z]{5}[0-9]{4}[A-Z]{1}/,
-                      message: 'Invalid PAN format',
-                    },
-                    minLength: { value: 10, message: 'PAN must be 10 characters' },
-                    maxLength: { value: 10, message: 'PAN must be 10 characters' },
-                  }
+      'text',
+      { required: true, maxLength: 10, placeholder: 'Enter PAN' }
                 )}
                 {renderInput(
                   'aadhaar',
                   'Aadhaar*',
                   <FaRegAddressCard />,
-                  'text',
-                  {
-                    required: 'Aadhaar is required',
-                    pattern: {
-                      value: /^[2-9]{1}[0-9]{3}[0-9]{4}[0-9]{4}$/,
-                      message: 'Invalid Aadhaar format',
-                    },
-                    minLength: { value: 12, message: 'Aadhaar must be 12 digits' },
-                    maxLength: { value: 12, message: 'Aadhaar must be 12 digits' },
-                  }
+      'text',
+      { required: true, maxLength: 12, placeholder: 'Enter Aadhaar' }
                 )}
               </div>
             </motion.div>
@@ -399,34 +198,6 @@ const ClientServiceConsent = () => {
               variants={containerVariants}
               className="p-6 rounded-lg bg-white/5 border border-white/10"
             >
-              <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2 mb-6"><Trans i18nKey="pages.ClientServiceConsent.document-uploads">Document Uploads</Trans></h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {renderFileInput(
-                  'panFile',
-                  'PAN Card Upload (optional)',
-                  <FaUpload size={24} />,
-                  setPanFile,
-                  panFile,
-                  'image/jpeg,image/png,application/pdf'
-                )}
-                {renderFileInput(
-                  'aadhaarFile',
-                  'Aadhaar Card Upload (optional)',
-                  <FaUpload size={24} />,
-                  setAadhaarFile,
-                  aadhaarFile,
-                  'image/jpeg,image/png,application/pdf'
-                )}
-                {renderFileInput(
-                  'signatureFile',
-                  'Signature Upload (optional)',
-                  <FaUpload size={24} />,
-                  setSignatureFile,
-                  signatureFile,
-                  'image/jpeg,image/png,application/pdf'
-                )}
-              </div>
-
               <motion.div variants={itemVariants}>
                 <label
                   htmlFor="address"
@@ -434,26 +205,21 @@ const ClientServiceConsent = () => {
                 ><Trans i18nKey="pages.ClientServiceConsent.address">Address*</Trans></label>
                 <textarea
                   id="address"
-                  {...register('address', {
-                    required: 'Address is required',
-                    minLength: {
-                      value: 10,
-                      message: 'Address must be at least 10 characters',
-                    },
-                  })}
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
                   rows="4"
                   placeholder="Enter Full Address"
-                  className={`w-full px-4 py-3 rounded-lg border custom-box-bg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ${
-                    errors.address ? 'border-red-500' : 'border-gray-300/50'
-                  }`}
+                  className={`w-full px-4 py-3 rounded-lg border custom-box-bg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
                 ></textarea>
-                {errors.address && (
-                  <p className="text-red-400 text-xs mt-1">
-                    {errors.address.message}
-                  </p>
-                )}
               </motion.div>
             </motion.div>
+            {message.text && (
+              <div className={`mb-2 p-3 rounded-lg ${message.type === 'success' ? 'bg-green-600/20 border border-green-400' : 'bg-red-600/10 border border-red-400'} text-sm` }>
+                {message.text}
+                
+              </div>
+            )}
 
             <motion.div variants={itemVariants}>
               <motion.button

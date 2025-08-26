@@ -24,37 +24,63 @@ const MethodologySection = () => {
   const images = [step1, step2, step3];
 
   return (
-    <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
-      <div className="container">
+    <section className="relative py-10 sm:py-14 lg:py-20 px-4 sm:px-6">
+      {/* Decorative blobs behind the section to give a free, airy feel */}
+      <div className="pointer-events-none absolute -left-10 -top-10 opacity-30">
+        <svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g filter="url(#a)">
+            <path d="M56 14C85 2 124-6 156 12c32 18 48 58 34 88-14 30-52 46-90 56-38 10-86 8-106-22C-20 78 27 26 56 14z" fill="#fff" />
+          </g>
+          <defs>
+            <filter id="a" x="-20" y="-20" width="280" height="280" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+              <feGaussianBlur stdDeviation="18" result="blur" />
+            </filter>
+          </defs>
+        </svg>
+      </div>
+
+      <div className="container mx-auto relative z-10">
         <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-4 sm:mb-6"
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           {heading}
         </motion.h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <p className="text-center text-sm sm:text-base text-gray-300 max-w-2xl mx-auto mb-8">
+          A clear, repeatable process — from verified data sources to actionable recommendations.
+          Designed for transparency and reproducibility.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {steps.map((step, idx) => (
             <motion.div
               key={idx}
-              className="bg-white/20 backdrop-blur-lg rounded-xl p-6 shadow-md border-2 border-white/30 flex flex-col items-center text-center"
-              initial={{ opacity: 0, y: 30 }}
+              className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-xl border border-white/6 overflow-hidden transform-gpu"
+              initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * idx, duration: 0.5 }}
-              whileHover={{ scale: 1.05 }}
-              style={{ transformStyle: 'preserve-3d' }}
+              transition={{ delay: 0.08 * idx, duration: 0.5 }}
+              whileHover={{ y: -6 }}
             >
-              <img
-                src={images[idx] || images[0]}
-                alt={step.title || ''}
-                className="w-20 h-20 mb-4 object-contain"
-                decoding="async"
-                loading="lazy"
-                onError={(e) => { e.currentTarget.onerror = null; }}
-              />
-              <h3 className="text-lg sm:text-xl font-bold mb-2">{step.title}</h3>
-              <p className="text-sm sm:text-base text-gray-100">{step.desc}</p>
+              {/* soft circular accent behind the image */}
+              <div className="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-gradient-to-br from-white/6 to-white/2 blur-3xl opacity-60 transform rotate-12"></div>
+
+              <div className="flex flex-col items-center text-center relative z-10">
+                <div className="w-24 h-24 rounded-full bg-white/6 flex items-center justify-center mb-4 shadow-md">
+                  <img
+                    src={images[idx] || images[0]}
+                    alt={step.title || ''}
+                    className="w-12 h-12 object-contain"
+                    decoding="async"
+                    loading="lazy"
+                    onError={(e) => { e.currentTarget.onerror = null; }}
+                  />
+                </div>
+
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-100">{step.title}</h3>
+                <p className="text-sm sm:text-base text-gray-300 max-w-md">{step.desc}</p>
+              </div>
             </motion.div>
           ))}
         </div>

@@ -41,10 +41,6 @@ nav.fixed, nav {
   80% { transform: translateY(-5px); }
 }
 
-.nav-item:hover {
-  animation: bounce 0.6s ease-in-out both;
-  will-change: transform;
-}
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -60,24 +56,25 @@ nav.fixed, nav {
   position: relative;
   padding: 8px 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: none;
   font-weight: 500;
+  box-sizing: border-box; /* ensure borders don't change layout/size */
 }
 
-.nav-item::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  background: var(--primary-green);
-  left: 0;
-  bottom: 0;
-  transition: width 0.4s ease;
-}
+/* Thicker, rounded, gradient underline for nav items. Uses transform for smoother animation. */
+.nav-item::after { display: none; }
 
-.nav-item:hover::after,
-.nav-item:focus::after {
-  width: 100%;
+/* Subtle hover/active background instead of underline */
+.nav-item:hover {
+  background: rgba(56, 189, 93, 0.06); /* very light green tint */
+  border-radius: 8px;
+}
+.nav-item.active {
+  /* Keep a subtle background to indicate active, but remove the green border */
+  background: rgba(56, 189, 93, 0.08);
+  border-radius: 8px;
+  border: none; /* removed per request */
+  box-shadow: none;
 }
 
 /* Logo Animation */
@@ -86,9 +83,27 @@ nav.fixed, nav {
   transition: transform 0.6s ease-in-out;
 }
 
-img.logo-hover {
-  aspect-ratio: 1 / 1; /* Adjust based on logo */
-  object-fit: contain;
+/* Logo wrapper and image: enforce true circle and cover behavior */
+.rotate-logo > div {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  overflow: hidden; /* clip to circle */
+}
+
+.rotate-logo img.logo-hover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ensure the image fills the circle */
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .rotate-logo > div { width: 56px; height: 56px; }
+  .rotate-logo img.logo-hover { width: 100%; height: 100%; }
 }
 
 /* Icon Styles */
@@ -182,6 +197,67 @@ svg {
   .hamburger.open .bar:nth-child(3) {
     transform: rotate(-45deg) translate(7px, -7px);
   }
+
+  /* Ensure all mobile menu text looks uniform */
+  .mobile-menu-items,
+  .mobile-menu-items * {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    color: var(--text-color) !important;
+  }
+
+  .mobile-back-btn {
+    margin-top: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    color: var(--text-color);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .mobile-back-btn:active {
+    transform: translateY(1px);
+  }
+
+  /* Staggered entrance animation for mobile menu children */
+  @keyframes mobileStaggerIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .mobile-stagger > * {
+    opacity: 0;
+    transform: translateY(8px);
+    animation-name: mobileStaggerIn;
+    animation-duration: 360ms;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+
+  /* Provide rising delays for up to 12 immediate children */
+  .mobile-stagger > *:nth-child(1) { animation-delay: 0.03s; }
+  .mobile-stagger > *:nth-child(2) { animation-delay: 0.08s; }
+  .mobile-stagger > *:nth-child(3) { animation-delay: 0.13s; }
+  .mobile-stagger > *:nth-child(4) { animation-delay: 0.18s; }
+  .mobile-stagger > *:nth-child(5) { animation-delay: 0.23s; }
+  .mobile-stagger > *:nth-child(6) { animation-delay: 0.28s; }
+  .mobile-stagger > *:nth-child(7) { animation-delay: 0.33s; }
+  .mobile-stagger > *:nth-child(8) { animation-delay: 0.38s; }
+  .mobile-stagger > *:nth-child(9) { animation-delay: 0.43s; }
+  .mobile-stagger > *:nth-child(10) { animation-delay: 0.48s; }
+  .mobile-stagger > *:nth-child(11) { animation-delay: 0.53s; }
+  .mobile-stagger > *:nth-child(12) { animation-delay: 0.58s; }
+
+  /* Slight hover microinteraction for mobile links */
+  .mobile-menu-items .nav-item { transition: transform 160ms ease, background 180ms ease, color 180ms ease; }
+  .mobile-menu-items .nav-item:active,
+  .mobile-menu-items .nav-item:focus {
+    transform: translateY(-2px);
+  }
 }
 
 /* Tablet Styles */
@@ -221,9 +297,94 @@ svg {
   .hamburger {
     display: none !important;
   }
+
+  /* Keep desktop nav items in a single row; allow horizontal scroll on very small desktops */
+  .desktop-menu {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* A thin scrollable row to guarantee a single-line layout on narrow widths */
+  .nav-scroll {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: visible; /* allow dropdowns to escape the scroll container */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  /* Make each direct child of nav-scroll expand evenly so the navbar uses full width */
+  .desktop-menu {
+    flex: 1 1 auto;
+  }
+
+  .nav-scroll {
+    gap: 0;
+  }
+
+  .nav-scroll > * {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 80px; /* prevent too narrow items */
+  }
+
+  .nav-scroll .nav-item {
+  width: 100%;
+  /* Make all desktop nav buttons uniform: fixed height, centered content */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px; /* uniform button height */
+  padding: 0 12px; /* left/right padding only */
+  text-align: center;
+  white-space: nowrap; /* prevent wrapping which can change height */
+  }
+  .nav-scroll .nav-item {
+    /* Keep button contents tight to text so borders wrap correctly */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px; /* uniform visual height */
+    width: auto; /* allow border to hug text */
+    padding: 0 14px; /* consistent left/right padding */
+    text-align: center;
+    white-space: nowrap; /* prevent wrapping which can change height */
+    box-sizing: border-box;
+  }
+
+  .nav-scroll::-webkit-scrollbar { display: none; }
+
+  /* Slightly tighten nav-item spacing on large screens */
+  .desktop-menu .nav-item {
+    padding: 6px 10px;
+  }
 }
 
 /* Active nav-item underline persistence */
 .nav-item.active::after {
   width: 100%;
+}
+
+/* Ensure dropdown panels escape scroll/overflow parents and sit above content */
+.desktop-menu, .nav-scroll {
+  overflow: visible !important;
+}
+
+.desktop-menu .group > div,
+.nav-scroll .group > div,
+.desktop-menu .group > .absolute,
+.nav-scroll .absolute {
+  position: absolute !important;
+  z-index: 99999 !important;
+  overflow: visible !important;
+  transform: translateZ(0); /* promote to its own layer to avoid clipping in some browsers */
 }

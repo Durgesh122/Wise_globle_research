@@ -5,12 +5,10 @@ import { ref, push } from 'firebase/database';
 import { toast } from 'react-toastify';
 import { db } from '../firebase';
 import { itemVariants } from '../utils/animationVariants';
-import { useTranslation } from '../i18nShim';
 
 const ContactForm = ({ contactFormRef }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [submitting, setSubmitting] = React.useState(false);
-  const { t } = useTranslation();
 
   const onSubmit = async (data) => {
     setSubmitting(true);
@@ -30,12 +28,12 @@ const ContactForm = ({ contactFormRef }) => {
         window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
       }
 
-      toast.success(t('contactForm.successMessage', 'Form submitted successfully! We will contact you soon.'), { position: 'top-center' });
+  toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
       reset();
     } catch (error) {
       console.error('Error submitting form:', error);
-      const errorMessage = error.message ? error.message : String(error);
-      toast.error(`${t('contactForm.errorMessage', 'Failed to submit form')}: ${errorMessage}`, { position: 'top-center' });
+  const errorMessage = error.message ? error.message : String(error);
+  toast.error(`Failed to submit form: ${errorMessage}`, { position: 'top-center' });
     } finally {
       setSubmitting(false);
     }
@@ -56,15 +54,15 @@ const ContactForm = ({ contactFormRef }) => {
           className="text-2xl sm:text-3xl font-bold text-center mb-8"
           variants={itemVariants}
         >
-          {t('contactForm.title', 'Get in Touch')}
+          Get in Touch
         </motion.h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-1 text-white">{t('contactForm.nameLabel', 'Name')}</label>
+            <label className="block text-sm font-medium mb-1 text-white">Name</label>
             <input
               {...register('name', {
-                required: t('contactForm.validation.nameRequired', 'Name is required'),
-                minLength: { value: 2, message: t('contactForm.validation.nameMinLength', 'Name must be at least 2 characters') },
+                required: 'Name is required',
+                minLength: { value: 2, message: 'Name must be at least 2 characters' },
               })}
               type="text"
               className={`w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300/50 custom-box-bg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
@@ -75,13 +73,13 @@ const ContactForm = ({ contactFormRef }) => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">{t('contactForm.emailLabel', 'Email')}</label>
+              <label className="block text-sm font-medium mb-1 text-white">Email</label>
               <input
                 {...register('email', {
-                  required: t('contactForm.validation.emailRequired', 'Email is required'),
+                  required: 'Email is required',
                   pattern: {
                     value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: t('contactForm.validation.emailInvalid', 'Invalid email address'),
+                    message: 'Invalid email address',
                   },
                 })}
                 type="email"
@@ -92,13 +90,13 @@ const ContactForm = ({ contactFormRef }) => {
               {errors.email && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.email.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">{t('contactForm.phoneLabel', 'Phone')}</label>
+              <label className="block text-sm font-medium mb-1 text-white">Phone</label>
               <input
                 {...register('phone', {
-                  required: t('contactForm.validation.phoneRequired', 'Phone number is required'),
+                  required: 'Phone number is required',
                   pattern: {
                     value: /^[6-9][0-9]{9}$/,
-                    message: t('contactForm.validation.phoneInvalid', 'Phone number must be 10 digits starting with 6, 7, 8, or 9'),
+                    message: 'Phone number must be 10 digits starting with 6, 7, 8, or 9',
                   },
                 })}
                 type="tel"
@@ -110,28 +108,26 @@ const ContactForm = ({ contactFormRef }) => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-white">{t('contactForm.interestLabel', 'Area of Interest')}</label>
+            <label className="block text-sm font-medium mb-1 text-white">Area of Interest</label>
             <select
-              {...register('interest', { required: t('contactForm.validation.interestRequired', 'Please select an area of interest') })}
+              {...register('interest', { required: 'Please select an area of interest' })}
               className={`w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300/50 custom-box-bg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.interest ? 'border-red-500' : ''
               }`}
             >
-              <option value="" className="text-black">{t('contactForm.selectOption', 'Select an option')}</option>
-              <option value="equity" className="text-black">{t('contactForm.options.equity', 'Equity Research')}</option>
-              <option value="derivatives" className="text-black">{t('contactForm.options.derivatives', 'Derivatives Strategies')}</option>
-              <option value="technical" className="text-black">{t('contactForm.options.technical', 'Technical Analysis')}</option>
-              <option value="portfolio" className="text-black">{t('contactForm.options.portfolio', 'Portfolio Management')}</option>
-              <option value="learning" className="text-black">{t('contactForm.options.learning', 'Learning Resources')}</option>
+              <option value="" className="text-black">Select an option</option>
+              <option value="equity" className="text-black">Equity</option>
+              <option value="derivatives" className="text-black">Derivatives</option>
+              <option value="commodity" className="text-black">Commodity</option>
             </select>
             {errors.interest && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.interest.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-white">{t('contactForm.messageLabel', 'Message')}</label>
+            <label className="block text-sm font-medium mb-1 text-white">Message</label>
             <textarea
               {...register('message', {
-                required: t('contactForm.validation.messageRequired', 'Message is required'),
-                minLength: { value: 10, message: t('contactForm.validation.messageMinLength', 'Message must be at least 10 characters') },
+                required: 'Message is required',
+                minLength: { value: 10, message: 'Message must be at least 10 characters' },
               })}
               rows={4}
               className={`w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300/50 custom-box-bg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
@@ -149,7 +145,7 @@ const ContactForm = ({ contactFormRef }) => {
             whileHover={{ scale: submitting ? 1 : 1.02, rotateY: submitting ? 0 : 10 }}
             whileTap={{ scale: submitting ? 1 : 0.98 }}
           >
-            {submitting ? t('contactForm.submitting', 'Submitting...') : t('contactForm.submitButton', 'Submit')}
+            {submitting ? 'Submitting...' : 'Submit'}
           </motion.button>
         </form>
       </div>

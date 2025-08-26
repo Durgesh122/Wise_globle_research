@@ -29,6 +29,7 @@ const useMotionLoader = () => {
 };
 
 const sliderImages = [
+  
   { name: 'slide1', original: slide1Img },
   { name: 'slide2', original: slide2Img },
   { name: 'slide4', original: slide4Img },

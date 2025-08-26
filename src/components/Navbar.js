@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 // useTranslation removed from this file to rely on translateWithFallback helper
 import { Link, useLocation } from 'react-router-dom';
-import {
-  FaTimes, FaBuilding, FaBriefcase, FaNewspaper, FaUserShield,
-  FaChartLine, FaCoins, FaGlobe, FaUniversity, FaFileAlt, FaShieldAlt
-} from 'react-icons/fa';
+// Removed react-icons usage per requirement to have no icons in the navbar
 import wiseLogo from '../assets/images/wise3.png';
 import './Navbar.css';
 import { ThemeContext } from '../context/ThemeContext';
@@ -83,6 +80,14 @@ const labelsFallbacks = {
   'navbar.services.specialization.title': 'Specialization',
   'navbar.services.index.title': 'Index',
   'navbar.services.mcx.title': 'MCX',
+  'navbar.more': 'More',
+  'navbar.more.disclaimer': 'Disclaimer',
+  'navbar.more.disclosure': 'Disclosure',
+  'navbar.more.privacy': 'Privacy Policy',
+  'navbar.more.refund': 'Refund Policy',
+  'navbar.more.complaintBox': 'Complaint Box',
+  'navbar.more.complaintData': 'Complaint Data',
+  'navbar.more.terms': 'Terms and Conditions',
 };
 
 const servicesMenu = [
@@ -91,7 +96,7 @@ const servicesMenu = [
     items: [
       { path: '/EvaluationStockCash', labelKey: 'navbar.services.cash.evaluationStockCash' },
       { path: '/SmartCash', labelKey: 'navbar.services.cash.smartCash' },
-      { path: '/services/equity/cash', labelKey: 'navbar.services.cash.cash' },
+
     ],
   },
   {
@@ -107,8 +112,7 @@ const servicesMenu = [
     labelKey: 'navbar.services.specialization.title',
     items: [
       { path: '/InfinityClub', labelKey: 'navbar.services.specialization.infinityClub' },
-      { path: '/MCXSupreme', labelKey: 'navbar.services.specialization.mcxSupreme' },
-      { path: '/GalaxyMCX', labelKey: 'navbar.services.specialization.galaxyMCX' },
+     
       { path: '/UniversalCash', labelKey: 'navbar.services.specialization.universalCash' },
     ],
   },
@@ -118,17 +122,14 @@ const servicesMenu = [
       { path: '/EvaluationIndexOptions', labelKey: 'navbar.services.index.evaluationIndexOptions' },
       { path: '/ImpulseIndexOptions', labelKey: 'navbar.services.index.impulseIndexOptions' },
       { path: '/services/smart-index-option', labelKey: 'navbar.services.index.smartIndexOption' },
-      { path: '/services/equity/index', labelKey: 'navbar.services.index.index' },
+  
     ],
   },
   {
     labelKey: 'navbar.services.mcx.title',
     items: [
-      { path: '/mcx', labelKey: 'navbar.services.mcx.mcx' },
-      { path: '/services/mcx/bullions', labelKey: 'navbar.services.mcx.bullions' },
-      { path: '/services/mcx/energy', labelKey: 'navbar.services.mcx.energy' },
-      { path: '/services/mcx/metal', labelKey: 'navbar.services.mcx.metal' },
-      { path: '/services/mcx/mcx-option', labelKey: 'navbar.services.mcx.mcxOption' },
+      { path: '/MCXSupreme', labelKey: 'navbar.services.specialization.mcxSupreme' },
+      { path: '/GalaxyMCX', labelKey: 'navbar.services.specialization.galaxyMCX' },
     ],
   },
 ];
@@ -137,35 +138,46 @@ const dropdownLinks = {
   company: {
     labelKey: 'navbar.company.title',
     items: [
-      { path: '/about', labelKey: 'navbar.company.aboutUs', icon: <FaBuilding /> },
-      { path: '/team', labelKey: 'navbar.company.ourTeam', icon: <FaUserShield /> },
-      { path: '/vision', labelKey: 'navbar.company.visionMission', icon: <FaChartLine /> },
+      { path: '/about', labelKey: 'navbar.company.aboutUs' },
+      { path: '/team', labelKey: 'navbar.company.ourTeam' },
+      { path: '/vision', labelKey: 'navbar.company.visionMission' },
     ]
   },
   hrZone: {
     labelKey: 'navbar.hrZone.title',
     items: [
-      { path: '/career', labelKey: 'navbar.hrZone.career', icon: <FaBriefcase /> },
-      { path: '/training', labelKey: 'navbar.hrZone.training', icon: <FaUniversity /> },
+      { path: '/career', labelKey: 'navbar.hrZone.career' },
+      { path: '/training', labelKey: 'navbar.hrZone.training' },
     ]
   },
   insights: {
     labelKey: 'navbar.insights.title',
     items: [
-      { path: '/blogs', labelKey: 'navbar.insights.blogs', icon: <FaNewspaper /> },
-      { path: '/market-news', labelKey: 'navbar.insights.marketNews', icon: <FaGlobe /> },
-      { path: '/complaint-data', labelKey: 'navbar.insights.complaintData', icon: <FaUserShield /> },
-      { path: '/grievance-redressal-process', labelKey: 'navbar.insights.grievanceRedressalProcess', icon: <FaFileAlt /> },
+      { path: '/blogs', labelKey: 'navbar.insights.blogs' },
+      { path: '/market-news', labelKey: 'navbar.insights.marketNews' },
+      { path: '/complaint-data', labelKey: 'navbar.insights.complaintData' },
+      { path: '/grievance-redressal-process', labelKey: 'navbar.insights.grievanceRedressalProcess' },
     ]
   },
   dashboard: {
     labelKey: 'navbar.dashboard.title',
     items: [
-      { path: '/admin', labelKey: 'navbar.dashboard.adminPanel', icon: <FaUserShield /> },
-      { path: '/client-panel', labelKey: 'navbar.dashboard.clientPanel', icon: <FaCoins /> },
-      { path: '/client-service-consent', labelKey: 'navbar.dashboard.clientServiceConsent', icon: <FaFileAlt /> },
-      { path: '/investor-chart', labelKey: 'navbar.dashboard.investorChart', icon: <FaChartLine /> },
-      { path: '/anti-money-laundering', labelKey: 'navbar.dashboard.antiMoneyLaundering', icon: <FaShieldAlt /> },
+      { path: '/admin', labelKey: 'navbar.dashboard.adminPanel' },
+      { path: '/client-panel', labelKey: 'navbar.dashboard.clientPanel' },
+      { path: '/client-service-consent', labelKey: 'navbar.dashboard.clientServiceConsent' },
+      { path: '/investor-chart', labelKey: 'navbar.dashboard.investorChart' },
+      { path: '/anti-money-laundering', labelKey: 'navbar.dashboard.antiMoneyLaundering' },
+    ]
+  },
+  more: {
+    labelKey: 'navbar.more',
+    items: [
+      { path: '/legal', labelKey: 'navbar.more.disclaimer' },
+      { path: '/disclosure', labelKey: 'navbar.more.disclosure' },
+      { path: '/privacy', labelKey: 'navbar.more.privacy' },
+      { path: '/refund', labelKey: 'navbar.more.refund' },
+  // Removed complaint and complaint-data per request
+      { path: '/terms', labelKey: 'navbar.more.terms' },
     ]
   },
 };
@@ -177,7 +189,7 @@ const navLinks = [
   { path: '/reports', labelKey: 'navbar.researchReports' },
 ];
 
-const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobile, mobileOpen, setMobileOpen, closeDrawer }) => {
+const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobile, mobileOpen, setMobileOpen, closeDrawer, categoryIcon: CategoryIcon, categoryIconColor }) => {
   const [isOpen, setIsOpen] = useState(false);
   const timeoutId = useRef(null);
   const menuRef = useRef(null);
@@ -262,6 +274,7 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
                       onClick={handleLinkClick}
                       style={{ wordBreak: 'break-word', whiteSpace: 'normal' }}
                     >
+                      {/* If item.icon is a React element, render it smaller and colorful */}
                       {translateWithFallback(null, item.labelKey)}
                     </Link>
                   ))}
@@ -297,9 +310,14 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
               <Link
                 key={item.path}
                 to={item.path}
-                className="nav-item block py-1 pl-2 text-gray-800"
+                className="nav-item block py-1 pl-2 text-gray-800 flex items-center gap-2"
                 onClick={handleLinkClick}
               >
+                      {item.icon ? (
+                        <span style={{ display: 'inline-flex', width: 16, height: 16, color: '#000' }}>
+                          {React.cloneElement(item.icon, { style: { width: 16, height: 16, color: 'inherit' } })}
+                        </span>
+                      ) : null}
                       {translateWithFallback(null, item.labelKey)}
               </Link>
             ))}
@@ -311,8 +329,6 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
 });
 
 function Navbar() {
-  // useTranslation was previously used; translateWithFallback provides fallbacks so
-  // we don't need to reference `t` directly here which removes an ESLint unused-var warning.
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [servicesMobileOpen, setServicesMobileOpen] = useState(false);
   const [mobileDropdownsOpen, setMobileDropdownsOpen] = useState({});
@@ -428,9 +444,9 @@ function Navbar() {
   top: 'var(--nav-offset, 0px)',
   right: 0,
   height: 'calc(100vh - var(--nav-offset, 0px))',
-    width: '80%',
-    maxWidth: '320px',
-    minWidth: '260px',
+    width: '100%',
+    maxWidth: '100%',
+    minWidth: '100%',
     background: 'var(--bg-opacity)',
     backdropFilter: 'blur(12px)',
     color: 'var(--text-color)',
@@ -451,11 +467,11 @@ function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 flex justify-between items-center">
           <Link to="/" className="flex items-center rotate-logo">
-            <div className="rounded-full p-1 border-2 border-[var(--primary-green)]">
+            <div className="rounded-full p-1 border-2 border-[var(--primary-green)] bg-white">
               <img
                 src={wiseLogo}
                 alt="Wise Logo"
-                className="h-10 sm:h-12 md:h-14 w-auto rounded-xl logo-hover"
+                className="h-10 sm:h-12 md:h-14 w-auto rounded-full logo-hover"
                 loading="lazy"
               />
             </div>
@@ -463,6 +479,7 @@ function Navbar() {
 
           {/* Desktop Menu */}
           <div className="desktop-menu hidden lg:flex lg:flex-wrap lg:justify-end space-x-2 xl:space-x-4 items-center font-medium">
+            <div className="nav-scroll w-full flex items-center">
               <Link
                 to="/"
                 className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname==='/' ? ' active' : ''}`}
@@ -491,7 +508,7 @@ function Navbar() {
                         location.pathname === item.path ? 'text-[var(--primary-green)] font-semibold' : ''
                       }`}
                     >
-                      {item.icon} {translateWithFallback(null, item.labelKey)}
+                      {translateWithFallback(null, item.labelKey)}
                     </Link>
                   ))}
                 </div>
@@ -508,6 +525,7 @@ function Navbar() {
   {translateWithFallback(null, link.labelKey)}
               </Link>
       ))}
+            </div>
           </div>
 
           {/* Mobile Hamburger */}
@@ -517,7 +535,7 @@ function Navbar() {
               aria-label="Toggle mobile menu"
             >
             {drawerOpen ? (
-              <FaTimes size={24} color={textColor} className="mobile-close-btn" />
+              <span className="mobile-close-btn" style={{ color: textColor }}>Close</span>
             ) : (
               <div className={`hamburger ${drawerOpen ? 'open' : ''}`}>
                 <div className="bar"></div>
@@ -530,8 +548,8 @@ function Navbar() {
       </nav>
 
       {/* Mobile Menu with Inline Styles */}
-      <div style={mobileDrawerStyles} ref={drawerRef}>
-        <div style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <div style={mobileDrawerStyles} ref={drawerRef} className={`mobile-menu ${drawerOpen ? 'open' : ''}`}>
+        <div className={`mobile-menu-items mobile-stagger`} style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <Link
             to="/"
             className="nav-item font-semibold py-1"
@@ -561,20 +579,20 @@ function Navbar() {
               </button>
               <div className={`overflow-hidden transition-all duration-300 ${mobileDropdownsOpen[key] ? 'max-h-96' : 'max-h-0'}`}>
                 {dropdown.items.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="nav-item block py-1 pl-2 flex items-center gap-2"
-                    onClick={closeDrawer}
-                  >
-  {item.icon} {translateWithFallback(null, item.labelKey)}
-                  </Link>
-                ))}
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className="nav-item block py-1 pl-2"
+                        onClick={closeDrawer}
+                      >
+      {translateWithFallback(null, item.labelKey)}
+                      </Link>
+                    ))}
               </div>
             </div>
           ))}
 
-          {navLinks.map((link) => (
+            {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
@@ -584,6 +602,16 @@ function Navbar() {
   {translateWithFallback(null, link.labelKey)}
             </Link>
           ))}
+
+            {/* Mobile back button to close drawer */}
+            <button
+              type="button"
+              className="nav-item mobile-back-btn"
+              onClick={closeDrawer}
+              aria-label="Close mobile menu"
+            >
+              Back
+            </button>
         </div>
       </div>
     </>

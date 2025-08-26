@@ -11,9 +11,10 @@
         "source": "**",
         "destination": "/index.html"
       }
+
     ]
-  },
-  "database": {
+},
+"database": {
     "rules": "database.rules.json"
   }
 }

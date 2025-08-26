@@ -1,23 +1,13 @@
 {
-  "name": "digio-proxy",
+  "name": "server",
   "version": "1.0.0",
-  "description": "Simple proxy to forward Digio sign requests from the frontend to Digio API with server-side credentials.",
-  "main": "digio-proxy.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node -r dotenv/config digio-proxy.js",
-    "dev": "node -r dotenv/config digio-proxy.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
-  "license": "MIT",
-  "dependencies": {
-  "cors": "^2.8.5",
-  "dotenv": "^16.3.1",
-  "express": "^4.18.2",
-  "node-fetch": "^2.6.7"
-  },
-  "env": {
-    "REACT_APP_DIGIO_PROXY_URL": "http://localhost:3001/api/digio",
-    "REACT_APP_NEWS_PROXY_URL": "/api/news",
-    "REACT_APP_DIGIO_TEMPLATE_KEY": "YOUR_TEMPLATE_KEY"
-  }
+  "license": "ISC",
+  "type": "commonjs"
 }

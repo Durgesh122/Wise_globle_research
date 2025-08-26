@@ -57,6 +57,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 const Legal = lazy(() => import('./pages/Legal'));
 const Disclosure = lazy(() => import('./pages/Disclosure'));
 const LiveChart = lazy(() => import('./pages/LiveChart'));
+const TradingViewTicker = lazy(() => import('./pages/TradingViewTicker'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Complaint = lazy(() => import('./pages/Complaint'));
@@ -215,6 +216,7 @@ function App() {
             <Route path="/legal" element={<Legal />} />
             <Route path="/disclosure" element={<Disclosure />} />
             <Route path="/livechart" element={<LiveChart />} />
+            <Route path="/ticker" element={<TradingViewTicker />} />
             <Route path="/team" element={<Team />} />
             <Route path="/vision" element={<Vision />} />
             <Route path="/equity" element={<Equity />} />

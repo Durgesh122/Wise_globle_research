@@ -5,30 +5,27 @@
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
     },
     "homeFormSubmissions": {
-      "# Allow anonymous submissions but require minimal validation: timestamp (number) and email (string) to reduce spam/abuse.\n      # Admins can read submissions.": true,
       ".write": "auth != null || (newData.exists() && newData.child('timestamp').isNumber() && newData.child('email').isString())",
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
       ".indexOn": ["timestamp"]
     },
     "popoForms": {
-      "# popoForms likely contains internal data; require auth to write and admin read": true,
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
       ".write": "auth != null",
       ".indexOn": ["timestamp"]
     },
     "complaints": {
-      "# Prevent anonymous users from writing complaints to avoid spam/poisoning": true,
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
       ".write": "auth != null",
       ".indexOn": ["timestamp"]
     },
     "clientServiceConsentForms": {
-      ".write": "auth != null",
+      ".write": "true",
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
       ".indexOn": ["timestamp"]
     },
     "complaintTableData": {
-      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      ".read": "true",
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
     },
     "monthlyDisposalTableData": {
@@ -42,8 +39,6 @@
     "reports": {
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
-    },
-    ".read": false,
-    ".write": false
+    }
   }
 }

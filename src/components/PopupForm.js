@@ -163,7 +163,7 @@ const PopupForm = ({ onClose }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      style={{ background: 'rgba(0,0,0,0.8)' }}
+    style={{ background: 'transparent' }}
     >
       <motion.div
         className="relative bg-gradient-to-br from-gray-900 to-blue-900 bg-opacity-80 backdrop-blur-xl rounded-2xl p-4 sm:p-8 w-full max-w-full sm:max-w-xl md:max-w-3xl lg:max-w-2xl shadow-2xl overflow-auto max-h-[90vh] mx-4 sm:mx-0"

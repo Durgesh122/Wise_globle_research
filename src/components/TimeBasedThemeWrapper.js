@@ -1,7 +1,7 @@
 // src/components/TimeBasedThemeWrapper.js
 import React, { useContext, useEffect } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
-import back2 from '../assets/images/unplash.png';
+import back2 from '../assets/images/daniele.png';
 
 const TimeBasedThemeWrapper = ({ children }) => {
   const { theme, gradients } = useContext(ThemeContext);
