@@ -8,7 +8,7 @@ const EvaluationStockCash = () => (
   <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.EvaluationStockCash.evaluation-stock-cash"><Trans i18nKey="pages.EvaluationStockCash.evaluation-stock-cash-1">Evaluation Stock Cash</Trans></Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
-      Wise Global Research Analyst provides equity research in the NSE cash segment by dedicated and experienced Research Analysts after in-depth technical analysis. Our equity trading recommendations are produced after proper analysis of the stock market. These technical levels are generated for recommendations that can provide good movement in the market. In a volatile market, our customers should only focus on intraday research and should not carry forward any position for the next day.
+  Wise Global Research Analyst provides equity research in the NSE cash segment by dedicated and experienced Research Analysts after in-depth technical analysis. Our equity trading recommendations are produced after proper analysis of the stock market. These technical levels are generated for recommendations that can provide good movement in the market. In a volatile market, our customers should only focus on intraday research and should not carry forward any position for the next day. A pure intraday product, where customers receive stock recommendations in the NSE cash segment. This product is designed for new customers who want to evaluate our recommendations in the cash market.
     </p>
 
     {/* What You Will Get */}
@@ -20,10 +20,9 @@ const EvaluationStockCash = () => (
         <li><Trans i18nKey="pages.EvaluationStockCash.timely-follow-ups-of-all-trade-signals"><Trans i18nKey="pages.EvaluationStockCash.timely-follow-ups-of-all-trade-signals-1">Timely follow-ups of all trade signals.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockCash.proper-time-for-entry-exit-in-recommenda"><Trans i18nKey="pages.EvaluationStockCash.proper-time-for-entry-exit-in-recommenda-1">Proper time for entry & exit in recommendations.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockCash.careful-analysis-of-market-direction"><Trans i18nKey="pages.EvaluationStockCash.careful-analysis-of-market-direction-1">Careful analysis of market direction.</Trans></Trans></li>
-        <li><Trans i18nKey="pages.EvaluationStockCash.recommendations-are-provided-through-sms"><Trans i18nKey="pages.EvaluationStockCash.recommendations-are-provided-through-sms-1">Recommendations are provided through SMS.</Trans></Trans></li>
-        <li><Trans i18nKey="pages.EvaluationStockCash.swift-real-time-customer-support-09-00-a"><Trans i18nKey="pages.EvaluationStockCash.swift-real-time-customer-support-09-00-a-1">Swift real-time customer support (09:00 AM to 06:00 PM).</Trans></Trans></li>
+        
+        
       </ul>
-      <p className="text-base mb-2 text-white"><Trans i18nKey="pages.EvaluationStockCash.a-pure-intraday-product-where-customers-"><Trans i18nKey="pages.EvaluationStockCash.a-pure-intraday-product-where-customers--1">A pure intraday product, where customers receive stock recommendations in the NSE cash segment. This product is designed for new customers who want to evaluate our recommendations in the cash market.</Trans></Trans></p>
       <div className="bg-white/10 rounded-lg p-4 mt-4">
         <span className="font-semibold text-white"><Trans i18nKey="pages.EvaluationStockCash.sample-call">Sample Call:</Trans></span>
         <div className="text-white mt-2"><Trans i18nKey="pages.EvaluationStockCash.buy-centuryply-above-512-target-518-524-"><Trans i18nKey="pages.EvaluationStockCash.buy-centuryply-above-512-target-518-524--1">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</Trans></Trans></div>
@@ -35,7 +34,7 @@ const EvaluationStockCash = () => (
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.EvaluationStockCash.trading-rules-every-trader-must-follow"><Trans i18nKey="pages.EvaluationStockCash.trading-rules-every-trader-must-follow-1">Trading Rules Every Trader Must Follow</Trans></Trans></h2>
       <ul className="list-decimal pl-6 text-base mb-4 text-white">
         <li><Trans i18nKey="pages.EvaluationStockCash.do-not-over-trade">Do not over trade.</Trans></li>
-        <li><Trans i18nKey="pages.EvaluationStockCash.only-follow-sms-research-recommendations"><Trans i18nKey="pages.EvaluationStockCash.only-follow-sms-research-recommendations-1">Only follow SMS research recommendations.</Trans></Trans></li>
+        
         <li><Trans i18nKey="pages.EvaluationStockCash.trade-each-recommendation-with-the-same-"><Trans i18nKey="pages.EvaluationStockCash.trade-each-recommendation-with-the-same--1">Trade each recommendation with the same quantity as advised by the Research Team.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockCash.profit-and-loss-are-subject-to-market-ri"><Trans i18nKey="pages.EvaluationStockCash.profit-and-loss-are-subject-to-market-ri-1">Profit and loss are subject to market risk; there is no guarantee or assurance.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockCash.never-be-emotional-while-trading"><Trans i18nKey="pages.EvaluationStockCash.never-be-emotional-while-trading-1">Never be emotional while trading.</Trans></Trans></li>
@@ -50,9 +49,7 @@ const EvaluationStockCash = () => (
       </ul>
     </div>
 
-    <div className="text-center text-sm text-white mt-8">
-      <strong><Trans i18nKey="pages.EvaluationStockCash.swift-real-time-customer-support"><Trans i18nKey="pages.EvaluationStockCash.swift-real-time-customer-support-1">Swift real-time customer support:</Trans></Trans></strong><Trans i18nKey="pages.EvaluationStockCash.09-00-am-to-06-00-pm"><Trans i18nKey="pages.EvaluationStockCash.09-00-am-to-06-00-pm-1">09:00 AM to 06:00 PM |</Trans></Trans><strong><Trans i18nKey="pages.EvaluationStockCash.all-recommendations-are-provided-through"><Trans i18nKey="pages.EvaluationStockCash.all-recommendations-are-provided-through-1">All recommendations are provided through SMS.</Trans></Trans></strong>
-    </div>
+    
 
     {/* Pricing Plan */}
     <div className="mb-8 text-center">
@@ -98,11 +95,11 @@ const EvaluationStockCash = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.EvaluationStockCash.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.EvaluationStockCash.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white"><Trans i18nKey="pages.EvaluationStockCash.a-all-recommendations-are-sent-via-sms-t"><Trans i18nKey="pages.EvaluationStockCash.a-all-recommendations-are-sent-via-sms-t-1">A: All recommendations are sent via SMS to your registered mobile number.</Trans></Trans></p>
+          <p className="text-white">A: Recommendations are delivered via your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.EvaluationStockCash.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.EvaluationStockCash.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
-          <p className="text-white"><Trans i18nKey="pages.EvaluationStockCash.a-yes-our-support-team-is-available-from"><Trans i18nKey="pages.EvaluationStockCash.a-yes-our-support-team-is-available-from-1">A: Yes, our support team is available from 09:00 AM to 06:00 PM for any queries.</Trans></Trans></p>
+          <p className="text-white">A: Our support team is available during Indian market hours.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.EvaluationStockCash.q-is-there-a-refund-policy"><Trans i18nKey="pages.EvaluationStockCash.q-is-there-a-refund-policy-1">Q: Is there a refund policy?</Trans></Trans></h3>
@@ -111,7 +108,7 @@ const EvaluationStockCash = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition"><Trans i18nKey="pages.EvaluationStockCash.contact-us">Contact Us</Trans></button>
+          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

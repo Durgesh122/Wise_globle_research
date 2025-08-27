@@ -20,8 +20,8 @@ const MCXOption = () => (
         <li><Trans i18nKey="pages.MCXOption.timely-follow-ups-and-updates-on-all-tra"><Trans i18nKey="pages.MCXOption.timely-follow-ups-and-updates-on-all-tra-1">Timely follow-ups and updates on all trade signals.</Trans></Trans></li>
         <li><Trans i18nKey="pages.MCXOption.clear-entry-and-exit-timings-for-every-r"><Trans i18nKey="pages.MCXOption.clear-entry-and-exit-timings-for-every-r-1">Clear entry and exit timings for every recommendation.</Trans></Trans></li>
         <li><Trans i18nKey="pages.MCXOption.comprehensive-analysis-of-market-directi"><Trans i18nKey="pages.MCXOption.comprehensive-analysis-of-market-directi-1">Comprehensive analysis of market direction and concise domestic & world market information.</Trans></Trans></li>
-        <li><Trans i18nKey="pages.MCXOption.recommendations-delivered-via-sms-for-in"><Trans i18nKey="pages.MCXOption.recommendations-delivered-via-sms-for-in-1">Recommendations delivered via SMS for instant action.</Trans></Trans></li>
-        <li><Trans i18nKey="pages.MCXOption.swift-real-time-customer-support-09-00-a"><Trans i18nKey="pages.MCXOption.swift-real-time-customer-support-09-00-a-1">Swift, real-time customer support (09:00 AM to 06:00 PM).</Trans></Trans></li>
+        
+        
       </ul>
       <p className="text-base mb-2 text-white"><Trans i18nKey="pages.MCXOption.mcx-options-services-are-ideal-for-trade"><Trans i18nKey="pages.MCXOption.mcx-options-services-are-ideal-for-trade-1">MCX Options Services are ideal for traders who want detailed technical and fundamental market analysis for options trading in one pack.</Trans></Trans></p>
     </div>
@@ -30,7 +30,7 @@ const MCXOption = () => (
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.MCXOption.trading-rules-every-options-trader-must-"><Trans i18nKey="pages.MCXOption.trading-rules-every-options-trader-must--1">Trading Rules Every Options Trader Must Follow</Trans></Trans></h2>
       <ul className="list-decimal pl-6 text-base mb-4 text-white">
         <li><Trans i18nKey="pages.MCXOption.do-not-over-trade">Do not over trade.</Trans></li>
-        <li><Trans i18nKey="pages.MCXOption.only-follow-sms-research-recommendations"><Trans i18nKey="pages.MCXOption.only-follow-sms-research-recommendations-1">Only follow SMS research recommendations.</Trans></Trans></li>
+  {/* Removed SMS-only rule per policy */}
         <li><Trans i18nKey="pages.MCXOption.trade-each-recommendation-with-the-same-"><Trans i18nKey="pages.MCXOption.trade-each-recommendation-with-the-same--1">Trade each recommendation with the same quantity as advised by the Research Team.</Trans></Trans></li>
         <li><Trans i18nKey="pages.MCXOption.profit-and-loss-are-subject-to-market-ri"><Trans i18nKey="pages.MCXOption.profit-and-loss-are-subject-to-market-ri-1">Profit and loss are subject to market risk; there is no guarantee or assurance.</Trans></Trans></li>
         <li><Trans i18nKey="pages.MCXOption.never-be-emotional-while-trading"><Trans i18nKey="pages.MCXOption.never-be-emotional-while-trading-1">Never be emotional while trading.</Trans></Trans></li>
@@ -46,9 +46,7 @@ const MCXOption = () => (
     </div>
 
 
-    <div className="text-center text-sm text-white mt-8">
-      <strong><Trans i18nKey="pages.MCXOption.swift-real-time-customer-support"><Trans i18nKey="pages.MCXOption.swift-real-time-customer-support-1">Swift real-time customer support:</Trans></Trans></strong><Trans i18nKey="pages.MCXOption.09-00-am-to-06-00-pm">09:00 AM to 06:00 PM |</Trans><strong><Trans i18nKey="pages.MCXOption.all-recommendations-are-provided-through"><Trans i18nKey="pages.MCXOption.all-recommendations-are-provided-through-1">All recommendations are provided through SMS.</Trans></Trans></strong>
-    </div>
+    
 
     {/* Why Choose Us Section */}
     <div className="my-12">
@@ -62,7 +60,7 @@ const MCXOption = () => (
         <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
           <FaBolt className="text-4xl mb-2 text-blue-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.MCXOption.real-time-support">Real-Time Support</Trans></h3>
-          <p className="text-white text-center"><Trans i18nKey="pages.MCXOption.get-instant-help-and-trade-updates-from-"><Trans i18nKey="pages.MCXOption.get-instant-help-and-trade-updates-from--1">Get instant help and trade updates from 9:00 AM to 6:00 PM, Monday to Friday.</Trans></Trans></p>
+          <p className="text-white text-center">Get help and trade updates during Indian market hours.</p>
         </div>
         <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
           <FaLock className="text-4xl mb-2 text-green-300" />
@@ -78,11 +76,11 @@ const MCXOption = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.MCXOption.q-how-will-i-receive-the-options-recomme"><Trans i18nKey="pages.MCXOption.q-how-will-i-receive-the-options-recomme-1">Q: How will I receive the options recommendations?</Trans></Trans></h3>
-          <p className="text-white"><Trans i18nKey="pages.MCXOption.a-all-options-recommendations-are-sent-v"><Trans i18nKey="pages.MCXOption.a-all-options-recommendations-are-sent-v-1">A: All options recommendations are sent via SMS to your registered mobile number.</Trans></Trans></p>
+          <p className="text-white">A: Options recommendations are shared via your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.MCXOption.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.MCXOption.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
-          <p className="text-white"><Trans i18nKey="pages.MCXOption.a-yes-our-support-team-is-available-from"><Trans i18nKey="pages.MCXOption.a-yes-our-support-team-is-available-from-1">A: Yes, our support team is available from 09:00 AM to 06:00 PM for any queries.</Trans></Trans></p>
+          <p className="text-white">A: Yes, support is available during Indian market hours for any queries.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.MCXOption.q-is-there-a-refund-policy">Q: Is there a refund policy?</Trans></h3>
@@ -91,7 +89,7 @@ const MCXOption = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition"><Trans i18nKey="pages.MCXOption.contact-us">Contact Us</Trans></button>
+          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

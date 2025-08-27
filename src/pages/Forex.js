@@ -127,7 +127,7 @@ const Forex = () => {
             className="mt-6 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-          ><Trans i18nKey="pages.Forex.learn-more">Learn More</Trans></motion.button>
+          >Enquiry Now</motion.button>
         </Link>
       </motion.section>
 
@@ -234,7 +234,7 @@ const Forex = () => {
             className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-          ><Trans i18nKey="pages.Forex.learn-more">Learn More</Trans></motion.button>
+          >Enquiry Now</motion.button>
         </Link>
       </motion.section>
 

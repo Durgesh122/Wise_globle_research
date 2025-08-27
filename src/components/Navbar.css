@@ -298,72 +298,58 @@ svg {
     display: none !important;
   }
 
-  /* Keep desktop nav items in a single row; allow horizontal scroll on very small desktops */
+  /* Keep desktop nav items in a single row with consistent spacing */
   .desktop-menu {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
+    display: block !important; /* wrapper only; layout is applied to .nav-scroll */
     width: 100%;
     overflow: visible;
   }
 
-  /* A thin scrollable row to guarantee a single-line layout on narrow widths */
+  /* Use flex so items keep natural width with an even gap */
   .nav-scroll {
     display: flex;
-    gap: 18px;
+    flex-wrap: nowrap;
     align-items: center;
-    white-space: nowrap;
-  overflow-x: auto;
-  overflow-y: visible; /* allow dropdowns to escape the scroll container */
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
+    justify-content: center;
+    gap: 12px; /* consistent spacing between items */
+    width: 100%;
+    overflow: visible; /* allow dropdowns */
   }
 
-  /* Make each direct child of nav-scroll expand evenly so the navbar uses full width */
-  .desktop-menu {
-    flex: 1 1 auto;
+  /* Slightly larger gap on very wide screens */
+  @media (min-width: 1280px) {
+    .nav-scroll { gap: 16px; }
   }
 
-  .nav-scroll {
-    gap: 0;
+  /* Fallback for browsers without flex gap support */
+  @supports not (gap: 1rem) {
+    .nav-scroll > * { margin-left: 12px; }
+    .nav-scroll > *:first-child { margin-left: 0; }
+    @media (min-width: 1280px) {
+      .nav-scroll > * { margin-left: 16px; }
+      .nav-scroll > *:first-child { margin-left: 0; }
+    }
   }
 
   .nav-scroll > * {
-    flex: 1 1 0;
+    min-width: 0; /* allow shrinking if needed */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 80px; /* prevent too narrow items */
   }
 
   .nav-scroll .nav-item {
-  width: 100%;
-  /* Make all desktop nav buttons uniform: fixed height, centered content */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 44px; /* uniform button height */
-  padding: 0 12px; /* left/right padding only */
-  text-align: center;
-  white-space: nowrap; /* prevent wrapping which can change height */
-  }
-  .nav-scroll .nav-item {
-    /* Keep button contents tight to text so borders wrap correctly */
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 44px; /* uniform visual height */
-    width: auto; /* allow border to hug text */
-    padding: 0 14px; /* consistent left/right padding */
+    height: 44px; /* uniform button height */
+    padding: 0 12px;
     text-align: center;
-    white-space: nowrap; /* prevent wrapping which can change height */
+    white-space: nowrap;
     box-sizing: border-box;
   }
 
-  .nav-scroll::-webkit-scrollbar { display: none; }
-
-  /* Slightly tighten nav-item spacing on large screens */
+  /* Slightly tighten nav-item padding */
   .desktop-menu .nav-item {
     padding: 6px 10px;
   }

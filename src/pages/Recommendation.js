@@ -102,7 +102,7 @@ const Recommendation = () => {
             variants={itemVariants}
             whileHover={{ scale: 1.1 }}
             onClick={handleContactClick}
-          ><Trans i18nKey="pages.Recommendation.explore-premium-research"><Trans i18nKey="pages.Recommendation.explore-premium-research-1">Explore Premium Research</Trans></Trans></motion.button>
+          ><Trans i18nKey="pages.Recommendation.explore-premium-research"><Trans i18nKey="pages.Recommendation.explore-premium-research-1">Enquiry Now</Trans></Trans></motion.button>
         </div>
       </motion.section>
     </motion.div>

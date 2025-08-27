@@ -21,8 +21,8 @@ const EvaluationStockOption = () => (
         <li><Trans i18nKey="pages.EvaluationStockOption.proper-time-for-entry-exit-in-recommenda"><Trans i18nKey="pages.EvaluationStockOption.proper-time-for-entry-exit-in-recommenda-1">Proper time for entry & exit in recommendations.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockOption.nifty-and-bank-nifty-trend-support-and-r"><Trans i18nKey="pages.EvaluationStockOption.nifty-and-bank-nifty-trend-support-and-r-1">Nifty and Bank Nifty trend, support, and resistance levels.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockOption.careful-analysis-of-market-direction-and"><Trans i18nKey="pages.EvaluationStockOption.careful-analysis-of-market-direction-and-1">Careful analysis of market direction and concise domestic & world market information.</Trans></Trans></li>
-        <li><Trans i18nKey="pages.EvaluationStockOption.recommendations-are-provided-through-sms"><Trans i18nKey="pages.EvaluationStockOption.recommendations-are-provided-through-sms-1">Recommendations are provided through SMS.</Trans></Trans></li>
-        <li><Trans i18nKey="pages.EvaluationStockOption.swift-real-time-customer-support-09-00-a"><Trans i18nKey="pages.EvaluationStockOption.swift-real-time-customer-support-09-00-a-1">Swift real-time customer support (09:00 AM to 06:00 PM).</Trans></Trans></li>
+        
+        
       </ul>
       <p className="text-base mb-2 text-white"><Trans i18nKey="pages.EvaluationStockOption.a-pure-intraday-product-where-customers-"><Trans i18nKey="pages.EvaluationStockOption.a-pure-intraday-product-where-customers--1">A pure intraday product, where customers receive Stock Option recommendations in NSE. This product is designed for new customers who want to evaluate our recommendations in the Stock Option market.</Trans></Trans></p>
       <div className="bg-white/10 rounded-lg p-4 mt-4">
@@ -36,7 +36,7 @@ const EvaluationStockOption = () => (
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.EvaluationStockOption.trading-rules-every-trader-must-follow"><Trans i18nKey="pages.EvaluationStockOption.trading-rules-every-trader-must-follow-1">Trading Rules Every Trader Must Follow</Trans></Trans></h2>
       <ul className="list-decimal pl-6 text-base mb-4 text-white">
         <li><Trans i18nKey="pages.EvaluationStockOption.do-not-over-trade"><Trans i18nKey="pages.EvaluationStockOption.do-not-over-trade-1">Do not over trade.</Trans></Trans></li>
-        <li><Trans i18nKey="pages.EvaluationStockOption.only-follow-sms-research-recommendations"><Trans i18nKey="pages.EvaluationStockOption.only-follow-sms-research-recommendations-1">Only follow SMS research recommendations.</Trans></Trans></li>
+        
         <li><Trans i18nKey="pages.EvaluationStockOption.trade-each-recommendation-with-the-same-"><Trans i18nKey="pages.EvaluationStockOption.trade-each-recommendation-with-the-same--1">Trade each recommendation with the same quantity as advised by the Research Team.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockOption.profit-and-loss-are-subject-to-market-ri"><Trans i18nKey="pages.EvaluationStockOption.profit-and-loss-are-subject-to-market-ri-1">Profit and loss are subject to market risk; there is no guarantee or assurance.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockOption.never-be-emotional-while-trading"><Trans i18nKey="pages.EvaluationStockOption.never-be-emotional-while-trading-1">Never be emotional while trading.</Trans></Trans></li>
@@ -51,9 +51,7 @@ const EvaluationStockOption = () => (
       </ul>
     </div>
 
-    <div className="text-center text-sm text-white mt-8">
-      <strong><Trans i18nKey="pages.EvaluationStockOption.swift-real-time-customer-support"><Trans i18nKey="pages.EvaluationStockOption.swift-real-time-customer-support-1">Swift real-time customer support:</Trans></Trans></strong><Trans i18nKey="pages.EvaluationStockOption.09-00-am-to-06-00-pm"><Trans i18nKey="pages.EvaluationStockOption.09-00-am-to-06-00-pm-1">09:00 AM to 06:00 PM |</Trans></Trans><strong><Trans i18nKey="pages.EvaluationStockOption.all-recommendations-are-provided-through"><Trans i18nKey="pages.EvaluationStockOption.all-recommendations-are-provided-through-1">All recommendations are provided through SMS.</Trans></Trans></strong>
-    </div>
+  {/* Removed explicit SMS/support-hours footer per policy */}
 
     {/* Pricing Plan */}
     <div className="mb-8 text-center">
@@ -99,11 +97,11 @@ const EvaluationStockOption = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.EvaluationStockOption.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.EvaluationStockOption.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white"><Trans i18nKey="pages.EvaluationStockOption.a-all-recommendations-are-sent-via-sms-t"><Trans i18nKey="pages.EvaluationStockOption.a-all-recommendations-are-sent-via-sms-t-1">A: All recommendations are sent via SMS to your registered mobile number.</Trans></Trans></p>
+          <p className="text-white">A: Recommendations are delivered via your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.EvaluationStockOption.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.EvaluationStockOption.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
-          <p className="text-white"><Trans i18nKey="pages.EvaluationStockOption.a-yes-our-support-team-is-available-from"><Trans i18nKey="pages.EvaluationStockOption.a-yes-our-support-team-is-available-from-1">A: Yes, our support team is available from 09:00 AM to 06:00 PM for any queries.</Trans></Trans></p>
+          <p className="text-white">A: Our support team is available during Indian market hours.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.EvaluationStockOption.q-is-there-a-refund-policy"><Trans i18nKey="pages.EvaluationStockOption.q-is-there-a-refund-policy-1">Q: Is there a refund policy?</Trans></Trans></h3>
@@ -112,7 +110,7 @@ const EvaluationStockOption = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition"><Trans i18nKey="pages.EvaluationStockOption.contact-us">Contact Us</Trans></button>
+          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

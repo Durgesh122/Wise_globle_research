@@ -6,7 +6,7 @@ const UniversalCash = () => (
   <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
   <h1 className="text-4xl font-extrabold mb-4 text-center text-white">Universal Cash</h1>
     <p className="text-lg mb-6 text-center text-white">
-      Universal Cash provides cash-segment recommendations (intraday / BTST / positional) for the NSE stock market with clear targets and stop‑loss levels. This pack is designed for traders focused on the cash segment who prefer a small number of high‑quality, research-backed trades. Our experienced research team provides in-depth technical and fundamental analysis and shares recommendations via SMS.
+      Universal Cash provides cash-segment recommendations (intraday / BTST / positional) for the NSE stock market with clear targets and stop‑loss levels. This pack is designed for traders focused on the cash segment who prefer a small number of high‑quality, research-backed trades. Our experienced research team provides in-depth technical and fundamental analysis and shares recommendations via your registered contact channel.
     </p>
 
     <div className="mb-8">
@@ -19,17 +19,16 @@ const UniversalCash = () => (
   <li>NIFTY and Bank NIFTY trend analysis with support and resistance levels.</li>
   <li>Careful analysis of market direction.</li>
   <li>Concise domestic and global market updates.</li>
-  <li>Recommendations are delivered via SMS.</li>
-  <li>Swift real‑time customer support: 09:00 AM to 06:00 PM.</li>
+  
+  
     </ul>
   <p className="text-base mb-2 text-white">Trading rules that every trader must studiously follow.</p>
     </div>
 
     <div className="mb-8">
   <h2 className="text-2xl font-bold mb-2 text-white">Trading Rules Every Trader Must Follow</h2>
-    <ul className="list-decimal pl-6 text-base mb-4 text-white">
+  <ul className="list-decimal pl-6 text-base mb-4 text-white">
   <li>Do not overtrade.</li>
-  <li>Only follow SMS research recommendations.</li>
   <li>Trade each recommendation with the same quantity as advised by the Research Team.</li>
   <li>Profit and loss are subject to market risk; there is no guarantee.</li>
   <li>Do not trade emotionally.</li>
@@ -64,9 +63,7 @@ const UniversalCash = () => (
       </div>
     </div>
 
-    <div className="text-center text-sm text-white mt-8">
-  <strong>Swift real-time customer support:</strong> 09:00 AM to 06:00 PM | <strong>All recommendations are provided through SMS.</strong>
-    </div>
+    
 
     {/* Why Choose Us Section */}
     <div className="my-12">
@@ -80,7 +77,7 @@ const UniversalCash = () => (
         <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
           <FaBolt className="text-4xl mb-2 text-blue-300" />
           <h3 className="font-bold text-lg mb-1 text-white">Real-Time Support</h3>
-          <p className="text-white text-center">Get instant help and trade updates from 9:00 AM to 6:00 PM, Monday to Friday.</p>
+          <p className="text-white text-center">Get help and trade updates during Indian market hours.</p>
         </div>
         <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
           <FaLock className="text-4xl mb-2 text-green-300" />
@@ -96,11 +93,11 @@ const UniversalCash = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white">Q: How will I receive the recommendations?</h3>
-          <p className="text-white">A: All recommendations are sent via SMS to your registered mobile number.</p>
+          <p className="text-white">A: Recommendations are shared via your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white">Q: Can I get support if I have questions?</h3>
-          <p className="text-white">A: Yes, our support team is available from 09:00 AM to 06:00 PM for any queries.</p>
+          <p className="text-white">A: Yes, support is available during Indian market hours for any queries.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white">Q: Is there a refund policy?</h3>
@@ -109,7 +106,7 @@ const UniversalCash = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Contact Us</button>
+          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

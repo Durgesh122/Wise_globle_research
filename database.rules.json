@@ -4,14 +4,23 @@
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
     },
-    "homeFormSubmissions": {
-      ".write": "auth != null || (newData.exists() && newData.child('timestamp').isNumber() && newData.child('email').isString())",
+    "chatbot-submissions": {
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      ".write": true,
+      ".indexOn": ["timestamp"]
+    },
+     "homeFormSubmissions": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "$id": {
+        ".write": "newData.exists() && newData.child('timestamp').isNumber() && newData.child('email').isString() && (!newData.child('honeypot').exists() || newData.child('honeypot').val() == '')"
+      },
       ".indexOn": ["timestamp"]
     },
     "popoForms": {
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
-      ".write": "auth != null",
+      "$id": {
+        ".write": "newData.exists() && newData.child('timestamp').isString() && newData.child('city').isString() && newData.child('interest').isString() && (!newData.child('honeypot').exists() || newData.child('honeypot').val() == '')"
+      },
       ".indexOn": ["timestamp"]
     },
     "complaints": {
@@ -29,15 +38,15 @@
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
     },
     "monthlyDisposalTableData": {
-      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+  ".read": true,
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
     },
     "annualDisposalTableData": {
-      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+  ".read": true,
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
     },
     "reports": {
-      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      ".read": true,
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
     }
   }

@@ -92,7 +92,7 @@ const getServicePath = (name) => {
   const routeName = name.toLowerCase().replace(/\s+/g, '-');
   switch (name) {
     case 'MCX Supreme':
-      return '/mcx-option';
+  return '/MCXSupreme';
     case 'Galaxy MCX':
       return '/mcx';
     default:

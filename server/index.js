@@ -9,7 +9,34 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+// If behind a proxy (e.g., Render), trust it so correct proto/host are detected
+app.set('trust proxy', 1);
+
+// Configure CORS to properly respond to preflight requests
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://wiseglobalresearch-services.web.app',
+  'https://wiseglobalresearch.com',
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl) or from allowed list
+    if (!origin || allowedOrigins.includes(origin) || /onrender\.com$/.test(new URL(origin).hostname)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // Digio API Configuration
@@ -73,6 +100,11 @@ app.post('/api/submit-client-form', async (req, res) => {
       error: error.response?.data || { message: 'Server error' }
     });
   }
+});
+
+// Simple health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
 });
 
 app.listen(PORT, () => {

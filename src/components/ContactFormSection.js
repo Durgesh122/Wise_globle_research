@@ -9,6 +9,7 @@ import { itemVariants } from '../utils/animationVariants';
 const ContactForm = ({ contactFormRef }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [submitting, setSubmitting] = React.useState(false);
+  const [honeypot, setHoneypot] = React.useState('');
 
   const onSubmit = async (data) => {
     setSubmitting(true);
@@ -20,6 +21,7 @@ const ContactForm = ({ contactFormRef }) => {
         interest: data.interest,
         message: data.message,
         timestamp: Date.now(),
+        honeypot: honeypot || ''
       };
       await push(ref(db, 'homeFormSubmissions'), formData);
 
@@ -57,6 +59,16 @@ const ContactForm = ({ contactFormRef }) => {
           Get in Touch
         </motion.h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+          {/* Honeypot field for bots */}
+          <input
+            type="text"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            name="honeypot"
+            autoComplete="off"
+            tabIndex="-1"
+            className="hidden"
+          />
           <div>
             <label className="block text-sm font-medium mb-1 text-white">Name</label>
             <input

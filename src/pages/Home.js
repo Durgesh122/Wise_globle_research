@@ -11,7 +11,7 @@ import EconomicCalendar from '../components/EconomicCalendar';
 
 import MarketInsights from '../components/MarketInsights';
 import MethodologySection from '../components/MethodologySection';
-import TeamSection from '../components/TeamSection';
+// import TeamSection from '../components/TeamSection'; // Temporarily disabled on Home page
 import TradingViewTicker from './TradingViewTicker';
 
 // ...TestimonialsSection removed from home page
@@ -80,7 +80,7 @@ const Home = () => {
         {/* <ServicesSection /> removed as per request */}
         <MarketInsights />
         <MethodologySection />
-        <TeamSection />
+  {/* <TeamSection />  // Temporarily disabled on Home page */}
         <CallToAction scrollToContactForm={scrollToContactForm} />
          {/* <TimelineSection /> removed as per request */}
         <CertificationsSection />

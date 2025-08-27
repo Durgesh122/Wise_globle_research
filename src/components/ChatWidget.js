@@ -1,24 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaCommentDots, FaTimes, FaUser, FaCity, FaPhone, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
+import { FaCommentDots, FaTimes, FaUser, FaCity, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { db } from '../firebase';
 import { ref, push, serverTimestamp } from 'firebase/database';
 
 // Service buttons removed — chat now only collects name, city and mobile.
-
-const ValidationMessage = ({ message, isValid }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -5 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -5 }}
-      className={`flex items-center mt-1 text-xs ${isValid ? 'text-green-600' : 'text-red-600'}`}
-    >
-      {isValid ? <FaCheck className="mr-1" /> : <FaExclamationTriangle className="mr-1" />}
-      {message}
-    </motion.div>
-  );
-};
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,17 +12,12 @@ const ChatWidget = () => {
   const [formData, setFormData] = useState({ 
     name: '', 
     city: '', 
+    address: '',
     mobile: '', 
     service: '', 
     extra: {} 
   });
-  const [validation, setValidation] = useState({
-    name: { isValid: false, message: '' },
-    city: { isValid: false, message: '' },
-    mobile: { isValid: false, message: '' }
-  });
   const [messages, setMessages] = useState([]);
-  const [recentMsgIds, setRecentMsgIds] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
@@ -79,7 +60,7 @@ const ChatWidget = () => {
   useEffect(() => {
     // When widget opens first time, introduce the assistant 'Dugu' and offer a short suggestion.
     if (isOpen && messages.length === 0 && !introSentRef.current) {
-      sendBotMessage("Hello 👋, I am Dugu — I can suggest services to you. I only need three details to connect you: your full name, your city and your mobile number. Please tell me your full name to get started.", 400);
+      sendBotMessage("Hi 👋, I'm Dudu. I just need your full name, city, address, and mobile number to connect you. What's your full name?", 400);
       setStep('askName');
       introSentRef.current = true;
     }
@@ -90,43 +71,11 @@ const ChatWidget = () => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
     setTimeout(() => {
       setMessages((prev) => [...prev, { fromUser: false, text: content, id }]);
-      // mark as recent for a short animation
-      setRecentMsgIds((prev) => [...prev, id]);
-      setTimeout(() => setRecentMsgIds((prev) => prev.filter(x => x !== id)), 900);
       setIsTyping(false);
     }, delay);
   };
 
-  const validateName = (name) => {
-    if (name.trim().length < 2) {
-      return { isValid: false, message: 'Name should be at least 2 characters long' };
-    }
-    if (!/^[a-zA-Z\s]+$/.test(name)) {
-      return { isValid: false, message: 'Name should contain only letters and spaces' };
-    }
-    return { isValid: true, message: 'Valid name' };
-  };
-
-  const validateCity = (city) => {
-    if (city.trim().length < 2) {
-      return { isValid: false, message: 'Please enter a valid city name' };
-    }
-    if (!/^[a-zA-Z\s]+$/.test(city)) {
-      return { isValid: false, message: 'City name should contain only letters and spaces' };
-    }
-    return { isValid: true, message: 'Valid city' };
-  };
-
-  const validateMobile = (mobile) => {
-    const digits = mobile.replace(/\D/g, '');
-    if (digits.length < 10) {
-      return { isValid: false, message: 'Mobile number should be 10 digits' };
-    }
-    if (!/^[6-9]\d{9}$/.test(digits)) {
-      return { isValid: false, message: 'Please enter a valid Indian mobile number' };
-    }
-    return { isValid: true, message: 'Valid mobile number' };
-  };
+  // All input validations removed per request — flow proceeds on any input.
 
   const getLocalResponse = async (userMessage) => {
     await new Promise((r) => setTimeout(r, 250));
@@ -164,20 +113,10 @@ const ChatWidget = () => {
     const userMessage = input.trim();
   const userMsgId = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
   setMessages((prev) => [...prev, { fromUser: true, text: userMessage, id: userMsgId }]);
-  setRecentMsgIds((prev) => [...prev, userMsgId]);
-  setTimeout(() => setRecentMsgIds((prev) => prev.filter(x => x !== userMsgId)), 900);
     setInput('');
     
     // Flow: askName -> askCity -> askMobile -> askService -> deep questions -> conversion
     if (step === 'askName') {
-      const nameValidation = validateName(userMessage);
-      setValidation(prev => ({...prev, name: nameValidation}));
-      
-      if (!nameValidation.isValid) {
-        sendBotMessage(nameValidation.message, 600);
-        return;
-      }
-      
       setFormData((prev) => ({ ...prev, name: userMessage.trim() }));
       sendBotMessage(`Nice to meet you, ${userMessage.trim()}. Please tell us your city.`, 600);
       setStep('askCity');
@@ -185,51 +124,47 @@ const ChatWidget = () => {
     }
 
     if (step === 'askCity') {
-      const cityValidation = validateCity(userMessage);
-      setValidation(prev => ({...prev, city: cityValidation}));
-      
-      if (!cityValidation.isValid) {
-        sendBotMessage(cityValidation.message, 600);
-        return;
-      }
-      
       setFormData((prev) => ({ ...prev, city: userMessage.trim() }));
-      sendBotMessage(`Got it — ${userMessage.trim()}. Please share your mobile number so we can contact you.`, 600);
+      sendBotMessage(`Thanks. Please share your full address (house/street, area, pincode).`, 600);
+      setStep('askAddress');
+      return;
+    }
+
+    if (step === 'askAddress') {
+      setFormData((prev) => ({ ...prev, address: userMessage.trim() }));
+      sendBotMessage(`Got it. Please share your mobile number so we can contact you.`, 600);
       setStep('askMobile');
       return;
     }
 
     if (step === 'askMobile') {
-      const mobileValidation = validateMobile(userMessage);
-      setValidation(prev => ({...prev, mobile: mobileValidation}));
-      
-      if (!mobileValidation.isValid) {
-        sendBotMessage(mobileValidation.message, 600);
-        return;
-      }
-      
-      // accept last 10 digits to be tolerant of country code
-      const digits = userMessage.replace(/\D/g, '');
-      const mobile10 = digits.slice(-10);
-      setFormData((prev) => ({ ...prev, mobile: mobile10 }));
+      // Save the raw input without validation
+      const rawMobile = userMessage.trim();
+      const digitsOnly = rawMobile.replace(/\D/g, '').slice(0, 15);
+      setFormData((prev) => ({ ...prev, mobile: rawMobile }));
 
       // submit collected details and finish the conversation
       const submissionData = {
         ...formData,
-        mobile: mobile10,
+        address: formData.address || '',
+        mobile: digitsOnly,
         timestamp: serverTimestamp(),
         status: 'New',
-        userActivity: userActivity
+        userActivity: {
+          lastInteraction: userActivity.lastInteraction instanceof Date ? userActivity.lastInteraction.getTime() : null,
+          messageCount: userActivity.messageCount,
+          sessionStart: userActivity.sessionStart instanceof Date ? userActivity.sessionStart.getTime() : null
+        }
       };
 
       push(ref(db, 'chatbot-submissions'), submissionData)
         .then(() => {
-          sendBotMessage(`Thank you, ${formData.name || ''}! We've received your details. Our team will contact you shortly on ${mobile10}.`, 700);
+          sendBotMessage(`Thank you, ${formData.name || ''}! We've received your details. Our team will contact you shortly on ${digitsOnly}.`, 700);
           // close and reset after a short delay so user can read message
           setTimeout(() => {
             closeWithFade(500, () => {
               setMessages([]);
-              setFormData({ name: '', city: '', mobile: '', service: '', extra: {} });
+              setFormData({ name: '', city: '', address: '', mobile: '', service: '', extra: {} });
               setStep('greeting');
               introSentRef.current = false;
             });
@@ -280,40 +215,26 @@ const ChatWidget = () => {
       return;
     }
 
-    if (step === 'conversion') {
+  if (step === 'conversion') {
       // capture opt-in yes/no
       if (/yes|haan|h|yep|sure|1|ok|okay/i.test(userMessage.toLowerCase())) {
-        const submissionData = {
-            ...formData,
-            timestamp: serverTimestamp(),
-            status: 'New', // Add a default status
-            userActivity: userActivity
-        };
-
-        push(ref(db, 'chatbot-submissions'), submissionData)
-            .then(() => {
-                sendBotMessage('Great! Our team will contact you to send FREE demo tips on WhatsApp. Thank you 🙏', 700);
-                // explicit follow-up confirmation
-                sendBotMessage('Our team will contact you shortly on the mobile number you provided — please be available.', 1200);
-                // final thank you and keep chat open
-                setStep('chatting');
-                // close and reset the widget shortly after messages are delivered
-                setTimeout(() => {
-                    closeWithFade(400, () => {
-                    // clear messages and reset form so next open is fresh
-                    setMessages([]);
-                    setFormData({ name: '', city: '', mobile: '', service: '', extra: {} });
-                    setStep('greeting');
-                    // allow intro to be sent again if needed in later sessions
-                    introSentRef.current = false;
-                    });
-                }, 2600);
-            })
-            .catch((error) => {
-                console.error("Error saving data to Firebase: ", error);
-                sendBotMessage('Sorry, a technical problem has occurred. Please try again after some time.', 700);
-                setStep('chatting');
-            });
+    // Details already saved after mobile; just confirm
+    sendBotMessage('Great! Our team will contact you to send FREE demo tips on WhatsApp. Thank you 🙏', 700);
+    // explicit follow-up confirmation
+    sendBotMessage('Our team will contact you shortly on the mobile number you provided — please be available.', 1200);
+    // final thank you and keep chat open
+    setStep('chatting');
+    // close and reset the widget shortly after messages are delivered
+    setTimeout(() => {
+      closeWithFade(400, () => {
+      // clear messages and reset form so next open is fresh
+      setMessages([]);
+      setFormData({ name: '', city: '', address: '', mobile: '', service: '', extra: {} });
+      setStep('greeting');
+      // allow intro to be sent again if needed in later sessions
+      introSentRef.current = false;
+      });
+    }, 2600);
         return;
       }
       if (/no|nah|nahi|0|not now|later/i.test(userMessage.toLowerCase())) {
@@ -354,9 +275,10 @@ const ChatWidget = () => {
   // Input placeholder based on step
   const getInputPlaceholder = () => {
     switch(step) {
-      case 'askName': return 'Your full name (letters only)';
-      case 'askCity': return 'Your city (letters only)';
-      case 'askMobile': return '10-digit mobile number';
+  case 'askName': return 'Your full name';
+  case 'askCity': return 'Your city';
+  case 'askAddress': return 'Your full address with pincode';
+  case 'askMobile': return 'Your mobile number';
       default: return 'Type a message...';
     }
   };
@@ -369,19 +291,13 @@ const ChatWidget = () => {
     }
   };
 
-  // Input pattern for validation
-  const getInputPattern = () => {
-    switch(step) {
-  case 'askName': return '[A-Za-z ]+';
-  case 'askCity': return '[A-Za-z ]+';
-      default: return null;
-    }
-  };
+  // No input pattern — validations removed
 
   const StepIndicator = () => {
     const stepContent = {
       askName: { icon: FaUser, label: 'Name', color: 'text-blue-500' },
       askCity: { icon: FaCity, label: 'City', color: 'text-green-500' },
+  askAddress: { icon: FaMapMarkerAlt, label: 'Address', color: 'text-rose-500' },
       askMobile: { icon: FaPhone, label: 'Mobile', color: 'text-purple-500' },
     };
 
@@ -420,20 +336,21 @@ const ChatWidget = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="w-80 h-[28rem] bg-white/95 backdrop-blur-md shadow-2xl rounded-xl border border-gray-200 flex flex-col overflow-hidden"
+            className="w-80 h-[28rem] bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl border border-gray-200 flex flex-col overflow-hidden relative"
           >
+            {/* Subtle, clean UI — background animations removed */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 flex justify-between items-center rounded-t-xl">
               <div className="flex items-center gap-2">
                 <div className="bg-white/20 p-1 rounded-full">
                   <FaCommentDots />
                 </div>
-                <span className="font-bold">Dugu — Wise Global</span>
+                <span className="font-bold">Dudu</span>
               </div>
               <div className="flex gap-2">
                 <button 
                   onClick={() => closeWithFade(300, () => { 
                     setMessages([]); 
-                    setFormData({ name: '', city: '', mobile: '', service: '', extra: {} }); 
+                    setFormData({ name: '', city: '', address: '', mobile: '', service: '', extra: {} }); 
                     setStep('greeting'); 
                     introSentRef.current = false; 
                   })} 
@@ -450,7 +367,7 @@ const ChatWidget = () => {
               </div>
             </div>
 
-            <div className="flex-1 p-3 overflow-y-auto space-y-3 text-sm bg-gradient-to-b from-blue-50 to-white">
+            <div className="flex-1 p-3 overflow-y-auto space-y-3 text-sm bg-gradient-to-b from-blue-50/70 to-white/80">
               {messages.length === 0 ? (
                 <div className="text-center mt-8">
                   <motion.div 
@@ -466,34 +383,45 @@ const ChatWidget = () => {
               ) : (
                 <>
                   {messages.map((msg, idx) => {
-                    const isRecent = msg.id && recentMsgIds.includes(msg.id);
                     return (
-                      <motion.div 
+                       <motion.div
                         key={msg.id || idx} 
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={isRecent ? { opacity: 1, y: 0, scale: [1.06, 0.98, 1], boxShadow: msg.fromUser ? '0 10px 30px rgba(59,130,246,0.18)' : '0 8px 24px rgba(0,0,0,0.06)' } : { opacity: 1, y: 0, scale: 1 }}
-                        transition={{ duration: isRecent ? 0.5 : 0.3, ease: 'easeOut' }}
-                        whileHover={{ scale: 1.02 }}
+                         animate={{ opacity: 1, y: 0, scale: 1 }}
+                         transition={{ duration: 0.25, ease: 'easeOut' }}
                         className={`flex ${msg.fromUser ? 'justify-end' : 'justify-start'}`}
                       >
-                        <div className={`max-w-[80%] px-4 py-3 rounded-2xl ${msg.fromUser ? 'bg-blue-500 text-white rounded-br-none' : 'bg-gray-100 text-gray-800 rounded-bl-none shadow-sm'}`}>
+                        <motion.div
+                          layout
+                          className={`max-w-[80%] px-4 py-3 rounded-2xl ${msg.fromUser ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-none' : 'bg-white/90 backdrop-blur text-gray-800 rounded-bl-none shadow-sm border border-gray-100'}`}
+                          whileTap={{ scale: 0.98 }}
+                        >
                           {typeof msg.text === 'string' ? msg.text : msg.text}
-                        </div>
+                        </motion.div>
                       </motion.div>
                     );
                   })}
 
-                  {isTyping && (
-                    <div className="flex justify-start">
-                      <div className="bg-gray-100 text-gray-800 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm">
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                   {isTyping && (
+                     <div className="flex justify-start">
+                       <div className="bg-white/90 backdrop-blur text-gray-800 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-100">
+                         <div className="flex items-center gap-1">
+                           <motion.span className="w-2 h-2 bg-gray-400 rounded-full inline-block"
+                             animate={{ opacity: [0.3, 1, 0.3] }}
+                             transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                           />
+                           <motion.span className="w-2 h-2 bg-gray-400 rounded-full inline-block"
+                             animate={{ opacity: [0.3, 1, 0.3] }}
+                             transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut', delay: 0.15 }}
+                           />
+                           <motion.span className="w-2 h-2 bg-gray-400 rounded-full inline-block"
+                             animate={{ opacity: [0.3, 1, 0.3] }}
+                             transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+                           />
+                         </div>
+                       </div>
+                     </div>
+                   )}
 
                   <div ref={messagesEndRef} />
                 </>
@@ -501,28 +429,6 @@ const ChatWidget = () => {
             </div>
 
             <div className="p-3 border-t border-gray-200 bg-white">
-              {/* Validation messages */}
-              <AnimatePresence>
-                {step === 'askName' && validation.name.message && (
-                  <ValidationMessage 
-                    message={validation.name.message} 
-                    isValid={validation.name.isValid} 
-                  />
-                )}
-                {step === 'askCity' && validation.city.message && (
-                  <ValidationMessage 
-                    message={validation.city.message} 
-                    isValid={validation.city.isValid} 
-                  />
-                )}
-                {step === 'askMobile' && validation.mobile.message && (
-                  <ValidationMessage 
-                    message={validation.mobile.message} 
-                    isValid={validation.mobile.isValid} 
-                  />
-                )}
-              </AnimatePresence>
-
               {/* Step indicator */}
               {step !== 'chatting' && step !== 'askService' && <StepIndicator />}
 
@@ -530,11 +436,10 @@ const ChatWidget = () => {
                 <input
                   type={getInputType()}
                   placeholder={getInputPlaceholder()}
-                  pattern={getInputPattern()}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all"
+                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all bg-white/90 backdrop-blur"
                   disabled={step === 'askService'}
                 />
                 <motion.button 
@@ -553,27 +458,13 @@ const ChatWidget = () => {
           </motion.div>
         ) : (
           <div className="relative">
-            <motion.div
-              animate={{
-                y: [-8, -28],
-                opacity: [0, 1, 0],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                repeatDelay: 2,
-                ease: "easeOut",
-              }}
-              className="absolute top-0 left-1/2 w-3 h-3 bg-white/80 rounded-full"
-              style={{ translateX: '-50%' }}
-            />
             <motion.button
               key="chat-open-button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsOpen(true)}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white w-14 h-14 p-0 rounded-full shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 transition-all flex items-center justify-center"
-              aria-label="Open Wise Global chat"
+              aria-label="Open Dudu chat"
             >
               <motion.svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -581,21 +472,18 @@ const ChatWidget = () => {
                 width="100%"
                 height="100%"
                 className="w-full h-full"
-                initial={{ y: 0 }}
-                animate={{ y: [0, -6, 0] }}
-                transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
               >
                 <g transform="translate(0,8)">
                   <circle cx="32" cy="24" r="14" fill="rgba(255,255,255,0.95)" />
                   <rect x="30" y="6" width="4" height="8" rx="2" fill="rgba(255,255,255,0.95)" />
                   <circle cx="32" cy="6" r="2" fill="rgba(255,255,255,0.95)" />
                   <motion.circle cx="25" cy="23" r="2" fill="#0b3b66"
-                    animate={{ scaleY: [1, 0.15, 1] }}
-                    transition={{ repeat: Infinity, duration: 2.2, times: [0, 0.5, 1], ease: 'easeInOut' }}
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
                   />
                   <motion.circle cx="39" cy="23" r="2" fill="#0b3b66"
-                    animate={{ scaleY: [1, 0.15, 1] }}
-                    transition={{ repeat: Infinity, duration: 2.2, times: [0.2, 0.7, 1], ease: 'easeInOut' }}
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut', delay: 0.2 }}
                   />
                   <path d="M25 30 C28 34, 36 34, 39 30" stroke="#0b3b66" strokeWidth="2" fill="transparent" strokeLinecap="round" />
                   <path d="M44 36 L50 40 L46 44" fill="rgba(255,255,255,0.95)" stroke="rgba(255,255,255,0.95)" />

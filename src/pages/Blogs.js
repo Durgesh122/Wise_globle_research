@@ -319,7 +319,7 @@ const Blogs = () => {
           <Link
             to="/contact"
             className="inline-block bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition"
-          ><Trans i18nKey="pages.Blogs.contact-us">Contact Us</Trans><FaArrowRight className="inline ml-2" />
+          >Enquiry Now<FaArrowRight className="inline ml-2" />
           </Link>
         </motion.div>
       </motion.div>

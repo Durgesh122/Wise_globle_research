@@ -7,7 +7,7 @@ const InfinityClub = () => (
   <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.InfinityClub.infinity-club">Infinity Club</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
-      In Infinity Club, we provide you Future and Option intraday recommendations with proper target &amp; Stop loss in NSE Stock Market. The Pack is specially designed for traders who’s working in all segment of NSE market with proper research-based recommendations and believes in limited but quality trades. Our highly experienced teams always focus on proper entry and exit time of customer; we provide you research on the in-depth analysis using technical and fundamental analysis by using SMS system
+      In Infinity Club, we provide you Future and Option intraday recommendations with proper target &amp; Stop loss in NSE Stock Market. The Pack is specially designed for traders who’s working in all segment of NSE market with proper research-based recommendations and believes in limited but quality trades. Our highly experienced teams always focus on proper entry and exit time of customer; we provide you research on the in-depth analysis using technical and fundamental analysis.
     </p>
 
     <div className="mb-8">
@@ -20,8 +20,8 @@ const InfinityClub = () => (
         <li><Trans i18nKey="pages.InfinityClub.nifty-and-bank-nifty-trend-and-support-a"><Trans i18nKey="pages.InfinityClub.nifty-and-bank-nifty-trend-and-support-a-1">Nifty and Bank Nifty Trend and Support and resistance.</Trans></Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.carefully-analysis-market-direction"><Trans i18nKey="pages.InfinityClub.carefully-analysis-market-direction-1">Carefully Analysis Market direction.</Trans></Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.concise-information-of-domestic-amp-worl"><Trans i18nKey="pages.InfinityClub.concise-information-of-domestic-amp-worl-1">Concise information of Domestic &amp; World Market.</Trans></Trans></li>
-        <li><Trans i18nKey="pages.InfinityClub.recommendations-are-provided-through-sms"><Trans i18nKey="pages.InfinityClub.recommendations-are-provided-through-sms-1">Recommendations are provided through SMS.</Trans></Trans></li>
-        <li><Trans i18nKey="pages.InfinityClub.swift-real-time-customer-support-between"><Trans i18nKey="pages.InfinityClub.swift-real-time-customer-support-between-1">Swift real time customer support between (09:00 AM to 06:00 PM).</Trans></Trans></li>
+        
+        
       </ul>
       <p className="text-base mb-2 text-white"><Trans i18nKey="pages.InfinityClub.trading-rules-that-every-trader-must-stu"><Trans i18nKey="pages.InfinityClub.trading-rules-that-every-trader-must-stu-1">Trading rules that every trader must studious follow.</Trans></Trans></p>
     </div>
@@ -30,7 +30,7 @@ const InfinityClub = () => (
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.trading-rules-every-trader-must-follow"><Trans i18nKey="pages.InfinityClub.trading-rules-every-trader-must-follow-1">Trading Rules Every Trader Must Follow</Trans></Trans></h2>
       <ul className="list-decimal pl-6 text-base mb-4 text-white">
         <li><Trans i18nKey="pages.InfinityClub.do-not-over-trade">Do not over trade.</Trans></li>
-        <li><Trans i18nKey="pages.InfinityClub.only-follow-sms-research-recommendations"><Trans i18nKey="pages.InfinityClub.only-follow-sms-research-recommendations-1">Only follow SMS research recommendations.</Trans></Trans></li>
+  {/* Removed SMS-only rule per policy */}
         <li><Trans i18nKey="pages.InfinityClub.have-to-trade-on-each-recommendation-wit"><Trans i18nKey="pages.InfinityClub.have-to-trade-on-each-recommendation-wit-1">Have to trade on each Recommendation with same quantity according to Research Team.</Trans></Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.profit-and-loss-is-subject-to-market-ris"><Trans i18nKey="pages.InfinityClub.profit-and-loss-is-subject-to-market-ris-1">Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</Trans></Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.never-be-emotional">Never be emotional.</Trans></li>
@@ -65,9 +65,7 @@ const InfinityClub = () => (
       </div>
     </div>
 
-    <div className="text-center text-sm text-white mt-8">
-      <strong><Trans i18nKey="pages.InfinityClub.swift-real-time-customer-support"><Trans i18nKey="pages.InfinityClub.swift-real-time-customer-support-1">Swift real-time customer support:</Trans></Trans></strong><Trans i18nKey="pages.InfinityClub.09-00-am-to-06-00-pm">09:00 AM to 06:00 PM |</Trans><strong><Trans i18nKey="pages.InfinityClub.all-recommendations-are-provided-through"><Trans i18nKey="pages.InfinityClub.all-recommendations-are-provided-through-1">All recommendations are provided through SMS.</Trans></Trans></strong>
-    </div>
+    
 
     {/* Why Choose Us Section */}
     <div className="my-12">
@@ -81,7 +79,7 @@ const InfinityClub = () => (
         <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
           <FaBolt className="text-4xl mb-2 text-blue-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.InfinityClub.real-time-support">Real-Time Support</Trans></h3>
-          <p className="text-white text-center"><Trans i18nKey="pages.InfinityClub.get-instant-help-and-trade-updates-from-"><Trans i18nKey="pages.InfinityClub.get-instant-help-and-trade-updates-from--1">Get instant help and trade updates from 9:00 AM to 6:00 PM, Monday to Friday.</Trans></Trans></p>
+          <p className="text-white text-center">Get help and trade updates during Indian market hours.</p>
         </div>
         <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
           <FaLock className="text-4xl mb-2 text-green-300" />
@@ -97,11 +95,11 @@ const InfinityClub = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.InfinityClub.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.InfinityClub.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white"><Trans i18nKey="pages.InfinityClub.a-all-recommendations-are-sent-via-sms-t"><Trans i18nKey="pages.InfinityClub.a-all-recommendations-are-sent-via-sms-t-1">A: All recommendations are sent via SMS to your registered mobile number.</Trans></Trans></p>
+          <p className="text-white">A: Recommendations are shared via your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.InfinityClub.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.InfinityClub.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
-          <p className="text-white"><Trans i18nKey="pages.InfinityClub.a-yes-our-support-team-is-available-from"><Trans i18nKey="pages.InfinityClub.a-yes-our-support-team-is-available-from-1">A: Yes, our support team is available from 09:00 AM to 06:00 PM for any queries.</Trans></Trans></p>
+          <p className="text-white">A: Yes, support is available during Indian market hours for any queries.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.InfinityClub.q-is-there-a-refund-policy"><Trans i18nKey="pages.InfinityClub.q-is-there-a-refund-policy-1">Q: Is there a refund policy?</Trans></Trans></h3>
@@ -110,7 +108,7 @@ const InfinityClub = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition"><Trans i18nKey="pages.InfinityClub.contact-us">Contact Us</Trans></button>
+          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

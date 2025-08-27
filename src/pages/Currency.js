@@ -96,7 +96,7 @@ function Currency() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/contact')}
-          ><Trans i18nKey="pages.Currency.learn-more">Learn More</Trans></motion.button>
+          >Enquiry Now</motion.button>
         </motion.section>
        </div>
      </motion.div>

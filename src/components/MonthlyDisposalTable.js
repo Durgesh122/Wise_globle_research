@@ -15,32 +15,53 @@ const MonthlyDisposalTable = () => {
 
   useEffect(() => {
     const tableRef = ref(db, 'monthlyDisposalTableData');
-    const unsubscribe = onValue(tableRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setTableData(Array.isArray(data) ? data : Object.values(data));
-      } else {
-        setTableData([
-          { srNo: 1, month: 'April, 2025', carried: 1, received: 0, resolved: 1, pending: 0 },
-          { srNo: 2, month: 'May, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 3, month: 'June, 2025', carried: 0, received: 2, resolved: 2, pending: 0 },
-          { srNo: 4, month: 'July, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 5, month: 'Aug, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 6, month: 'Sep, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 7, month: 'Oct, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 8, month: 'Nov, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 9, month: 'Dec, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 10, month: 'Jan, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 11, month: 'Feb, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 12, month: 'March, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 'Grand Total', month: '', carried: 1, received: 2, resolved: 3, pending: 0 },
-        ]);
+    const unsubscribe = onValue(
+      tableRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setTableData(Array.isArray(data) ? data : Object.values(data));
+        } else {
+          setTableData([
+            { srNo: 1, month: 'April, 2025', carried: 1, received: 0, resolved: 1, pending: 0 },
+            { srNo: 2, month: 'May, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 3, month: 'June, 2025', carried: 0, received: 2, resolved: 2, pending: 0 },
+            { srNo: 4, month: 'July, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 5, month: 'Aug, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 6, month: 'Sep, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 7, month: 'Oct, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 8, month: 'Nov, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 9, month: 'Dec, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 10, month: 'Jan, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 11, month: 'Feb, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 12, month: 'March, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 'Grand Total', month: '', carried: 1, received: 2, resolved: 3, pending: 0 },
+          ]);
+        }
+      },
+      (error) => {
+        if (error && error.code === 'PERMISSION_DENIED') {
+          // Silent fallback for public view
+          setTableData([
+            { srNo: 1, month: 'April, 2025', carried: 1, received: 0, resolved: 1, pending: 0 },
+            { srNo: 2, month: 'May, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 3, month: 'June, 2025', carried: 0, received: 2, resolved: 2, pending: 0 },
+            { srNo: 4, month: 'July, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 5, month: 'Aug, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 6, month: 'Sep, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 7, month: 'Oct, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 8, month: 'Nov, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 9, month: 'Dec, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 10, month: 'Jan, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 11, month: 'Feb, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 12, month: 'March, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
+            { srNo: 'Grand Total', month: '', carried: 1, received: 2, resolved: 3, pending: 0 },
+          ]);
+        } else {
+          toast.error('Failed to load monthly disposal data: ' + error.message);
+        }
       }
-      // setIsLoading(false); // Removed unused isLoading
-    }, (error) => {
-      toast.error('Failed to load monthly disposal data: ' + error.message);
-      // setIsLoading(false); // Removed unused isLoading
-    });
+    );
     return () => unsubscribe();
   }, []);
 

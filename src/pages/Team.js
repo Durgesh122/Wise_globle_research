@@ -164,7 +164,7 @@ const missionStatement = {
 const cta = {
   title: 'Join the Wise Global Community',
   description: 'Ready to elevate your trading? Contact our expert team to explore offerings like Smart Options, MCX Supreme, and Infinity Club tailored for Indian markets.',
-  buttonText: 'Contact Us',
+  buttonText: 'Enquiry Now',
   buttonLink: '/contact',
 };
 

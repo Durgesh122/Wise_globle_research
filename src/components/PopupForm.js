@@ -30,8 +30,7 @@ const PopupForm = ({ onClose }) => {
     name: '',
     mobile: '',
     city: '',
-  interest: '',
-    newsletter: false,
+    interest: '',
     honeypot: '', // Hidden field for bot detection
   });
   const [errors, setErrors] = useState({});
@@ -43,12 +42,7 @@ const PopupForm = ({ onClose }) => {
   // Real-time validation
   useEffect(() => {
     const errs = {};
-    if (touched.name && (!form.name.trim() || form.name.trim().split(' ').length < 2)) {
-      errs.name = 'Please enter your full name (first and last)';
-    }
-    if (touched.mobile && !/^\\d{10}$/.test(form.mobile)) {
-      errs.mobile = 'Enter a valid 10-digit mobile number';
-    }
+    // Name and mobile validations removed as requested
     if (touched.city && !form.city.trim()) {
       errs.city = 'Please enter your city';
     }
@@ -70,12 +64,7 @@ const PopupForm = ({ onClose }) => {
   // Form validation
   const validate = () => {
     const errs = {};
-    if (!form.name.trim() || form.name.trim().split(' ').length < 2) {
-      errs.name = 'Please enter your full name (first and last)';
-    }
-    if (!/^\\d{10}$/.test(form.mobile)) {
-      errs.mobile = 'Enter a valid 10-digit mobile number';
-    }
+    // Name and mobile validations removed as requested
     if (!form.city.trim()) {
       errs.city = 'Please enter your city';
     }
@@ -93,7 +82,7 @@ const PopupForm = ({ onClose }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-  setTouched({ name: true, mobile: true, city: true, interest: true });
+    setTouched({ city: true, interest: true });
 
     if (!validate()) return;
 
@@ -117,7 +106,6 @@ const PopupForm = ({ onClose }) => {
         mobile: '',
         city: '',
         interest: '',
-        newsletter: false,
         honeypot: '',
       });
       setTouched({});
@@ -163,10 +151,13 @@ const PopupForm = ({ onClose }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-    style={{ background: 'transparent' }}
+      style={{ background: 'transparent' }}
     >
       <motion.div
-        className="relative bg-gradient-to-br from-gray-900 to-blue-900 bg-opacity-80 backdrop-blur-xl rounded-2xl p-4 sm:p-8 w-full max-w-full sm:max-w-xl md:max-w-3xl lg:max-w-2xl shadow-2xl overflow-auto max-h-[90vh] mx-4 sm:mx-0"
+        className="relative backdrop-blur-xl rounded-2xl p-4 sm:p-8 w-full max-w-full sm:max-w-xl md:max-w-3xl lg:max-w-2xl shadow-2xl overflow-auto max-h-[90vh] mx-4 sm:mx-0"
+        style={{
+          backgroundImage: 'linear-gradient(135deg, #D5ffff 0%, #b3ffe6 100%)'
+        }}
         onClick={(e) => e.stopPropagation()}
         initial={{ scale: 0.8, opacity: 0, y: 50 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -174,8 +165,8 @@ const PopupForm = ({ onClose }) => {
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         {/* Header with Company Name */}
-  <h2 className="text-2xl font-bold text-white text-center mb-4">Wise Global Research Services</h2>
-  <h3 className="text-lg font-semibold text-blue-300 text-center mb-6">Unlock Market Insights & Data-Driven Decisions</h3>
+  <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">Wise Global Research Services</h2>
+  <h3 className="text-lg font-semibold text-blue-700 text-center mb-6">Unlock Market Insights & Data-Driven Decisions</h3>
 
         {/* Logo with Particle Animation */}
         <div
@@ -214,20 +205,20 @@ const PopupForm = ({ onClose }) => {
 
         {/* Success Message */}
         <AnimatePresence>
-          {successMessage && (
+          {successMessage ? (
             <motion.div
-              className="mb-4 p-4 bg-green-600 bg-opacity-80 rounded-lg text-white text-center"
+              className="mb-4 p-4 bg-green-100 rounded-lg text-green-800 text-center"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
             >
               {successMessage}
             </motion.div>
-          )}
+          ) : null}
         </AnimatePresence>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="w-full max-w-lg mx-auto space-y-6 px-4 sm:px-0 text-white">
+  <form onSubmit={handleSubmit} className="w-full max-w-lg mx-auto space-y-6 px-4 sm:px-0 text-gray-900">
           {/* Honeypot Field (Hidden for Bot Detection) */}
           <input
             type="text"
@@ -247,40 +238,32 @@ const PopupForm = ({ onClose }) => {
               value={form.name}
               onChange={handleChange}
               placeholder="Enter your full name"
-              className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.name ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
-              required
+              className={`w-full px-4 py-3 bg-white rounded-lg border ${errors.name ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
             />
-            {errors.name && (
-              <motion.p
-                className="text-red-400 text-sm mt-1"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                {errors.name}
-              </motion.p>
-            )}
+            {/* Name validation removed */}
           </div>
 
           {/* Mobile Number */}
           <div>
             <label className="block text-sm font-medium mb-1">Mobile Number</label>
             <input
+              type="tel"
               name="mobile"
               value={form.mobile}
-              onChange={handleChange}
+              onChange={(e) => {
+                // Allow only digits and cap at 10
+                const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 10);
+                setForm((prev) => ({ ...prev, mobile: digitsOnly }));
+                setTouched((prev) => ({ ...prev, mobile: true }));
+              }}
               placeholder="Enter your 10-digit mobile number"
-              className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.mobile ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
+              inputMode="numeric"
+              minLength={10}
+              maxLength={10}
               required
+              className={`w-full px-4 py-3 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
             />
-            {errors.mobile && (
-              <motion.p
-                className="text-red-400 text-sm mt-1"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                {errors.mobile}
-              </motion.p>
-            )}
+            {/* Mobile validation message removed; input restricted to max 10 digits */}
           </div>
 
           {/* City Input */}
@@ -291,12 +274,12 @@ const PopupForm = ({ onClose }) => {
               value={form.city}
               onChange={handleChange}
               placeholder="Enter your city"
-              className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.city ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
+              className={`w-full px-4 py-3 bg-white rounded-lg border ${errors.city ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
               required
             />
             {errors.city && (
               <motion.p
-                className="text-red-400 text-sm mt-1"
+                className="text-red-600 text-sm mt-1"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
@@ -312,7 +295,7 @@ const PopupForm = ({ onClose }) => {
                 name="interest"
                 value={form.interest}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 bg-gray-800 bg-opacity-50 rounded-lg border ${errors.interest ? 'border-red-500' : 'border-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
+                className={`w-full px-4 py-3 bg-white rounded-lg border ${errors.interest ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
                 required
               >
                 <option value="">Select your interest</option>
@@ -324,7 +307,7 @@ const PopupForm = ({ onClose }) => {
               </select>
               {errors.interest && (
                 <motion.p
-                  className="text-red-400 text-sm mt-1"
+                  className="text-red-600 text-sm mt-1"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 >
@@ -333,17 +316,7 @@ const PopupForm = ({ onClose }) => {
               )}
           </div>
 
-          {/* Newsletter Subscription */}
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              name="newsletter"
-              checked={form.newsletter}
-              onChange={handleChange}
-              className="h-5 w-5 text-blue-500 focus:ring-blue-500 border-gray-500 rounded"
-            />
-            <label className="ml-2 text-sm font-medium">Subscribe to our newsletter</label>
-          </div>
+          {/* Newsletter checkbox removed as requested */}
 
           {/* Submit Button */}
           <button
@@ -388,7 +361,7 @@ const PopupForm = ({ onClose }) => {
         {/* Close Button */}
         <motion.button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-white hover:text-blue-300"
+          className="absolute top-4 right-4 text-gray-700 hover:text-blue-700"
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
         >

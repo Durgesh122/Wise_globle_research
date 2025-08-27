@@ -298,7 +298,7 @@ const Career = () => {
         <a
           href="/contact"
           className="inline-block bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition"
-        ><Trans i18nKey="pages.Career.contact-us">Contact Us</Trans></a>
+  ><Trans i18nKey="pages.Career.contact-us">Enquiry Now</Trans></a>
       </motion.div>
 
       {/* Disclaimer */}

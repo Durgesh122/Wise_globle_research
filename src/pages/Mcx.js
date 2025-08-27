@@ -504,11 +504,11 @@ const Mcx = () => {
                       <li><Trans i18nKey="pages.Mcx.nifty-and-bank-nifty-trend-and-support-a"><Trans i18nKey="pages.Mcx.nifty-and-bank-nifty-trend-and-support-a-1">Nifty and Bank Nifty Trend and Support and resistance.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.carefully-analysis-market-direction"><Trans i18nKey="pages.Mcx.carefully-analysis-market-direction-2">Carefully Analysis Market direction.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.concise-information-of-domestic-world-ma"><Trans i18nKey="pages.Mcx.concise-information-of-domestic-world-ma-2">Concise information of Domestic & World Market.</Trans></Trans></li>
-                      <li><Trans i18nKey="pages.Mcx.recommendations-are-provided-through-sms"><Trans i18nKey="pages.Mcx.recommendations-are-provided-through-sms-2">Recommendations are provided through SMS.</Trans></Trans></li>
-                      <li><Trans i18nKey="pages.Mcx.swift-real-time-customer-support-between"><Trans i18nKey="pages.Mcx.swift-real-time-customer-support-between-2">Swift real time customer support between (09:00 AM to 06:00 PM).</Trans></Trans></li>
+                      
+                      
                       <li><Trans i18nKey="pages.Mcx.trading-rules-that-every-trader-must-stu"><Trans i18nKey="pages.Mcx.trading-rules-that-every-trader-must-stu-2">Trading rules that every trader must studious follow.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.do-not-over-trade">Do not over trade.</Trans></li>
-                      <li><Trans i18nKey="pages.Mcx.only-follow-sms-research-recommendations"><Trans i18nKey="pages.Mcx.only-follow-sms-research-recommendations-2">Only follow SMS research recommendations.</Trans></Trans></li>
+                      {/* Removed SMS-only rule per policy */}
                       <li><Trans i18nKey="pages.Mcx.have-to-trade-on-each-recommendation-wit"><Trans i18nKey="pages.Mcx.have-to-trade-on-each-recommendation-wit-2">Have to trade on each Recommendation with same quantity according to Research Team.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.profit-and-loss-is-subject-to-market-ris"><Trans i18nKey="pages.Mcx.profit-and-loss-is-subject-to-market-ris-2">Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.never-be-emotional">Never be emotional.</Trans></li>
@@ -553,11 +553,11 @@ const Mcx = () => {
                       <li><Trans i18nKey="pages.Mcx.proper-time-for-entry-exit-in-recommenda"><Trans i18nKey="pages.Mcx.proper-time-for-entry-exit-in-recommenda-1">Proper time for entry & exit in recommendations.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.carefully-analysis-market-direction"><Trans i18nKey="pages.Mcx.carefully-analysis-market-direction-1">Carefully Analysis Market direction.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.concise-information-of-domestic-world-ma"><Trans i18nKey="pages.Mcx.concise-information-of-domestic-world-ma-1">Concise information of Domestic & World Market.</Trans></Trans></li>
-                      <li><Trans i18nKey="pages.Mcx.recommendations-are-provided-through-sms"><Trans i18nKey="pages.Mcx.recommendations-are-provided-through-sms-1">Recommendations are provided through SMS.</Trans></Trans></li>
-                      <li><Trans i18nKey="pages.Mcx.swift-real-time-customer-support-between"><Trans i18nKey="pages.Mcx.swift-real-time-customer-support-between-1">Swift real time customer support between (09:00 AM to 06:00 PM).</Trans></Trans></li>
+                      
+                      
                       <li><Trans i18nKey="pages.Mcx.trading-rules-that-every-trader-must-stu"><Trans i18nKey="pages.Mcx.trading-rules-that-every-trader-must-stu-1">Trading rules that every trader must studious follow.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.do-not-over-trade">Do not over trade.</Trans></li>
-                      <li><Trans i18nKey="pages.Mcx.only-follow-sms-research-recommendations"><Trans i18nKey="pages.Mcx.only-follow-sms-research-recommendations-1">Only follow SMS research recommendations.</Trans></Trans></li>
+                      {/* Removed SMS-only rule per policy */}
                       <li><Trans i18nKey="pages.Mcx.have-to-trade-on-each-recommendation-wit"><Trans i18nKey="pages.Mcx.have-to-trade-on-each-recommendation-wit-1">Have to trade on each Recommendation with same quantity according to Research Team.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.profit-and-loss-is-subject-to-market-ris"><Trans i18nKey="pages.Mcx.profit-and-loss-is-subject-to-market-ris-1">Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</Trans></Trans></li>
                       <li><Trans i18nKey="pages.Mcx.never-be-emotional">Never be emotional.</Trans></li>

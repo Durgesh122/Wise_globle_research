@@ -39,7 +39,7 @@ const BTST = () => {
       title: "Why Choose Us?",
       points: [
         "Our research is based on verified trades from the past 12 months.",
-        "Real-time alerts via SMS, email, and WhatsApp with instant execution updates.",
+  "Real-time alerts via your registered communication channels with instant execution updates.",
         "Dedicated research support for all subscribers with direct analyst access.",
         "Clear risk-reward ratio in every research report (minimum 1:2 ratio maintained).",
         "Weekly performance review webinars and monthly portfolio health checks.",
@@ -59,7 +59,7 @@ const BTST = () => {
     {
       title: "Subscription Plans",
       points: [
-        "Basic Plan: 5 BTST research reports per week with SMS alerts (₹2,999/month)",
+  "Basic Plan: 5 BTST research reports per week with instant alerts (₹2,999/month)",
         "Premium Plan: 10-15 BTST research reports with WhatsApp priority (₹4,999/month)",
         "Institutional Plan: Unlimited research reports + dedicated analyst (₹9,999/month)",
         "All plans include weekend strategy sessions and monthly review reports.",

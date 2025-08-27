@@ -16,21 +16,31 @@ const AnnualDisposalTable = () => {
 
   useEffect(() => {
     const tableRef = ref(db, 'annualDisposalTableData');
-    const unsubscribe = onValue(tableRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setTableData(Array.isArray(data) ? data : Object.values(data));
-      } else {
-        setTableData([
-          { srNo: 1, year: '2024 - 2025', carried: 0, received: 8, resolved: 7, pending: 1 },
-          { srNo: 'Grand Total', year: '', carried: 0, received: 8, resolved: 7, pending: 1 },
-        ]);
+    const unsubscribe = onValue(
+      tableRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setTableData(Array.isArray(data) ? data : Object.values(data));
+        } else {
+          setTableData([
+            { srNo: 1, year: '2024 - 2025', carried: 0, received: 8, resolved: 7, pending: 1 },
+            { srNo: 'Grand Total', year: '', carried: 0, received: 8, resolved: 7, pending: 1 },
+          ]);
+        }
+      },
+      (error) => {
+        // If permission denied, fall back silently to default data for public viewing
+        if (error && error.code === 'PERMISSION_DENIED') {
+          setTableData([
+            { srNo: 1, year: '2024 - 2025', carried: 0, received: 8, resolved: 7, pending: 1 },
+            { srNo: 'Grand Total', year: '', carried: 0, received: 8, resolved: 7, pending: 1 },
+          ]);
+        } else {
+          toast.error('Failed to load annual disposal data: ' + error.message);
+        }
       }
-      // setIsLoading(false); // Removed unused isLoading
-    }, (error) => {
-      toast.error('Failed to load annual disposal data: ' + error.message);
-      // setIsLoading(false); // Removed unused isLoading
-    });
+    );
     return () => unsubscribe();
   }, []);
 

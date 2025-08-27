@@ -41,7 +41,7 @@ const coreValues = [
   {
     id: 2,
     title: 'Client-Centric Approach',
-    description: 'Our strategies are tailored to the needs of Indian investors, from beginners in Mumbai to seasoned traders in Delhi.',
+  description: 'Our strategies are tailored to the needs of Indian investors all over India, from beginners to seasoned traders.',
   },
   {
     id: 3,

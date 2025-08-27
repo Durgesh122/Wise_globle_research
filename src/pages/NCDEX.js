@@ -144,10 +144,10 @@ const NCDEXPage = () => {
           transition={{ duration: 0.5 }}
         ><Trans i18nKey="pages.NCDEX.ready-to-learn-more">Ready to Learn More?</Trans></motion.h2>
         <p className="text-white mb-6"><Trans i18nKey="pages.NCDEX.explore-our-knowledge-hub-and-stay-updat"><Trans i18nKey="pages.NCDEX.explore-our-knowledge-hub-and-stay-updat-1">Explore our knowledge hub and stay updated on India's agricultural market evolution.</Trans></Trans></p>
-        <button
+  <button
           onClick={() => setShowContactForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full shadow transition inline-block"
-        ><Trans i18nKey="pages.NCDEX.contact-us">Contact Us</Trans></button>
+  >Enquiry Now</button>
       </section>
     </main>
   );

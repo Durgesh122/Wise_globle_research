@@ -47,6 +47,7 @@ const ChatbotSubmissions = () => {
                 <th scope="col" className="px-6 py-3">Timestamp</th>
                 <th scope="col" className="px-6 py-3">Name</th>
                 <th scope="col" className="px-6 py-3">City</th>
+                <th scope="col" className="px-6 py-3">Address</th>
                 <th scope="col" className="px-6 py-3">Mobile</th>
                 <th scope="col" className="px-6 py-3">Service</th>
                 <th scope="col" className="px-6 py-3">Status</th>
@@ -59,6 +60,7 @@ const ChatbotSubmissions = () => {
                   <td className="px-6 py-4">{new Date(sub.timestamp).toLocaleString()}</td>
                   <td className="px-6 py-4 font-medium">{sub.name}</td>
                   <td className="px-6 py-4">{sub.city}</td>
+                  <td className="px-6 py-4 whitespace-pre-wrap break-words max-w-xs">{sub.address || '-'}</td>
                   <td className="px-6 py-4">
                     <a href={`https://wa.me/91${sub.mobile}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-green-400 hover:text-green-300">
                       <FaWhatsapp />

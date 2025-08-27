@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   FaPhone, FaEnvelope, FaMapMarkerAlt,
-  FaFacebookF, FaInstagram, FaYoutube, FaLinkedinIn, FaPalette
+  FaFacebookF, FaInstagram, FaYoutube, FaLinkedinIn, FaPalette, FaGlobe, FaChevronDown
 } from 'react-icons/fa';
 import { SiX } from 'react-icons/si';
 import wiseLogo from '../assets/images/wise3.png';
@@ -11,6 +11,81 @@ import { ThemeContext } from '../context/ThemeContext';
 function Footer() {
   const { changeTheme, theme, gradients } = useContext(ThemeContext);
   const { background, textColor } = gradients[theme] || gradients.default;
+  const [langQuery, setLangQuery] = useState('');
+  const [showAllWidget, setShowAllWidget] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const langDropdownRef = useRef(null);
+
+  // Indian and popular languages list (codes supported by Google Translate)
+  const indianLanguages = [
+    { code: 'as', name: 'Assamese' },
+    { code: 'bn', name: 'Bengali' },
+    { code: 'bho', name: 'Bhojpuri' },
+    { code: 'doi', name: 'Dogri' },
+    { code: 'gom', name: 'Konkani' },
+    { code: 'gu', name: 'Gujarati' },
+    { code: 'hi', name: 'Hindi' },
+    { code: 'kn', name: 'Kannada' },
+    { code: 'ks', name: 'Kashmiri' },
+    { code: 'mai', name: 'Maithili' },
+    { code: 'ml', name: 'Malayalam' },
+    { code: 'mni-Mtei', name: 'Meiteilon (Manipuri)' },
+    { code: 'mr', name: 'Marathi' },
+    { code: 'ne', name: 'Nepali' },
+    { code: 'or', name: 'Odia (Oriya)' },
+    { code: 'pa', name: 'Punjabi' },
+    { code: 'sa', name: 'Sanskrit' },
+    { code: 'sd', name: 'Sindhi' },
+    { code: 'ta', name: 'Tamil' },
+    { code: 'te', name: 'Telugu' },
+    { code: 'ur', name: 'Urdu' },
+  ];
+
+  const popularLanguages = [
+    { code: 'en', name: 'English' },
+    { code: 'ar', name: 'Arabic' },
+    { code: 'zh-CN', name: 'Chinese (Simplified)' },
+    { code: 'zh-TW', name: 'Chinese (Traditional)' },
+    { code: 'cs', name: 'Czech' },
+    { code: 'da', name: 'Danish' },
+    { code: 'nl', name: 'Dutch' },
+    { code: 'fi', name: 'Finnish' },
+    { code: 'fr', name: 'French' },
+    { code: 'de', name: 'German' },
+    { code: 'el', name: 'Greek' },
+    { code: 'he', name: 'Hebrew' },
+    { code: 'hu', name: 'Hungarian' },
+    { code: 'id', name: 'Indonesian' },
+    { code: 'it', name: 'Italian' },
+    { code: 'ja', name: 'Japanese' },
+    { code: 'ko', name: 'Korean' },
+    { code: 'ms', name: 'Malay' },
+    { code: 'no', name: 'Norwegian' },
+    { code: 'pl', name: 'Polish' },
+    { code: 'pt', name: 'Portuguese' },
+    { code: 'ro', name: 'Romanian' },
+    { code: 'ru', name: 'Russian' },
+    { code: 'es', name: 'Spanish' },
+    { code: 'sv', name: 'Swedish' },
+    { code: 'th', name: 'Thai' },
+    { code: 'tr', name: 'Turkish' },
+    { code: 'uk', name: 'Ukrainian' },
+    { code: 'vi', name: 'Vietnamese' },
+    { code: 'fa', name: 'Persian' },
+    { code: 'sr', name: 'Serbian' },
+    { code: 'hr', name: 'Croatian' },
+    { code: 'bg', name: 'Bulgarian' },
+    { code: 'sk', name: 'Slovak' },
+    { code: 'sl', name: 'Slovenian' },
+    { code: 'et', name: 'Estonian' },
+    { code: 'lv', name: 'Latvian' },
+    { code: 'lt', name: 'Lithuanian' },
+    { code: 'ta', name: 'Tamil' },
+    { code: 'te', name: 'Telugu' },
+    { code: 'fil', name: 'Filipino' },
+  ];
+
+  // Note: allQuickLanguages (merged list) is not needed because we present two grouped lists.
 
   // language selector removed — static English content used
   // Language translator: integrate Google Translate widget in a safe, responsive way
@@ -24,13 +99,12 @@ function Footer() {
     }
 
     // Define the callback for when the Google Translate script loads
-    window.googleTranslateElementInit = function googleTranslateElementInit() {
+  window.googleTranslateElementInit = function googleTranslateElementInit() {
       try {
-        // Restrict languages to Hindi, Bengali, Marathi, Tamil and Gujarati only
+    // Initialize widget with all available languages (no includedLanguages filter)
         new window.google.translate.TranslateElement(
           {
             pageLanguage: 'en',
-            includedLanguages: 'hi,bn,mr,ta,gu', // only these five languages
             layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
             autoDisplay: false,
           },
@@ -68,6 +142,16 @@ function Footer() {
     };
   }, []);
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (!langDropdownRef.current) return;
+      if (!langDropdownRef.current.contains(e.target)) setIsLangOpen(false);
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, []);
+
   // Helper to set the Google Translate cookie and trigger translation
   const translateTo = (lang) => {
     if (typeof document === 'undefined') return;
@@ -88,6 +172,7 @@ function Footer() {
     <>
 
       <footer
+        role="contentinfo"
         style={{ background, color: textColor }}
         className="relative z-30 transition-all duration-1000 pt-8 pb-4 px-4 mx-2 my-2 border-4 border-[#64ed37] rounded-xl shadow-xl overflow-x-hidden"
       >
@@ -101,43 +186,17 @@ function Footer() {
                   <img src={wiseLogo} alt="Wise Global Logo" className="w-full h-full object-contain rounded-full bg-white" />
                 </div>
               </div>
-              <p className="mt-3 text-sm break-words" style={{ color: textColor }}>
-                Wise Global Research Services — market research, analytics, and investment insights.
+              <p className="mt-3 text-sm md:text-base leading-relaxed break-words" style={{ color: textColor }}>
+                Wise Global Research Services — Market research, analytics, and investment insights.
               </p>
-              <div className="flex gap-4 justify-center md:justify-start mt-4">
-                <a href="https://www.facebook.com/wiseglobalresearch/" target="_blank" rel="noreferrer"><FaFacebookF className="text-blue-600 text-lg hover:scale-110 transition" /></a>
-                <a href="https://www.instagram.com/wiseglobalresearch/" target="_blank" rel="noreferrer"><FaInstagram className="text-pink-500 text-lg hover:scale-110 transition" /></a>
-                <a href="https://x.com/research221711" target="_blank" rel="noreferrer"><SiX className="bg-white text-black rounded-full text-lg hover:scale-110 transition p-[2px]" /></a>
-                <a href="https://www.linkedin.com/in/wise-global-research-services-63b535317/" target="_blank" rel="noreferrer"><FaLinkedinIn className="text-white text-lg hover:scale-110 transition" /></a>
-                <a href="https://www.youtube.com/@WiseGlobalResearchService" target="_blank" rel="noreferrer"><FaYoutube className="text-red-600 text-lg hover:scale-110 transition" /></a>
+              <div className="flex flex-wrap gap-3 sm:gap-4 justify-center md:justify-start mt-4">
+                <a aria-label="Facebook" href="https://www.facebook.com/wiseglobalresearch/" target="_blank" rel="noreferrer"><FaFacebookF className="text-blue-600 text-lg hover:scale-110 transition" /></a>
+                <a aria-label="Instagram" href="https://www.instagram.com/wiseglobalresearch/" target="_blank" rel="noreferrer"><FaInstagram className="text-pink-500 text-lg hover:scale-110 transition" /></a>
+                <a aria-label="X (Twitter)" href="https://x.com/research221711" target="_blank" rel="noreferrer"><SiX className="bg-white text-black rounded-full text-lg hover:scale-110 transition p-[2px]" /></a>
+                <a aria-label="LinkedIn" href="https://www.linkedin.com/in/wise-global-research-services-63b535317/" target="_blank" rel="noreferrer"><FaLinkedinIn className="text-white text-lg hover:scale-110 transition" /></a>
+                <a aria-label="YouTube" href="https://www.youtube.com/@WiseGlobalResearchService" target="_blank" rel="noreferrer"><FaYoutube className="text-red-600 text-lg hover:scale-110 transition" /></a>
               </div>
-              {/* Google Translate widget */}
-              <div className="mt-4">
-                <div className="flex items-center gap-3">
-                  <div className="text-xs mb-0" style={{ color: textColor }}>Translate site</div>
-                  <div className="text-xs">
-                    <select
-                      aria-label="Translate site"
-                      defaultValue=""
-                      onChange={(e) => {
-                        const v = e.target.value;
-                        if (v) translateTo(v);
-                      }}
-                      className="bg-white text-black text-xs px-2 py-1 rounded shadow-sm"
-                    >
-                      <option value="" disabled>Choose</option>
-                      <option value="hi">Hindi</option>
-                      <option value="bn">Bengali</option>
-                      <option value="mr">Marathi</option>
-                      <option value="ta">Tamil</option>
-                      <option value="gu">Gujarati</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Hidden default widget (we use the cookie + reload approach and a compact dropdown) */}
-                <div id="google_translate_element" className="mx-auto md:mx-0" style={{ display: 'none' }}></div>
-              </div>
+              {/* (moved) Language section now appears below Theme selector */}
             </div>
 
             {/* Quick Links Section */}
@@ -210,6 +269,91 @@ function Footer() {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Translate Website */}
+              <div className="mt-4" ref={langDropdownRef}>
+                <h3 className="font-semibold flex items-center gap-2" style={{ color: textColor }}>
+                  <FaGlobe /> Translate Website
+                </h3>
+
+                {/* Dropdown trigger */}
+                <button
+                  type="button"
+                  onClick={() => setIsLangOpen((s) => !s)}
+                  aria-haspopup="menu"
+                  aria-expanded={isLangOpen}
+                  className="mt-2 w-full bg-white text-black rounded shadow-md px-3 py-2 flex items-center justify-between hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-400"
+                >
+                  <span className="text-sm">Choose language</span>
+                  <FaChevronDown className={`transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Dropdown panel */}
+                <div className={`relative ${isLangOpen ? 'block' : 'hidden'}`}>
+                  <div className="absolute left-0 right-0 mt-2 bg-white text-black rounded-md shadow-2xl p-3 z-40 max-h-[70vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                    <input
+                      type="text"
+                      value={langQuery}
+                      onChange={(e) => setLangQuery(e.target.value)}
+                      placeholder="Search language..."
+                      className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+                      aria-label="Search language"
+                    />
+
+                    <div className="mt-3">
+                      <div className="text-xs font-semibold text-gray-600 mb-1">Indian languages</div>
+                      <div className="flex flex-wrap gap-2">
+                        {(langQuery ? indianLanguages.filter(l => (l.name + l.code).toLowerCase().includes(langQuery.toLowerCase())) : indianLanguages)
+                          .map((l) => (
+                            <button
+                              key={`in-${l.code}`}
+                              onClick={() => { setIsLangOpen(false); translateTo(l.code); }}
+                              className="px-2 py-1 rounded-full bg-green-100 hover:bg-green-200 text-green-800 text-xs transition"
+                              role="menuitem"
+                              title={`Translate to ${l.name}`}
+                            >
+                              {l.name}
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-4">
+                      <div className="text-xs font-semibold text-gray-600 mb-1">Popular worldwide</div>
+                      <div className="flex flex-wrap gap-2">
+                        {(langQuery ? popularLanguages.filter(l => (l.name + l.code).toLowerCase().includes(langQuery.toLowerCase())) : popularLanguages)
+                          .map((l) => (
+                            <button
+                              key={`pop-${l.code}`}
+                              onClick={() => { setIsLangOpen(false); translateTo(l.code); }}
+                              className="px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs transition"
+                              role="menuitem"
+                              title={`Translate to ${l.name}`}
+                            >
+                              {l.name}
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between gap-2 text-xs text-gray-600">
+                      <span>Need more languages? Use full list below.</span>
+                      <button
+                        type="button"
+                        onClick={() => setShowAllWidget((s) => !s)}
+                        className="underline text-green-700 hover:text-green-800"
+                      >
+                        {showAllWidget ? 'Hide full list' : 'Show full list'}
+                      </button>
+                    </div>
+
+                    {/* Full Google widget (all languages) - keep mounted always for reliable init */}
+                    <div className="mt-2">
+                      <div id="google_translate_element" className={`${showAllWidget ? '' : 'hidden'} min-h-[28px]`} />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

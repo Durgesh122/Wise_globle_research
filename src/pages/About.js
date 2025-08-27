@@ -27,7 +27,6 @@ const About = () => {
       <p className="text-lg text-center mb-8 text-white/80">We provide market research, analytics, and actionable investment insights tailored for Indian investors and traders.</p>
 
       <div className="max-w-3xl mx-auto text-center mb-8">
-  <h2 className="text-2xl font-extrabold mb-2 text-white">About Us — Wise Global Research</h2>
   <p className="text-lg text-white/90">We prioritize what matters most: clear, practical, and research-backed guidance so you can make confident investment decisions.</p>
         <div className="mt-4 text-white/80 text-left md:text-center">
           <p>

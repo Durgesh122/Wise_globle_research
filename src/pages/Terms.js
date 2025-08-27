@@ -42,18 +42,20 @@ function Terms() {
 
         <section className="mb-8">
           <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3, duration: 0.5 }}>
-            Wise Global Research Services Pvt Ltd. always provides recommendations with proper stop loss. It is mandatory for clients to maintain stop loss in each and every trading recommendation of us. Wise Global Research Services Pvt Ltd. will not be liable in cases where client fails to maintain given stop loss given by SMS.
+            Wise Global Research Services Pvt Ltd. always provides recommendations with proper stop loss. It is mandatory for clients to maintain stop loss in each and every trading recommendation of us. Wise Global Research Services Pvt Ltd. will not be liable in cases where client fails to maintain the given stop loss.
           </motion.p>
         </section>
 
         <section className="mb-8">
           <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4, duration: 0.5 }}>
-            All the services/trading recommendation are provided only via SMS, telephonic support is provided to client only upon the SMS provided by us, if client opt that (depending on services) in a written request from client, we do not render any services/trading recommendation over phone call, it is only a support to overcome any kind of misinterpretation of trading recommendation provided by us via SMS.
+            All the services/trading recommendations are shared via your registered contact channel. Telephonic support, where applicable as per service, is provided to address any clarification on the recommendations shared.
           </motion.p>
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 0.5 }}><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-wi"><Trans i18nKey="pages.Terms.wise-global-research-services-pvt-ltd-wi-1">Wise Global Research Services Pvt Ltd. will not be held responsible for any kind of delay in SMS for any reason (Due to 3rd Party technical failure, please read carefully this term in Disclaimer).</Trans></Trans></motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 0.5 }}>
+            Wise Global Research Services Pvt Ltd. will not be held responsible for any kind of delay in delivery of communications due to third-party technical failures. Please read this term carefully in the Disclaimer.
+          </motion.p>
         </section>
 
         <section className="mb-8">
@@ -81,7 +83,9 @@ function Terms() {
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2, duration: 0.5 }}><Trans i18nKey="pages.Terms.we-suggest-you-not-to-work-on-personal-r"><Trans i18nKey="pages.Terms.we-suggest-you-not-to-work-on-personal-r-1">We suggest you not to work on personal recommendation given by associates of company. You have paid the service charges in the company to receive the recommendations on SMS.</Trans></Trans></motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2, duration: 0.5 }}>
+            We suggest you not to work on personal recommendations given by associates of the company. You have paid the service charges in the company to receive the recommendations via official communication channels.
+          </motion.p>
         </section>
 
         <section className="mb-8">

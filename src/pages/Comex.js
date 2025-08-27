@@ -299,7 +299,7 @@ const Comex = () => {
           <p className="mb-4"><Trans i18nKey="pages.Comex.with-an-average-daily-trading-volume-exc"><Trans i18nKey="pages.Comex.with-an-average-daily-trading-volume-exc-1">With an average daily trading volume exceeding 100,000 contracts, COMEX boasts deep liquidity and tight bid-ask spreads. This high-volume environment attracts global participants and underpins price efficiency, making COMEX a cornerstone of the modern financial system.</Trans></Trans></p>
           {/* CTA Button */}
           <div className="text-center mt-6">
-            <motion.button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setShowContactForm(true)}><Trans i18nKey="pages.Comex.contact-us-to-learn-more">Contact Us to Learn More</Trans></motion.button>
+            <motion.button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setShowContactForm(true)}>Enquiry Now</motion.button>
           </div>
         </motion.section>
       </div>

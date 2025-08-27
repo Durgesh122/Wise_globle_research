@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import {
-  FaUser, FaUserTie, FaIdCard, FaEnvelope, FaCalendarAlt,
-  FaAddressCard, FaRegAddressCard, FaArrowRight
-} from 'react-icons/fa';
+  RiUserLine, RiUser2Line, RiIdCardLine, RiMailLine, RiCalendar2Line,
+  RiBankCardLine, RiContactsBookLine, RiArrowRightSLine, RiCheckboxCircleFill, RiCloseCircleFill, RiLoader4Line
+} from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 
 // Animation variants for container and items
@@ -40,6 +40,7 @@ const ClientServiceConsent = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [showPopup, setShowPopup] = useState(false);
   // no file fields: only form inputs
 
   // No file uploads — form only
@@ -50,14 +51,68 @@ const ClientServiceConsent = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // Validate form and return list of English error messages
+  const validateForm = (data) => {
+    const errors = [];
+    const isEmpty = (v) => !v || !String(v).trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const dobRegex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\d{2}$/; // DD-MM-YYYY
+    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/i; // e.g., ABCDE1234F
+    const aadhaarRegex = /^\d{12}$/; // 12 digits
+
+    if (isEmpty(data.clientName)) errors.push('Client Name is required.');
+    if (isEmpty(data.fatherName)) errors.push("Father's Name is required.");
+    if (isEmpty(data.clientId)) errors.push('Client ID is required.');
+
+    if (isEmpty(data.email)) {
+      errors.push('Email is required.');
+    } else if (!emailRegex.test(data.email)) {
+      errors.push('Please enter a valid email address.');
+    }
+
+    if (isEmpty(data.dob)) {
+      errors.push('Date of Birth is required.');
+    } else if (!dobRegex.test(data.dob)) {
+      errors.push('Date of Birth must be in DD-MM-YYYY format.');
+    }
+
+    if (isEmpty(data.pan)) {
+      errors.push('PAN is required.');
+    } else if (!panRegex.test(data.pan)) {
+      errors.push('PAN must be 10 characters (e.g., ABCDE1234F).');
+    }
+
+    if (isEmpty(data.aadhaar)) {
+      errors.push('Aadhaar is required.');
+    } else if (!aadhaarRegex.test(data.aadhaar)) {
+      errors.push('Aadhaar must be 12 digits.');
+    }
+
+    if (isEmpty(data.address)) errors.push('Address is required.');
+
+    return errors;
+  };
+
   // Handle form submission (posts to local server like the provided ClientForm.jsx)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setMessage({ type: '', text: '' });
 
+    // Custom validation to ensure all messages are shown in our popup
+    const errors = validateForm(formData);
+    if (errors.length > 0) {
+      setMessage({
+        type: 'error',
+        text: `Please fix the following:\n- ${errors.join('\n- ')}`,
+      });
+      setShowPopup(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      const response = await fetch('http://localhost:3001/api/submit-client-form', {
+      const response = await fetch('https://masterxservers.onrender.com/api/submit-client-form', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -67,17 +122,22 @@ const ClientServiceConsent = () => {
 
       if (data.success) {
         setMessage({ type: 'success', text: '✅ Please check your mail. Redirecting...' });
+        setShowPopup(true);
         setTimeout(() => {
-          window.location.href = 'https://wiseglobalresearch.com/client-service-consent-form/';
+          window.location.href = 'https://wiseglobalresearch.com/client-service-consent/';
         }, 2000);
       } else {
-        const errorCode = data.error && data.error.code ? data.error.code : 'UNKNOWN_ERROR';
-        const errorMessage = data.error && data.error.message ? data.error.message : 'An unknown error occurred.';
-        const errorDetails = data.error && data.error.details ? `Details: ${data.error.details}` : '';
-        setMessage({ type: 'error', text: `❌ Error Code: ${errorCode}. Message: ${errorMessage} ${errorDetails}` });
+        const errorCode = (data.error && data.error.code) || 'UNKNOWN_ERROR';
+        // Ensure user-facing message is English and clear
+        setMessage({
+          type: 'error',
+          text: `We couldn't submit your form at the moment.\nError Code: ${errorCode}. Please try again later.`,
+        });
+        setShowPopup(true);
       }
     } catch (err) {
-      setMessage({ type: 'error', text: `❌ Network error: ${err.message}. कृपया सुनिश्चित करें कि server चल रहा है।` });
+      setMessage({ type: 'error', text: `Network error: ${err.message}. Please check your connection and try again.` });
+      setShowPopup(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -134,7 +194,7 @@ const ClientServiceConsent = () => {
             <p className="mt-2 text-gray-300">Please fill out the form below.</p>
           </div>
 
-    <form onSubmit={handleSubmit} className="space-y-6">
+  <form onSubmit={handleSubmit} noValidate className="space-y-6">
             <motion.div
               variants={containerVariants}
               className="p-6 rounded-lg bg-white/5 border border-white/10"
@@ -144,21 +204,21 @@ const ClientServiceConsent = () => {
                 {renderInput(
                   'clientName',
                   'Client Name*',
-                  <FaUser />,
+                  <RiUserLine />,
       'text',
       { required: true, placeholder: 'Enter Name' }
                 )}
                 {renderInput(
                   'fatherName',
                   "Father's Name*",
-                  <FaUserTie />,
+                  <RiUser2Line />,
       'text',
       { required: true, placeholder: "Enter Father's Name" }
                 )}
                 {renderInput(
                   'clientId',
                   'Client ID*',
-                  <FaIdCard />,
+                  <RiIdCardLine />,
       'text',
       { maxLength: 50, placeholder: 'Enter Client Id' },
       'Ask your representative for the client ID.'
@@ -166,28 +226,28 @@ const ClientServiceConsent = () => {
                 {renderInput(
                   'email',
                   'Email ID*',
-                  <FaEnvelope />,
+                  <RiMailLine />,
       'email',
       { required: true, placeholder: 'Enter Email' }
                 )}
                 {renderInput(
                   'dob',
                   'Date Of Birth*',
-                  <FaCalendarAlt />,
+                  <RiCalendar2Line />,
       'text',
       { required: true, placeholder: '31-12-2000' }
                 )}
                 {renderInput(
                   'pan',
                   'PAN*',
-                  <FaAddressCard />,
+                  <RiBankCardLine />,
       'text',
       { required: true, maxLength: 10, placeholder: 'Enter PAN' }
                 )}
                 {renderInput(
                   'aadhaar',
                   'Aadhaar*',
-                  <FaRegAddressCard />,
+                  <RiContactsBookLine />,
       'text',
       { required: true, maxLength: 12, placeholder: 'Enter Aadhaar' }
                 )}
@@ -214,10 +274,32 @@ const ClientServiceConsent = () => {
                 ></textarea>
               </motion.div>
             </motion.div>
-            {message.text && (
-              <div className={`mb-2 p-3 rounded-lg ${message.type === 'success' ? 'bg-green-600/20 border border-green-400' : 'bg-red-600/10 border border-red-400'} text-sm` }>
-                {message.text}
-                
+
+            {/* Loader overlay while submitting */}
+            {isSubmitting && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                <div className="p-6 rounded-xl shadow-2xl border-2 flex flex-col items-center max-w-xs w-full bg-white/90 border-blue-400 animate-fade-in">
+                  <RiLoader4Line className="animate-spin text-blue-500 text-4xl mb-2" />
+                  <span className="text-blue-700 font-semibold">Submitting your form...</span>
+                </div>
+              </div>
+            )}
+
+            {/* Popup Modal for messages */}
+            {showPopup && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                <div className={`p-6 rounded-xl shadow-2xl border-2 flex flex-col items-center max-w-xs w-full animate-fade-in ${message.type === 'success' ? 'bg-green-600/90 border-green-400' : 'bg-red-600/90 border-red-400'}`}>
+                  <span className="text-4xl mb-2">
+                    {message.type === 'success' ? <RiCheckboxCircleFill className="text-green-200" /> : <RiCloseCircleFill className="text-red-200" />}
+                  </span>
+                  <span className="text-white text-center font-semibold mb-2 whitespace-pre-line">
+                    {message.text}
+                  </span>
+                  <button
+                    className="mt-4 px-4 py-2 rounded bg-white/20 text-white hover:bg-white/40 transition"
+                    onClick={() => setShowPopup(false)}
+                  >Close</button>
+                </div>
               </div>
             )}
 
@@ -230,7 +312,7 @@ const ClientServiceConsent = () => {
                 whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
               >
                 {isSubmitting ? 'Submitting...' : 'Submit'}
-                {!isSubmitting && <FaArrowRight className="inline ml-2" />}
+                {!isSubmitting && <RiArrowRightSLine className="inline ml-2" />}
               </motion.button>
             </motion.div>
           </form>

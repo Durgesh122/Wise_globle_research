@@ -72,7 +72,7 @@ const labelsFallbacks = {
   'navbar.dashboard.title': 'Dashboard',
   'navbar.payment': 'Payment',
   'navbar.complaintBox': 'Complaint Box',
-  'navbar.contactUs': 'Contact Us',
+  'navbar.contactUs': 'Enquiry Now',
   'navbar.researchReports': 'Research Reports',
   // Explicit category titles for Services mega menu
   'navbar.services.cash.title': 'Cash',
@@ -139,7 +139,6 @@ const dropdownLinks = {
     labelKey: 'navbar.company.title',
     items: [
       { path: '/about', labelKey: 'navbar.company.aboutUs' },
-      { path: '/team', labelKey: 'navbar.company.ourTeam' },
       { path: '/vision', labelKey: 'navbar.company.visionMission' },
     ]
   },
@@ -147,7 +146,6 @@ const dropdownLinks = {
     labelKey: 'navbar.hrZone.title',
     items: [
       { path: '/career', labelKey: 'navbar.hrZone.career' },
-      { path: '/training', labelKey: 'navbar.hrZone.training' },
     ]
   },
   insights: {
@@ -245,14 +243,14 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
           {translateWithFallback(null, labelKey)}
         </button>
         <div
-          className={`absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-lg border border-[var(--primary-green)] text-black shadow-lg rounded-xl z-50 flex flex-row p-4 w-[90vw] md:w-[80vw] max-w-[900px] transition-opacity duration-300 ${
+          className={`absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-lg border border-[var(--primary-green)] text-black shadow-lg rounded-xl z-50 flex flex-row p-4 w-[90vw] lg:w-[84vw] max-w-[1000px] transition-opacity duration-300 ${
             isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
           } animate-slideDown`}
           style={{
             overflowX: 'auto',
             wordBreak: 'break-word',
             minWidth: '250px',
-            maxWidth: '900px',
+            maxWidth: '1000px',
           }}
           onMouseEnter={handleMenuMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -478,8 +476,8 @@ function Navbar() {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="desktop-menu hidden lg:flex lg:flex-wrap lg:justify-end space-x-2 xl:space-x-4 items-center font-medium">
-            <div className="nav-scroll w-full flex items-center">
+          <div className="desktop-menu hidden lg:block font-medium flex-grow">
+            <div className="nav-scroll w-full flex items-center justify-center gap-4 xl:gap-6">
               <Link
                 to="/"
                 className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname==='/' ? ' active' : ''}`}
