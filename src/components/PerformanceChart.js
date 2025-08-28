@@ -27,12 +27,16 @@ const PerformanceChart = () => {
     ],
   };
 
+  const prefersReduced = typeof window !== 'undefined' && window.matchMedia
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     animation: {
-      duration: 1500,
-      easing: 'easeInOutQuart',
+      duration: prefersReduced ? 0 : 1500,
+      easing: prefersReduced ? 'linear' : 'easeInOutQuart',
     },
     plugins: {
       legend: {

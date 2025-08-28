@@ -464,27 +464,68 @@ function Reports() {
 
   // Handle download
   const handleDownload = (report) => {
-    if (!selectedReport || selectedReport.id !== report.id) {
+    // Require successful password verification: use pdfPreview as the gate
+    if (!pdfPreview || pdfPreview.id !== report.id) {
       toast.error('Please verify the password first.', { position: 'top-center' });
       return;
     }
+
     try {
-      const base64String = report.file.split(',')[1];
-      const byteCharacters = atob(base64String);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      const fileSource = report?.file || report?.fileData;
+      const filename = report?.filename || `${report?.title || 'report'}.pdf`;
+
+      if (!fileSource || typeof fileSource !== 'string') {
+        throw new Error('No file source found for this report.');
       }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = report.filename || `${report.title}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+
+      // Helper to download a Blob
+      const downloadBlob = (blob, name) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      };
+
+      // If it's a data URL (e.g., data:application/pdf;base64,XXXXX)
+      if (fileSource.startsWith('data:')) {
+        const [meta, base64] = fileSource.split(',');
+        const mimeMatch = meta.match(/data:([^;]+);base64/);
+        const mime = mimeMatch ? mimeMatch[1] : 'application/pdf';
+        const byteCharacters = atob(base64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: mime });
+        downloadBlob(blob, filename);
+      }
+      // If it's an http(s) URL
+      else if (/^https?:\/\//i.test(fileSource)) {
+        // Best-effort direct download via anchor; server should provide correct CORS/headers.
+        const link = document.createElement('a');
+        link.href = fileSource;
+        link.download = filename; // May be ignored by the browser if cross-origin without proper headers
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      // Otherwise, assume it's a raw base64 string without the data URL prefix
+      else {
+        const byteCharacters = atob(fileSource);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        downloadBlob(blob, filename);
+      }
+
       toast.success('Report downloaded successfully.', { position: 'top-center' });
       setIsPreviewOpen(false);
     } catch (error) {

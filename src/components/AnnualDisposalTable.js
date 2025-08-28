@@ -51,14 +51,15 @@ const AnnualDisposalTable = () => {
       <h2 className="text-xl font-bold text-white mb-4">Trend Of Annual Disposal Of Complaints</h2>
       <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
         <table className="w-full border-collapse text-left text-xs sm:text-sm" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(15px)' }}>
+          <caption className="sr-only">Annual disposal trend of complaints with carried, received, resolved and pending counts</caption>
           <thead>
             <tr className="text-white" style={{ background: 'rgba(255,255,255,0.3)' }}>
-              <th className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
-              <th className="p-2 sm:p-3 border border-gray-200/30">Year</th>
-              <th className="p-2 sm:p-3 border border-gray-200/30">Carried forward from previous year</th>
-              <th className="p-2 sm:p-3 border border-gray-200/30">Received</th>
-              <th className="p-2 sm:p-3 border border-gray-200/30">Resolved*</th>
-              <th className="p-2 sm:p-3 border border-gray-200/30">Pending#</th>
+              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
+              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Year</th>
+              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Carried forward from previous year</th>
+              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Received</th>
+              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Resolved*</th>
+              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Pending#</th>
               {/* Actions column removed */}
             </tr>
           </thead>

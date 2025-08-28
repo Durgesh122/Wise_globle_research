@@ -11,16 +11,20 @@ const AnimatedChart = ({ symbol }) => {
   const chartRef = useRef(null);
   const [chartData, setChartData] = useState(generateChartData(symbol));
 
+  const prefersReduced = typeof window !== 'undefined' && window.matchMedia
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+
   useEffect(() => {
+    if (prefersReduced) return; // disable auto updates if reduced motion
     const interval = setInterval(() => {
       setChartData((prev) => {
         const newValues = prev.values.map((value) => value + (Math.random() * 50 - 25));
         return { ...prev, values: newValues };
       });
     }, 2000);
-
     return () => clearInterval(interval);
-  }, [symbol]);
+  }, [symbol, prefersReduced]);
 
   useEffect(() => {
     if (!chartData.values || chartData.values.some(isNaN)) {
@@ -50,12 +54,14 @@ const AnimatedChart = ({ symbol }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    animation: {
-      duration: 1500,
-      easing: 'easeInOutQuart',
-      animateScale: true,
-      animateRotate: true,
-    },
+    animation: prefersReduced
+      ? false
+      : {
+          duration: 1500,
+          easing: 'easeInOutQuart',
+          animateScale: true,
+          animateRotate: true,
+        },
     plugins: {
       legend: {
         display: true,

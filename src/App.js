@@ -23,6 +23,7 @@ import AdminLayout from './pages/admin/AdminLayout';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import WhatsAppButton from './components/WhatsAppButton';
 import ScrollToTop from './components/ScrollToTop';
+// Removed RouteAnnouncer, SeoHelmet, and A11yControls (not present in repo)
 
 // Lazy Loaded Pages
 // Helper to retry dynamic imports when chunk loading fails (transient dev/server/cache issues)
@@ -144,16 +145,27 @@ function App() {
 
   return (
     <HelmetProvider>
-      <TimeBasedThemeWrapper>
+  {/* Skip link for keyboard users */}
+  <a href="#main-content" className="skip-link">Skip to main content</a>
+
+  <TimeBasedThemeWrapper>
       <ScrollToTop />
 
       {/* Toast Notifications */}
-      <ToastContainer position="top-center" autoClose={3000} theme="colored" />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        theme="colored"
+        role="status"
+        ariaLive="polite"
+        newestOnTop
+        limit={3}
+      />
 
 
       {/* Background Particles (Hidden on Mobile) */}
       {!isAdminPage && (
-        <div className="hidden sm:block fixed top-0 left-0 w-full h-full z-[-1]">
+        <div className="hidden sm:block fixed top-0 left-0 w-full h-full z-[-1]" aria-hidden="true">
           <ParticlesBackground
             options={{
               particles: {
@@ -170,10 +182,13 @@ function App() {
 
       {/* Page Content Wrapper */}
       <main
+        id="main-content"
+        role="main"
         className={`min-h-screen ${
           isAdminPage ? '' : 'pt-16 px-2 sm:px-4 md:px-8 lg:px-12 max-w-screen-2xl mx-auto'
         }`}
       >
+  {/* Removed SeoHelmet and RouteAnnouncer to avoid missing module errors */}
         <Suspense
           fallback={
             <div className="text-center py-10 text-primaryBlue font-josefin">

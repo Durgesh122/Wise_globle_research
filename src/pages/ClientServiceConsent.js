@@ -45,10 +45,28 @@ const ClientServiceConsent = () => {
 
   // No file uploads — form only
 
-  // Handle form input changes
+  // Handle form input changes with light normalization (PAN/Aadhaar)
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    let v = value;
+    // Auto-format DOB as DD-MM-YYYY while typing
+    if (name === 'dob') {
+      const digits = value.replace(/\D/g, '').slice(0, 8); // keep max 8 digits
+      if (digits.length <= 2) {
+        v = digits;
+      } else if (digits.length <= 4) {
+        v = `${digits.slice(0, 2)}-${digits.slice(2)}`;
+      } else {
+        v = `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
+      }
+    }
+    if (name === 'pan') {
+      v = value.toUpperCase().replace(/\s/g, '').slice(0, 10);
+    }
+    if (name === 'aadhaar') {
+      v = value.replace(/\D/g, '').slice(0, 12);
+    }
+    setFormData((prev) => ({ ...prev, [name]: v }));
   };
 
   // Validate form and return list of English error messages
@@ -56,7 +74,8 @@ const ClientServiceConsent = () => {
     const errors = [];
     const isEmpty = (v) => !v || !String(v).trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    const dobRegex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\d{2}$/; // DD-MM-YYYY
+  // DD-MM-YYYY or DD/MM/YYYY
+  const dobRegex = /^(0[1-9]|[12][0-9]|3[01])[/-](0[1-9]|1[0-2])[/-](19|20)\d{2}$/;
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/i; // e.g., ABCDE1234F
     const aadhaarRegex = /^\d{12}$/; // 12 digits
 
@@ -162,6 +181,13 @@ const ClientServiceConsent = () => {
           onChange={handleChange}
           placeholder={attrs.placeholder || `Enter your ${label.replace('*', '').toLowerCase()}`}
           className={`w-full pl-11 pr-4 py-3 rounded-lg border custom-box-bg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
+          {...(id === 'email' ? { autoComplete: 'email' } : {})}
+          {...(id === 'clientName' ? { autoComplete: 'name' } : {})}
+          {...(id === 'fatherName' ? { autoComplete: 'additional-name' } : {})}
+          {...(id === 'clientId' ? { autoComplete: 'off' } : {})}
+          {...(id === 'dob' ? { autoComplete: 'bday', inputMode: 'numeric', pattern: '\\d{2}[-/]\\d{2}[-/]\\d{4}' } : {})}
+          {...(id === 'pan' ? { autoComplete: 'off', inputMode: 'text', autoCapitalize: 'characters', pattern: '[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}', maxLength: 10, style: { textTransform: 'uppercase' } } : {})}
+          {...(id === 'aadhaar' ? { autoComplete: 'off', inputMode: 'numeric', pattern: '\\d{12}', maxLength: 12 } : {})}
           {...attrs}
         />
       </div>
@@ -182,7 +208,7 @@ const ClientServiceConsent = () => {
         <motion.div className="text-sm mb-8" variants={itemVariants}>
           <Link to="/" className="hover:text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.home">Home</Trans></Link>
           <span className="mx-2">/</span>
-          <span className="text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent-2">Client Service Consent</Trans></Trans></span>
+          <span className="text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent</Trans></span>
         </motion.div>
 
         <motion.div
@@ -190,7 +216,7 @@ const ClientServiceConsent = () => {
           variants={itemVariants}
         >
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent-1">Client Service Consent</Trans></Trans></h2>
+            <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent</Trans></h2>
             <p className="mt-2 text-gray-300">Please fill out the form below.</p>
           </div>
 
@@ -199,7 +225,7 @@ const ClientServiceConsent = () => {
               variants={containerVariants}
               className="p-6 rounded-lg bg-white/5 border border-white/10"
             >
-              <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2 mb-6"><Trans i18nKey="pages.ClientServiceConsent.client-information"><Trans i18nKey="pages.ClientServiceConsent.client-information-1">Client Information</Trans></Trans></h3>
+              <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2 mb-6"><Trans i18nKey="pages.ClientServiceConsent.client-information">Client Information</Trans></h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {renderInput(
                   'clientName',
@@ -235,7 +261,7 @@ const ClientServiceConsent = () => {
                   'Date Of Birth*',
                   <RiCalendar2Line />,
       'text',
-      { required: true, placeholder: '31-12-2000' }
+  { required: true, placeholder: '31-12-2000', maxLength: 10 }
                 )}
                 {renderInput(
                   'pan',
@@ -270,6 +296,7 @@ const ClientServiceConsent = () => {
                   onChange={handleChange}
                   rows="4"
                   placeholder="Enter Full Address"
+                  autoComplete="street-address"
                   className={`w-full px-4 py-3 rounded-lg border custom-box-bg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
                 ></textarea>
               </motion.div>
@@ -277,7 +304,7 @@ const ClientServiceConsent = () => {
 
             {/* Loader overlay while submitting */}
             {isSubmitting && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40" role="alert" aria-busy="true" aria-live="assertive">
                 <div className="p-6 rounded-xl shadow-2xl border-2 flex flex-col items-center max-w-xs w-full bg-white/90 border-blue-400 animate-fade-in">
                   <RiLoader4Line className="animate-spin text-blue-500 text-4xl mb-2" />
                   <span className="text-blue-700 font-semibold">Submitting your form...</span>
@@ -287,12 +314,12 @@ const ClientServiceConsent = () => {
 
             {/* Popup Modal for messages */}
             {showPopup && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40" role="dialog" aria-modal="true">
                 <div className={`p-6 rounded-xl shadow-2xl border-2 flex flex-col items-center max-w-xs w-full animate-fade-in ${message.type === 'success' ? 'bg-green-600/90 border-green-400' : 'bg-red-600/90 border-red-400'}`}>
                   <span className="text-4xl mb-2">
                     {message.type === 'success' ? <RiCheckboxCircleFill className="text-green-200" /> : <RiCloseCircleFill className="text-red-200" />}
                   </span>
-                  <span className="text-white text-center font-semibold mb-2 whitespace-pre-line">
+                  <span className="text-white text-center font-semibold mb-2 whitespace-pre-line" aria-live="assertive">
                     {message.text}
                   </span>
                   <button

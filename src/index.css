@@ -29,6 +29,28 @@ body {
   overflow-x: hidden;
 }
 
+/* Accessible focus outline */
+:focus-visible {
+  outline: 3px solid #22c55e;
+  outline-offset: 2px;
+}
+
+/* Skip link styles */
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -40px;
+  background: #111827;
+  color: #fff;
+  padding: 8px 12px;
+  z-index: 10000;
+  border-radius: 6px;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
 /* ✅ Responsive Container Helpers */
 .container {
   max-width: 1280px; /* Equivalent to max-w-screen-xl */
@@ -210,3 +232,30 @@ body {
 /* NOTE: avoid forcing global `top` on body — it can conflict with layout and mobile
    chrome; if you added it to work around a specific translation widget, scope it
    to that container instead. */
+
+
+/* ===== Accessibility Global Toggles ===== */
+/* Reduce motion toggle via data attribute applied on <html> by A11yControls */
+html[data-reduce-motion="true"] * {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* High contrast mode toggle via data attribute */
+html[data-high-contrast="true"] {
+  color: #000 !important;
+  background-color: #fff !important;
+}
+html[data-high-contrast="true"] *:focus-visible {
+  outline: 3px solid #000 !important;
+}
+/* Nudge some common utility colors for better contrast in HC mode */
+html[data-high-contrast="true"] .text-gray-400,
+html[data-high-contrast="true"] .text-gray-500,
+html[data-high-contrast="true"] .text-gray-600 { color: #111 !important; }
+html[data-high-contrast="true"] .text-white { color: #000 !important; }
+html[data-high-contrast="true"] .bg-white\/20 { background-color: rgba(0,0,0,0.08) !important; }
+html[data-high-contrast="true"] .bg-white\/90 { background-color: rgba(255,255,255,1) !important; }
+html[data-high-contrast="true"] .bg-blue-600 { background-color: #003366 !important; }
+html[data-high-contrast="true"] .bg-gray-800 { background-color: #111 !important; }

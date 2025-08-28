@@ -332,6 +332,8 @@ function Navbar() {
   const [mobileDropdownsOpen, setMobileDropdownsOpen] = useState({});
   const location = useLocation();
   const drawerRef = useRef();
+  const firstFocusableRef = useRef(null);
+  const lastFocusableRef = useRef(null);
   const { theme, gradients } = useContext(ThemeContext);
   const { background, textColor } = gradients?.[theme] || gradients.default;
   const navRef = useRef(null);
@@ -365,6 +367,15 @@ function Navbar() {
     };
     if (drawerOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      // set initial focus into the drawer for accessibility
+      setTimeout(() => {
+        const focusables = drawerRef.current?.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+        if (focusables && focusables.length) {
+          firstFocusableRef.current = focusables[0];
+          lastFocusableRef.current = focusables[focusables.length - 1];
+          firstFocusableRef.current.focus();
+        }
+      }, 0);
     }
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [drawerOpen]);
@@ -459,6 +470,7 @@ function Navbar() {
   return (
     <>
       <nav
+        role="navigation"
         ref={navRef}
         style={{ background, color: textColor }}
         className="fixed w-full z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-b-xl"
@@ -493,11 +505,42 @@ function Navbar() {
                 <button
                   className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${dropdown.items.some(item => location.pathname.startsWith(item.path)) ? ' active' : ''}`}
                   style={{ color: textColor }}
-                    aria-label={`Toggle ${translateWithFallback(null, dropdown.labelKey)} menu`}
+          aria-label={`Toggle ${translateWithFallback(null, dropdown.labelKey)} menu`}
+          aria-haspopup="true"
+                    aria-expanded={undefined}
+                    onKeyDown={(e) => {
+                      const menu = e.currentTarget.nextElementSibling;
+                      if (!menu) return;
+                      const items = menu.querySelectorAll('a');
+                      if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        items[0]?.focus();
+                      }
+                    }}
                 >
                     {translateWithFallback(null, dropdown.labelKey)}
                 </button>
-                <div className="absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-md border border-[var(--primary-green)] text-black shadow-md rounded-md z-50 group-hover:flex flex-col min-w-[180px] xl:min-w-[200px] p-2 hidden transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-hover:visible animate-slideDown">
+                <div className="absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-md border border-[var(--primary-green)] text-black shadow-md rounded-md z-50 group-hover:flex flex-col min-w-[180px] xl:min-w-[200px] p-2 hidden transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-hover:visible animate-slideDown" role="menu" onKeyDown={(e) => {
+                  const links = e.currentTarget.querySelectorAll('a');
+                  const first = links[0];
+                  const last = links[links.length - 1];
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (document.activeElement === last) first?.focus(); else {
+                      const i = Array.from(links).indexOf(document.activeElement);
+                      links[i + 1]?.focus();
+                    }
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (document.activeElement === first) last?.focus(); else {
+                      const i = Array.from(links).indexOf(document.activeElement);
+                      links[i - 1]?.focus();
+                    }
+                  } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    e.currentTarget.previousElementSibling?.focus();
+                  }
+                }}>
                   {dropdown.items.map((item) => (
                     <Link
                       key={item.path}
@@ -505,6 +548,8 @@ function Navbar() {
                       className={`px-3 xl:px-4 py-2 hover:bg-gray-200 text-xs xl:text-sm flex items-center gap-2 transition-all duration-300 ${
                         location.pathname === item.path ? 'text-[var(--primary-green)] font-semibold' : ''
                       }`}
+            role="menuitem"
+                      tabIndex={-1}
                     >
                       {translateWithFallback(null, item.labelKey)}
                     </Link>
@@ -531,6 +576,8 @@ function Navbar() {
               className="lg:hidden z-[10000] drawer-toggle"
               onClick={() => setDrawerOpen(!drawerOpen)}
               aria-label="Toggle mobile menu"
+              aria-expanded={drawerOpen}
+              aria-controls="mobile-menu"
             >
             {drawerOpen ? (
               <span className="mobile-close-btn" style={{ color: textColor }}>Close</span>
@@ -546,12 +593,13 @@ function Navbar() {
       </nav>
 
       {/* Mobile Menu with Inline Styles */}
-      <div style={mobileDrawerStyles} ref={drawerRef} className={`mobile-menu ${drawerOpen ? 'open' : ''}`}>
+  <div style={mobileDrawerStyles} ref={drawerRef} className={`mobile-menu ${drawerOpen ? 'open' : ''}`} id="mobile-menu" role="dialog" aria-modal="true">
         <div className={`mobile-menu-items mobile-stagger`} style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <Link
             to="/"
             className="nav-item font-semibold py-1"
             onClick={closeDrawer}
+    tabIndex={0}
           >
             {translateWithFallback(null, 'navbar.home')}
           </Link>
@@ -582,6 +630,7 @@ function Navbar() {
                         to={item.path}
                         className="nav-item block py-1 pl-2"
                         onClick={closeDrawer}
+                        tabIndex={drawerOpen ? 0 : -1}
                       >
       {translateWithFallback(null, item.labelKey)}
                       </Link>
@@ -607,6 +656,22 @@ function Navbar() {
               className="nav-item mobile-back-btn"
               onClick={closeDrawer}
               aria-label="Close mobile menu"
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') closeDrawer();
+                if (e.key === 'Tab') {
+                  const focusables = drawerRef.current?.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+                  if (!focusables || !focusables.length) return;
+                  const first = focusables[0];
+                  const last = focusables[focusables.length - 1];
+                  if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                  } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                  }
+                }
+              }}
             >
               Back
             </button>

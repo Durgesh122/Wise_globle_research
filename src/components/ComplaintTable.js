@@ -62,18 +62,19 @@ const ComplaintTable = () => {
                 backdropFilter: 'blur(15px)',
                 WebkitBackdropFilter: 'blur(15px)',
               }}
-              aria-label="Complaint Data for July 2025"
+        aria-label="Complaint Data for July 2025"
             >
+        <caption className="sr-only">Monthly complaint receipt and resolution statistics by source</caption>
               <thead>
                 <tr className="text-white" style={{ background: 'rgba(255, 255, 255, 0.3)' }}>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Received from</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Pending at the end of last month</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Received</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Resolved</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Pending</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Pending Complaints 3 Months</th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30">Average Resolution time (in days)^</th>
+          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
+          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Received from</th>
+          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Pending at the end of last month</th>
+          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Received</th>
+          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Resolved</th>
+          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Pending</th>
+          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Pending Complaints 3 Months</th>
+          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Average Resolution time (in days)^</th>
                 </tr>
               </thead>
               <tbody>

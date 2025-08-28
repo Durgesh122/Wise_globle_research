@@ -7,6 +7,10 @@ const ParticlesBackground = () => {
     await loadSlim(engine); // Load slim config here
   };
 
+  const prefersReduced = typeof window !== 'undefined' && window.matchMedia
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+
   return (
     <Particles
       id="tsparticles"
@@ -18,8 +22,8 @@ const ParticlesBackground = () => {
         fpsLimit: 60,
         interactivity: {
           events: {
-            onClick: { enable: true, mode: 'push' },
-            onHover: { enable: true, mode: 'repulse' },
+            onClick: { enable: !prefersReduced, mode: 'push' },
+            onHover: { enable: !prefersReduced, mode: 'repulse' },
             resize: true,
           },
           modes: {
@@ -32,14 +36,14 @@ const ParticlesBackground = () => {
           links: {
             color: '#ffffff',
             distance: 150,
-            enable: true,
+            enable: !prefersReduced,
             opacity: 0.5,
             width: 1,
           },
           collisions: { enable: true },
           move: {
-            enable: true,
-            speed: 1,
+            enable: !prefersReduced,
+            speed: prefersReduced ? 0 : 1,
             outModes: { default: 'bounce' },
           },
           number: {
@@ -48,7 +52,7 @@ const ParticlesBackground = () => {
           },
           opacity: { value: 0.5 },
           shape: { type: 'circle' },
-          size: { value: { min: 1, max: 5 } },
+          size: { value: prefersReduced ? 2 : { min: 1, max: 5 } },
         },
         detectRetina: true,
       }}

@@ -24,8 +24,13 @@ function Contact() {
     setLoading(true);
 
     const submissionData = {
-      ...formData,
-      timestamp: Date.now(),
+  // Normalize to satisfy database.rules.json
+  name: String(formData.name || ''),
+  email: String(formData.email || ''),
+  phone: String(formData.phone || ''),
+  message: String(formData.message || ''),
+  timestamp: Date.now(), // number required by rules
+  honeypot: '' // explicitly empty so (!exists || == '') passes
     };
 
     try {
@@ -40,7 +45,12 @@ function Contact() {
       setFormData({ name: '', email: '', phone: '', message: '' });
     } catch (error) {
       console.error('Error submitting form to Firebase:', error);
-      toast.error(`Failed to submit form: ${error.message}`, { position: 'top-center' });
+      const msg = (error && error.message) ? error.message : String(error);
+      // Surface a friendly hint when rules reject the write
+      const hint = /permission_denied/i.test(msg)
+        ? ' Permission denied by database rules. Ensure email is provided and timestamp is numeric.'
+        : '';
+      toast.error(`Failed to submit form: ${msg}${hint}`, { position: 'top-center' });
     } finally {
       setLoading(false);
     }

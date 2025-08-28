@@ -93,6 +93,24 @@
 			"type": "shell",
 			"command": "npm run build",
 			"group": "build"
+		},
+		{
+			"label": "Build React App for Production",
+			"type": "shell",
+			"command": "npm run build",
+			"group": "build"
+		},
+		{
+			"label": "Build React App for Production",
+			"type": "shell",
+			"command": "npm run build",
+			"group": "build"
+		},
+		{
+			"label": "Build React App for Production",
+			"type": "shell",
+			"command": "npm run build",
+			"group": "build"
 		}
 	]
 }

@@ -55,10 +55,11 @@ const ContactForm = ({ contactFormRef }) => {
         <motion.h2
           className="text-2xl sm:text-3xl font-bold text-center mb-8"
           variants={itemVariants}
+          id="contact-form-heading"
         >
           Get in Touch
         </motion.h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+  <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6" aria-labelledby="contact-form-heading">
           {/* Honeypot field for bots */}
           <input
             type="text"
@@ -70,8 +71,9 @@ const ContactForm = ({ contactFormRef }) => {
             className="hidden"
           />
           <div>
-            <label className="block text-sm font-medium mb-1 text-white">Name</label>
+            <label className="block text-sm font-medium mb-1 text-white" htmlFor="name">Name</label>
             <input
+              id="name"
               {...register('name', {
                 required: 'Name is required',
                 minLength: { value: 2, message: 'Name must be at least 2 characters' },
@@ -80,13 +82,16 @@ const ContactForm = ({ contactFormRef }) => {
               className={`w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300/50 custom-box-bg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.name ? 'border-red-500' : ''
               }`}
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? 'name-error' : undefined}
             />
-            {errors.name && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.name.message}</p>}
+            {errors.name && <p id="name-error" className="text-red-500 text-xs sm:text-sm mt-1">{errors.name.message}</p>}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Email</label>
+              <label className="block text-sm font-medium mb-1 text-white" htmlFor="email">Email</label>
               <input
+                id="email"
                 {...register('email', {
                   required: 'Email is required',
                   pattern: {
@@ -98,12 +103,15 @@ const ContactForm = ({ contactFormRef }) => {
                 className={`w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300/50 custom-box-bg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                   errors.email ? 'border-red-500' : ''
                 }`}
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? 'email-error' : undefined}
               />
-              {errors.email && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.email.message}</p>}
+              {errors.email && <p id="email-error" className="text-red-500 text-xs sm:text-sm mt-1">{errors.email.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Phone</label>
+              <label className="block text-sm font-medium mb-1 text-white" htmlFor="phone">Phone</label>
               <input
+                id="phone"
                 {...register('phone', {
                   required: 'Phone number is required',
                   pattern: {
@@ -115,28 +123,34 @@ const ContactForm = ({ contactFormRef }) => {
                 className={`w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300/50 custom-box-bg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                   errors.phone ? 'border-red-500' : ''
                 }`}
+                aria-invalid={!!errors.phone}
+                aria-describedby={errors.phone ? 'phone-error' : undefined}
               />
-              {errors.phone && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.phone.message}</p>}
+              {errors.phone && <p id="phone-error" className="text-red-500 text-xs sm:text-sm mt-1">{errors.phone.message}</p>}
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-white">Area of Interest</label>
+            <label className="block text-sm font-medium mb-1 text-white" htmlFor="interest">Area of Interest</label>
             <select
+              id="interest"
               {...register('interest', { required: 'Please select an area of interest' })}
               className={`w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300/50 custom-box-bg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.interest ? 'border-red-500' : ''
               }`}
+              aria-invalid={!!errors.interest}
+              aria-describedby={errors.interest ? 'interest-error' : undefined}
             >
               <option value="" className="text-black">Select an option</option>
               <option value="equity" className="text-black">Equity</option>
               <option value="derivatives" className="text-black">Derivatives</option>
               <option value="commodity" className="text-black">Commodity</option>
             </select>
-            {errors.interest && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.interest.message}</p>}
+            {errors.interest && <p id="interest-error" className="text-red-500 text-xs sm:text-sm mt-1">{errors.interest.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-white">Message</label>
+            <label className="block text-sm font-medium mb-1 text-white" htmlFor="message">Message</label>
             <textarea
+              id="message"
               {...register('message', {
                 required: 'Message is required',
                 minLength: { value: 10, message: 'Message must be at least 10 characters' },
@@ -145,8 +159,10 @@ const ContactForm = ({ contactFormRef }) => {
               className={`w-full px-3 sm:px-4 py-2 rounded-lg border border-gray-300/50 custom-box-bg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.message ? 'border-red-500' : ''
               }`}
+              aria-invalid={!!errors.message}
+              aria-describedby={errors.message ? 'message-error' : undefined}
             ></textarea>
-            {errors.message && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.message.message}</p>}
+            {errors.message && <p id="message-error" className="text-red-500 text-xs sm:text-sm mt-1">{errors.message.message}</p>}
           </div>
           <motion.button
             type="submit"

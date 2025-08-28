@@ -8,7 +8,7 @@ const PlatformFeatures = () => {
     {
       title: 'Real-time Alerts',
       desc: 'Instant notifications for trading opportunities',
-      icon: <FaMobileAlt className="text-2xl sm:text-3xl" />,
+  icon: <FaMobileAlt className="text-2xl sm:text-3xl" aria-hidden="true" focusable="false" />,
       animation: {
         whileHover: { scale: 1.05, rotateY: 10 },
         transition: { type: 'spring', stiffness: 300 },
@@ -17,7 +17,7 @@ const PlatformFeatures = () => {
     {
       title: 'Advanced Charts',
       desc: 'Interactive charts with multiple indicators',
-      icon: <FaDesktop className="text-2xl sm:text-3xl" />,
+  icon: <FaDesktop className="text-2xl sm:text-3xl" aria-hidden="true" focusable="false" />,
       animation: {
         whileHover: { rotateY: 5 },
         transition: { duration: 0.3 },
@@ -26,7 +26,7 @@ const PlatformFeatures = () => {
     {
       title: 'Portfolio Tracker',
       desc: 'Monitor all your investments in one place',
-      icon: <FaChartBar className="text-2xl sm:text-3xl" />,
+  icon: <FaChartBar className="text-2xl sm:text-3xl" aria-hidden="true" focusable="false" />,
       animation: {
         whileHover: { y: -5 },
         transition: { duration: 0.2 },
@@ -35,7 +35,7 @@ const PlatformFeatures = () => {
     {
       title: 'Research Reports',
       desc: 'In-depth analysis of stocks and sectors',
-      icon: <FaRegChartBar className="text-2xl sm:text-3xl" />,
+  icon: <FaRegChartBar className="text-2xl sm:text-3xl" aria-hidden="true" focusable="false" />,
       animation: {
         whileHover: { scale: 1.03 },
         transition: { duration: 0.2 },
@@ -44,7 +44,7 @@ const PlatformFeatures = () => {
     {
       title: 'Market Scanners',
       desc: 'Custom filters to find trading opportunities',
-      icon: <FaBullseye className="text-2xl sm:text-3xl" />,
+  icon: <FaBullseye className="text-2xl sm:text-3xl" aria-hidden="true" focusable="false" />,
       animation: {
         whileHover: { rotateY: -5 },
         transition: { duration: 0.3 },
@@ -53,7 +53,7 @@ const PlatformFeatures = () => {
     {
       title: 'Educational Content',
       desc: 'Learn from our experts through videos and articles',
-      icon: <FaLightbulb className="text-2xl sm:text-3xl" />,
+  icon: <FaLightbulb className="text-2xl sm:text-3xl" aria-hidden="true" focusable="false" />,
       animation: {
         whileHover: { y: -5 },
         transition: { duration: 0.2 },

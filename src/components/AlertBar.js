@@ -12,16 +12,37 @@ const AlertBar = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const prefersReduced = React.useMemo(() =>
+    typeof window !== 'undefined' && window.matchMedia
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false
+  , []);
+  const [paused, setPaused] = React.useState(false);
+  const togglePause = () => setPaused(p => !p);
+
   return (
     <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 mt-5">
       <div className="container mx-auto px-4">
         <div
-          className="animate-scroll whitespace-normal break-words text-sm md:text-base text-center flex items-center justify-center gap-2"
+          className={[
+            (!prefersReduced && !paused) ? 'animate-scroll' : null,
+            'whitespace-normal', 'break-words', 'text-sm', 'md:text-base',
+            'text-center', 'flex', 'items-center', 'justify-center', 'gap-2'
+          ].filter(Boolean).join(' ')}
           role="status"
           aria-live="polite"
         >
           <strong className="flex-shrink-0">{notePrefix}</strong>
           <span className="max-w-full">{alertMessage}</span>
+          <button
+            type="button"
+            onClick={togglePause}
+            className="ml-3 px-2 py-1 text-xs bg-white/20 rounded"
+            aria-pressed={paused}
+            aria-label={paused ? 'Resume scrolling announcement' : 'Pause scrolling announcement'}
+          >
+            {paused ? 'Resume' : 'Pause'}
+          </button>
         </div>
       </div>
     </div>

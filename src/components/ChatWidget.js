@@ -138,10 +138,16 @@ const ChatWidget = () => {
     }
 
     if (step === 'askMobile') {
-      // Save the raw input without validation
-      const rawMobile = userMessage.trim();
-      const digitsOnly = rawMobile.replace(/\D/g, '').slice(0, 15);
-      setFormData((prev) => ({ ...prev, mobile: rawMobile }));
+      // Enforce exactly 10 digits for mobile number
+      const digitsOnly = userMessage.replace(/\D/g, '').slice(0, 10);
+      if (digitsOnly.length !== 10) {
+        // keep only digits in the input box and ask again
+        setInput(digitsOnly);
+        sendBotMessage('Please enter a valid 10-digit mobile number (numbers only).');
+        return;
+      }
+      // store the sanitized 10-digit mobile only
+      setFormData((prev) => ({ ...prev, mobile: digitsOnly }));
 
       // submit collected details and finish the conversation
       const submissionData = {
@@ -278,7 +284,7 @@ const ChatWidget = () => {
   case 'askName': return 'Your full name';
   case 'askCity': return 'Your city';
   case 'askAddress': return 'Your full address with pincode';
-  case 'askMobile': return 'Your mobile number';
+  case 'askMobile': return '10-digit mobile number';
       default: return 'Type a message...';
     }
   };
@@ -292,6 +298,17 @@ const ChatWidget = () => {
   };
 
   // No input pattern — validations removed
+  
+  // Input change handler with step-aware normalization (strict 10-digit mobile)
+  const handleInputChange = (e) => {
+    const val = e.target.value || '';
+    if (step === 'askMobile') {
+      const digits = val.replace(/\D/g, '').slice(0, 10);
+      setInput(digits);
+    } else {
+      setInput(val);
+    }
+  };
 
   const StepIndicator = () => {
     const stepContent = {
@@ -437,10 +454,14 @@ const ChatWidget = () => {
                   type={getInputType()}
                   placeholder={getInputPlaceholder()}
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={handleInputChange}
                   onKeyPress={handleKeyPress}
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all bg-white/90 backdrop-blur"
                   disabled={step === 'askService'}
+                  // limit to 10 characters and hint numeric keypad for mobile step
+                  maxLength={step === 'askMobile' ? 10 : undefined}
+                  inputMode={step === 'askMobile' ? 'numeric' : undefined}
+                  pattern={step === 'askMobile' ? '\\d{10}' : undefined}
                 />
                 <motion.button 
                   onClick={handleSend} 
