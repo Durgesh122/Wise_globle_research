@@ -3,7 +3,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ContactDataPage from './pages/ContactDataPage';
@@ -18,12 +18,18 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ChatWidget from './components/ChatWidget';
 import FloatingPayButton from './components/FloatingPayButton';
-import ParticlesBackground from './components/ParticlesBackground';
 import AdminLayout from './pages/admin/AdminLayout';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import WhatsAppButton from './components/WhatsAppButton';
 import ScrollToTop from './components/ScrollToTop';
 // Removed RouteAnnouncer, SeoHelmet, and A11yControls (not present in repo)
+import JobsManager from './pages/admin/JobsManager'; // Added JobsManager import
+import SeoHelmet from './components/SeoHelmet';
+import AccessibilityMenu from './components/AccessibilityMenu';
+import Breadcrumbs from './components/Breadcrumbs';
+import AccessibilityStatement from './pages/AccessibilityStatement';
+import AccessibilityFeedback from './pages/AccessibilityFeedback';
+import Search from './pages/Search';
 
 // Lazy Loaded Pages
 // Helper to retry dynamic imports when chunk loading fails (transient dev/server/cache issues)
@@ -110,6 +116,7 @@ const ClientServiceConsent = lazy(() => import('./pages/ClientServiceConsent'));
 const InvestorChart = lazy(() => import('./pages/InvestorChart'));
 const AntiMoneyLaundering = lazy(() => import('./pages/AntiMoneyLaundering'));
 const DailyRecommendation = lazy(() => import('./pages/DailyRecommendation'));
+const Media = lazy(() => import('./pages/Media'));
 
 // Lazy Loaded Admin Pages
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -118,10 +125,12 @@ const ConsentSubmissions = lazy(() => import('./pages/admin/ConsentSubmissions')
 const ComplaintManager = lazy(() => import('./pages/admin/ComplaintManager'));
 const ReportManager = lazy(() => import('./pages/admin/ReportManager'));
 const PopupSubmissions = lazy(() => import('./pages/admin/PopupSubmissions'));
+const HomeContactSubmissions = lazy(() => import('./pages/admin/HomeContactSubmissions'));
 const ChatbotSubmissions = lazy(() => import('./pages/admin/ChatbotSubmissions')); // Added this line
+const ComplaintBox = lazy(() => import('./pages/admin/ComplaintBox'));
+const A11yFeedback = lazy(() => import('./pages/admin/A11yFeedback'));
 
 function App() {
-  const [particleCount, setParticleCount] = React.useState(window.innerWidth <= 640 ? 20 : 50);
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
 
@@ -132,15 +141,8 @@ function App() {
     } else {
       AOS.init({ duration: 800, once: true });
     }
-
-    const handleResize = () => {
-      setParticleCount(window.innerWidth <= 640 ? 20 : 50);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+  // Removed particles resize listener
+  return undefined;
   }, []);
 
   return (
@@ -150,6 +152,7 @@ function App() {
 
   <TimeBasedThemeWrapper>
       <ScrollToTop />
+  <SeoHelmet />
 
       {/* Toast Notifications */}
       <ToastContainer
@@ -163,19 +166,7 @@ function App() {
       />
 
 
-      {/* Background Particles (Hidden on Mobile) */}
-      {!isAdminPage && (
-        <div className="hidden sm:block fixed top-0 left-0 w-full h-full z-[-1]" aria-hidden="true">
-          <ParticlesBackground
-            options={{
-              particles: {
-                number: { value: particleCount },
-                size: { value: 3 },
-              },
-            }}
-          />
-        </div>
-      )}
+  {/* Background particles removed as requested */}
 
       {/* Navbar */}
       {!isAdminPage && <Navbar />}
@@ -188,8 +179,9 @@ function App() {
           isAdminPage ? '' : 'pt-16 px-2 sm:px-4 md:px-8 lg:px-12 max-w-screen-2xl mx-auto'
         }`}
       >
+  {!isAdminPage && <Breadcrumbs />}
   {/* Removed SeoHelmet and RouteAnnouncer to avoid missing module errors */}
-        <Suspense
+  <Suspense
           fallback={
             <div className="text-center py-10 text-primaryBlue font-josefin">
               Loading...
@@ -244,12 +236,17 @@ function App() {
             <Route path="/user-login" element={<UserLogin />} />
             <Route path="/client-panel" element={<ClientPanel />} />
             <Route path="/complaint" element={<Complaint />} />
-            <Route path="/reports" element={<Reports />} />
+            <Route path="/research-reports" element={<Reports />} />
+            {/* Backward-compatible redirect from old /reports to new /research-reports */}
+            <Route path="/reports" element={<Navigate to="/research-reports" replace />} />
             <Route path="/payment" element={<PaymentInfo />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/refund" element={<Refund />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/recommendation" element={<Recommendation />} />
+            <Route path="/accessibility-statement" element={<AccessibilityStatement />} />
+            <Route path="/accessibility-feedback" element={<AccessibilityFeedback />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/services/equity/stock-option" element={<StockOption />} />
             <Route path="/services/equity/delivery" element={<Delivery />} />
             <Route path="/services/equity/index" element={<Index />} />
@@ -273,22 +270,34 @@ function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="popups" element={<PopupSubmissions />} />
               <Route path="contacts" element={<ContactSubmissions />} />
+              <Route path="home-contacts" element={<HomeContactSubmissions />} />
               <Route path="consents" element={<ConsentSubmissions />} />
               <Route path="complaints" element={<ComplaintManager />} />
+              <Route path="complaint-box" element={<ComplaintBox />} />
               <Route path="reports" element={<ReportManager />} />
               <Route path="chatbot-data" element={<ChatbotSubmissions />} /> {/* Added this line */}
+              <Route path="a11y-feedback" element={<A11yFeedback />} />
+              <Route path="jobs" element={<JobsManager />} /> {/* Jobs Manager (admins only) */}
             </Route>
-            <Route path="/client-service-consent" element={<ClientServiceConsent />} />
+            <Route path="/client-service-consent-form" element={<ClientServiceConsent />} />
+            {/* Backward-compatible redirect from old path */}
+            <Route path="/client-service-consent" element={<Navigate to="/client-service-consent-form" replace />} />
             <Route path="/investor-chart" element={<InvestorChart />} />
+            {/* Alias route to match Footer link */}
+            <Route path="/investor-charter" element={<InvestorChart />} />
             <Route path="/anti-money-laundering" element={<AntiMoneyLaundering />} />
             <Route path="/daily" element={<DailyRecommendation />} />
+            <Route path="/media" element={<Media />} />
           <Route path="/guide" element={<GuideForInvesting />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>
 
-      {/* Footer & Floating Buttons */}
+      {/* Global Accessibility menu on all pages */}
+      <AccessibilityMenu />
+
+      {/* Footer & Floating Buttons (hide on admin) */}
       {!isAdminPage && (
         <>
           <Footer />
@@ -303,3 +312,64 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

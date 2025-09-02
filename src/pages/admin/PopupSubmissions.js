@@ -108,8 +108,7 @@ const PopupSubmissions = () => {
       Name: s.name,
       Mobile: s.mobile,
       City: s.city,
-      Experience: s.experience,
-      Newsletter: s.newsletter ? 'Yes' : 'No',
+      Interest: s.interest,
     }));
     const csv = Papa.unparse(csvData);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -137,7 +136,7 @@ const PopupSubmissions = () => {
       transition={{ duration: 0.5 }}
       className="bg-gray-800/50 p-6 rounded-lg shadow-lg"
     >
-      <div className="flex justify-between items-center mb-6">
+  <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
         <h1 className="text-2xl font-bold text-white"><Trans i18nKey="pages.admin_PopupSubmissions.popup-form-submissions"><Trans i18nKey="pages.admin_PopupSubmissions.popup-form-submissions-1">Popup Form Submissions</Trans></Trans></h1>
         <motion.button
           onClick={handleExportCSV}
@@ -156,8 +155,8 @@ const PopupSubmissions = () => {
         <p className="text-gray-400"><Trans i18nKey="pages.admin_PopupSubmissions.no-submissions-yet"><Trans i18nKey="pages.admin_PopupSubmissions.no-submissions-yet-1">No submissions yet.</Trans></Trans></p>
       ) : (
         <>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-gray-900/70 rounded-lg">
+          <div className="overflow-x-auto h-scroll custom-scrollbar">
+            <table className="min-w-[720px] sm:min-w-full bg-gray-900/70 rounded-lg text-xs sm:text-sm">
               <thead className="bg-gray-700/50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
@@ -168,21 +167,19 @@ const PopupSubmissions = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.name">Name</Trans></th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.mobile">Mobile</Trans></th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.city">City</Trans></th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.experience">Experience</Trans></th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.newsletter">Newsletter</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Interest</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.actions">Actions</Trans></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700">
                 {filteredSubmissions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((submission) => (
                   <tr key={submission.id} className="hover:bg-gray-800/50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{new Date(submission.timestamp).toLocaleString('en-IN')}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{submission.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{submission.mobile}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{submission.city}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{submission.experience}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{submission.newsletter ? 'Yes' : 'No'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{new Date(submission.timestamp).toLocaleString('en-IN')}</td>
+                    <td className="px-6 py-4 break-words text-gray-300">{submission.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{submission.mobile}</td>
+                    <td className="px-6 py-4 break-words text-gray-300">{submission.city}</td>
+                    <td className="px-6 py-4 break-words text-gray-300">{submission.interest}</td>
+                    <td className="px-6 py-4 whitespace-nowrap font-medium">
                       <motion.button
                         onClick={() => handleDeleteClick(submission.id)}
                         className="text-red-500 hover:text-red-700"

@@ -68,27 +68,27 @@
     "react-simple-typewriter": "^5.0.1",
     "react-slick": "^0.30.3",
     "react-spinners": "^0.17.0",
-    "react-toastify": "^11.0.5",
-    "react-tsparticles": "^2.12.2",
-    "recharts": "^3.1.0",
+  "react-toastify": "^11.0.5",
+  "recharts": "^3.1.0",
     "slick-carousel": "^1.8.1",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
     "styled-components": "^6.1.19",
     "swiper": "^11.2.10",
-    "three": "^0.178.0",
-    "tsparticles": "^2.12.0",
-    "tsparticles-slim": "^2.12.0",
+  "three": "^0.178.0",
     "url": "^0.11.4",
     "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
+  "start:ci": "cross-env PORT=3000 react-scripts start",
     "dev": "concurrently \"npm:start\" \"npm:server\"",
     "server": "npm --prefix server start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+  "test": "react-scripts test",
+  "test:a11y": "react-scripts test --watchAll=false --testPathPattern=a11y.smoke.test.js",
+  "pa11y": "pa11y-ci --config pa11y.config.json",
     "eject": "react-scripts eject",
     "analyze": "npx source-map-explorer \"build/static/js/*.js\"",
     "images:build": "node scripts/generate-images.js",
@@ -100,8 +100,9 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+  "react-app",
+  "react-app/jest",
+  "plugin:jsx-a11y/recommended"
     ]
   },
   "browserslist": {
@@ -117,14 +118,19 @@
     ]
   },
   "devDependencies": {
+  "eslint-plugin-jsx-a11y": "^6.8.0",
+  "jest-axe": "^7.0.0",
     "ajv": "^6.12.6",
     "autoprefixer": "^10.4.21",
     "concurrently": "^8.2.0",
     "eslint": "^8.57.1",
+  "cross-env": "^7.0.3",
     "gh-pages": "^6.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
+  "pa11y-ci": "^3.0.1",
     "postcss": "^8.5.6",
+  "serve": "^14.2.3",
     "sharp": "^0.32.0",
     "source-map-explorer": "^2.5.3",
     "tailwindcss": "^3.4.17",

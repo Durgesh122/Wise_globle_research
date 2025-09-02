@@ -4,13 +4,13 @@
  * Features day-based filtering, category selection, search, pagination, and animations.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Trans } from '../i18nShim';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSearch, FiLock, FiEye } from 'react-icons/fi';
+import { FiSearch, FiEye } from 'react-icons/fi';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import PropTypes from 'prop-types';
@@ -51,12 +51,56 @@ const LoadingSpinner = () => (
   </motion.div>
 );
 
-// Controlled confirmation modal for password verification
-const PasswordModal = ({ isOpen, onClose, onConfirm, report }) => {
-  const [passwordInput, setPasswordInput] = useState('');
+
+// Report preview modal with robust PDF embedding
+const ReportPreviewModal = ({ isOpen, onClose, report = null, onDownload = null }) => {
+  // Basic mobile detection for safer PDF rendering on small devices
+  const isMobile = useMemo(() => {
+    if (typeof navigator === 'undefined') return false;
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }, []);
+  const { previewUrl, revoke } = useMemo(() => {
+    const fileSource = report?.file || report?.fileData || '';
+    try {
+      if (!fileSource) return { previewUrl: null, revoke: () => {} };
+
+      // If http(s), use directly
+      if (/^https?:\/\//i.test(fileSource)) {
+        return { previewUrl: fileSource, revoke: () => {} };
+      }
+
+      const toBlobUrl = (bytes, mime = 'application/pdf') => {
+        const blob = new Blob([bytes], { type: mime });
+        const objectUrl = URL.createObjectURL(blob);
+        return { previewUrl: objectUrl, revoke: () => URL.revokeObjectURL(objectUrl) };
+      };
+
+      // Data URL
+      if (fileSource.startsWith('data:')) {
+        const [meta, base64] = fileSource.split(',');
+        const mimeMatch = meta.match(/data:([^;]+);base64/);
+        const mime = mimeMatch ? mimeMatch[1] : 'application/pdf';
+        const bin = atob(base64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return toBlobUrl(bytes, mime);
+      }
+
+      // Raw base64
+      const bin = atob(fileSource);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return toBlobUrl(bytes, 'application/pdf');
+    } catch (e) {
+      return { previewUrl: null, revoke: () => {} };
+    }
+  }, [report]);
+
+  useEffect(() => revoke, [revoke]);
+
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && report && (
         <motion.div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
           initial={{ opacity: 0 }}
@@ -64,45 +108,84 @@ const PasswordModal = ({ isOpen, onClose, onConfirm, report }) => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-xl border border-gray-200/20 max-w-md w-full"
+            className="bg-white/10 backdrop-blur-lg p-4 rounded-xl shadow-xl border border-gray-200/20 max-w-full sm:max-w-xl md:max-w-3xl w-full h-[90dvh] sm:h-[80vh] mx-2 sm:mx-auto flex flex-col overflow-hidden"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
           >
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Verify Password for {report?.title}
-            </h3>
-            <input
-              type="password"
-              inputMode="numeric"
-              maxLength={4}
-              placeholder="Enter 4-digit password"
-              className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4"
-              value={passwordInput}
-              onChange={(e) => setPasswordInput(e.target.value)}
-              aria-label={`Password for ${report?.title}`}
-            />
-            <div className="flex justify-end gap-4">
-              <motion.button
-                onClick={() => {
-                  onConfirm(passwordInput, report);
-                  setPasswordInput('');
-                }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              ><Trans i18nKey="pages.Reports.verify">Verify</Trans></motion.button>
-              <motion.button
-                onClick={() => {
-                  setPasswordInput('');
-                  onClose();
-                }}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              ><Trans i18nKey="pages.Reports.cancel">Cancel</Trans></motion.button>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold text-white truncate">{report?.title}</h3>
+              <div className="flex gap-2">
+                {previewUrl && (
+                  <a
+                    href={previewUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30"
+                    aria-label="Open in new tab"
+                  >
+                    Open
+                  </a>
+                )}
+                <motion.button
+                  onClick={onClose}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  aria-label="Close preview"
+                ><Trans i18nKey="pages.Reports.close">Close</Trans></motion.button>
+              </div>
+            </div>
+            <div className="bg-white h-full rounded-md overflow-hidden flex flex-col">
+              <div className="flex-1 min-h-0">
+                {previewUrl ? (
+                  isMobile ? (
+                    // Mobile fallback: many mobile browsers (especially iOS Safari) don't render PDFs inside <object> reliably.
+                    // We prefer a plain iframe with full height; users can still use the Open button if the browser blocks it.
+                    <iframe
+                      src={previewUrl}
+                      title={report?.title || 'Report preview'}
+                      className="w-full h-full border-0"
+                      allow="fullscreen"
+                    />
+                  ) : (
+                    <object data={previewUrl} type="application/pdf" className="w-full h-full">
+                      <iframe
+                        src={previewUrl}
+                        title={report?.title || 'Report preview'}
+                        className="w-full h-full border-0"
+                      />
+                    </object>
+                  )
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-700 p-4">
+                    <p>Preview unavailable. Use the Open or Download buttons.</p>
+                  </div>
+                )}
+              </div>
+              <div className="p-3 border-t border-gray-200/10 bg-gray-50/5 flex justify-end gap-3">
+                {onDownload && (
+                  <motion.button
+                    onClick={() => onDownload(report)}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    <Trans i18nKey="pages.Reports.download">Download</Trans>
+                  </motion.button>
+                )}
+                <motion.button
+                  onClick={onClose}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Trans i18nKey="pages.Reports.close">Close</Trans>
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         </motion.div>
@@ -110,80 +193,6 @@ const PasswordModal = ({ isOpen, onClose, onConfirm, report }) => {
     </AnimatePresence>
   );
 };
-
-PasswordModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onConfirm: PropTypes.func.isRequired,
-  report: PropTypes.shape({
-    title: PropTypes.string,
-    password: PropTypes.string,
-  }),
-};
-
-// Report preview modal with embedded PDF view
-const ReportPreviewModal = ({ isOpen, onClose, report = null, onDownload = null }) => (
-  <AnimatePresence>
-    {isOpen && report && (
-      <motion.div
-        className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <motion.div
-          className="bg-white/10 backdrop-blur-lg p-4 rounded-xl shadow-xl border border-gray-200/20 max-w-full sm:max-w-xl md:max-w-3xl w-full h-[90vh] sm:h-[80vh] mx-2 sm:mx-auto flex flex-col overflow-hidden"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.8, opacity: 0 }}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-lg font-semibold text-white truncate">{report?.title}</h3>
-            <motion.button
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-              aria-label="Close preview"
-            ><Trans i18nKey="pages.Reports.close">Close</Trans></motion.button>
-          </div>
-          <div className="bg-white h-full rounded-md overflow-hidden flex flex-col">
-            <div className="flex-1 min-h-0">
-              <iframe
-                src={report?.file || report?.fileData}
-                title={report?.title}
-                className="w-full h-full"
-              />
-            </div>
-            <div className="p-3 border-t border-gray-200/10 bg-gray-50/5 flex justify-end gap-3">
-              {onDownload && (
-                <motion.button
-                  onClick={() => onDownload(report)}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  <Trans i18nKey="pages.Reports.download">Download</Trans>
-                </motion.button>
-              )}
-              <motion.button
-                onClick={onClose}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                <Trans i18nKey="pages.Reports.close">Close</Trans>
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
 
 // Defensive: ensure no .defaultProps exist on this function component
 // (some toolchains or HOCs may add it; React warns about defaultProps on
@@ -284,7 +293,7 @@ SearchFilter.propTypes = {
 };
 
 // Report card component
-const ReportCard = ({ report, isSelected, onVerify, onPreview }) => (
+const ReportCard = ({ report, isSelected, onPreview }) => (
   <motion.li
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
@@ -309,16 +318,6 @@ const ReportCard = ({ report, isSelected, onVerify, onPreview }) => (
     </div>
     <div className="mt-3 flex flex-col sm:flex-row items-center gap-3">
       <motion.button
-        onClick={() => onVerify(report)}
-        className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
-        variants={buttonVariants}
-        whileHover="hover"
-        whileTap="tap"
-        aria-label={`Verify password for ${report.title}`}
-      >
-        <FiLock /><Trans i18nKey="pages.Reports.verify">Verify</Trans>
-      </motion.button>
-      <motion.button
         onClick={() => onPreview && onPreview(report)}
         className="w-full sm:w-auto px-4 py-2 bg-white/10 text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2"
         variants={buttonVariants}
@@ -341,7 +340,7 @@ ReportCard.propTypes = {
     size: PropTypes.string.isRequired,
   }).isRequired,
   isSelected: PropTypes.bool.isRequired,
-  onVerify: PropTypes.func.isRequired,
+  // onVerify removed (no OTP flow)
 };
 
 // Pagination component
@@ -389,8 +388,10 @@ function Reports() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedReport, setSelectedReport] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isOtpOpen, setIsOtpOpen] = useState(false);
+  const [otpInput, setOtpInput] = useState('');
+  const [pendingReport, setPendingReport] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [sortBy, setSortBy] = useState('title');
@@ -440,36 +441,42 @@ function Reports() {
     setCurrentPage(1);
   }, [activeDay]);
 
-  // Handle password verification
-  const handleVerifyPassword = useCallback((password, report) => {
-    if (!password) {
-      toast.error('Please enter a password.', { position: 'top-center' });
-      return;
-    }
-    if (password === report.password) {
-      setPdfPreview(report);
-      setSelectedReport(report);
-      setIsPasswordModalOpen(false);
-      toast.success('Password verified successfully.', { position: 'top-center' });
-    } else {
-      toast.error('Incorrect password.', { position: 'top-center' });
-    }
-  }, []);
-
-  // Handle report preview
+  // No OTP verification — open preview directly
+  // Handle report preview with OTP verification
   const handlePreviewReport = (report) => {
-    setSelectedReport(report);
-    setIsPreviewOpen(true);
+    setPendingReport(report);
+    setOtpInput('');
+    setIsOtpOpen(true);
+  };
+
+  const verifyOtpAndOpen = () => {
+    try {
+      const expected = String(pendingReport?.otp || '').trim();
+      const entered = String(otpInput || '').trim();
+      if (!expected) {
+        toast.error('This report requires an OTP, but none is set. Contact admin.');
+        return;
+      }
+      if (entered.length === 0) {
+        toast.warn('Please enter the OTP.');
+        return;
+      }
+      if (entered !== expected) {
+        toast.error('Invalid OTP.');
+        return;
+      }
+      setSelectedReport(pendingReport);
+      setPdfPreview(pendingReport);
+      setIsPreviewOpen(true);
+      setIsOtpOpen(false);
+      setPendingReport(null);
+    } catch (e) {
+      toast.error('Failed to verify OTP.');
+    }
   };
 
   // Handle download
   const handleDownload = (report) => {
-    // Require successful password verification: use pdfPreview as the gate
-    if (!pdfPreview || pdfPreview.id !== report.id) {
-      toast.error('Please verify the password first.', { position: 'top-center' });
-      return;
-    }
-
     try {
       const fileSource = report?.file || report?.fileData;
       const filename = report?.filename || `${report?.title || 'report'}.pdf`;
@@ -636,10 +643,6 @@ function Reports() {
                         key={report.id}
                         report={report}
                         isSelected={pdfPreview?.id === report.id}
-                        onVerify={() => {
-                          setSelectedReport(report);
-                          setIsPasswordModalOpen(true);
-                        }}
                         onPreview={handlePreviewReport}
                       />
                     ))}
@@ -710,7 +713,7 @@ function Reports() {
                         />
                       </svg>
                       <h3 className="mt-2 text-sm font-medium text-white"><Trans i18nKey="pages.Reports.no-report-selected">No report selected</Trans></h3>
-                      <p className="mt-1 text-sm text-gray-300"><Trans i18nKey="pages.Reports.click-on-a-report-and-verify-the-passwor"><Trans i18nKey="pages.Reports.click-on-a-report-and-verify-the-passwor-1">Click on a report and verify the password to preview it</Trans></Trans></p>
+                      <p className="mt-1 text-sm text-gray-300">Click on a report to preview it.</p>
                     </div>
                   </div>
                 )}
@@ -718,6 +721,58 @@ function Reports() {
             </div>
           </div>
         </motion.div>
+
+        {/* OTP Modal */}
+        <AnimatePresence>
+          {isOtpOpen && (
+            <motion.div
+              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="bg-gray-900 text-white p-6 rounded-xl shadow-xl w-full max-w-md border border-gray-700"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+              >
+                <h3 className="text-lg font-semibold mb-2">Enter OTP</h3>
+                <p className="text-sm text-gray-300 mb-4">Please enter the 6-digit OTP to view this report.</p>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  autoFocus
+                  className="w-full px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4 tracking-widest text-center"
+                  placeholder="••••••"
+                  value={otpInput}
+                  onChange={(e) => setOtpInput(e.target.value.replace(/[^0-9]/g, ''))}
+                />
+                <div className="flex justify-end gap-2">
+                  <motion.button
+                    onClick={() => { setIsOtpOpen(false); setPendingReport(null); setOtpInput(''); }}
+                    className="px-4 py-2 bg-gray-600 rounded-lg"
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    <Trans i18nKey="pages.Reports.cancel">Cancel</Trans>
+                  </motion.button>
+                  <motion.button
+                    onClick={verifyOtpAndOpen}
+                    className="px-4 py-2 bg-indigo-600 rounded-lg"
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    <Trans i18nKey="pages.Reports.verify">Verify</Trans>
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Pagination */}
         {totalPages > 1 && (
@@ -728,14 +783,6 @@ function Reports() {
           />
         )}
       </div>
-
-      {/* Password Verification Modal */}
-      <PasswordModal
-        isOpen={isPasswordModalOpen}
-        onClose={() => setIsPasswordModalOpen(false)}
-        onConfirm={handleVerifyPassword}
-        report={selectedReport}
-      />
 
       {/* Report Preview Modal */}
       <ReportPreviewModal

@@ -1,7 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaChartLine, FaSignal, FaBolt, FaGlobeAmericas } from 'react-icons/fa';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
+// Images for each insight (scroll-framed)
+import slide1 from '../assets/images/slide1.png';
+import slide2 from '../assets/images/slide2.png';
+import slide4 from '../assets/images/slide4.png';
+import slide5 from '../assets/images/slide5.png';
 
 // Heading and richer insights content
 const heading = 'Market Insights — Today';
@@ -10,26 +14,22 @@ const insights = [
   {
     title: 'Market Sentiment',
     desc: 'Measure bullish vs bearish flows, positioning and short-term risk appetite across major markets.',
-    icon: FaSignal,
-    color: 'text-rose-400',
+    img: slide1,
   },
   {
     title: 'Top Movers',
     desc: 'Daily leaders and laggards with on-chain and volume context to spot momentum trades.',
-    icon: FaBolt,
-    color: 'text-amber-400',
+    img: slide2,
   },
   {
     title: 'Sector Watch',
     desc: 'Sector rotation insights and which industries are leading the market this session.',
-    icon: FaChartLine,
-    color: 'text-violet-400',
+    img: slide4,
   },
   {
     title: 'Macro Trends',
     desc: 'Key macro indicators and events shaping risk — rates, inflation, and central bank cues.',
-    icon: FaGlobeAmericas,
-    color: 'text-teal-300',
+    img: slide5,
   },
 ];
 
@@ -56,19 +56,21 @@ const MarketInsights = () => {
               animate="visible"
               whileHover={{ y: -6 }}
             >
-              <div className="w-full h-36 sm:h-40 rounded-lg mb-4 flex items-center justify-center"
-                   style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0))' }}>
-                <motion.div
-                  className={`p-3 rounded-full bg-white/6 ${insight.color}`}
-                  initial={{ scale: 0.98, opacity: 0.95 }}
-                  animate={{ scale: [0.98, 1.04, 0.98] }}
-                  transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  {(() => {
-                    const Icon = insight.icon || FaChartLine;
-                    return <Icon size={44} aria-hidden="true" />;
-                  })()}
-                </motion.div>
+              {/* Scroll-shaped image frame */}
+              <div className="relative w-full h-36 sm:h-40 mb-4 select-none">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <motion.div
+                    className="relative w-[88%] h-[80%] bg-[#f5efe4] dark:bg-[#efe7d7] border border-amber-200/70 rounded-md shadow-inner overflow-hidden"
+                    initial={{ scale: 0.98, opacity: 0.95 }}
+                    animate={{ scale: [0.98, 1, 0.98] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <img src={insight.img} alt={insight.title} className="w-full h-full object-cover" />
+                    {/* Scroll rolls */}
+                    <span className="absolute -top-2 left-6 w-12 h-4 bg-[#e9dcc5] border border-amber-200/70 rounded-full shadow-sm" />
+                    <span className="absolute -bottom-2 right-6 w-12 h-4 bg-[#e9dcc5] border border-amber-200/70 rounded-full shadow-sm" />
+                  </motion.div>
+                </div>
               </div>
 
               <h3 className="text-lg sm:text-xl font-semibold mb-1 text-gray-900 dark:text-gray-100">{insight.title}</h3>

@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import step1 from '../assets/images/imgStep01.png';
 import step2 from '../assets/images/imgStep02.png';
-import step3 from '../assets/images/imgStep03.png';
+import step3 from '../assets/images/team2.png';
 
 const MethodologySection = () => {
   // removed react-i18next for this component per request
@@ -67,11 +67,11 @@ const MethodologySection = () => {
               <div className="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-gradient-to-br from-white/6 to-white/2 blur-3xl opacity-60 transform rotate-12"></div>
 
               <div className="flex flex-col items-center text-center relative z-10">
-                <div className="w-24 h-24 rounded-full bg-white/6 flex items-center justify-center mb-4 shadow-md">
+                <div className="w-24 h-24 rounded-full overflow-hidden bg-white/6 border border-white/20 mb-4 shadow-md">
                   <img
                     src={images[idx] || images[0]}
                     alt={step.title || ''}
-                    className="w-12 h-12 object-contain"
+                    className="w-full h-full object-cover rounded-full"
                     decoding="async"
                     loading="lazy"
                     onError={(e) => { e.currentTarget.onerror = null; }}

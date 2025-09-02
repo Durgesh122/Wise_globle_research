@@ -19,7 +19,6 @@ const ImpulseOption = () => (
         <li><Trans i18nKey="pages.ImpulseOption.carefully-analysis-market-direction"><Trans i18nKey="pages.ImpulseOption.carefully-analysis-market-direction-1">Carefully Analysis Market direction.</Trans></Trans></li>
         <li><Trans i18nKey="pages.ImpulseOption.concise-information-of-domestic-amp-worl"><Trans i18nKey="pages.ImpulseOption.concise-information-of-domestic-amp-worl-1">Concise information of Domestic &amp; World Market.</Trans></Trans></li>
       </ul>
-      <p className="text-base mb-2 text-white"><Trans i18nKey="pages.ImpulseOption.trading-rules-that-every-trader-must-stu"><Trans i18nKey="pages.ImpulseOption.trading-rules-that-every-trader-must-stu-1">Trading rules that every trader must studious follow</Trans></Trans></p>
     </div>
 
     <div className="mb-8">
@@ -41,7 +40,7 @@ const ImpulseOption = () => (
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.ImpulseOption.sample-calls">Sample Calls</Trans></h2>
-      <div className="bg-white/10 rounded-lg p-4 text-center text-base text-white font-mono"><Trans i18nKey="pages.ImpulseOption.buy-dixon-14500-ce-above-720-tgt-800-900"><Trans i18nKey="pages.ImpulseOption.buy-dixon-14500-ce-above-720-tgt-800-900-1">BUY DIXON 14500 CE ABOVE 720 TGT 800 900 SL 620</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.ImpulseOption.buy-dixon-14500-ce-above-720-tgt-800-900"><Trans i18nKey="pages.ImpulseOption.buy-dixon-14500-ce-above-720-tgt-800-900-1">BUY DIXON 14500 CE ABOVE 720 TGT 800 900 SL 620</Trans></Trans></div>
     </div>
 
     <div className="mb-8">

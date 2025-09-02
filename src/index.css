@@ -136,6 +136,13 @@ body {
   border-radius: 6px;
 }
 
+/* ✅ Horizontal scroll helper for mobile tables */
+.h-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* momentum scroll on iOS */
+  overscroll-behavior-x: contain;
+}
+
 /* ✅ Blurred background for components */
 .custom-box-bg {
   /* subtle translucent panel for both dark and light backgrounds */
@@ -250,6 +257,17 @@ html[data-high-contrast="true"] {
 html[data-high-contrast="true"] *:focus-visible {
   outline: 3px solid #000 !important;
 }
+/* Ensure links/buttons remain clear and discernible in HC mode */
+html[data-high-contrast="true"] a[href] {
+  color: #000 !important;
+  text-decoration: underline !important;
+}
+html[data-high-contrast="true"] button,
+html[data-high-contrast="true"] [role="button"] {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
 /* Nudge some common utility colors for better contrast in HC mode */
 html[data-high-contrast="true"] .text-gray-400,
 html[data-high-contrast="true"] .text-gray-500,
@@ -259,3 +277,47 @@ html[data-high-contrast="true"] .bg-white\/20 { background-color: rgba(0,0,0,0.0
 html[data-high-contrast="true"] .bg-white\/90 { background-color: rgba(255,255,255,1) !important; }
 html[data-high-contrast="true"] .bg-blue-600 { background-color: #003366 !important; }
 html[data-high-contrast="true"] .bg-gray-800 { background-color: #111 !important; }
+
+/* Highlight links when requested */
+html[data-highlight-links="true"] a[href] {
+  outline: 2px dashed #22c55e !important;
+  outline-offset: 2px !important;
+}
+html[data-highlight-links="true"] a[href]:focus-visible {
+  outline-width: 3px !important;
+}
+
+/* Readable font (prefer system UI / open dyslexic if present) */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: local('OpenDyslexic'), local('OpenDyslexic-Regular');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+html[data-readable-font="true"] body,
+html[data-readable-font="true"] * {
+  font-family: 'OpenDyslexic', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important;
+}
+
+/* Page-wide filters */
+html[data-grayscale="true"] body { filter: grayscale(100%); }
+html[data-invert="true"] body { filter: invert(100%) hue-rotate(180deg); }
+/* If both invert and grayscale are on, combine reasonably */
+html[data-invert="true"][data-grayscale="true"] body { filter: invert(100%) hue-rotate(180deg) grayscale(100%); }
+
+/* Line height */
+html[data-line-height="relaxed"] body, html[data-line-height="relaxed"] * { line-height: 1.7 !important; }
+
+/* Screen-reader only utility */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}

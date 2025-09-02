@@ -1,7 +1,7 @@
 // Import required dependencies
 import React, { useState, useMemo } from 'react';
 import { Trans, useTranslation } from '../i18nShim';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import {

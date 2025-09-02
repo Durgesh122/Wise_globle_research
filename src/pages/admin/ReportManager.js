@@ -39,6 +39,7 @@ const REPORT_CATEGORIES = ['Market', 'Technical', 'Financial', 'Competitor', 'Ot
 const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
   const [newReport, setNewReport] = useState({ title: '', description: '', category: 'Market', file: null });
   const [uploading, setUploading] = useState(false);
+  const [lastOtp, setLastOtp] = useState('');
 
   const handleUpload = async () => {
     if (!newReport.file) {
@@ -53,7 +54,8 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
     }
     setUploading(true);
     try {
-      await onUpload(day, newReport);
+      const result = await onUpload(day, newReport);
+      if (result?.otp) setLastOtp(result.otp);
       setNewReport({ title: '', description: '', category: 'Market', file: null });
       const fileInput = document.getElementById(`file-input-${day}`);
       if (fileInput) fileInput.value = '';
@@ -77,6 +79,11 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
         <motion.button onClick={handleUpload} disabled={uploading} className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg flex items-center justify-center gap-2 disabled:opacity-50" variants={buttonVariants} whileHover="hover">
           <FiUpload /> {uploading ? 'Uploading...' : 'Upload'}
         </motion.button>
+        {lastOtp && (
+          <div className="mt-2 text-sm text-green-300">
+            <span className="inline-flex items-center px-2 py-1 rounded bg-green-900/30 border border-green-700/40">New OTP: <strong className="ml-1 tracking-widest">{lastOtp}</strong></span>
+          </div>
+        )}
       </div>
       <div>
         <h5 className="text-sm font-medium text-gray-300 mb-2"><Trans i18nKey="pages.admin_ReportManager.uploaded-reports">Uploaded Reports</Trans></h5>
@@ -84,7 +91,12 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
           <ul className="space-y-2">
             {reports[day].map((report) => (
               <motion.li key={report.id} className="flex justify-between items-center p-3 bg-gray-700/20 rounded-lg" variants={itemVariants}>
-                <p className="text-sm text-white font-medium truncate" title={report.title}>{report.title}</p>
+                <div className="min-w-0">
+                  <p className="text-sm text-white font-medium truncate" title={report.title}>{report.title}</p>
+                  {report.otp && (
+                    <p className="text-xs text-emerald-300/90 mt-1">OTP: <span className="font-mono tracking-widest">{report.otp}</span></p>
+                  )}
+                </div>
                 <div className="flex gap-2">
                   <motion.button onClick={() => onPreview(report)} className="text-indigo-400 hover:text-indigo-300" variants={buttonVariants} whileHover="hover"><FiEye size={16} /></motion.button>
                   <motion.button onClick={() => onDelete(report.id)} className="text-red-500 hover:text-red-400" variants={buttonVariants} whileHover="hover"><FiTrash2 size={16} /></motion.button>
@@ -94,21 +106,7 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
           </ul>
         ) : <p className="text-sm text-gray-400"><Trans i18nKey="pages.admin_ReportManager.no-reports-uploaded"><Trans i18nKey="pages.admin_ReportManager.no-reports-uploaded-1">No reports uploaded.</Trans></Trans></p>}
       </div>
-      {/* Display generated codes under upload button */}
-      <div className="mb-4">
-        <h5 className="text-sm font-medium text-gray-300 mb-2"><Trans i18nKey="pages.admin_ReportManager.report-codes">Report Codes</Trans></h5>
-        {reports[day]?.length > 0 ? (
-          <ul className="space-y-1">
-            {reports[day].map((report) => (
-              <li key={report.id} className="text-xs text-gray-300 truncate">
-                {report.title || 'Untitled Report'}: {report.password}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-gray-400"><Trans i18nKey="pages.admin_ReportManager.no-codes-generated"><Trans i18nKey="pages.admin_ReportManager.no-codes-generated-1">No codes generated.</Trans></Trans></p>
-        )}
-      </div>
+      {/* Codes removed: password is embedded inside PDF; no external OTP shown */}
     </motion.div>
   );
 };
@@ -153,8 +151,8 @@ const ReportManager = () => {
     }
     const file = reportData.file;
     const fileDataUrl = await toBase64(file);
-    const password = Math.floor(1000 + Math.random() * 9000).toString();
-
+    // Generate a 6-digit OTP
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
     const newReportData = {
       title: reportData.title || 'Untitled Report',
       description: reportData.description || 'No description',
@@ -164,11 +162,12 @@ const ReportManager = () => {
       filename: file.name,
       timestamp: Date.now(),
       day,
-      password,
+      otp,
     };
 
     await push(ref(db, 'reports'), newReportData);
-    toast.success(`Report uploaded for ${day}. Password: ${password}`, { autoClose: 5000 });
+    toast.success(`Report uploaded for ${day}.`, { autoClose: 3000 });
+    return { otp };
   };
 
   const handleDeleteClick = (id) => {

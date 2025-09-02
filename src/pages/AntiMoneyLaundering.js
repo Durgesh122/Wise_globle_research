@@ -1,6 +1,6 @@
 import React from 'react';
-import ant2Image from '../assets/images/Ant2.jpg';
-import mlImage from '../assets/images/MoneyLaundering.jpg';
+import ant2Image from '../assets/images/Ant2.png';
+import mlImage from '../assets/images/MoneyLaundering.png';
 
 const AntiMoneyLaundering = () => {
   return (

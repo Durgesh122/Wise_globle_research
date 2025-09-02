@@ -11,6 +11,7 @@ const GalaxyMCX = () => (
     <p className="text-lg mb-6 text-center text-white">
       Our MCX Commodity Service provides real-time trading insights, research-backed recommendations, and expert research recommendations for F&O commodities such as gold, silver, crude oil, natural gas, and base metals. Designed for both beginners and experienced traders, whether you’re trading for short-term profits or long-term investments, our MCX Commodity Service is your reliable partner in navigating the Indian commodities market with confidence.
     </p>
+  <p className="text-base mb-6 text-center text-white"><Trans i18nKey="pages.GalaxyMCX.galaxy-mcx-is-ideal-for-traders-who-want"><Trans i18nKey="pages.GalaxyMCX.galaxy-mcx-is-ideal-for-traders-who-want-1">Galaxy MCX is ideal for traders who want detailed technical and fundamental market analysis in one pack.</Trans></Trans></p>
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.GalaxyMCX.galaxy-mcx-features">Galaxy MCX Features</Trans></h2>
@@ -22,7 +23,7 @@ const GalaxyMCX = () => (
         <li><Trans i18nKey="pages.GalaxyMCX.careful-analysis-of-market-direction"><Trans i18nKey="pages.GalaxyMCX.careful-analysis-of-market-direction-1">Careful analysis of market direction.</Trans></Trans></li>
         <li><Trans i18nKey="pages.GalaxyMCX.concise-information-of-domestic-world-ma"><Trans i18nKey="pages.GalaxyMCX.concise-information-of-domestic-world-ma-1">Concise information of domestic & world market.</Trans></Trans></li>
       </ul>
-      <p className="text-base mb-2 text-white"><Trans i18nKey="pages.GalaxyMCX.galaxy-mcx-is-ideal-for-traders-who-want"><Trans i18nKey="pages.GalaxyMCX.galaxy-mcx-is-ideal-for-traders-who-want-1">Galaxy MCX is ideal for traders who want detailed technical and fundamental market analysis in one pack.</Trans></Trans></p>
+      
     </div>
 
     <div className="mb-8">
@@ -46,7 +47,7 @@ const GalaxyMCX = () => (
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.GalaxyMCX.sample-call">Sample Call</Trans></h2>
-      <div className="bg-white/10 rounded-lg p-4 text-white text-center font-mono text-lg mb-2"><Trans i18nKey="pages.GalaxyMCX.buy-crude-oil-5800-ce-above-181-target-2"><Trans i18nKey="pages.GalaxyMCX.buy-crude-oil-5800-ce-above-181-target-2-1">BUY CRUDE OIL 5800 CE ABOVE 181 TARGET 204 226 STOPLOSS 154</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-white text-left font-mono text-lg mb-2"><Trans i18nKey="pages.GalaxyMCX.buy-crude-oil-5800-ce-above-181-target-2"><Trans i18nKey="pages.GalaxyMCX.buy-crude-oil-5800-ce-above-181-target-2-1">BUY CRUDE OIL 5800 CE ABOVE 181 TARGET 204 226 STOPLOSS 154</Trans></Trans></div>
     </div>
 
     <div className="mb-8">

@@ -5,17 +5,21 @@ import { toast } from 'react-toastify'; // For notifications
 function VerifyOTP() {
   const [otp, setOtp] = useState('');
   const navigate = useNavigate();
-  const mobile = localStorage.getItem('adminMobile');
+  const mobile = null; // OTP via localStorage is insecure; disable until proper backend OTP is implemented
 
   useEffect(() => {
-    if (!mobile) navigate('/user-login');
+  if (!mobile) navigate('/user-login');
   }, [mobile, navigate]);
 
   const handleVerify = async (e) => {
     e.preventDefault();
 
-    localStorage.setItem('adminLoggedIn', 'true');
-    navigate('/admin/contact-data');
+    if (!otp || otp.length < 4) {
+      toast.error('Please enter the OTP sent to your phone.', { position: 'top-center' });
+      return;
+    }
+  toast.error('OTP login is disabled. Please use email/password login.', { position: 'top-center' });
+  navigate('/user-login');
   };
 
   return (

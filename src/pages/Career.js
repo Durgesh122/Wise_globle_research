@@ -1,8 +1,12 @@
 // src/pages/Career.js
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
-import { FaBriefcase, FaUpload, FaBuilding, FaChartLine } from 'react-icons/fa';
+import careersImg from '../assets/images/careers.png';
+import { FaBriefcase, FaUpload } from 'react-icons/fa';
+import { db } from '../firebase';
+import { ref as dbRef, push, set, onValue, query, orderByChild, equalTo } from 'firebase/database';
+import { toast } from 'react-toastify';
 
 // Animation variants
 const containerVariants = {
@@ -25,64 +29,10 @@ const cardVariants = {
   hover: { scale: 1.05, rotateY: 10, boxShadow: '0 15px 30px rgba(0,0,0,0.2)' },
 };
 
-// Job openings data (same as before)
-const jobOpenings = [
-  {
-    id: 1,
-    title: 'Market Research Analyst',
-    location: 'Indore, Madhya Pradesh',
-    description: 'Analyze NSE and BSE market trends, provide insights for NIFTY and BANKNIFTY strategies, and contribute to Smart Options reports.',
-    requirements: [
-      'Bachelor’s degree in Finance, Economics, or related field.',
-      '2+ years of experience in market analysis.',
-      'Knowledge of SEBI regulations and MCX commodities.',
-      'Proficiency in data analysis tools (e.g., Excel, Python).',
-    ],
-    icon: <FaChartLine className="text-blue-300 text-4xl mb-4" />,
-  },
-  {
-    id: 2,
-    title: 'Research Analyst',
-    location: 'Indore, Madhya Pradesh',
-    description: 'Guide clients on investment strategies for stocks like RELIANCE and MCX commodities like GOLD, ensuring SEBI-compliant research.',
-    requirements: [
-      'Certified Financial Planner (CFP) or equivalent.',
-      '3+ years in financial research roles.',
-      'Strong communication and client management skills.',
-      'Familiarity with Indian stock markets.',
-    ],
-    icon: <FaBriefcase className="text-blue-300 text-4xl mb-4" />,
-  },
-  {
-    id: 3,
-    title: 'Data Scientist',
-    location: 'Indore, Madhya Pradesh',
-    description: 'Develop AI-driven trading algorithms for services like Universal Cash and Galaxy MCX, using real-time NSE and MCX data.',
-    requirements: [
-      'Master’s degree in Data Science, Computer Science, or related field.',
-      'Expertise in Python, R, and machine learning frameworks.',
-      '2+ years in financial data analysis.',
-      'Understanding of Indian market dynamics.',
-    ],
-    icon: <FaChartLine className="text-blue-300 text-4xl mb-4" />,
-  },
-  {
-    id: 4,
-    title: 'Client Success Manager',
-    location: 'Indore, Madhya Pradesh',
-    description: 'Support clients using Infinity Club and Evaluation Stock Options, ensuring seamless onboarding and satisfaction.',
-    requirements: [
-      'Bachelor’s degree in Business or related field.',
-      '2+ years in customer success or client relations.',
-      'Knowledge of Indian financial markets.',
-      'Excellent interpersonal skills.',
-    ],
-    icon: <FaBuilding className="text-blue-300 text-4xl mb-4" />,
-  },
-];
+// Jobs will be loaded dynamically from RTDB /jobs where active === true
 
-const careerImage = 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=600';
-const fallbackImage = 'https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg?auto=compress&cs=tinysrgb&w=600';
+const careerImage = careersImg;
+const fallbackImage = careersImg;
 
 const Career = () => {
   const [formData, setFormData] = useState({
@@ -91,9 +41,38 @@ const Career = () => {
     phone: '',
     resume: null,
     whyHire: '',
+    jobId: '',
   });
   const [errors, setErrors] = useState({});
   const [fileName, setFileName] = useState('No file chosen');
+  const [loading, setLoading] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
+  const [jobs, setJobs] = useState({});
+
+  useEffect(() => {
+    // Load only active jobs
+    const q = query(dbRef(db, 'jobs'), orderByChild('active'), equalTo(true));
+    const off = onValue(q, (snap) => {
+      setJobs(snap.val() || {});
+    });
+    return () => off();
+  }, []);
+
+  const jobList = useMemo(() => Object.entries(jobs).map(([id, j]) => ({ id, ...j })), [jobs]);
+
+  // If there are no active jobs, default to a general application bucket
+  useEffect(() => {
+    if (jobList.length === 0 && formData.jobId !== 'general') {
+      setFormData((prev) => ({ ...prev, jobId: 'general' }));
+    }
+  }, [jobList.length, formData.jobId]);
+
+  // If active jobs exist, default to the first one when nothing is selected
+  useEffect(() => {
+    if (jobList.length > 0 && !formData.jobId) {
+      setFormData((prev) => ({ ...prev, jobId: jobList[0].id }));
+    }
+  }, [jobList, formData.jobId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -127,21 +106,71 @@ const Career = () => {
     if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
     else if (!/^\d{10}$/.test(formData.phone)) newErrors.phone = 'Phone number must be 10 digits';
     if (!formData.resume) newErrors.resume = 'Resume is required';
-    if (!formData.whyHire.trim()) newErrors.whyHire = 'This field is required';
+  if (!formData.whyHire.trim()) newErrors.whyHire = 'This field is required';
+  // Require a job selection only when there are active jobs listed; otherwise default to 'general'
+  if (jobList.length > 0 && !formData.jobId) newErrors.jobId = 'Please select a job';
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      console.log('Form submitted:', formData);
-      alert('Application submitted successfully!');
-      setFormData({ name: '', email: '', phone: '', resume: null, whyHire: '' });
+      return;
+    }
+    if (honeypot) {
+      return;
+    }
+    setLoading(true);
+    try {
+      // Read resume as Base64 and store entirely in RTDB
+      let resumeData = '';
+      let resumeMeta = null;
+      if (formData.resume) {
+        resumeMeta = {
+          name: formData.resume.name,
+          size: formData.resume.size,
+          contentType: formData.resume.type || 'application/octet-stream',
+        };
+        resumeData = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const result = reader.result; // data:*/*;base64,....
+              const base64 = typeof result === 'string' ? result.split(',')[1] : '';
+              resolve(base64 || '');
+            } catch (e) { reject(e); }
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(formData.resume);
+        });
+      }
+
+  // Save submission to RTDB under jobApplications for clarity
+  const node = push(dbRef(db, 'jobApplications'));
+      await set(node, {
+        source: 'career',
+        jobId: String(formData.jobId || ''),
+        name: String(formData.name || ''),
+        email: String(formData.email || ''),
+        phone: String(formData.phone || ''),
+        whyHire: String(formData.whyHire || ''),
+        resumeMeta,
+        resumeData, // base64 content
+        timestamp: Date.now(),
+        honeypot: '',
+      });
+
+      toast.success('Application submitted successfully!', { position: 'top-center' });
+  setFormData({ name: '', email: '', phone: '', resume: null, whyHire: '', jobId: '' });
       setFileName('No file chosen');
       setErrors({});
+    } catch (err) {
+      const msg = err?.message || String(err);
+      toast.error(`Failed to submit application: ${msg}`, { position: 'top-center' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -175,11 +204,11 @@ const Career = () => {
         />
       </motion.div>
 
-      {/* Current Openings Section */}
+      {/* Current Openings Section (dynamic) */}
       <motion.div className="mb-12" variants={containerVariants}>
         <h2 className="text-3xl font-bold text-white mb-6 text-center"><Trans i18nKey="pages.Career.current-openings">Current Openings</Trans></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {jobOpenings.map((job) => (
+          {jobList.map((job) => (
             <motion.div
               key={job.id}
               className="bg-white/30 rounded-xl shadow-lg p-6 border-t-4 border-blue-500"
@@ -189,18 +218,25 @@ const Career = () => {
               whileHover="hover"
               style={{ transformStyle: 'preserve-3d' }}
             >
-              {job.icon}
+              <FaBriefcase className="text-blue-300 text-4xl mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">{job.title}</h3>
               <p className="text-white mb-2">{job.location}</p>
               <p className="text-white mb-4">{job.description}</p>
               <h4 className="text-lg font-semibold text-white mb-2"><Trans i18nKey="pages.Career.requirements">Requirements:</Trans></h4>
               <ul className="list-disc pl-6 text-white space-y-1">
-                {job.requirements.map((req, index) => (
-                  <li key={index}>{req}</li>
-                ))}
+                {Array.isArray(job.requirements)
+                  ? job.requirements.map((req, index) => (<li key={index}>{req}</li>))
+                  : String(job.requirements || '')
+                      .split(/\r?\n|,/)
+                      .map((s, i) => s.trim())
+                      .filter(Boolean)
+                      .map((s, i) => (<li key={i}>{s}</li>))}
               </ul>
             </motion.div>
           ))}
+          {jobList.length === 0 && (
+            <div className="text-white/80 text-center col-span-1 md:col-span-2">No openings currently.</div>
+          )}
         </div>
       </motion.div>
 
@@ -208,6 +244,34 @@ const Career = () => {
       <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
         <h2 className="text-3xl font-bold text-white mb-6 text-center"><Trans i18nKey="pages.Career.apply-now">Apply Now</Trans></h2>
         <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
+          {/* Select Job */}
+      <div>
+            <label htmlFor="jobId" className="block text-white font-semibold mb-2">Select Job</label>
+            <select
+              id="jobId"
+              name="jobId"
+              value={formData.jobId}
+              onChange={(e)=>setFormData({...formData, jobId: e.target.value})}
+              className="w-full p-3 border rounded-lg bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+        <option value="">-- Choose an opening --</option>
+        <option value="general">General Application</option>
+              {jobList.map(j => (
+                <option key={j.id} value={j.id}>{j.title} — {j.location}</option>
+              ))}
+            </select>
+            {errors.jobId && <p className="text-red-400 text-sm mt-1">{errors.jobId}</p>}
+          </div>
+          {/* Honeypot */}
+          <input
+            type="text"
+            name="website"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            tabIndex="-1"
+            autoComplete="off"
+            className="hidden"
+          />
           <div>
             <label htmlFor="name" className="block text-white font-semibold mb-2"><Trans i18nKey="pages.Career.your-name">Your Name</Trans></label>
             <input
@@ -282,8 +346,9 @@ const Career = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition"
-          ><Trans i18nKey="pages.Career.submit-application">Submit Application</Trans></button>
+            disabled={loading}
+            className={`w-full text-white px-6 py-3 rounded-full font-semibold transition ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}`}
+          >{loading ? 'Submitting...' : (<Trans i18nKey="pages.Career.submit-application">Submit Application</Trans>)}</button>
         </form>
       </motion.div>
 

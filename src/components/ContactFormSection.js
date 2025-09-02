@@ -23,7 +23,7 @@ const ContactForm = ({ contactFormRef }) => {
         timestamp: Date.now(),
         honeypot: honeypot || ''
       };
-      await push(ref(db, 'homeFormSubmissions'), formData);
+  await push(ref(db, 'homePageContactSubmissions'), formData);
 
       // Google Ads Conversion Tracking
       if (window.gtag) {

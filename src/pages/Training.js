@@ -1,6 +1,9 @@
 // src/pages/Training.js
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { ref, push } from 'firebase/database';
+import { db } from '../firebase';
+import { toast } from 'react-toastify';
 import { FaChartLine, FaBookOpen, FaShieldAlt, FaUsers } from 'react-icons/fa';
 
 // Animation variants
@@ -105,6 +108,8 @@ const Training = () => {
     message: '',
   });
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -123,16 +128,38 @@ const Training = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      console.log('Form submitted:', formData);
-      alert('Registration submitted successfully!');
+      return;
+    }
+    if (honeypot) {
+      // Silently ignore bots
+      return;
+    }
+    setLoading(true);
+    try {
+      const submission = {
+        source: 'training',
+        name: String(formData.name || ''),
+        email: String(formData.email || ''),
+        phone: String(formData.phone || ''),
+        course: String(formData.course || ''),
+        message: String(formData.message || ''),
+        timestamp: Date.now(),
+        honeypot: '',
+      };
+      await push(ref(db, 'homeFormSubmissions'), submission);
+      toast.success('Registration submitted successfully!', { position: 'top-center' });
       setFormData({ name: '', email: '', phone: '', course: '', message: '' });
       setErrors({});
+    } catch (err) {
+      const msg = err?.message || String(err);
+      toast.error(`Failed to submit registration: ${msg}`, { position: 'top-center' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -238,6 +265,16 @@ const Training = () => {
       <motion.div className="bg-white/30 rounded-xl p-8 mb-12" variants={itemVariants} style={{ transformStyle: 'preserve-3d' }}>
   <h2 className="text-3xl font-bold text-white mb-6 text-center">Register for Training</h2>
         <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
+          {/* Honeypot for bots */}
+          <input
+            type="text"
+            name="company"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            tabIndex="-1"
+            autoComplete="off"
+            className="hidden"
+          />
           <div>
             <label htmlFor="name" className="block text-white font-semibold mb-2">Your Name</label>
             <input
@@ -310,8 +347,9 @@ const Training = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition"
-          >Register Now</button>
+            disabled={loading}
+            className={`w-full text-white px-6 py-3 rounded-full font-semibold transition ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}`}
+          >{loading ? 'Submitting...' : 'Register Now'}</button>
         </form>
       </motion.div>
 

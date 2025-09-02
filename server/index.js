@@ -3,6 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const dotenv = require('dotenv');
+const rateLimit = require('express-rate-limit');
+const admin = require('firebase-admin');
+const { z } = require('zod');
 dotenv.config();
 
 const app = express();
@@ -39,14 +42,64 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(express.json());
 
+// Rate limiter: limit each IP to 100 requests per 15 minutes
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use(limiter);
+
+// Initialize Firebase Admin for verifying ID tokens
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
+  });
+}
+
+// Middleware to require a valid Firebase ID token; restrict to admin users
+const requireAdminAuth = async (req, res, next) => {
+  try {
+    const authHeader = req.header('Authorization') || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    if (!token) return res.status(401).json({ success: false, error: { message: 'Missing bearer token' } });
+    const decoded = await admin.auth().verifyIdToken(token);
+    let isAdmin = decoded.admin === true;
+    if (!isAdmin) {
+      try {
+        const snap = await admin.database().ref(`admins/${decoded.uid}`).get();
+        isAdmin = snap.exists() && snap.val() === true;
+      } catch (_) {
+        isAdmin = false;
+      }
+    }
+    if (!isAdmin) return res.status(403).json({ success: false, error: { message: 'Admin only' } });
+    req.user = decoded;
+    next();
+  } catch (e) {
+    return res.status(401).json({ success: false, error: { message: 'Invalid token' } });
+  }
+};
+
 // Digio API Configuration
 const DIGIO_API_URL = process.env.DIGIO_API_URL;
 const DIGIO_API_KEY = process.env.DIGIO_API_KEY;
 
-// API Route
-app.post('/api/submit-client-form', async (req, res) => {
+// Schema for client form payload
+const clientFormSchema = z.object({
+  clientName: z.string().min(1),
+  address: z.string().min(1),
+  dob: z.string().min(1),
+  pan: z.string().min(1),
+  email: z.string().email(),
+  clientId: z.string().optional(),
+});
+
+// API Route (admin-only)
+app.post('/api/submit-client-form', requireAdminAuth, async (req, res) => {
   try {
-    const formData = req.body;
+    const parse = clientFormSchema.safeParse(req.body);
+    if (!parse.success) {
+      return res.status(400).json({ success: false, error: { message: 'Invalid payload', issues: parse.error.flatten() } });
+    }
+    const formData = parse.data;
 
     // Prepare payload for Digio API
     const postData = {
@@ -105,6 +158,38 @@ app.post('/api/submit-client-form', async (req, res) => {
 // Simple health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
+});
+
+// Basic economic events endpoint (mock data or pass-through when url is provided and whitelisted server-side)
+app.get('/api/economic', async (req, res) => {
+  try {
+    const { url } = req.query;
+    // If you later add whitelist + fetch real data, do it here. For now return mock events.
+    const now = Date.now();
+    const countries = ['IN', 'US', 'EU', 'GB', 'JP'];
+    const titles = ['CPI (YoY)', 'GDP Growth Rate', 'Retail Sales MoM', 'Unemployment Rate', 'Trade Balance'];
+    const out = Array.from({ length: 10 }).map((_, i) => {
+      const t = new Date(now + (i + 1) * (30 + Math.floor(Math.random() * 90)) * 60000);
+      const prev = (Math.random() * 5).toFixed(1) + '%';
+      const consensus = (parseFloat(prev) + (Math.random() * 2 - 1)).toFixed(1) + '%';
+      const actual = (parseFloat(consensus) + (Math.random() * 2 - 1)).toFixed(1) + '%';
+      return {
+        id: `srv-${now}-${i}`,
+        date: t.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        time: t.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }),
+        isoTime: t.toISOString(),
+        country: countries[i % countries.length],
+        title: titles[i % titles.length],
+        impact: Math.ceil(Math.random() * 3),
+        previous: prev,
+        consensus,
+        actual,
+      };
+    });
+    res.json(out);
+  } catch (e) {
+    res.status(500).json({ error: 'failed to load economic data' });
+  }
 });
 
 app.listen(PORT, () => {

@@ -1,57 +1,74 @@
 import React, { useState, useEffect } from 'react';
-import { Trans } from '../../i18nShim';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { FiMail, FiFileText, FiAlertCircle, FiBarChart2, FiBell } from 'react-icons/fi';
+import { FaEnvelope, FaBullhorn, FaFileContract, FaExclamationCircle, FaComments, FaBriefcase, FaChartBar } from 'react-icons/fa';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../../firebase';
+import DashboardCard from './DashboardCard'; // Using the new DashboardCard component
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  },
+};
+
+const useDatabaseCount = (path) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const dbRef = ref(db, path);
+    const unsubscribe = onValue(dbRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setCount(Object.keys(snapshot.val()).length);
+      } else {
+        setCount(0);
+      }
+    });
+    return () => unsubscribe();
+  }, [path]);
+  return count;
 };
 
 const Dashboard = () => {
-  const [complaintCount, setComplaintCount] = useState(0);
-  useEffect(() => {
-    const complaintsRef = ref(db, 'complaints');
-    const unsub = onValue(complaintsRef, snap => {
-      const data = snap.val() || {};
-      setComplaintCount(Object.keys(data).length);
-    });
-    return () => unsub();
-  }, []);
+  const contactCount = useDatabaseCount('contacts');
+  const popupCount = useDatabaseCount('popups');
+  const consentCount = useDatabaseCount('consents');
+  const complaintCount = useDatabaseCount('complaint-box');
+  const chatbotDataCount = useDatabaseCount('chatbot-data');
+  const jobCount = useDatabaseCount('jobs');
+
   const cards = [
-    { title: 'Contact Submissions', link: '/admin/contacts', icon: <FiMail size={24} /> },
-    { title: 'Popup Submissions', link: '/admin/popups', icon: <FiBell size={24} /> },
-    { title: 'Consent Submissions', link: '/admin/consents', icon: <FiFileText size={24} /> },
-    { title: 'Complaint Manager', link: '/admin/complaints', icon: <FiAlertCircle size={24} />, count: complaintCount },
-    { title: 'Report Manager', link: '/admin/reports', icon: <FiBarChart2 size={24} /> },
+    { title: 'Contact Submissions', value: contactCount, icon: <FaEnvelope />, color: 'blue', to: '/admin/contacts' },
+  { title: 'Home Page Contacts', value: 0, icon: <FaEnvelope />, color: 'cyan', to: '/admin/home-contacts' },
+    { title: 'Popup Submissions', value: popupCount, icon: <FaBullhorn />, color: 'purple', to: '/admin/popups' },
+    { title: 'Consent Submissions', value: consentCount, icon: <FaFileContract />, color: 'green', to: '/admin/consents' },
+    { title: 'Complaint Box', value: complaintCount, icon: <FaExclamationCircle />, color: 'red', to: '/admin/complaint-box' },
+  { title: 'Complaint Manager', value: 0, icon: <FaExclamationCircle />, color: 'rose', to: '/admin/complaints' },
+  { title: 'Report Manager', value: 0, icon: <FaChartBar />, color: 'emerald', to: '/admin/reports' },
+    { title: 'Chatbot Data', value: chatbotDataCount, icon: <FaComments />, color: 'yellow', to: '/admin/chatbot-data' },
+    { title: 'Job Postings', value: jobCount, icon: <FaBriefcase />, color: 'indigo', to: '/admin/jobs' },
   ];
 
   return (
     <motion.div
+      variants={containerVariants}
       initial="hidden"
       animate="visible"
-      variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
     >
-      <motion.h1
-        className="text-3xl font-bold text-white mb-8"
-        variants={itemVariants}
-      ><Trans i18nKey="pages.admin_Dashboard.admin-dashboard">Admin Dashboard</Trans></motion.h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {cards.map((card, index) => (
-          <motion.div key={index} variants={itemVariants}>
-            <Link to={card.link} className="block bg-gray-800/30 p-6 rounded-xl shadow-lg border border-gray-200/20 hover:bg-indigo-600/30 hover:border-indigo-500 transition-all duration-300 transform hover:-translate-y-1">
-              <div className="text-indigo-400 mb-4">{card.icon}</div>
-              <h3 className="text-lg font-semibold">
-                {card.title}
-                {card.count !== undefined && ` (${card.count})`}
-              </h3>
-            </Link>
-          </motion.div>
+          <DashboardCard 
+            key={index} 
+            icon={card.icon} 
+            title={card.title} 
+            value={card.value} 
+            color={card.color}
+            to={card.to}
+          />
         ))}
       </div>
+
+      {/* You can add more sections here, for example, charts or recent activity feeds */}
     </motion.div>
   );
 };

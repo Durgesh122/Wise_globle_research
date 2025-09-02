@@ -768,6 +768,7 @@ function ContactData() {
   const [submissions, setSubmissions] = useState([]);
   const [filteredSubmissions, setFilteredSubmissions] = useState([]);
   const [reports, setReports] = useState({});
+  const [complaintTitle, setComplaintTitle] = useState('Complaint Data for July 2025');
   const [tableData, setTableData] = useState([
     { srNo: 1, source: 'Directly from Investors', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
     { srNo: 2, source: 'SEBI (SCORES)', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
@@ -926,10 +927,26 @@ function ContactData() {
       }
     );
 
+    // Fetch complaint table title for manager
+    const titleRef = ref(db, 'complaintTableData/title');
+    const unsubscribeTitle = onValue(
+      titleRef,
+      (snapshot) => {
+        const t = snapshot.val();
+        if (typeof t === 'string' && t.trim()) {
+          setComplaintTitle(t.trim());
+        }
+      },
+      (error) => {
+        console.error('Error fetching complaint title:', error);
+      }
+    );
+
     return () => {
       unsubscribeSubmissions();
       unsubscribeReports();
       unsubscribeTable();
+      unsubscribeTitle();
     };
   }, [sortOrder]);
 
@@ -1118,7 +1135,11 @@ function ContactData() {
       setNewReport({ title: '', description: '', category: 'Market', file: null, day: 'Monday' });
     } catch (error) {
       console.error('Error uploading report:', error);
-      toast.error(`Failed to upload report: ${error.message}`, { position: 'top-center' });
+      let msg = `Failed to upload report: ${error.message}`;
+      if (error?.code === 'PERMISSION_DENIED' || /permission_denied/i.test(error?.message || '')) {
+        msg = 'Upload blocked by database rules. Ensure your account has Admin, Support, or HR permissions.';
+      }
+      toast.error(msg, { position: 'top-center' });
     } finally {
       setUploading((prev) => ({ ...prev, [day]: false }));
     }
@@ -1326,7 +1347,34 @@ function ContactData() {
           )}
 
           {/* Complaint Table */}
-          <h3 className="text-2xl font-semibold text-white mb-4"><Trans i18nKey="pages.ContactData.complaint-table-data">Complaint Table Data</Trans></h3>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
+            <h3 className="text-2xl font-semibold text-white"><Trans i18nKey="pages.ContactData.complaint-table-data">Complaint Table Data</Trans></h3>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                className="px-3 py-2 rounded-lg bg-white/10 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                value={complaintTitle}
+                onChange={(e) => setComplaintTitle(e.target.value)}
+                placeholder="Complaint table title"
+                aria-label="Complaint table title"
+              />
+              <motion.button
+                onClick={async () => {
+                  try {
+                    await update(ref(db, 'complaintTableData'), { title: complaintTitle || '' });
+                    toast.success('Complaint table title updated.', { position: 'top-center' });
+                  } catch (error) {
+                    console.error('Error updating complaint title:', error);
+                    toast.error('Failed to update title: ' + error.message, { position: 'top-center' });
+                  }
+                }}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >Save Title</motion.button>
+            </div>
+          </div>
           <ComplaintTable
             tableData={tableData}
             setTableData={setTableData}

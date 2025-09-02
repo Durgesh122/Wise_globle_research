@@ -23,14 +23,12 @@ const InfinityClub = () => (
         
         
       </ul>
-      <p className="text-base mb-2 text-white"><Trans i18nKey="pages.InfinityClub.trading-rules-that-every-trader-must-stu"><Trans i18nKey="pages.InfinityClub.trading-rules-that-every-trader-must-stu-1">Trading rules that every trader must studious follow.</Trans></Trans></p>
     </div>
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.trading-rules-every-trader-must-follow"><Trans i18nKey="pages.InfinityClub.trading-rules-every-trader-must-follow-1">Trading Rules Every Trader Must Follow</Trans></Trans></h2>
       <ul className="list-decimal pl-6 text-base mb-4 text-white">
-        <li><Trans i18nKey="pages.InfinityClub.do-not-over-trade">Do not over trade.</Trans></li>
-  {/* Removed SMS-only rule per policy */}
+  <li><Trans i18nKey="pages.InfinityClub.do-not-over-trade">Do not over trade.</Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.have-to-trade-on-each-recommendation-wit"><Trans i18nKey="pages.InfinityClub.have-to-trade-on-each-recommendation-wit-1">Have to trade on each Recommendation with same quantity according to Research Team.</Trans></Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.profit-and-loss-is-subject-to-market-ris"><Trans i18nKey="pages.InfinityClub.profit-and-loss-is-subject-to-market-ris-1">Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</Trans></Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.never-be-emotional">Never be emotional.</Trans></li>
@@ -47,7 +45,7 @@ const InfinityClub = () => (
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.sample-calls">Sample Calls</Trans></h2>
-      <div className="bg-white/10 rounded-lg p-4 text-center text-base text-white font-mono"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75-"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75--1">BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75-"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75--1">BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50</Trans></Trans></div>
     </div>
 
     <div className="mb-8">

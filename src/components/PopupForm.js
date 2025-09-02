@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { db } from '../firebase';
-import { ref, push } from 'firebase/database';
+import { api } from '../utils/api';
 import wImg from '../assets/images/w.png';
 
 // Particle animation variants for logo hover
@@ -88,14 +87,11 @@ const PopupForm = ({ onClose }) => {
 
     setIsSubmitting(true);
     try {
-      // ⬇️ push into "popoForms" instead of "contactEntries"
-      await push(
-        ref(db, 'popoForms'),
-        {
-          ...form,
-          timestamp: new Date().toISOString(),
-        }
-      );
+      // Submit to backend; backend writes to RTDB
+      const res = await api.post('/popup', {
+        ...form,
+      });
+      if (!res.ok) throw new Error('Server rejected');
       // Google Ads Conversion Tracking
       if (window.gtag) {
         window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
@@ -156,7 +152,7 @@ const PopupForm = ({ onClose }) => {
       <motion.div
         className="relative backdrop-blur-xl rounded-2xl p-4 sm:p-8 w-full max-w-full sm:max-w-xl md:max-w-3xl lg:max-w-2xl shadow-2xl overflow-auto max-h-[90vh] mx-4 sm:mx-0"
         style={{
-          backgroundImage: 'linear-gradient(135deg, #D5ffff 0%, #b3ffe6 100%)'
+          backgroundImage: 'linear-gradient(135deg, #00000044 0%, #b3ffe6 100%)'
         }}
         onClick={(e) => e.stopPropagation()}
         initial={{ scale: 0.8, opacity: 0, y: 50 }}

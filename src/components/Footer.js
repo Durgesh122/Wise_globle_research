@@ -206,6 +206,7 @@ function Footer() {
                 <li><Link to="/about" className="hover:text-yellow-400">→ About Us</Link></li>
                 <li><Link to="/contact" className="hover:text-yellow-400">→ Contact</Link></li>
                 <li><Link to="/payment" className="hover:text-yellow-400">→ Payment</Link></li>
+                <li><Link to="/search" className="hover:text-yellow-400">→ Search</Link></li>
                 <li><Link to="/investor-charter" className="hover:text-yellow-400">→ Investor Charter</Link></li>
                 <li><Link to="/career" className="hover:text-yellow-400">→ Careers</Link></li>
                 <li><Link to="/guide" className="hover:text-yellow-400">→ Guide for Investing</Link></li>
@@ -224,6 +225,8 @@ function Footer() {
                 <li><Link to="/complaint" className="hover:text-yellow-400">→ Complaint Box</Link></li>
                 <li><Link to="/complaint-data" className="hover:text-yellow-400">→ Complaint Data</Link></li>
                 <li><Link to="/terms" className="hover:text-yellow-400">→ Terms and Conditions</Link></li>
+                <li><Link to="/accessibility-statement" className="hover:text-yellow-400">→ Accessibility Statement</Link></li>
+                <li><Link to="/accessibility-feedback" className="hover:text-yellow-400">→ Accessibility Feedback</Link></li>
               </ul>
             </div>
 
@@ -283,6 +286,8 @@ function Footer() {
                   onClick={() => setIsLangOpen((s) => !s)}
                   aria-haspopup="menu"
                   aria-expanded={isLangOpen}
+                  aria-controls="lang-dropdown-panel"
+                  aria-label="Choose website language"
                   className="mt-2 w-full bg-white text-black rounded shadow-md px-3 py-2 flex items-center justify-between hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-400"
                 >
                   <span className="text-sm">Choose language</span>
@@ -291,7 +296,7 @@ function Footer() {
 
                 {/* Dropdown panel */}
                 <div className={`relative ${isLangOpen ? 'block' : 'hidden'}`}>
-                  <div className="absolute left-0 right-0 mt-2 bg-white text-black rounded-md shadow-2xl p-3 z-40 max-h-[70vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                  <div id="lang-dropdown-panel" role="menu" aria-label="Language options" className="absolute left-0 right-0 mt-2 bg-white text-black rounded-md shadow-2xl p-3 z-40 max-h-[70vh] overflow-y-auto custom-scrollbar border border-gray-200">
                     <input
                       type="text"
                       value={langQuery}
@@ -337,12 +342,15 @@ function Footer() {
                       </div>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between gap-2 text-xs text-gray-600">
+          <div className="mt-3 flex items-center justify-between gap-2 text-xs text-gray-600" aria-live="polite">
                       <span>Need more languages? Use full list below.</span>
                       <button
                         type="button"
                         onClick={() => setShowAllWidget((s) => !s)}
-                        className="underline text-green-700 hover:text-green-800"
+            className="underline text-green-700 hover:text-green-800"
+            aria-controls="google_translate_element"
+            aria-expanded={showAllWidget}
+            aria-label={showAllWidget ? 'Hide full list of languages' : 'Show full list of languages'}
                       >
                         {showAllWidget ? 'Hide full list' : 'Show full list'}
                       </button>
@@ -350,7 +358,7 @@ function Footer() {
 
                     {/* Full Google widget (all languages) - keep mounted always for reliable init */}
                     <div className="mt-2">
-                      <div id="google_translate_element" className={`${showAllWidget ? '' : 'hidden'} min-h-[28px]`} />
+                      <div id="google_translate_element" aria-label="Google Translate full list" className={`${showAllWidget ? '' : 'hidden'} min-h-[28px]`} />
                     </div>
                   </div>
                 </div>

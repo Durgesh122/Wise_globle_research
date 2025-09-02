@@ -10,6 +10,7 @@ const EvaluationIndexOptions = () => (
     <p className="text-lg mb-6 text-center text-white">
       Evaluation Index Options service is specifically designed for option traders trading with precise technical research recommendations for Index Options. We provide recommendations to intraday traders to optimize every market movement. Nearly 1-2 intraday recommendations are given daily in Nifty and Bank Nifty Options, as per market conditions. Our timely technical recommendations provide adequate time to enter and exit trades. Our team of analysts specializes in tracking the F&O market, major sectors, and blends technical analysis with national and international events to predict market moves.
     </p>
+  <p className="text-base mb-6 text-center text-white"><Trans i18nKey="pages.EvaluationIndexOptions.a-pure-intraday-product-where-customers-"><Trans i18nKey="pages.EvaluationIndexOptions.a-pure-intraday-product-where-customers--1">A pure intraday product, where customers receive Index Option recommendations in NSE. This product is designed for new customers who want to evaluate our recommendations in the Stock Option market.</Trans></Trans></p>
 
     {/* What We Offer */}
     <div className="mb-8">
@@ -24,11 +25,6 @@ const EvaluationIndexOptions = () => (
         
         
       </ul>
-      <p className="text-base mb-2 text-white"><Trans i18nKey="pages.EvaluationIndexOptions.a-pure-intraday-product-where-customers-"><Trans i18nKey="pages.EvaluationIndexOptions.a-pure-intraday-product-where-customers--1">A pure intraday product, where customers receive Index Option recommendations in NSE. This product is designed for new customers who want to evaluate our recommendations in the Stock Option market.</Trans></Trans></p>
-      <div className="bg-white/10 rounded-lg p-4 mt-4">
-        <span className="font-semibold text-white"><Trans i18nKey="pages.EvaluationIndexOptions.sample-call">Sample Call:</Trans></span>
-        <div className="text-white mt-2"><Trans i18nKey="pages.EvaluationIndexOptions.buy-banknifty-02-mar-40400-pe-above-460-"><Trans i18nKey="pages.EvaluationIndexOptions.buy-banknifty-02-mar-40400-pe-above-460--1">BUY BANKNIFTY 02 MAR 40400 PE ABOVE 460 TARGET 540 620 STOPLOSS 370</Trans></Trans></div>
-      </div>
     </div>
 
     {/* Trading Rules */}
@@ -51,6 +47,14 @@ const EvaluationIndexOptions = () => (
       </ul>
     </div>
 
+    {/* Sample Calls (moved below Trading Rules as requested) */}
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.EvaluationIndexOptions.sample-calls">Sample Calls</Trans></h2>
+      <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono">
+        <Trans i18nKey="pages.EvaluationIndexOptions.buy-banknifty-02-mar-40400-pe-above-460-"><Trans i18nKey="pages.EvaluationIndexOptions.buy-banknifty-02-mar-40400-pe-above-460--1">BUY BANKNIFTY 02 MAR 40400 PE ABOVE 460 TARGET 540 620 STOPLOSS 370</Trans></Trans>
+      </div>
+    </div>
+
   {/* Removed explicit SMS/support-hours footer per policy */}
 
     {/* Pricing Plan */}
@@ -59,7 +63,7 @@ const EvaluationIndexOptions = () => (
       <div className="flex justify-center">
         <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center max-w-xs w-full">
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.EvaluationIndexOptions.index-evaluation-pack"><Trans i18nKey="pages.EvaluationIndexOptions.index-evaluation-pack-1">Index Evaluation Pack</Trans></Trans></h3>
-          <div className="text-3xl font-extrabold text-white mb-2">₹5,100 <span className="text-base font-normal"><Trans i18nKey="pages.EvaluationIndexOptions.10-days">/ 10 Days</Trans></span></div>
+          <div className="text-3xl font-extrabold text-white mb-2">₹5,100 <span className="text-base font-normal"><Trans i18nKey="pages.EvaluationIndexOptions.10-days">/ weekly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.EvaluationIndexOptions.1-to-2-calls-in-a-day"><Trans i18nKey="pages.EvaluationIndexOptions.1-to-2-calls-in-a-day-1">1 to 2 Calls in a Day</Trans></Trans></div>
           <Link to="/payment">
             <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.EvaluationIndexOptions.payment">Payment</Trans></button>

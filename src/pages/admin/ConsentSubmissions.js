@@ -30,20 +30,20 @@ const buttonVariants = {
 
 const ConsentTable = ({ submissions, handleDelete }) => (
   <motion.div
-    className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20 overflow-x-auto p-2"
+    className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20 overflow-x-auto h-scroll custom-scrollbar p-2"
     variants={itemVariants}
   >
-    <table className="min-w-full table-auto text-white">
+    <table className="min-w-[900px] md:min-w-full table-auto text-white text-xs sm:text-sm">
       <thead className="bg-gray-700/50">
         <tr>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.client-name">Client Name</Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.client-id">Client ID</Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.email">Email</Trans></th>
+          <th className="p-4 text-left font-semibold">Client Name</th>
+          <th className="p-4 text-left font-semibold">Client ID</th>
+          <th className="p-4 text-left font-semibold">Email</th>
           <th className="hidden md:table-cell p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.pan-card">PAN Card</Trans></th>
           <th className="hidden md:table-cell p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.aadhaar-card">Aadhaar Card</Trans></th>
           <th className="hidden lg:table-cell p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.signature">Signature</Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.timestamp">Timestamp</Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ConsentSubmissions.actions">Actions</Trans></th>
+          <th className="p-4 text-left font-semibold">Timestamp</th>
+          <th className="p-4 text-left font-semibold">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -53,9 +53,9 @@ const ConsentTable = ({ submissions, handleDelete }) => (
             className="border-b border-gray-200/20 hover:bg-gray-700/20"
             variants={itemVariants}
           >
-            <td data-label="Client Name" className="p-4">{submission.clientName || 'N/A'}</td>
-            <td data-label="Client ID" className="p-4">{submission.clientId || 'N/A'}</td>
-            <td data-label="Email" className="p-4">{submission.email || 'N/A'}</td>
+            <td data-label="Client Name" className="p-4 break-words">{submission.clientName || 'N/A'}</td>
+            <td data-label="Client ID" className="p-4 break-words">{submission.clientId || 'N/A'}</td>
+            <td data-label="Email" className="p-4 break-words">{submission.email || 'N/A'}</td>
             <td data-label="PAN Card" className="hidden md:table-cell p-2 sm:p-4">
               {submission.panCard ? (
                 <div className="flex items-center gap-2">
@@ -92,7 +92,7 @@ const ConsentTable = ({ submissions, handleDelete }) => (
                 </div>
               ) : 'N/A'}
             </td>
-            <td data-label="Timestamp" className="p-2 sm:p-4">{submission.timestamp ? new Date(submission.timestamp).toLocaleString('en-IN') : 'N/A'}</td>
+            <td data-label="Timestamp" className="p-2 sm:p-4 whitespace-nowrap">{submission.timestamp ? new Date(submission.timestamp).toLocaleString('en-IN') : 'N/A'}</td>
             <td data-label="Actions" className="p-2 sm:p-4">
               <motion.button onClick={() => handleDelete(submission)} className="text-red-500 hover:text-red-700" variants={buttonVariants} whileHover="hover"><FiTrash2 size={16} /></motion.button>
             </td>

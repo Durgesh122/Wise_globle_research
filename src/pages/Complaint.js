@@ -45,11 +45,12 @@ const Complaint = () => {
         timestamp: Date.now()
       };
       await push(ref(db, 'complaints'), newComplaint);
+      setSubmitted(true);
     } catch (error) {
       console.error('Error saving complaint:', error);
       toast.error('Failed to submit complaint: ' + error.message);
+      setCurrentStep(3); // return to review so user can retry
     }
-    setTimeout(() => setSubmitted(true), 1500);
   };
 
   const nextStep = () => setCurrentStep(prev => prev + 1);

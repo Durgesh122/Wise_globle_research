@@ -28,8 +28,7 @@ const Metal = () => (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.Metal.trading-rules-every-trader-must-follow"><Trans i18nKey="pages.Metal.trading-rules-every-trader-must-follow-1">Trading Rules Every Trader Must Follow</Trans></Trans></h2>
       <ul className="list-decimal pl-6 text-base mb-4 text-white">
-        <li><Trans i18nKey="pages.Metal.do-not-over-trade">Do not over trade.</Trans></li>
-  {/* Removed SMS-only rule per policy */}
+  <li><Trans i18nKey="pages.Metal.do-not-over-trade">Do not over trade.</Trans></li>
         <li><Trans i18nKey="pages.Metal.trade-each-recommendation-with-the-same-"><Trans i18nKey="pages.Metal.trade-each-recommendation-with-the-same--1">Trade each recommendation with the same quantity as advised by the Research Team.</Trans></Trans></li>
         <li><Trans i18nKey="pages.Metal.profit-and-loss-are-subject-to-market-ri"><Trans i18nKey="pages.Metal.profit-and-loss-are-subject-to-market-ri-1">Profit and loss are subject to market risk; there is no guarantee or assurance.</Trans></Trans></li>
         <li><Trans i18nKey="pages.Metal.never-be-emotional-while-trading"><Trans i18nKey="pages.Metal.never-be-emotional-while-trading-1">Never be emotional while trading.</Trans></Trans></li>

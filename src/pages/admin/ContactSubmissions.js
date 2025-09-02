@@ -30,23 +30,22 @@ const buttonVariants = {
 
 const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggle }) => (
     <motion.div
-      className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20 overflow-x-auto p-2"
+      className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20 overflow-x-auto h-scroll custom-scrollbar p-2"
     variants={itemVariants}
   >
-    <table className="min-w-full table-auto text-white">
+    <table className="min-w-[700px] sm:min-w-full table-auto text-white text-xs sm:text-sm">
       <thead className="bg-gray-700/50">
         <tr>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.name">Name</Trans></th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.mobile">Mobile</Trans></th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.city">City</Trans></th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.experience">Experience</Trans></th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.newsletter">Newsletter</Trans></th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Name</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Email</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Phone</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Message</th>
           <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">
             <button onClick={handleSortToggle} className="hover:text-indigo-400 transition-colors">
               Timestamp {sortOrder === 'desc' ? '↓' : '↑'}
             </button>
           </th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold"><Trans i18nKey="pages.admin_ContactSubmissions.actions">Actions</Trans></th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -56,12 +55,11 @@ const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggl
             className="border-b border-gray-200/20 hover:bg-gray-700/20 transition-colors"
             variants={itemVariants}
           >
-            <td className="p-4">{submission.name || 'N/A'}</td>
-            <td className="p-4">{submission.email || 'N/A'}</td>
-            <td className="p-4">{submission.phone || 'N/A'}</td>
-            <td className="p-4">{submission.interest || 'N/A'}</td>
-            <td className="p-4 max-w-xs truncate">{submission.message || 'N/A'}</td>
-            <td className="p-4">
+            <td className="p-4 break-words">{submission.name || 'N/A'}</td>
+            <td className="p-4 break-words">{submission.email || 'N/A'}</td>
+            <td className="p-4 break-words">{submission.phone || 'N/A'}</td>
+            <td className="p-4 max-w-[10rem] sm:max-w-xs truncate break-words">{submission.message || 'N/A'}</td>
+            <td className="p-4 whitespace-nowrap">
               {submission.timestamp ? new Date(submission.timestamp).toLocaleString('en-IN') : 'N/A'}
             </td>
             <td className="p-4">
@@ -154,7 +152,10 @@ const ContactSubmissions = () => {
 
   const handleExportCSV = () => {
     const csvData = filteredSubmissions.map(s => ({
-      Name: s.name, Email: s.email, Phone: s.phone, Interest: s.interest, Message: s.message,
+      Name: s.name,
+      Email: s.email,
+      Phone: s.phone,
+      Message: s.message,
       Timestamp: new Date(s.timestamp).toLocaleString('en-IN'),
     }));
     const csv = Papa.unparse(csvData);
@@ -175,8 +176,8 @@ const ContactSubmissions = () => {
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
-      <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions-1">Contact Submissions</Trans></Trans></h2>
-      <div className="flex justify-between items-center mb-4">
+  <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions-1">Contact Submissions</Trans></Trans></h2>
+  <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search contacts..." />
         <motion.button onClick={handleExportCSV} className="bg-green-500/80 text-white px-4 py-2 rounded-lg flex items-center gap-2" variants={buttonVariants} whileHover="hover">
           <FiDownload /><Trans i18nKey="pages.admin_ContactSubmissions.export-csv">Export CSV</Trans></motion.button>

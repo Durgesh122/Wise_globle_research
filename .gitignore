@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+# ignore nested node_modules in subpackages like server/
+**/node_modules/
 /.pnp
 .pnp.js
 
@@ -10,6 +12,8 @@
 
 # production
 /build
+build web/
+build.zip
 
 # misc
 .DS_Store
@@ -18,6 +22,10 @@
 .env.test.local
 .env.production.local
 src/.env
+
+# common env files
+.env
+.env.*
 
 npm-debug.log*
 yarn-debug.log*

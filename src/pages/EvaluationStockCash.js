@@ -57,7 +57,7 @@ const EvaluationStockCash = () => (
       <div className="flex justify-center">
         <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center max-w-xs w-full">
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.EvaluationStockCash.cash-evaluation-pack"><Trans i18nKey="pages.EvaluationStockCash.cash-evaluation-pack-1">Cash Evaluation Pack</Trans></Trans></h3>
-          <div className="text-3xl font-extrabold text-white mb-2">₹5,100 <span className="text-base font-normal"><Trans i18nKey="pages.EvaluationStockCash.10-days">/ 10 Days</Trans></span></div>
+          <div className="text-3xl font-extrabold text-white mb-2">₹5,100 <span className="text-base font-normal"><Trans i18nKey="pages.EvaluationStockCash.10-days">/ weekly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.EvaluationStockCash.2-to-3-calls-in-a-day"><Trans i18nKey="pages.EvaluationStockCash.2-to-3-calls-in-a-day-1">2 to 3 Calls in a Day</Trans></Trans></div>
           <Link to="/payment">
             <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.EvaluationStockCash.payment">Payment</Trans></button>

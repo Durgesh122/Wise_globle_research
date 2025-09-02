@@ -6,6 +6,8 @@ import {
   RiBankCardLine, RiContactsBookLine, RiArrowRightSLine, RiCheckboxCircleFill, RiCloseCircleFill, RiLoader4Line
 } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
+import { db } from '../firebase';
+import { ref as dbRef, push, set } from 'firebase/database';
 
 // Animation variants for container and items
 const containerVariants = {
@@ -140,10 +142,20 @@ const ClientServiceConsent = () => {
       const data = await response.json();
 
       if (data.success) {
+        // Persist to RTDB for admin records
+        try {
+          const node = push(dbRef(db, 'clientServiceConsentForms'));
+          await set(node, {
+            ...formData,
+            timestamp: Date.now(),
+          });
+        } catch (_) {
+          // Non-fatal: continue flow
+        }
         setMessage({ type: 'success', text: '✅ Please check your mail. Redirecting...' });
         setShowPopup(true);
         setTimeout(() => {
-          window.location.href = 'https://wiseglobalresearch.com/client-service-consent/';
+          window.location.href = 'https://wiseglobalresearch.com/client-service-consent-form/';
         }, 2000);
       } else {
         const errorCode = (data.error && data.error.code) || 'UNKNOWN_ERROR';
@@ -208,7 +220,7 @@ const ClientServiceConsent = () => {
         <motion.div className="text-sm mb-8" variants={itemVariants}>
           <Link to="/" className="hover:text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.home">Home</Trans></Link>
           <span className="mx-2">/</span>
-          <span className="text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent</Trans></span>
+          <span className="text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent Form</Trans></span>
         </motion.div>
 
         <motion.div
@@ -216,7 +228,7 @@ const ClientServiceConsent = () => {
           variants={itemVariants}
         >
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent</Trans></h2>
+            <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent Form</Trans></h2>
             <p className="mt-2 text-gray-300">Please fill out the form below.</p>
           </div>
 

@@ -74,6 +74,12 @@ const labelsFallbacks = {
   'navbar.complaintBox': 'Complaint Box',
   'navbar.contactUs': 'Enquiry Now',
   'navbar.researchReports': 'Research Reports',
+  // Accessibility
+  'navbar.accessibility.title': 'Accessibility',
+  'navbar.accessibility.statement': 'Accessibility Statement',
+  'navbar.accessibility.feedback': 'Accessibility Feedback',
+  'navbar.accessibility.search': 'Search',
+  'navbar.accessibility.media': 'Media',
   // Explicit category titles for Services mega menu
   'navbar.services.cash.title': 'Cash',
   'navbar.services.option.title': 'Option',
@@ -157,12 +163,21 @@ const dropdownLinks = {
       { path: '/grievance-redressal-process', labelKey: 'navbar.insights.grievanceRedressalProcess' },
     ]
   },
+  accessibility: {
+    labelKey: 'navbar.accessibility.title',
+    items: [
+      { path: '/accessibility-statement', labelKey: 'navbar.accessibility.statement' },
+      { path: '/accessibility-feedback', labelKey: 'navbar.accessibility.feedback' },
+      { path: '/search', labelKey: 'navbar.accessibility.search' },
+      { path: '/media', labelKey: 'navbar.accessibility.media' },
+    ]
+  },
   dashboard: {
     labelKey: 'navbar.dashboard.title',
     items: [
       { path: '/admin', labelKey: 'navbar.dashboard.adminPanel' },
       { path: '/client-panel', labelKey: 'navbar.dashboard.clientPanel' },
-      { path: '/client-service-consent', labelKey: 'navbar.dashboard.clientServiceConsent' },
+  { path: '/client-service-consent-form', labelKey: 'navbar.dashboard.clientServiceConsent' },
       { path: '/investor-chart', labelKey: 'navbar.dashboard.investorChart' },
       { path: '/anti-money-laundering', labelKey: 'navbar.dashboard.antiMoneyLaundering' },
     ]
@@ -184,7 +199,7 @@ const navLinks = [
   { path: '/payment', labelKey: 'navbar.payment' },
   { path: '/complaint', labelKey: 'navbar.complaintBox' },
   { path: '/contact', labelKey: 'navbar.contactUs' },
-  { path: '/reports', labelKey: 'navbar.researchReports' },
+  { path: '/research-reports', labelKey: 'navbar.researchReports' },
 ];
 
 const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobile, mobileOpen, setMobileOpen, closeDrawer, categoryIcon: CategoryIcon, categoryIconColor }) => {
@@ -338,6 +353,26 @@ function Navbar() {
   const { background, textColor } = gradients?.[theme] || gradients.default;
   const navRef = useRef(null);
 
+  // Ensure the navbar isn't see-through by adding a solid base color under the gradient.
+  // We pick a light or dark surface based on the theme's text color for contrast.
+  const getBaseSurface = (tc) => {
+    try {
+      if (!tc || typeof tc !== 'string') return 'rgba(10,15,20,0.98)';
+      let hex = tc.trim();
+      if (hex.startsWith('#')) hex = hex.slice(1);
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const r = parseInt(hex.slice(0, 2), 16);
+      const g = parseInt(hex.slice(2, 4), 16);
+      const b = parseInt(hex.slice(4, 6), 16);
+      const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255; // 0..1
+      // If text is dark (low luminance), use a near-white surface; otherwise use a dark surface.
+      return luminance < 0.5 ? 'rgba(255,255,255,0.98)' : 'rgba(10,15,20,0.98)';
+    } catch (e) {
+      return 'rgba(10,15,20,0.98)';
+    }
+  };
+  const baseSurfaceColor = getBaseSurface(textColor);
+
   const closeDrawer = () => {
     setDrawerOpen(false);
     setServicesMobileOpen(false);
@@ -456,7 +491,8 @@ function Navbar() {
     width: '100%',
     maxWidth: '100%',
     minWidth: '100%',
-    background: 'var(--bg-opacity)',
+  // Make mobile drawer opaque so page text doesn't show through
+  background: baseSurfaceColor,
     backdropFilter: 'blur(12px)',
     color: 'var(--text-color)',
     boxShadow: '0 0 15px rgba(0,0,0,0.2)',
@@ -472,7 +508,8 @@ function Navbar() {
       <nav
         role="navigation"
         ref={navRef}
-        style={{ background, color: textColor }}
+  // Use gradient + an opaque base color to block underlying content
+  style={{ background, backgroundColor: baseSurfaceColor, color: textColor }}
         className="fixed w-full z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-b-xl"
       >
         <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 flex justify-between items-center">
@@ -482,7 +519,11 @@ function Navbar() {
                 src={wiseLogo}
                 alt="Wise Logo"
                 className="h-10 sm:h-12 md:h-14 w-auto rounded-full logo-hover"
-                loading="lazy"
+                loading="eager"
+                decoding="sync"
+                fetchpriority="high"
+                width="56"
+                height="56"
               />
             </div>
           </Link>

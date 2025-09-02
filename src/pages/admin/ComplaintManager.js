@@ -10,6 +10,66 @@ import PropTypes from 'prop-types';
 
 import LoadingSpinner from '../../components/admin/LoadingSpinner';
 
+// ------- Module-scope helpers to keep useEffect deps stable -------
+const toNum = (v) => {
+  const n = Number(v);
+  return isNaN(n) ? 0 : n;
+};
+
+export const computeMonthlyGrandTotal = (rows) => {
+  return rows.reduce(
+    (acc, r) => {
+      acc.carried += toNum(r.carried);
+      acc.received += toNum(r.received);
+      acc.resolved += toNum(r.resolved);
+      acc.pending += toNum(r.pending);
+      return acc;
+    },
+    { carried: 0, received: 0, resolved: 0, pending: 0 }
+  );
+};
+
+export const computeComplaintGrandTotal = (rows) => {
+  const totals = rows.reduce(
+    (acc, r) => {
+      acc.pendingLastMonth += toNum(r.pendingLastMonth);
+      acc.received += toNum(r.received);
+      acc.resolved += toNum(r.resolved);
+      acc.pending += toNum(r.pending);
+      acc.pending3Months += toNum(r.pending3Months);
+      const art = Number(r.avgResolutionTime);
+      if (!isNaN(art)) {
+        acc._avgSum += art;
+        acc._avgCnt += 1;
+      }
+      return acc;
+    },
+    { pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, _avgSum: 0, _avgCnt: 0 }
+  );
+  const avg = totals._avgCnt > 0 ? Math.round((totals._avgSum / totals._avgCnt) * 10) / 10 : 0;
+  return {
+    pendingLastMonth: totals.pendingLastMonth,
+    received: totals.received,
+    resolved: totals.resolved,
+    pending: totals.pending,
+    pending3Months: totals.pending3Months,
+    avgResolutionTime: avg,
+  };
+};
+
+export const computeAnnualGrandTotal = (rows) => {
+  return rows.reduce(
+    (acc, r) => {
+      acc.carried += toNum(r.carried);
+      acc.received += toNum(r.received);
+      acc.resolved += toNum(r.resolved);
+      acc.pending += toNum(r.pending);
+      return acc;
+    },
+    { carried: 0, received: 0, resolved: 0, pending: 0 }
+  );
+};
+
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -96,34 +156,36 @@ EditModal.propTypes = {
 };
 
 const ComplaintTable = ({ tableData, handleEdit }) => (
-  <motion.div className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20" variants={itemVariants}>
-    <table className="w-full text-white responsive-table">
-      <thead className="bg-gray-700/50">
+  <motion.div className="overflow-x-auto h-scroll custom-scrollbar bg-gray-800 rounded-lg shadow" variants={itemVariants}>
+    <table className="min-w-[920px] sm:min-w-full text-sm text-left text-gray-300">
+      <thead className="bg-gray-700 text-xs text-gray-200 uppercase tracking-wider">
         <tr>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.received-from">Received from</Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month-1">Pending last month</Trans></Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.resolved">Resolved</Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending">Pending</Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months-1">Pending  3 Months</Trans></Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days-1">Avg. Resolution time (days)</Trans></Trans></th>
-          <th className="p-4 text-left text-sm font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.received-from">Received from</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month-1">Pending last month</Trans></Trans></th>
+          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.resolved">Resolved</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending">Pending</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months-1">Pending  3 Months</Trans></Trans></th>
+          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days-1">Avg. Resolution time (days)</Trans></Trans></th>
+          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
         </tr>
       </thead>
       <tbody>
         {(Array.isArray(tableData) ? tableData : Object.values(tableData || {})).map(row => (
-          <motion.tr key={row.srNo} className="border-b border-gray-200/20 hover:bg-gray-700/20" variants={itemVariants}>
-            <td data-label="Sr. No." className="p-4">{row.srNo}</td>
-            <td data-label="Received from" className="p-4">{row.source || 'N/A'}</td>
-            <td data-label="Pending last month" className="p-4">{row.pendingLastMonth || 0}</td>
-            <td data-label="Received" className="p-4">{row.received || 0}</td>
-            <td data-label="Resolved" className="p-4">{row.resolved || 0}</td>
-            <td data-label="Pending" className="p-4">{row.pending || 0}</td>
-            <td data-label="Pending > 3 Months" className="p-4">{row.pending3Months || 0}</td>
-            <td data-label="Avg. Resolution time (days)" className="p-4">{row.avgResolutionTime || 0}</td>
-            <td data-label="Actions" className="p-4">
-              <motion.button onClick={() => handleEdit(row)} className="text-blue-500 hover:text-blue-700" variants={buttonVariants} whileHover="hover"><FiEdit size={16} /></motion.button>
+          <motion.tr key={row.srNo} className="border-b border-gray-700 hover:bg-gray-600/50" variants={itemVariants}>
+            <td data-label="Sr. No." className="px-6 py-4">{row.srNo}</td>
+            <td data-label="Received from" className="px-6 py-4">{row.source || 'N/A'}</td>
+            <td data-label="Pending last month" className="px-6 py-4">{row.pendingLastMonth || 0}</td>
+            <td data-label="Received" className="px-6 py-4">{row.received || 0}</td>
+            <td data-label="Resolved" className="px-6 py-4">{row.resolved || 0}</td>
+            <td data-label="Pending" className="px-6 py-4">{row.pending || 0}</td>
+            <td data-label="Pending > 3 Months" className="px-6 py-4">{row.pending3Months || 0}</td>
+            <td data-label="Avg. Resolution time (days)" className="px-6 py-4">{row.avgResolutionTime || 0}</td>
+            <td data-label="Actions" className="px-6 py-4">
+              {row.srNo !== 'Grand Total' && (
+                <motion.button onClick={() => handleEdit(row)} className="text-blue-400 hover:text-blue-300" variants={buttonVariants} whileHover="hover"><FiEdit size={16} /></motion.button>
+              )}
             </td>
           </motion.tr>
         ))}
@@ -143,6 +205,12 @@ const ComplaintManager = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editRowData, setEditRowData] = useState(null);
 
+  // Public complaints table heading (e.g., "July 2025")
+  const [headerMonthYear, setHeaderMonthYear] = useState('July 2025');
+  const [isSavingHeader, setIsSavingHeader] = useState(false);
+
+  // Individual Complaints moved to separate ComplaintBox page
+
   // Monthly Disposal Table State
   const [monthlyData, setMonthlyData] = useState([]);
   const [isMonthlyEditOpen, setIsMonthlyEditOpen] = useState(false);
@@ -153,20 +221,27 @@ const ComplaintManager = () => {
   const [isAnnualEditOpen, setIsAnnualEditOpen] = useState(false);
   const [annualEditRow, setAnnualEditRow] = useState(null);
 
+  // Helpers moved to module scope above to avoid useEffect deps
+
   useEffect(() => {
     // Complaint Table
     const tableRef = ref(db, 'complaintTableData');
     const unsub1 = onValue(tableRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        setTableData(Array.isArray(data) ? data : Object.values(data));
+        const arr = Array.isArray(data) ? [...data] : Object.values(data);
+        const rows = arr.filter((r) => r && r.srNo !== 'Grand Total');
+        const totals = computeComplaintGrandTotal(rows);
+        const grandRow = { srNo: 'Grand Total', source: '', ...totals };
+        setTableData([...rows, grandRow]);
       } else {
-        setTableData([
+        const base = [
           { srNo: 1, source: 'Directly from Investors', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
           { srNo: 2, source: 'SEBI (SCORES)', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
           { srNo: 3, source: 'Other Sources (if any)', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
-          { srNo: 'Grand Total', source: '', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
-        ]);
+        ];
+        const totals = computeComplaintGrandTotal(base);
+        setTableData([...base, { srNo: 'Grand Total', source: '', ...totals }]);
       }
       setIsLoading(false);
     }, (error) => {
@@ -174,14 +249,18 @@ const ComplaintManager = () => {
       setIsLoading(false);
     });
 
-    // Monthly Disposal Table
+  // Monthly Disposal Table
     const monthlyRef = ref(db, 'monthlyDisposalTableData');
     const unsub2 = onValue(monthlyRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        setMonthlyData(Array.isArray(data) ? data : Object.values(data));
+        const arr = Array.isArray(data) ? [...data] : Object.values(data);
+        const rows = arr.filter((r) => r && r.srNo !== 'Grand Total');
+        const totals = computeMonthlyGrandTotal(rows);
+        const grandRow = { srNo: 'Grand Total', month: '', ...totals };
+        setMonthlyData([...rows, grandRow]);
       } else {
-        setMonthlyData([
+        const seed = [
           { srNo: 1, month: 'April, 2025', carried: 1, received: 0, resolved: 1, pending: 0 },
           { srNo: 2, month: 'May, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
           { srNo: 3, month: 'June, 2025', carried: 0, received: 2, resolved: 2, pending: 0 },
@@ -194,30 +273,45 @@ const ComplaintManager = () => {
           { srNo: 10, month: 'Jan, 2025', carried: 0, received: 0, resolved: 0, pending: 0 },
           { srNo: 11, month: 'Feb, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
           { srNo: 12, month: 'March, 2026', carried: 0, received: 0, resolved: 0, pending: 0 },
-          { srNo: 'Grand Total', month: '', carried: 1, received: 2, resolved: 3, pending: 0 },
-        ]);
+        ];
+        const totals = computeMonthlyGrandTotal(seed);
+        setMonthlyData([...seed, { srNo: 'Grand Total', month: '', ...totals }]);
       }
     }, (error) => {
       toast.error('Failed to load monthly disposal data: ' + error.message);
     });
 
-    // Annual Disposal Table
+  // Annual Disposal Table
     const annualRef = ref(db, 'annualDisposalTableData');
     const unsub3 = onValue(annualRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        setAnnualData(Array.isArray(data) ? data : Object.values(data));
+        const arr = Array.isArray(data) ? [...data] : Object.values(data);
+        const rows = arr.filter((r) => r && r.srNo !== 'Grand Total');
+        const totals = computeAnnualGrandTotal(rows);
+        const grandRow = { srNo: 'Grand Total', year: '', ...totals };
+        setAnnualData([...rows, grandRow]);
       } else {
-        setAnnualData([
+        const base = [
           { srNo: 1, year: '2024 - 2025', carried: 0, received: 8, resolved: 7, pending: 1 },
-          { srNo: 'Grand Total', year: '', carried: 0, received: 8, resolved: 7, pending: 1 },
-        ]);
+        ];
+        const totals = computeAnnualGrandTotal(base);
+        setAnnualData([...base, { srNo: 'Grand Total', year: '', ...totals }]);
       }
     }, (error) => {
       toast.error('Failed to load annual disposal data: ' + error.message);
     });
 
-    return () => { unsub1(); unsub2(); unsub3(); };
+    // Public complaints heading (month/year)
+    const headerRef = ref(db, 'complaintHeaderMonthYear');
+    const unsub4 = onValue(headerRef, (snapshot) => {
+      const val = snapshot.val();
+      if (typeof val === 'string' && val.trim().length > 0) {
+        setHeaderMonthYear(val.trim());
+      }
+    });
+
+  return () => { unsub1(); unsub2(); unsub3(); unsub4(); };
   }, []);
 
   const handleEdit = (row) => {
@@ -227,8 +321,13 @@ const ComplaintManager = () => {
 
   const handleSave = async (editedRow) => {
     try {
-      const updatedData = tableData.map(row => row.srNo === editedRow.srNo ? editedRow : row);
-      await set(ref(db, 'complaintTableData'), updatedData);
+      const working = (Array.isArray(tableData) ? tableData : Object.values(tableData || {}))
+        .filter(r => r.srNo !== 'Grand Total')
+        .map(r => (r.srNo === editedRow.srNo ? editedRow : r));
+      const totals = computeComplaintGrandTotal(working);
+      const finalData = [...working, { srNo: 'Grand Total', source: '', ...totals }];
+      await set(ref(db, 'complaintTableData'), finalData);
+      setTableData(finalData);
       toast.success('Row updated successfully.');
     } catch (error) {
       toast.error('Failed to update row: ' + error.message);
@@ -245,8 +344,15 @@ const ComplaintManager = () => {
   };
   const handleMonthlySave = async (editedRow) => {
     try {
-      const updatedData = monthlyData.map(row => row.srNo === editedRow.srNo ? editedRow : row);
-      await set(ref(db, 'monthlyDisposalTableData'), updatedData);
+      // replace edited row in working set excluding Grand Total
+      const working = (Array.isArray(monthlyData) ? monthlyData : Object.values(monthlyData || {}))
+        .filter(r => r.srNo !== 'Grand Total')
+        .map(r => (r.srNo === editedRow.srNo ? editedRow : r));
+      // compute new grand total
+      const totals = computeMonthlyGrandTotal(working);
+      const finalData = [...working, { srNo: 'Grand Total', month: '', ...totals }];
+      await set(ref(db, 'monthlyDisposalTableData'), finalData);
+      setMonthlyData(finalData);
       toast.success('Monthly row updated successfully.');
     } catch (error) {
       toast.error('Failed to update monthly row: ' + error.message);
@@ -261,8 +367,13 @@ const ComplaintManager = () => {
   };
   const handleAnnualSave = async (editedRow) => {
     try {
-      const updatedData = annualData.map(row => row.srNo === editedRow.srNo ? editedRow : row);
-      await set(ref(db, 'annualDisposalTableData'), updatedData);
+      const working = (Array.isArray(annualData) ? annualData : Object.values(annualData || {}))
+        .filter(r => r.srNo !== 'Grand Total')
+        .map(r => (r.srNo === editedRow.srNo ? editedRow : r));
+      const totals = computeAnnualGrandTotal(working);
+      const finalData = [...working, { srNo: 'Grand Total', year: '', ...totals }];
+      await set(ref(db, 'annualDisposalTableData'), finalData);
+      setAnnualData(finalData);
       toast.success('Annual row updated successfully.');
     } catch (error) {
       toast.error('Failed to update annual row: ' + error.message);
@@ -270,41 +381,87 @@ const ComplaintManager = () => {
     setIsAnnualEditOpen(false);
   };
 
+  // Save public complaints heading (month/year)
+  const handleSaveHeader = async () => {
+    try {
+      const value = (headerMonthYear || '').trim();
+      if (!value) {
+        toast.error('Please enter a month and year, e.g., "July 2025".');
+        return;
+      }
+      setIsSavingHeader(true);
+      await set(ref(db, 'complaintHeaderMonthYear'), value);
+      toast.success('Heading updated successfully.');
+    } catch (error) {
+      toast.error('Failed to update heading: ' + error.message);
+    } finally {
+      setIsSavingHeader(false);
+    }
+  };
+
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager-1">Complaint Manager</Trans></Trans></h2>
+  {/* Complaint submissions moved to Complaint Box page */}
       {isLoading ? <LoadingSpinner /> : (
         <>
+          {/* Public heading controller for ComplaintTable */}
+          <motion.div className="mb-6 bg-gray-800/60 border border-gray-200/20 rounded-lg p-4" variants={itemVariants}>
+            <h3 className="text-lg font-semibold text-white mb-3">Public Complaints Heading</h3>
+            <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+              <label htmlFor="headerMonthYear" className="text-sm text-gray-300 min-w-[180px]">Month & Year (e.g., July 2025)</label>
+              <input
+                id="headerMonthYear"
+                type="text"
+                value={headerMonthYear}
+                onChange={(e) => setHeaderMonthYear(e.target.value)}
+                className="w-full sm:max-w-md p-2 rounded-md bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                placeholder="July 2025"
+              />
+              <motion.button
+                onClick={handleSaveHeader}
+                disabled={isSavingHeader}
+                className="px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                {isSavingHeader ? 'Saving…' : 'Save'}
+              </motion.button>
+            </div>
+            <p className="mt-2 text-xs text-gray-400">This updates the heading shown on the public Complaints table.</p>
+          </motion.div>
+
           <ComplaintTable tableData={tableData} handleEdit={handleEdit} />
 
           {/* Monthly Disposal Table (admin editable) */}
           <div className="my-8">
             <h2 className="text-xl font-bold text-white mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints-1">Trend Of Monthly Disposal Of Complaints</Trans></Trans></h2>
-            <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
-              <table className="w-full border-collapse text-left text-xs sm:text-sm" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(15px)' }}>
-                <thead>
-                  <tr className="text-white" style={{ background: 'rgba(255,255,255,0.3)' }}>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.month">Month</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-month"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-month-1">Carried forward from previous month</Trans></Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.resolved-1">Resolved*</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.pending-2">Pending#</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
+            <div className="overflow-x-auto bg-gray-800 rounded-lg shadow custom-scrollbar">
+              <table className="min-w-full text-sm text-left text-gray-300">
+                <thead className="bg-gray-700 text-xs text-gray-200 uppercase tracking-wider">
+                  <tr>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.month">Month</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-month"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-month-1">Carried forward from previous month</Trans></Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.resolved-1">Resolved*</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.pending-2">Pending#</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
                   </tr>
                 </thead>
                 <tbody>
                   {(Array.isArray(monthlyData) ? monthlyData : Object.values(monthlyData || {})).map(row => (
-                    <tr key={row.srNo} className="transition-colors hover:bg-opacity-25" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.srNo}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.month}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.carried}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.received}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.resolved}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.pending}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">
+                    <tr key={row.srNo} className="border-b border-gray-700 hover:bg-gray-600/50">
+                      <td className="px-6 py-4">{row.srNo}</td>
+                      <td className="px-6 py-4">{row.month}</td>
+                      <td className="px-6 py-4">{row.carried}</td>
+                      <td className="px-6 py-4">{row.received}</td>
+                      <td className="px-6 py-4">{row.resolved}</td>
+                      <td className="px-6 py-4">{row.pending}</td>
+                      <td className="px-6 py-4">
                         {row.srNo !== 'Grand Total' && (
-                          <button onClick={() => handleMonthlyEdit(row)} className="text-blue-500 hover:text-blue-700"><FiEdit size={16} /></button>
+                          <button onClick={() => handleMonthlyEdit(row)} className="text-blue-400 hover:text-blue-300"><FiEdit size={16} /></button>
                         )}
                       </td>
                     </tr>
@@ -317,31 +474,31 @@ const ComplaintManager = () => {
           {/* Annual Disposal Table (admin editable) */}
           <div className="my-8">
             <h2 className="text-xl font-bold text-white mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints-1">Trend Of Annual Disposal Of Complaints</Trans></Trans></h2>
-            <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
-              <table className="w-full border-collapse text-left text-xs sm:text-sm" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(15px)' }}>
-                <thead>
-                  <tr className="text-white" style={{ background: 'rgba(255,255,255,0.3)' }}>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.year">Year</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-year"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-year-1">Carried forward from previous year</Trans></Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.resolved-1">Resolved*</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.pending-2">Pending#</Trans></th>
-                    <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
+            <div className="overflow-x-auto bg-gray-800 rounded-lg shadow custom-scrollbar">
+              <table className="min-w-full text-sm text-left text-gray-300">
+                <thead className="bg-gray-700 text-xs text-gray-200 uppercase tracking-wider">
+                  <tr>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.year">Year</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-year"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-year-1">Carried forward from previous year</Trans></Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.resolved-1">Resolved*</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.pending-2">Pending#</Trans></th>
+                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
                   </tr>
                 </thead>
                 <tbody>
                   {(Array.isArray(annualData) ? annualData : Object.values(annualData || {})).map(row => (
-                    <tr key={row.srNo} className="transition-colors hover:bg-opacity-25" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.srNo}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.year}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.carried}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.received}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.resolved}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.pending}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">
+                    <tr key={row.srNo} className="border-b border-gray-700 hover:bg-gray-600/50">
+                      <td className="px-6 py-4">{row.srNo}</td>
+                      <td className="px-6 py-4">{row.year}</td>
+                      <td className="px-6 py-4">{row.carried}</td>
+                      <td className="px-6 py-4">{row.received}</td>
+                      <td className="px-6 py-4">{row.resolved}</td>
+                      <td className="px-6 py-4">{row.pending}</td>
+                      <td className="px-6 py-4">
                         {row.srNo !== 'Grand Total' && (
-                          <button onClick={() => handleAnnualEdit(row)} className="text-blue-500 hover:text-blue-700"><FiEdit size={16} /></button>
+                          <button onClick={() => handleAnnualEdit(row)} className="text-blue-400 hover:text-blue-300"><FiEdit size={16} /></button>
                         )}
                       </td>
                     </tr>

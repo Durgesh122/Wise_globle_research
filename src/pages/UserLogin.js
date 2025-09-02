@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  setPersistence,
+  browserSessionPersistence,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { toast } from "react-toastify";
 import { motion, useAnimation } from "framer-motion";
 import logo from "../assets/images/w.png"; // Verify this path is correct
 
 const UserLogin = () => {
+  const authDebug = (typeof window !== 'undefined') && ((new URLSearchParams(window.location.search).get('debugAuth') === '1') || localStorage.getItem('authDebug') === '1');
   // Translations removed; using static English strings
   const location = useLocation();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
+  // No MFA state needed since phone/OTP is disabled
   const logoControls = useAnimation();
   const textControls = useAnimation();
 
@@ -29,15 +38,20 @@ const UserLogin = () => {
   // Redirect if already authenticated
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (authDebug) {
+        console.log('[AuthDebug] onAuthStateChanged user:', currentUser?.uid, currentUser?.email);
+      }
       if (currentUser) {
         navigate(location.state?.from?.pathname || "/admin", { replace: true });
       }
     });
     return () => unsubscribe();
-  }, [navigate, location]);
+  }, [navigate, location, authDebug]);
 
   // Form validation
   const validateForm = () => {
+    // For login, rely on Firebase Auth to validate credentials.
+    // Keep only basic checks to avoid blocking valid passwords.
     let isValid = true;
     const newErrors = { email: "", password: "" };
 
@@ -51,21 +65,6 @@ const UserLogin = () => {
 
     if (!password) {
       newErrors.password = "Password is required.";
-      isValid = false;
-    } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
-      isValid = false;
-    } else if (!/[A-Z]/.test(password)) {
-      newErrors.password = "Password must contain at least one uppercase letter.";
-      isValid = false;
-    } else if (!/[a-z]/.test(password)) {
-      newErrors.password = "Password must contain at least one lowercase letter.";
-      isValid = false;
-    } else if (!/[0-9]/.test(password)) {
-      newErrors.password = "Password must contain at least one number.";
-      isValid = false;
-    } else if (!/[!@#$%^&*]/.test(password)) {
-      newErrors.password = "Password must contain at least one special character (!@#$%^&*).";
       isValid = false;
     }
 
@@ -84,23 +83,80 @@ const UserLogin = () => {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      // Limit session to current tab/window (session storage)
+  await setPersistence(auth, browserSessionPersistence);
+  const emailTrimmed = email.trim();
+  await signInWithEmailAndPassword(auth, emailTrimmed, password);
   toast.success("Login successful.", { position: "top-center" });
       // onAuthStateChanged will handle the navigation automatically
     } catch (error) {
       let errorMessage = "Login failed. Please try again.";
+  // MFA not required; phone/OTP is disabled now
       if (error.code === "auth/user-not-found") {
         errorMessage = "User not found.";
-      } else if (error.code === "auth/wrong-password") {
-        errorMessage = "Incorrect password.";
+      } else if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential" || error.code === "auth/invalid-login-credentials") {
+        errorMessage = "Invalid email or password.";
+      } else if (error.code === "auth/user-disabled") {
+        errorMessage = "This user account is disabled.";
       } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Too many unsuccessful login attempts. Please try again later.";
+      } else if (error.code === 'auth/operation-not-allowed') {
+        errorMessage = "Email/password sign-in is disabled. Enable it in Firebase Auth > Sign-in method.";
+      } else if (error.code === 'auth/unauthorized-domain') {
+        errorMessage = "Unauthorized domain. Add your site domain to Firebase Auth > Settings > Authorized domains.";
+      } else if (error.code === 'auth/invalid-api-key') {
+        errorMessage = "Invalid Firebase API key. Check src/firebase.js configuration.";
+      } else if (error.code === 'auth/network-request-failed') {
+        errorMessage = "Network error. Check your connection or Content Security Policy for identitytoolkit.googleapis.com.";
+      }
+      const code = error.code || 'unknown';
+      errorMessage += ` (code: ${code})`;
+      if (authDebug) {
+        console.error('[AuthDebug] Login error', { code: error.code, message: error.message });
+      } else {
+        // Minimal console for non-debug too, to aid diagnosis if needed
+        console.error('[Auth] Login error', { code: error.code, message: error.message });
       }
       toast.error(errorMessage, { position: "top-center" });
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Handle password reset
+  const handlePasswordReset = async () => {
+    if (isResetting || isLoading) return;
+    const emailTrimmed = email.trim();
+
+    // basic email validation
+    if (!emailTrimmed) {
+      toast.info("Enter your email above to receive a reset link.", { position: "top-center" });
+      setErrors((prev) => ({ ...prev, email: "Email is required to reset password." }));
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed)) {
+      toast.error("Please enter a valid email address.", { position: "top-center" });
+      setErrors((prev) => ({ ...prev, email: "Please enter a valid email address." }));
+      return;
+    }
+
+    try {
+      setIsResetting(true);
+      await sendPasswordResetEmail(auth, emailTrimmed);
+      toast.success("Password reset email sent. Check your inbox.", { position: "top-center" });
+    } catch (error) {
+      let msg = "Couldn't send reset email. Please try again.";
+      if (error.code === "auth/user-not-found") msg = "No user found with this email.";
+      else if (error.code === "auth/invalid-email") msg = "Invalid email address.";
+      else if (error.code === "auth/too-many-requests") msg = "Too many attempts. Please try later.";
+      console.error('[Auth] Password reset error', { code: error.code, message: error.message });
+      toast.error(`${msg} (code: ${error.code || 'unknown'})`, { position: "top-center" });
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  // No MFA handlers needed
 
   // Logo hover animation
   const handleLogoHover = async () => {
@@ -180,6 +236,12 @@ const UserLogin = () => {
         role="region"
         aria-label="Admin login form"
       >
+  {/* MFA/OTP disabled: no reCAPTCHA used */}
+        {authDebug && (
+          <div className="absolute -top-8 left-0 text-xs text-yellow-300 opacity-80">
+            Debug ON • Host: {typeof window !== 'undefined' ? window.location.origin : ''}
+          </div>
+        )}
         {/* Loading Overlay */}
         {isLoading && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-2xl">
@@ -217,14 +279,9 @@ const UserLogin = () => {
             src={logo}
             alt="Company Logo"
             className="w-20 h-20 object-contain"
-            style={{ filter: "drop-shadow(0 0 8px rgba(234, 179, 8, 0.4))" }}
-            decoding="async"
-            loading="lazy"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = "https://via.placeholder.com/80?text=Logo"; // Fallback image
-              console.error("Failed to load logo at ../assets/images/w.png");
-            }}
+            loading="eager"
+            width={80}
+            height={80}
           />
         </motion.div>
 
@@ -300,6 +357,23 @@ const UserLogin = () => {
             {isLoading ? "Signing in..." : "Sign In"}
           </motion.button>
         </form>
+
+        {/* Forgot Password */}
+        <div className="mt-3 text-center">
+          <button
+            type="button"
+            onClick={handlePasswordReset}
+            disabled={isResetting || isLoading}
+            className={`text-sm underline underline-offset-4 transition-colors ${
+              isResetting || isLoading ? "text-white/40" : "text-yellow-300 hover:text-yellow-200"
+            }`}
+            aria-label="Forgot password"
+          >
+            {isResetting ? "Sending reset link..." : "Forgot password?"}
+          </button>
+        </div>
+
+  {/* No MFA UI */}
       </motion.div>
     </div>
   );

@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-// i18n removed: using static English strings in this page
 import { containerVariants } from '../utils/animationVariants';
 import HeroSection from '../components/HeroSection';
 import AlertBar from '../components/AlertBar';
@@ -14,7 +13,6 @@ import MethodologySection from '../components/MethodologySection';
 // import TeamSection from '../components/TeamSection'; // Temporarily disabled on Home page
 import TradingViewTicker from './TradingViewTicker';
 
-// ...TestimonialsSection removed from home page
 // import SubscriptionPlans from '../components/SubscriptionPlans';
 import CallToAction from '../components/CallToAction';
 // import TimelineSection from '../components/TimelineSection';
@@ -25,7 +23,6 @@ import PopupForm from '../components/PopupForm';
 import WhatsAppButton from '../components/WhatsAppButton';
 
 const Home = () => {
-  // translations removed; using static English text below
   const contactFormRef = useRef(null);
   const [showScroll, setShowScroll] = useState(false);
   const [showPopup, setShowPopup] = useState(true);
@@ -77,12 +74,12 @@ const Home = () => {
         <WhyChooseUs />
         <MarketOverview />
         <EconomicCalendar embedUrl="https://widget.myfxbook.com/widget/calendar.html" />
-        {/* <ServicesSection /> removed as per request */}
+  {/* <ServicesSection /> */}
         <MarketInsights />
         <MethodologySection />
-  {/* <TeamSection />  // Temporarily disabled on Home page */}
+  {/* <TeamSection /> */}
         <CallToAction scrollToContactForm={scrollToContactForm} />
-         {/* <TimelineSection /> removed as per request */}
+         {/* <TimelineSection /> */}
         <CertificationsSection />
         <ContactFormSection contactFormRef={contactFormRef} />
         <ComplaintTable />

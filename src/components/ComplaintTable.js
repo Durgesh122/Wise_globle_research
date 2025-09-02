@@ -5,6 +5,8 @@ import { db } from '../firebase';
 import { itemVariants } from '../utils/animationVariants';
 
 const ComplaintTable = () => {
+  // Dynamic heading (month/year) managed by admin in ComplaintManager
+  const [headingMonthYear, setHeadingMonthYear] = useState('July 2025');
   const [tableData, setTableData] = useState([
     { srNo: 1, source: 'Directly from Investors', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
     { srNo: 2, source: 'SEBI (SCORES)', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
@@ -15,6 +17,21 @@ const ComplaintTable = () => {
   const [errorTable, setErrorTable] = useState(null);
 
   useEffect(() => {
+    // Listen for heading (month/year) updates from Firebase
+    const headingRef = ref(db, 'complaintHeaderMonthYear');
+    const unsubHeader = onValue(
+      headingRef,
+      (snapshot) => {
+        const val = snapshot.val();
+        if (typeof val === 'string' && val.trim().length > 0) {
+          setHeadingMonthYear(val.trim());
+        }
+      },
+      () => {
+        // Ignore heading errors silently; keep default
+      }
+    );
+
     const tableRef = ref(db, 'complaintTableData');
     const unsubscribe = onValue(
       tableRef,
@@ -33,7 +50,10 @@ const ComplaintTable = () => {
       }
     );
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      unsubHeader();
+    };
   }, []);
 
   return (
@@ -43,7 +63,7 @@ const ComplaintTable = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
           variants={itemVariants}
         >
-          Complaint Data for July 2025
+          {`Complaint Data for ${headingMonthYear}`}
         </motion.h2>
         {loadingTable ? (
           <div className="flex justify-center items-center py-6">
@@ -62,7 +82,7 @@ const ComplaintTable = () => {
                 backdropFilter: 'blur(15px)',
                 WebkitBackdropFilter: 'blur(15px)',
               }}
-        aria-label="Complaint Data for July 2025"
+        aria-label={`Complaint Data for ${headingMonthYear}`}
             >
         <caption className="sr-only">Monthly complaint receipt and resolution statistics by source</caption>
               <thead>

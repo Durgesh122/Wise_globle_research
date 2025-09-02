@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from '../i18nShim';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import {
   FaChartLine, FaShieldAlt, FaRupeeSign, 
   FaPercentage, FaUsers, FaCalendarAlt,

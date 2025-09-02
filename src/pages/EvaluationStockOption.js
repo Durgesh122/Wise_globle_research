@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Trans } from '../i18nShim';
 import { FaChartLine, FaRegClock, FaUserCheck } from 'react-icons/fa';
@@ -9,6 +8,13 @@ const EvaluationStockOption = () => (
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.EvaluationStockOption.evaluation-stock-option"><Trans i18nKey="pages.EvaluationStockOption.evaluation-stock-option-1">Evaluation Stock Option</Trans></Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Evaluation Stock Option service is specifically designed for option traders who want to take advantage of short-term stock price movement. Wise Global Research Analyst provides recommendations to intraday traders to optimize every market movement. Our team of analysts specializes in tracking the F&O market, major sectors, and blends technical analysis with national and international events to predict market moves. Our timely technical recommendations provide adequate time to enter trades and are a supreme blend of technical and fundamental research.
+    </p>
+    <p className="text-lg mb-6 text-center text-white">
+      <Trans i18nKey="pages.EvaluationStockOption.a-pure-intraday-product-where-customers-">
+        <Trans i18nKey="pages.EvaluationStockOption.a-pure-intraday-product-where-customers--1">
+          A pure intraday product, where customers receive Stock Option recommendations in NSE. This product is designed for new customers who want to evaluate our recommendations in the Stock Option market.
+        </Trans>
+      </Trans>
     </p>
 
     {/* What We Offer */}
@@ -21,13 +27,10 @@ const EvaluationStockOption = () => (
         <li><Trans i18nKey="pages.EvaluationStockOption.proper-time-for-entry-exit-in-recommenda"><Trans i18nKey="pages.EvaluationStockOption.proper-time-for-entry-exit-in-recommenda-1">Proper time for entry & exit in recommendations.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockOption.nifty-and-bank-nifty-trend-support-and-r"><Trans i18nKey="pages.EvaluationStockOption.nifty-and-bank-nifty-trend-support-and-r-1">Nifty and Bank Nifty trend, support, and resistance levels.</Trans></Trans></li>
         <li><Trans i18nKey="pages.EvaluationStockOption.careful-analysis-of-market-direction-and"><Trans i18nKey="pages.EvaluationStockOption.careful-analysis-of-market-direction-and-1">Careful analysis of market direction and concise domestic & world market information.</Trans></Trans></li>
-        
-        
       </ul>
-      <p className="text-base mb-2 text-white"><Trans i18nKey="pages.EvaluationStockOption.a-pure-intraday-product-where-customers-"><Trans i18nKey="pages.EvaluationStockOption.a-pure-intraday-product-where-customers--1">A pure intraday product, where customers receive Stock Option recommendations in NSE. This product is designed for new customers who want to evaluate our recommendations in the Stock Option market.</Trans></Trans></p>
-      <div className="bg-white/10 rounded-lg p-4 mt-4">
+      <div className="bg-white/10 rounded-lg p-4 mt-4 text-left">
         <span className="font-semibold text-white"><Trans i18nKey="pages.EvaluationStockOption.sample-call">Sample Call:</Trans></span>
-        <div className="text-white mt-2"><Trans i18nKey="pages.EvaluationStockOption.buy-hal-mar-2600-ce-above-131-target-145"><Trans i18nKey="pages.EvaluationStockOption.buy-hal-mar-2600-ce-above-131-target-145-1">BUY HAL MAR 2600 CE ABOVE 131 TARGET 145 160 STOPLOSS 112</Trans></Trans></div>
+        <div className="text-white mt-2 font-mono"><Trans i18nKey="pages.EvaluationStockOption.buy-dixon-14500-ce-above-720-tgt-800-900-sl-620"><Trans i18nKey="pages.EvaluationStockOption.buy-dixon-14500-ce-above-720-tgt-800-900-sl-620-1">BUY DIXON 14500 CE ABOVE 720 TGT 800 900 SL 620</Trans></Trans></div>
       </div>
     </div>
 
@@ -59,7 +62,7 @@ const EvaluationStockOption = () => (
       <div className="flex justify-center">
         <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center max-w-xs w-full">
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.EvaluationStockOption.option-evaluation-pack"><Trans i18nKey="pages.EvaluationStockOption.option-evaluation-pack-1">Option Evaluation Pack</Trans></Trans></h3>
-          <div className="text-3xl font-extrabold text-white mb-2">₹5,100 <span className="text-base font-normal"><Trans i18nKey="pages.EvaluationStockOption.10-days">/ 10 Days</Trans></span></div>
+          <div className="text-3xl font-extrabold text-white mb-2">₹5,100 <span className="text-base font-normal"><Trans i18nKey="pages.EvaluationStockOption.10-days">/ weekly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.EvaluationStockOption.2-to-3-calls-in-a-day"><Trans i18nKey="pages.EvaluationStockOption.2-to-3-calls-in-a-day-1">2 to 3 Calls in a Day</Trans></Trans></div>
           <Link to="/payment">
             <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.EvaluationStockOption.payment">Payment</Trans></button>

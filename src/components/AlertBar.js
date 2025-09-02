@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const AlertBar = () => {
   // Static bilingual alert message
@@ -17,32 +18,39 @@ const AlertBar = () => {
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false
   , []);
-  const [paused, setPaused] = React.useState(false);
-  const togglePause = () => setPaused(p => !p);
+
+  // Seamless marquee using duplicated slides: move the track by 50% of its width
+  const marqueeAnimate = (!prefersReduced)
+    ? { x: ['0%', '-50%'] }
+    : { x: 0 };
+  const marqueeTransition = (!prefersReduced)
+    ? { duration: 30, repeat: Infinity, ease: 'linear' }
+    : { duration: 0 };
 
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 mt-5">
+    <div className="bg-white/30 backdrop-blur-sm text-white py-2 mt-5">
       <div className="container mx-auto px-4">
-        <div
-          className={[
-            (!prefersReduced && !paused) ? 'animate-scroll' : null,
-            'whitespace-normal', 'break-words', 'text-sm', 'md:text-base',
-            'text-center', 'flex', 'items-center', 'justify-center', 'gap-2'
-          ].filter(Boolean).join(' ')}
-          role="status"
-          aria-live="polite"
-        >
-          <strong className="flex-shrink-0">{notePrefix}</strong>
-          <span className="max-w-full">{alertMessage}</span>
-          <button
-            type="button"
-            onClick={togglePause}
-            className="ml-3 px-2 py-1 text-xs bg-white/20 rounded"
-            aria-pressed={paused}
-            aria-label={paused ? 'Resume scrolling announcement' : 'Pause scrolling announcement'}
+        <div className="relative overflow-hidden" role="status" aria-live="polite">
+          {/* Scrolling track */}
+          <motion.div
+            className="flex whitespace-nowrap items-center text-sm md:text-base will-change-transform transform-gpu"
+            initial={{ x: 0 }}
+            animate={marqueeAnimate}
+            transition={marqueeTransition}
           >
-            {paused ? 'Resume' : 'Pause'}
-          </button>
+            {/* Slide 1 */}
+            <div className="flex shrink-0 items-center gap-2 pr-8">
+              <strong className="flex-shrink-0">{notePrefix}</strong>
+              <span>{alertMessage}</span>
+            </div>
+            {/* Slide 2 (duplicate for seamless loop) */}
+            <div className="flex shrink-0 items-center gap-2 pr-8" aria-hidden="true">
+              <strong className="flex-shrink-0">{notePrefix}</strong>
+              <span>{alertMessage}</span>
+            </div>
+          </motion.div>
+
+          {/* Control removed per request */}
         </div>
       </div>
     </div>

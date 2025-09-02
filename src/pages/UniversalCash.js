@@ -22,7 +22,6 @@ const UniversalCash = () => (
   
   
     </ul>
-  <p className="text-base mb-2 text-white">Trading rules that every trader must studiously follow.</p>
     </div>
 
     <div className="mb-8">
@@ -45,7 +44,7 @@ const UniversalCash = () => (
 
     <div className="mb-8">
   <h2 className="text-2xl font-bold mb-2 text-white">Sample Calls</h2>
-  <div className="bg-white/10 rounded-lg p-4 text-center text-base text-white font-mono">BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50</div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono">BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50</div>
     </div>
 
     <div className="mb-8">

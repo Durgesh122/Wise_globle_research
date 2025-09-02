@@ -14,6 +14,7 @@ function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -23,7 +24,7 @@ function Contact() {
     e.preventDefault();
     setLoading(true);
 
-    const submissionData = {
+  const submissionData = {
   // Normalize to satisfy database.rules.json
   name: String(formData.name || ''),
   email: String(formData.email || ''),
@@ -104,6 +105,16 @@ function Contact() {
           variants={fadeInUp}
           custom={1}
         >
+          {/* Honeypot field for bots */}
+          <input
+            type="text"
+            name="website"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            tabIndex="-1"
+            autoComplete="off"
+            className="hidden"
+          />
           {/* Name */}
           <motion.div className="flex items-center gap-3 mb-4" variants={fadeInUp} custom={1.1}>
             <FaUser />

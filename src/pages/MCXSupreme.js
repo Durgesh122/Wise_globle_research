@@ -11,6 +11,7 @@ const MCXSupreme = () => (
     <p className="text-lg mb-6 text-center text-white">
       MCX Supreme is designed and destined to deliver recommendations with good market moves. Its unique blend of technical and fundamental research makes it one of the most exciting and rewarding products for commodity traders. Receive 1-2 intraday recommendations daily in Bullions, Base Metals, and Energy traded on MCX. Our timely technical recommendations provide you with adequate time to enter trades, while our supreme blend of technical and globally covered fundamental research ensures you stay ahead in the market.
     </p>
+  <p className="text-base mb-6 text-center text-white"><Trans i18nKey="pages.MCXSupreme.mcx-supreme-services-are-ideal-for-trade"><Trans i18nKey="pages.MCXSupreme.mcx-supreme-services-are-ideal-for-trade-1">MCX Supreme Services are ideal for traders who primarily deal in MCX commodities and want detailed technical and fundamental market analysis in one pack.</Trans></Trans></p>
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.MCXSupreme.what-we-offer">What We Offer</Trans></h2>
@@ -24,7 +25,6 @@ const MCXSupreme = () => (
         
         
       </ul>
-      <p className="text-base mb-2 text-white"><Trans i18nKey="pages.MCXSupreme.mcx-supreme-services-are-ideal-for-trade"><Trans i18nKey="pages.MCXSupreme.mcx-supreme-services-are-ideal-for-trade-1">MCX Supreme Services are ideal for traders who primarily deal in MCX commodities and want detailed technical and fundamental market analysis in one pack.</Trans></Trans></p>
     </div>
 
     <div className="mb-8">

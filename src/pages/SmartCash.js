@@ -21,7 +21,6 @@ const SmartCash = () => (
         
         
       </ul>
-      <p className="text-base mb-2 text-white"><Trans i18nKey="pages.SmartCash.trading-rules-that-every-trader-must-stu"><Trans i18nKey="pages.SmartCash.trading-rules-that-every-trader-must-stu-1">Trading rules that every trader must studious follow.</Trans></Trans></p>
     </div>
 
     <div className="mb-8">
@@ -45,7 +44,7 @@ const SmartCash = () => (
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.sample-calls">Sample Calls</Trans></h2>
-      <div className="bg-white/10 rounded-lg p-4 text-center text-base text-white font-mono"><Trans i18nKey="pages.SmartCash.buy-centuryply-above-512-target-518-524-"><Trans i18nKey="pages.SmartCash.buy-centuryply-above-512-target-518-524--1">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.SmartCash.buy-centuryply-above-512-target-518-524-"><Trans i18nKey="pages.SmartCash.buy-centuryply-above-512-target-518-524--1">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</Trans></Trans></div>
     </div>
 
     <div className="mb-8">

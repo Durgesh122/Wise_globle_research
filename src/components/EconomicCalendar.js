@@ -60,7 +60,13 @@ const EconomicCalendar = ({ apiUrl, pollInterval = 30000, embedUrl = 'https://wi
   const [events, setEvents] = useState(() => Array.from({ length: 8 }).map((_, i) => makeMockEvent(i)));
   const mounted = useRef(true);
   const embedRef = useRef(null);
+  const tvRef = useRef(null);
   const [showEmbed, setShowEmbed] = useState(false);
+  const [forceTable, setForceTable] = useState(false);
+  // Track whether the third-party embed failed. Only used to show a small notice.
+  const [embedFailed, setEmbedFailed] = useState(false);
+  const [embedLoaded, setEmbedLoaded] = useState(false);
+  const [useTradingView, setUseTradingView] = useState(false);
 
   useEffect(() => {
     mounted.current = true;
@@ -96,7 +102,12 @@ const EconomicCalendar = ({ apiUrl, pollInterval = 30000, embedUrl = 'https://wi
 
   // lazy-show iframe when near viewport to avoid heavy third-party load
   useEffect(() => {
-    if (!embedRef.current || showEmbed || !('IntersectionObserver' in window)) return undefined;
+    if (!embedRef.current || showEmbed) return undefined;
+    // Fallback: if IntersectionObserver isn't supported, show the embed immediately
+    if (!('IntersectionObserver' in window)) {
+      setShowEmbed(true);
+      return undefined;
+    }
     const ob = new IntersectionObserver((entries) => {
       if (entries.some(e => e.isIntersecting)) {
         setShowEmbed(true);
@@ -106,6 +117,50 @@ const EconomicCalendar = ({ apiUrl, pollInterval = 30000, embedUrl = 'https://wi
     ob.observe(embedRef.current);
     return () => ob.disconnect();
   }, [showEmbed]);
+
+  // If the embed is shown but doesn't load within a timeout, fall back (TradingView -> table)
+  useEffect(() => {
+    if (!showEmbed || forceTable || useTradingView) return undefined;
+    setEmbedLoaded(false);
+    setEmbedFailed(false);
+    const t = setTimeout(() => {
+      if (!embedLoaded) {
+        setEmbedFailed(true);
+        // Try TradingView widget before giving up to table
+        setUseTradingView(true);
+      }
+    }, 8000);
+    return () => clearTimeout(t);
+  }, [showEmbed, forceTable, embedLoaded, useTradingView]);
+
+  // Load TradingView Economic Calendar widget dynamically when needed
+  useEffect(() => {
+    if (!useTradingView || !tvRef.current) return undefined;
+    // Reset container and inject the official TradingView embed script with config as innerHTML
+    tvRef.current.innerHTML = '<div class="tradingview-widget-container__widget"></div>';
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-events.js';
+    script.innerHTML = JSON.stringify({
+      width: '100%',
+      height: 520,
+      colorTheme: 'dark',
+      isTransparent: true,
+      locale: 'en',
+      importanceFilter: '-1,0,1,2' // show all
+    });
+    tvRef.current.appendChild(script);
+
+    // If TradingView doesn't render (network blocked), drop to table
+    const fallbackTimer = setTimeout(() => {
+      // Heuristic: if no iframe was injected, assume failure
+      if (tvRef.current && !tvRef.current.querySelector('iframe')) {
+        setForceTable(true);
+      }
+    }, 9000);
+    return () => clearTimeout(fallbackTimer);
+  }, [useTradingView]);
 
   const cellClassFor = (actualStr, consensusStr) => {
     const a = numericValue(actualStr);
@@ -145,23 +200,64 @@ const EconomicCalendar = ({ apiUrl, pollInterval = 30000, embedUrl = 'https://wi
               <div className="bg-white/6 px-2 py-1 rounded">{new Date().toLocaleTimeString()} (GMT)</div>
             </div>
           </div>
+          {embedUrl && (
+            <div className="flex items-center gap-3">
+              <a
+                href={embedUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-blue-300 hover:text-blue-200 underline"
+              >
+                Open full calendar
+              </a>
+              <button
+                type="button"
+                onClick={() => { setForceTable(v => !v); setEmbedFailed(false); }}
+                className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20"
+                title={forceTable ? 'Show embedded provider view' : 'Use built-in table view'}
+              >
+                {forceTable ? 'Try embed again' : 'Use built-in view'}
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="overflow-hidden bg-white/30 rounded-xl shadow-inner">
-          {embedUrl ? (
-            <div className="w-full" style={{ minHeight: 320 }} ref={embedRef}>
+          {embedUrl && !forceTable ? (
+            <div
+              className="w-full"
+              style={{ minHeight: 320 }}
+              ref={embedRef}
+            >
               {showEmbed ? (
-                <iframe
-                  title="Economic Calendar Widget"
-                  src={embedUrl}
-                  className="w-full"
-                  style={{ height: 'min(520px, 60vh)', border: 'none', display: 'block' }}
-                  sandbox="allow-scripts allow-same-origin allow-popups"
-                  loading="lazy"
-                />
+                useTradingView ? (
+                  <div
+                    className="tradingview-widget-container"
+                    ref={tvRef}
+                    // Use widely supported responsive sizing instead of CSS min()
+                    style={{ height: '60vh', minHeight: 360, maxHeight: 520 }}
+                  />
+                ) : (
+                  <iframe
+                    title="Economic Calendar Widget"
+                    src={embedUrl}
+                    className="w-full"
+                    // Use 60vh with min/max height for better mobile support
+                    style={{ height: '60vh', minHeight: 360, maxHeight: 520, border: 'none', display: 'block' }}
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    aria-label="Embedded economic calendar"
+                    onLoad={() => setEmbedLoaded(true)}
+                    onError={() => { setEmbedFailed(true); setUseTradingView(true); }}
+                  />
+                )
               ) : (
                 <div className="w-full h-[320px] bg-white/6 flex items-center justify-center text-gray-300">Loading calendar…</div>
               )}
+              {embedFailed ? (
+                <div className="text-xs text-amber-300 px-2 py-2">Embed failed to load; trying fallback view…</div>
+              ) : null}
             </div>
           ) : (
             <>

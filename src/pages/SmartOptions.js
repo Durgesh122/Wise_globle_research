@@ -23,7 +23,6 @@ const SmartOptions = () => (
         
         
       </ul>
-      <p className="text-base mb-2 text-white"><Trans i18nKey="pages.SmartOptions.trading-rules-that-every-trader-must-stu"><Trans i18nKey="pages.SmartOptions.trading-rules-that-every-trader-must-stu-1">Trading rules that every trader must studious follow.</Trans></Trans></p>
     </div>
 
     <div className="mb-8">
@@ -47,7 +46,7 @@ const SmartOptions = () => (
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartOptions.sample-calls">Sample Calls</Trans></h2>
-      <div className="bg-white/10 rounded-lg p-4 text-center text-base text-white font-mono"><Trans i18nKey="pages.SmartOptions.buy-hal-mar-2600-ce-above-131-target-145"><Trans i18nKey="pages.SmartOptions.buy-hal-mar-2600-ce-above-131-target-145-1">BUY HAL MAR 2600 CE ABOVE 131 TARGET 145 160 STOPLOSS 112</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.SmartOptions.buy-hal-mar-2600-ce-above-131-target-145"><Trans i18nKey="pages.SmartOptions.buy-hal-mar-2600-ce-above-131-target-145-1">BUY HAL MAR 2600 CE ABOVE 131 TARGET 145 160 STOPLOSS 112</Trans></Trans></div>
     </div>
 
     <div className="mb-8">
