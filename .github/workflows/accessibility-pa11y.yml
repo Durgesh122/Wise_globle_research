@@ -13,10 +13,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+    - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+      node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
@@ -32,12 +32,12 @@ jobs:
         run: mkdir -p pa11y-reports
 
       - name: Start static server
-        run: npx serve -s build -l 3000 &
+        run: npx serve -s build -l 5000 &
 
       - name: Wait for server
         run: |
           for i in {1..30}; do
-            if curl -sf http://localhost:3000 > /dev/null; then
+            if curl -sf http://localhost:5000 > /dev/null; then
               echo "Server is up"; exit 0; fi; sleep 1; done; exit 1
 
       - name: Run Pa11y CI (JSON report)

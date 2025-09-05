@@ -77,11 +77,14 @@ const ChatWidget = () => {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   // Periodic teaser when closed
-  const [showTeaser, setShowTeaser] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [invalidPulse, setInvalidPulse] = useState(false);
   const messagesEndRef = useRef(null);
   const introSentRef = useRef(false);
+  // Teaser popup state and timers
+  const [showTeaser, setShowTeaser] = useState(false);
+  const teaserTimerRef = useRef(null);
+  const teaserAutoHideRef = useRef(null);
   const [userActivity, setUserActivity] = useState({
     lastInteraction: null,
     messageCount: 0,
@@ -165,26 +168,46 @@ const ChatWidget = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  // Teaser pill loop when closed (appears briefly every few seconds)
+
+  // (removed) previous one-time nudge logic in favor of lively launcher effects
+
+  // Repeating teaser popup every 10 seconds when the widget is closed
   useEffect(() => {
-    let intervalId, kickoffId, hideId;
-    const showOnce = () => {
-      setShowTeaser(true);
-      hideId = window.setTimeout(() => setShowTeaser(false), 2500);
+    // Start interval only when closed
+    const start = () => {
+      if (teaserTimerRef.current) return;
+      teaserTimerRef.current = setInterval(() => {
+        // Only show teaser if chat is closed
+        if (!isOpen) {
+          setShowTeaser(true);
+        }
+      }, 10000);
     };
-    if (!isOpen) {
-      kickoffId = window.setTimeout(showOnce, 1500);
-      intervalId = window.setInterval(showOnce, 12000);
-    }
+
+    if (!isOpen) start();
+
+    // Clear on open/unmount
     return () => {
-      window.clearInterval(intervalId);
-      window.clearTimeout(kickoffId);
-      window.clearTimeout(hideId);
-      setShowTeaser(false);
+      if (teaserTimerRef.current) {
+        clearInterval(teaserTimerRef.current);
+        teaserTimerRef.current = null;
+      }
     };
   }, [isOpen]);
 
-  // (removed) previous one-time nudge logic in favor of lively launcher effects
+  // Auto-hide teaser after a short duration
+  useEffect(() => {
+    if (showTeaser) {
+      if (teaserAutoHideRef.current) clearTimeout(teaserAutoHideRef.current);
+      teaserAutoHideRef.current = setTimeout(() => setShowTeaser(false), 4000);
+    }
+    return () => {
+      if (teaserAutoHideRef.current) {
+        clearTimeout(teaserAutoHideRef.current);
+        teaserAutoHideRef.current = null;
+      }
+    };
+  }, [showTeaser]);
 
   useEffect(() => {
     // When widget opens first time, introduce the assistant 'Dudu' and offer a short suggestion.
@@ -468,18 +491,18 @@ const ChatWidget = () => {
   };
 
   return (
-  <div className="fixed bottom-24 right-6 z-50">
+    <div className="fixed bottom-24 right-6 z-50">
+      {/* Chat panel */}
       <AnimatePresence>
-        {isOpen ? (
+        {isOpen && (
           <motion.div
             key="chat-widget"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="w-80 h-[28rem] bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl border border-gray-200 flex flex-col overflow-hidden relative"
+            className="w-80 mr-16 h-[28rem] bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl border border-gray-200 flex flex-col overflow-hidden relative z-40"
           >
-            {/* Subtle, clean UI — background animations removed */}
             <div className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-3 flex justify-between items-center rounded-t-xl">
               <div className="flex items-center gap-2">
                 <div className="bg-white/20 p-1 rounded-full">
@@ -488,7 +511,6 @@ const ChatWidget = () => {
                 <div className="flex flex-col leading-tight">
                   <span className="font-bold">Dudu</span>
                   <div className="flex items-center gap-1 text-[11px] text-white/90">
-                    {/* Presence dot */}
                     <motion.span
                       className="inline-block w-2 h-2 rounded-full bg-emerald-400"
                       animate={{ scale: [1, 1.15, 1], opacity: [0.85, 1, 0.85] }}
@@ -498,18 +520,9 @@ const ChatWidget = () => {
                     {isTyping ? (
                       <div className="flex items-center gap-1">
                         <span className="opacity-90">Typing</span>
-                        <motion.span className="w-1 h-1 bg-white rounded-full"
-                          animate={{ y: [0, -2, 0], opacity: [0.5, 1, 0.5] }}
-                          transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut' }}
-                        />
-                        <motion.span className="w-1 h-1 bg-white rounded-full"
-                          animate={{ y: [0, -2, 0], opacity: [0.5, 1, 0.5] }}
-                          transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.18 }}
-                        />
-                        <motion.span className="w-1 h-1 bg-white rounded-full"
-                          animate={{ y: [0, -2, 0], opacity: [0.5, 1, 0.5] }}
-                          transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.36 }}
-                        />
+                        <motion.span className="w-1 h-1 bg-white rounded-full" animate={{ y: [0, -2, 0], opacity: [0.5, 1, 0.5] }} transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut' }} />
+                        <motion.span className="w-1 h-1 bg-white rounded-full" animate={{ y: [0, -2, 0], opacity: [0.5, 1, 0.5] }} transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.18 }} />
+                        <motion.span className="w-1 h-1 bg-white rounded-full" animate={{ y: [0, -2, 0], opacity: [0.5, 1, 0.5] }} transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.36 }} />
                       </div>
                     ) : (
                       <span className="opacity-90">Online</span>
@@ -518,21 +531,20 @@ const ChatWidget = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button 
-                  onClick={() => closeWithFade(300, () => { 
-                    setMessages([]); 
-                    setFormData({ name: '', city: '', address: '', mobile: '', service: '', extra: {} }); 
-                    setStep('greeting'); 
-                    introSentRef.current = false; 
-                  })} 
+                <button
+                  onClick={() =>
+                    closeWithFade(300, () => {
+                      setMessages([]);
+                      setFormData({ name: '', city: '', address: '', mobile: '', service: '', extra: {} });
+                      setStep('greeting');
+                      introSentRef.current = false;
+                    })
+                  }
                   className="text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30 transition-colors"
                 >
                   End Chat
                 </button>
-                <button 
-                  onClick={() => setIsOpen(false)}
-                  className="hover:bg-white/20 p-1 rounded-full transition-colors"
-                >
+                <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition-colors">
                   <FaTimes />
                 </button>
               </div>
@@ -541,11 +553,7 @@ const ChatWidget = () => {
             <div className="flex-1 p-3 overflow-y-auto space-y-3 text-sm bg-gradient-to-b from-indigo-50/70 to-white/80">
               {messages.length === 0 ? (
                 <div className="text-center mt-8">
-                  <motion.div 
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    className="bg-gradient-to-r from-indigo-600 to-violet-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto"
-                  >
+                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="bg-gradient-to-r from-indigo-600 to-violet-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
                     <ChatLogo className="w-8 h-8" animated />
                   </motion.div>
                   <p className="text-gray-700 mt-4 font-medium">Welcome to Wise Global Research Services</p>
@@ -553,65 +561,32 @@ const ChatWidget = () => {
                 </div>
               ) : (
                 <>
-                  {messages.map((msg, idx) => {
-                    return (
-                       <motion.div
-                        key={msg.id || idx} 
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                         transition={{ duration: 0.25, ease: 'easeOut' }}
-                        className={`flex ${msg.fromUser ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <motion.div
-                          layout
-                          className={`max-w-[80%] px-4 py-3 rounded-2xl ${msg.fromUser ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-none' : 'bg-white/90 backdrop-blur text-gray-800 rounded-bl-none shadow-sm border border-gray-100'}`}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          {typeof msg.text === 'string' ? msg.text : msg.text}
-                        </motion.div>
+                  {messages.map((msg, idx) => (
+                    <motion.div key={msg.id || idx} initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.25, ease: 'easeOut' }} className={`flex ${msg.fromUser ? 'justify-end' : 'justify-start'}`}>
+                      <motion.div layout className={`max-w-[80%] px-4 py-3 rounded-2xl ${msg.fromUser ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-none' : 'bg-white/90 backdrop-blur text-gray-800 rounded-bl-none shadow-sm border border-gray-100'}`} whileTap={{ scale: 0.98 }}>
+                        {typeof msg.text === 'string' ? msg.text : msg.text}
                       </motion.div>
-                    );
-                  })}
+                    </motion.div>
+                  ))}
 
-                   {isTyping && (
-                     <div className="flex justify-start">
-                       <div className="bg-white/90 backdrop-blur text-gray-800 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-100">
-                         <div className="flex items-center gap-3">
-                           {/* Thought cloud that repeats while thinking */}
-                           <motion.div
-                             className="relative px-3 py-2 rounded-2xl bg-white shadow border border-gray-100"
-                             initial={{ opacity: 0, y: 6, scale: 0.95 }}
-                             animate={{ opacity: [0.6, 1, 0.6], y: [6, 0, -4, 0, 6], scale: [0.95, 1, 0.98, 1] }}
-                             transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-                             aria-live="polite"
-                           >
-                             <div className="text-[11px] text-gray-700 whitespace-nowrap">
-                               I’m Dudu — how can I assist you?
-                             </div>
-                             {/* Tiny cloud bubbles */}
-                             <span className="absolute -bottom-1 -left-1 w-2 h-2 bg-white rounded-full border border-gray-100"></span>
-                             <span className="absolute -bottom-3 -left-2 w-1.5 h-1.5 bg-white rounded-full border border-gray-100"></span>
-                           </motion.div>
-
-                           {/* Typing dots */}
-                           <div className="flex items-center gap-1">
-                             <motion.span className="w-2 h-2 bg-gray-400 rounded-full inline-block"
-                               animate={{ y: [0, -2, 0], opacity: [0.4, 1, 0.4] }}
-                               transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut' }}
-                             />
-                             <motion.span className="w-2 h-2 bg-gray-400 rounded-full inline-block"
-                               animate={{ y: [0, -2, 0], opacity: [0.4, 1, 0.4] }}
-                               transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.18 }}
-                             />
-                             <motion.span className="w-2 h-2 bg-gray-400 rounded-full inline-block"
-                               animate={{ y: [0, -2, 0], opacity: [0.4, 1, 0.4] }}
-                               transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.36 }}
-                             />
-                           </div>
-                         </div>
-                       </div>
-                     </div>
-                   )}
+                  {isTyping && (
+                    <div className="flex justify-start">
+                      <div className="bg-white/90 backdrop-blur text-gray-800 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-100">
+                        <div className="flex items-center gap-3">
+                          <motion.div className="relative px-3 py-2 rounded-2xl bg-white shadow border border-gray-100" initial={{ opacity: 0, y: 6, scale: 0.95 }} animate={{ opacity: [0.6, 1, 0.6], y: [6, 0, -4, 0, 6], scale: [0.95, 1, 0.98, 1] }} transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }} aria-live="polite">
+                            <div className="text-[11px] text-gray-700 whitespace-nowrap">I’m Dudu — how can I assist you?</div>
+                            <span className="absolute -bottom-1 -left-1 w-2 h-2 bg-white rounded-full border border-gray-100"></span>
+                            <span className="absolute -bottom-3 -left-2 w-1.5 h-1.5 bg-white rounded-full border border-gray-100"></span>
+                          </motion.div>
+                          <div className="flex items-center gap-1">
+                            <motion.span className="w-2 h-2 bg-gray-400 rounded-full inline-block" animate={{ y: [0, -2, 0], opacity: [0.4, 1, 0.4] }} transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut' }} />
+                            <motion.span className="w-2 h-2 bg-gray-400 rounded-full inline-block" animate={{ y: [0, -2, 0], opacity: [0.4, 1, 0.4] }} transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.18 }} />
+                            <motion.span className="w-2 h-2 bg-gray-400 rounded-full inline-block" animate={{ y: [0, -2, 0], opacity: [0.4, 1, 0.4] }} transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut', delay: 0.36 }} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div ref={messagesEndRef} />
                 </>
@@ -619,14 +594,8 @@ const ChatWidget = () => {
             </div>
 
             <div className="p-3 border-t border-gray-200 bg-white">
-              {/* Step indicator */}
               {step !== 'chatting' && step !== 'askService' && <StepIndicator />}
-
-              <motion.div
-                animate={invalidPulse ? { x: [0, -8, 8, -6, 6, -3, 3, 0] } : { x: 0 }}
-                transition={{ duration: 0.45 }}
-                className="flex items-center gap-2"
-              >
+              <motion.div animate={invalidPulse ? { x: [0, -8, 8, -6, 6, -3, 3, 0] } : { x: 0 }} transition={{ duration: 0.45 }} className="flex items-center gap-2">
                 <input
                   type={getInputType()}
                   placeholder={getInputPlaceholder()}
@@ -636,94 +605,73 @@ const ChatWidget = () => {
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all bg-white/90 backdrop-blur"
                   disabled={step === 'askService'}
                 />
-                <motion.button 
-                  onClick={handleSend} 
-                  disabled={input.trim() === '' || step === 'askService'} 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-2.5 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                >
+                <motion.button onClick={handleSend} disabled={input.trim() === '' || step === 'askService'} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-2.5 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                   </svg>
                 </motion.button>
               </motion.div>
-              {errorText && (
-                <div className="mt-2 text-xs text-rose-600 font-medium">{errorText}</div>
-              )}
+              {errorText && <div className="mt-2 text-xs text-rose-600 font-medium">{errorText}</div>}
             </div>
           </motion.div>
-        ) : (
-          <div className="relative">
-            {/* Periodic peeker for attention when closed (proper placement near launcher) */}
-            <AnimatePresence>
-              {!isOpen && showTeaser && (
-                <motion.div
-                  key="chat-peeker"
-                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                  animate={{ opacity: 1, y: -10, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                  transition={{ duration: 0.25 }}
-                  className="absolute -top-14 right-0 flex items-center gap-2 select-none"
-                >
-                  <motion.div
-                    className="w-8 h-8 rounded-full bg-white shadow-md border border-gray-200 flex items-center justify-center text-base"
-                    initial={{ rotate: 0 }}
-                    animate={{ rotate: [0, 18, -8, 12, 0] }}
-                    transition={{ duration: 1.3, ease: 'easeInOut' }}
-                    aria-hidden="true"
-                  >
-                    🤖
-                  </motion.div>
-                  <motion.div
-                    className="px-2.5 py-1 rounded-full bg-white border border-gray-200 text-[11px] text-gray-800 shadow"
-                    initial={{ y: 2 }}
-                    animate={{ y: [2, 0, 2] }}
-                    transition={{ duration: 1.4, ease: 'easeInOut' }}
-                  >
-                    Chat with Dudu
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <motion.button
-              key="chat-open-button"
-              whileHover={{ scale: 1.08, rotate: 2 }}
-              whileTap={{ scale: 0.95, rotate: -2 }}
-              onClick={() => setIsOpen(true)}
-              className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white w-14 h-14 p-0 rounded-full shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all flex items-center justify-center"
-              aria-label="Open Dudu chat"
-            >
-              <motion.div
-                initial={{ scale: 0.92, opacity: 0.95, rotate: 0, y: 0 }}
-                animate={{
-                  scale: [0.96, 1, 0.96],
-                  opacity: 1,
-                  rotate: [-3, 3, -2, 2, 0],
-                  y: [0, -1.5, 0]
-                }}
-                transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-                className="w-9 h-9 relative"
-              >
-                <ChatLogo className="w-9 h-9" animated />
-                {/* playful sparkles */}
-                <motion.span
-                  className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-white/90"
-                  initial={{ scale: 0.8, opacity: 0.8 }}
-                  animate={{ scale: [0.8, 1.3, 0.8], opacity: [0.6, 1, 0.6] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                />
-                <motion.span
-                  className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full bg-white/70"
-                  initial={{ scale: 0.8, opacity: 0.8 }}
-                  animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.5, 0.9, 0.5] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
-                />
-              </motion.div>
-            </motion.button>
-          </div>
         )}
       </AnimatePresence>
+
+      {/* Launcher button - always visible, fixed position */}
+      <div className="relative z-50 mt-2">
+        <AnimatePresence>
+          {showTeaser && !isOpen && (
+            <motion.div
+              key="chat-teaser"
+              initial={{ opacity: 0, x: 8, scale: 0.98 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 8, scale: 0.98 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              className="absolute right-full mr-3 top-1/3-translate-y-[60%] bg-white/95 backdrop-blur px-3 py-2 rounded-xl shadow-lg border border-gray-100 text-xs text-gray-800 max-w-[240px] cursor-pointer"
+              role="status"
+              aria-live="polite"
+              onClick={() => {
+                setIsOpen(true);
+                setShowTeaser(false);
+              }}
+            >
+              <div className="flex items-start gap-2">
+                <div className="mt-0.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
+                </div>
+                <div className="flex-1">Hii, I’m Dudu.</div>
+                <button onClick={() => setShowTeaser(false)} className="ml-1 text-gray-400 hover:text-gray-600" aria-label="Dismiss chat teaser">
+                  <FaTimes size={10} />
+                </button>
+              </div>
+              <span className="absolute top-1/2 -translate-y-1/2 -right-1.5 w-3 h-3 bg-white rotate-45 border-r border-b border-gray-100" aria-hidden="true"></span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.button
+          key="chat-open-button"
+          whileHover={{ scale: 1.08, rotate: 2 }}
+          whileTap={{ scale: 0.95, rotate: -2 }}
+          onClick={() => {
+            setIsOpen(true);
+            setShowTeaser(false);
+          }}
+          className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white w-14 h-14 p-0 rounded-full shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all flex items-center justify-center"
+          aria-label="Open Dudu chat"
+        >
+          <motion.div
+            initial={{ scale: 0.92, opacity: 0.95, rotate: 0, y: 0 }}
+            animate={{ scale: [0.96, 1, 0.96], opacity: 1, rotate: [-3, 3, -2, 2, 0], y: [0, -1.5, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-9 h-9 relative"
+          >
+            <ChatLogo className="w-9 h-9" animated />
+            <motion.span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-white/90" initial={{ scale: 0.8, opacity: 0.8 }} animate={{ scale: [0.8, 1.3, 0.8], opacity: [0.6, 1, 0.6] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }} />
+            <motion.span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full bg-white/70" initial={{ scale: 0.8, opacity: 0.8 }} animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.5, 0.9, 0.5] }} transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }} />
+          </motion.div>
+        </motion.button>
+      </div>
     </div>
   );
 };

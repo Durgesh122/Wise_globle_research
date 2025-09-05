@@ -5,8 +5,10 @@ import {
   FaFacebookF, FaInstagram, FaYoutube, FaLinkedinIn, FaPalette, FaGlobe, FaChevronDown
 } from 'react-icons/fa';
 import { SiX } from 'react-icons/si';
-import wiseLogo from '../assets/images/wise3.png';
 import { ThemeContext } from '../context/ThemeContext';
+const logoName = 'wise3';
+const logoSrcSetAvif = ['/assets/images/wise3-64.avif 64w','/assets/images/wise3-96.avif 96w','/assets/images/wise3-112.avif 112w','/assets/images/wise3-128.avif 128w','/assets/images/wise3-256.avif 256w'].join(', ');
+const logoSrcSetWebp = ['/assets/images/wise3-64.webp 64w','/assets/images/wise3-96.webp 96w','/assets/images/wise3-112.webp 112w','/assets/images/wise3-128.webp 128w','/assets/images/wise3-256.webp 256w'].join(', ');
 
 function Footer() {
   const { changeTheme, theme, gradients } = useContext(ThemeContext);
@@ -183,7 +185,11 @@ function Footer() {
             <div className="text-center md:text-left">
               <div className="relative inline-block w-24 h-24 sm:w-32 sm:h-32 mx-auto md:mx-0">
                 <div className="relative z-10 rounded-full border-4 shadow-xl transition duration-700 bg-white p-1" style={{ borderColor: '#4efc03' }}>
-                  <img src={wiseLogo} alt="Wise Global Logo" className="w-full h-full object-contain rounded-full bg-white" />
+                  <picture>
+                    <source type="image/avif" srcSet={logoSrcSetAvif} sizes="(max-width: 640px) 96px, 128px" />
+                    <source type="image/webp" srcSet={logoSrcSetWebp} sizes="(max-width: 640px) 96px, 128px" />
+                    <img src={`/assets/images/${logoName}.png`} alt="Wise Global Logo" className="w-full h-full object-contain rounded-full bg-white" loading="lazy" decoding="async" />
+                  </picture>
                 </div>
               </div>
               <p className="mt-3 text-sm md:text-base leading-relaxed break-words" style={{ color: textColor }}>
@@ -192,7 +198,7 @@ function Footer() {
               <div className="flex flex-wrap gap-3 sm:gap-4 justify-center md:justify-start mt-4">
                 <a aria-label="Facebook" href="https://www.facebook.com/wiseglobalresearch/" target="_blank" rel="noreferrer"><FaFacebookF className="text-blue-600 text-lg hover:scale-110 transition" /></a>
                 <a aria-label="Instagram" href="https://www.instagram.com/wiseglobalresearch/" target="_blank" rel="noreferrer"><FaInstagram className="text-pink-500 text-lg hover:scale-110 transition" /></a>
-                <a aria-label="X (Twitter)" href="https://x.com/research221711" target="_blank" rel="noreferrer"><SiX className="bg-white text-black rounded-full text-lg hover:scale-110 transition p-[2px]" /></a>
+                <a aria-label="X (Twitter)" href="https://x.com/research221711" target="_blank" rel="noreferrer"><SiX aria-hidden="true" className="bg-white text-black rounded-full text-lg hover:scale-110 transition p-[2px]" /></a>
                 <a aria-label="LinkedIn" href="https://www.linkedin.com/in/wise-global-research-services-63b535317/" target="_blank" rel="noreferrer"><FaLinkedinIn className="text-white text-lg hover:scale-110 transition" /></a>
                 <a aria-label="YouTube" href="https://www.youtube.com/@WiseGlobalResearchService" target="_blank" rel="noreferrer"><FaYoutube className="text-red-600 text-lg hover:scale-110 transition" /></a>
               </div>
@@ -207,6 +213,7 @@ function Footer() {
                 <li><Link to="/contact" className="hover:text-yellow-400">→ Contact</Link></li>
                 <li><Link to="/payment" className="hover:text-yellow-400">→ Payment</Link></li>
                 <li><Link to="/search" className="hover:text-yellow-400">→ Search</Link></li>
+                <li><a href="/sitemap.xml" className="hover:text-yellow-400">→ Sitemap</a></li>
                 <li><Link to="/investor-charter" className="hover:text-yellow-400">→ Investor Charter</Link></li>
                 <li><Link to="/career" className="hover:text-yellow-400">→ Careers</Link></li>
                 <li><Link to="/guide" className="hover:text-yellow-400">→ Guide for Investing</Link></li>
@@ -235,7 +242,7 @@ function Footer() {
               <h3 className="text-lg font-semibold mb-3" style={{ color: textColor }}>Registration Details</h3>
               <ul className="space-y-1 text-sm">
                 <li className="break-words"><strong>Registered Name:</strong> WISE GLOBAL RESEARCH SERVICES PRIVATE LIMITED</li>
-                <li className="break-words"><strong>Principal Officer/Compliance Officer:</strong> Hemraj Singh Sikarwar</li>
+                <li className="break-words"><strong>CEO / Principal Officer / Compliance Officer:</strong> Hemraj Singh Sikarwar</li>
                 <li><strong>GST No:</strong> 23AADCW7173Q1ZO</li>
                 <li><strong>CIN Number:</strong> U66190MP2024PTC069199</li>
                 <li><strong>Type of Registration:</strong> Non – Individual</li>
@@ -260,11 +267,12 @@ function Footer() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="font-semibold flex items-center gap-1"><FaPalette /> Select Website Theme</h3>
+        <h3 id="theme-label" className="font-semibold flex items-center gap-1"><FaPalette /> Select Website Theme</h3>
               <div className="bg-white text-black rounded shadow-md overflow-hidden">
                 <select
                   onChange={(e) => changeTheme(e.target.value)}
-                  className="w-full px-4 py-2 pr-10 bg-white focus:outline-none"
+          className="w-full px-4 py-2 pr-10 bg-white focus:outline-none"
+          aria-labelledby="theme-label"
                 >
                   {Object.keys(gradients).map((key) => (
                     <option key={key} value={key}>
@@ -284,7 +292,6 @@ function Footer() {
                 <button
                   type="button"
                   onClick={() => setIsLangOpen((s) => !s)}
-                  aria-haspopup="menu"
                   aria-expanded={isLangOpen}
                   aria-controls="lang-dropdown-panel"
                   aria-label="Choose website language"
@@ -296,7 +303,7 @@ function Footer() {
 
                 {/* Dropdown panel */}
                 <div className={`relative ${isLangOpen ? 'block' : 'hidden'}`}>
-                  <div id="lang-dropdown-panel" role="menu" aria-label="Language options" className="absolute left-0 right-0 mt-2 bg-white text-black rounded-md shadow-2xl p-3 z-40 max-h-[70vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                  <div id="lang-dropdown-panel" role="region" aria-label="Language options" className="absolute left-0 right-0 mt-2 bg-white text-black rounded-md shadow-2xl p-3 z-40 max-h-[70vh] overflow-y-auto custom-scrollbar border border-gray-200">
                     <input
                       type="text"
                       value={langQuery}
@@ -315,7 +322,6 @@ function Footer() {
                               key={`in-${l.code}`}
                               onClick={() => { setIsLangOpen(false); translateTo(l.code); }}
                               className="px-2 py-1 rounded-full bg-green-100 hover:bg-green-200 text-green-800 text-xs transition"
-                              role="menuitem"
                               title={`Translate to ${l.name}`}
                             >
                               {l.name}
@@ -333,7 +339,6 @@ function Footer() {
                               key={`pop-${l.code}`}
                               onClick={() => { setIsLangOpen(false); translateTo(l.code); }}
                               className="px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs transition"
-                              role="menuitem"
                               title={`Translate to ${l.name}`}
                             >
                               {l.name}
@@ -358,7 +363,8 @@ function Footer() {
 
                     {/* Full Google widget (all languages) - keep mounted always for reliable init */}
                     <div className="mt-2">
-                      <div id="google_translate_element" aria-label="Google Translate full list" className={`${showAllWidget ? '' : 'hidden'} min-h-[28px]`} />
+                      <div id="google_translate_element" role="region" aria-labelledby="google-translate-label" className={`${showAllWidget ? '' : 'hidden'} min-h-[28px]`} />
+                      <span id="google-translate-label" className="sr-only">Google Translate full list</span>
                     </div>
                   </div>
                 </div>

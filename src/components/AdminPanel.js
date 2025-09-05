@@ -1,8 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useContext } from 'react';
 import { useTranslation } from '../i18nShim';
 import { db } from '../firebase';
 import { ref, onValue } from 'firebase/database';
-import logo from '../assets/images/wise3.png';
+import { ThemeContext } from '../context/ThemeContext';
+// Use responsive public assets for logo
+const logoName = 'wise3';
+const logoSrcSetAvif = ['/assets/images/wise3-64.avif 64w','/assets/images/wise3-96.avif 96w','/assets/images/wise3-112.avif 112w','/assets/images/wise3-128.avif 128w','/assets/images/wise3-256.avif 256w'].join(', ');
+const logoSrcSetWebp = ['/assets/images/wise3-64.webp 64w','/assets/images/wise3-96.webp 96w','/assets/images/wise3-112.webp 112w','/assets/images/wise3-128.webp 128w','/assets/images/wise3-256.webp 256w'].join(', ');
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -49,6 +53,7 @@ const DownloadIcon = (props) => (
 
 const AdminPanel = () => {
   const { t } = useTranslation();
+  const { background, textColor } = useContext(ThemeContext);
 
   const [entries, setEntries] = useState([]);
   const [submissions, setSubmissions] = useState({});
@@ -172,14 +177,21 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div
+      className="min-h-screen flex"
+      style={{ background: background, color: textColor, transition: 'background 0.5s ease-in-out, color 0.5s ease-in-out' }}
+    >
       <div className={classNames(
         'fixed inset-y-0 left-0 z-40 w-72 transform bg-white shadow-lg transition-transform duration-200 ease-in-out md:translate-x-0 md:static md:inset-auto',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       )}>
         <div className="h-full flex flex-col">
           <div className="flex items-center gap-3 px-4 py-4 border-b">
-            <img src={logo} alt="Logo" className="h-10 w-10 object-contain rounded" />
+            <picture>
+              <source type="image/avif" srcSet={logoSrcSetAvif} sizes="40px" />
+              <source type="image/webp" srcSet={logoSrcSetWebp} sizes="40px" />
+              <img src={`/assets/images/${logoName}.png`} alt="Logo" className="h-10 w-10 object-contain rounded" loading="lazy" decoding="async" width="40" height="40" />
+            </picture>
             <div>
               <p className="font-semibold text-gray-900">Wise Global Admin</p>
               <p className="text-xs text-gray-500">Research Services</p>

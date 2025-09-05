@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaBullhorn, FaFileContract, FaExclamationCircle, FaComments, FaBriefcase, FaChartBar } from 'react-icons/fa';
+import { FaEnvelope, FaBullhorn, FaExclamationCircle, FaComments, FaBriefcase, FaChartBar } from 'react-icons/fa';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../../firebase';
 import DashboardCard from './DashboardCard'; // Using the new DashboardCard component
@@ -32,7 +32,6 @@ const useDatabaseCount = (path) => {
 const Dashboard = () => {
   const contactCount = useDatabaseCount('contacts');
   const popupCount = useDatabaseCount('popups');
-  const consentCount = useDatabaseCount('consents');
   const complaintCount = useDatabaseCount('complaint-box');
   const chatbotDataCount = useDatabaseCount('chatbot-data');
   const jobCount = useDatabaseCount('jobs');
@@ -40,8 +39,7 @@ const Dashboard = () => {
   const cards = [
     { title: 'Contact Submissions', value: contactCount, icon: <FaEnvelope />, color: 'blue', to: '/admin/contacts' },
   { title: 'Home Page Contacts', value: 0, icon: <FaEnvelope />, color: 'cyan', to: '/admin/home-contacts' },
-    { title: 'Popup Submissions', value: popupCount, icon: <FaBullhorn />, color: 'purple', to: '/admin/popups' },
-    { title: 'Consent Submissions', value: consentCount, icon: <FaFileContract />, color: 'green', to: '/admin/consents' },
+  { title: 'Popup Submissions', value: popupCount, icon: <FaBullhorn />, color: 'purple', to: '/admin/popups' },
     { title: 'Complaint Box', value: complaintCount, icon: <FaExclamationCircle />, color: 'red', to: '/admin/complaint-box' },
   { title: 'Complaint Manager', value: 0, icon: <FaExclamationCircle />, color: 'rose', to: '/admin/complaints' },
   { title: 'Report Manager', value: 0, icon: <FaChartBar />, color: 'emerald', to: '/admin/reports' },

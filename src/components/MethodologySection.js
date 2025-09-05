@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import step1 from '../assets/images/imgStep01.png';
 import step2 from '../assets/images/imgStep02.png';
-import step3 from '../assets/images/team2.png';
+import step3 from '../assets/images/slide5.png';
 
 const MethodologySection = () => {
+  const [loaded, setLoaded] = useState([false, false, false]);
+
+  // Proactively prefetch the heavier third image to reduce perceived delay
+  useEffect(() => {
+    const img = new Image();
+    img.src = step3;
+  }, []);
+
   // removed react-i18next for this component per request
   const heading = 'Methodology';
   const steps = [
@@ -67,14 +75,25 @@ const MethodologySection = () => {
               <div className="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-gradient-to-br from-white/6 to-white/2 blur-3xl opacity-60 transform rotate-12"></div>
 
               <div className="flex flex-col items-center text-center relative z-10">
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-white/6 border border-white/20 mb-4 shadow-md">
+                <div className="relative w-24 h-24 rounded-full overflow-hidden bg-white/6 border border-white/20 mb-4 shadow-md">
+                  {/* Shimmer placeholder */}
+                  {!loaded[idx] && (
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 animate-pulse bg-gradient-to-r from-white/10 via-white/20 to-white/10"
+                    />
+                  )}
                   <img
                     src={images[idx] || images[0]}
                     alt={step.title || ''}
-                    className="w-full h-full object-cover rounded-full"
+                    className={`w-full h-full object-cover rounded-full transition-opacity duration-500 ${loaded[idx] ? 'opacity-100' : 'opacity-0'}`}
+                    width={96}
+                    height={96}
                     decoding="async"
                     loading="lazy"
-                    onError={(e) => { e.currentTarget.onerror = null; }}
+                    fetchpriority={idx === 2 ? 'low' : 'auto'}
+                    onLoad={() => setLoaded((arr) => arr.map((v, i) => (i === idx ? true : v)))}
+                    onError={(e) => { e.currentTarget.onerror = null; setLoaded((arr) => arr.map((v, i) => (i === idx ? true : v))); }}
                   />
                 </div>
 

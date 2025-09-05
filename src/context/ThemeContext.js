@@ -3,23 +3,13 @@ import React, { createContext, useState, useEffect } from 'react';
 // Define an extensive set of vibrant, sexy gradients (restored) + premium dark themes
 const gradients = {
   default: {
-    // Techy indigo-to-periwinkle gradient
-    background: 'linear-gradient(-225deg, #2db2ff7e 0%, #b5b3ff77 48%, #b4bcee46 100%)',
+  // Requested light gradient
+   background: 'linear-gradient(to right, #4272ff, #365dff)',
     textColor: '#ffffff',
     transition: 'background 0.5s ease-in-out',
   },
   // ...removed two top colors (fire, purpleDream) per user request
-  greenGlow: {
-    background: 'linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12)',
-    textColor: '#ffffff',
-    transition: 'background 0.5s ease-in-out',
-  },
-  rainbowSky: {
-    background: 'linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1)',
-    textColor: '#000000',
-    transition: 'background 0.5s ease-in-out',
-  },
-  // New Sexy Gradients
+  
 
   cosmicTrade: {
     background: 'linear-gradient(to right, #4b0082, #00b7eb)',
@@ -68,6 +58,32 @@ const gradients = {
     textColor: '#0b1220',
     transition: 'background 0.5s ease-in-out',
   },
+  // Darker glass-friendly gradients (good behind white/30 glass panels)
+  glassNavy: {
+    background: 'linear-gradient(to right, #0B1A2A, #1A2F4A)',
+    textColor: '#E6EEF8',
+    transition: 'background 0.5s ease-in-out',
+  },
+  deepTealGlass: {
+    background: 'linear-gradient(to right, #0C2A2B, #145055)',
+    textColor: '#E6FFF7',
+    transition: 'background 0.5s ease-in-out',
+  },
+  royalPlumGlass: {
+    background: 'linear-gradient(to right, #2B103B, #452050)',
+    textColor: '#F5E9FF',
+    transition: 'background 0.5s ease-in-out',
+  },
+  slateNight: {
+    background: 'linear-gradient(to right, #111827, #1F2937)',
+    textColor: '#E6EEF8',
+    transition: 'background 0.5s ease-in-out',
+  },
+  spaceAqua: {
+    background: 'linear-gradient(to right, #062038, #0E3A55)',
+    textColor: '#D6F1FF',
+    transition: 'background 0.5s ease-in-out',
+  },
   electricRoyal: {
     background: 'linear-gradient(to right, #4272ff, #365dff)',
     textColor: '#ffffff',
@@ -95,7 +111,7 @@ const gradients = {
     transition: 'background 0.5s ease-in-out',
   },
   deepGalaxy: {
-    background: 'linear-gradient(90deg, #071029 0%, #0e1833 50%, #12203f 100%)',
+    background: 'linear-gradient(90deg, #0076a5ff 0%, #aa3e2bff 50%, #61dbe4ff 100%)',
     textColor: '#dbe9ff',
     transition: 'background 0.5s ease-in-out',
   },
@@ -109,11 +125,26 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('default');
   const [previewTheme, setPreviewTheme] = useState(null); // For previewing themes
 
-  // Apply theme transition to body for smooth gradient changes
+  // Apply theme transition and background to html, body, and #root for full-page consistency
   useEffect(() => {
-    document.body.style.transition = 'background 0.5s ease-in-out';
-    document.body.style.background = previewTheme ? gradients[previewTheme].background : gradients[theme].background;
-    document.body.style.color = previewTheme ? gradients[previewTheme].textColor : gradients[theme].textColor;
+    const active = previewTheme ? gradients[previewTheme] : gradients[theme];
+
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    const rootEl = document.getElementById('root');
+
+    // Smooth transitions
+    htmlEl.style.transition = active.transition || 'background 0.5s ease-in-out';
+    bodyEl.style.transition = active.transition || 'background 0.5s ease-in-out';
+    if (rootEl) rootEl.style.transition = active.transition || 'background 0.5s ease-in-out';
+
+    // Synchronize backgrounds across the full document so no fallback peeks through
+    htmlEl.style.background = active.background;
+    bodyEl.style.background = active.background;
+    if (rootEl) rootEl.style.background = active.background;
+
+    // Text color on body (components still control their own text utilities)
+    bodyEl.style.color = active.textColor;
   }, [theme, previewTheme]);
 
   // Change theme permanently

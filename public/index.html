@@ -18,6 +18,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <!-- ✅ Google Font Optimization -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  <link rel="dns-prefetch" href="https://s3.tradingview.com">
+  <link rel="dns-prefetch" href="https://myfxbook.com">
+  <link rel="dns-prefetch" href="https://widget.myfxbook.com">
+  <link rel="preconnect" href="https://widget.myfxbook.com" crossorigin>
+  <link rel="preconnect" href="https://wiseglobalresearch.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap">
@@ -26,35 +34,31 @@
       rel="stylesheet"
     />
 
-    <!-- ✅ Font Awesome Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-      media="all"
-      onload="this.media='all'"
-    />
+  <!-- Removed Font Awesome CSS to avoid webfont downloads; using SVG icon packages instead -->
 
     <!-- Google tag (gtag.js) - load script async, defer config and conversion until after load to avoid blocking LCP/TBT -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1137180109"></script>
     <script>
+      // Initialize dataLayer and a lightweight gtag shim immediately so we don't depend on window 'load'.
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      // Defer analytics configuration until after the page has loaded to reduce render-blocking work.
-      window.addEventListener('load', function(){
+      function gtag(){ dataLayer.push(arguments); }
+
+      function initAnalytics() {
         try {
           gtag('js', new Date());
           gtag('config', 'AW-1137180109');
-        } catch(e){
-          // ignore if gtag not available
-        }
-        // Defer conversion event further so it doesn't compete with LCP work
+        } catch (e) { /* no-op */ }
+        // Fire conversion later so it doesn't compete with LCP work
         setTimeout(function(){
-          try { gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'}); } catch(e){}
+          try { gtag('event', 'conversion', { send_to: 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA' }); } catch (e) {}
         }, 2000);
-      });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAnalytics);
+      } else {
+        initAnalytics();
+      }
     </script>
     <!-- ✅ SEO Meta Tags -->
     <meta name="description" content="Wise Global Research Services - SEBI Registered Research Analyst. Get expert stock market research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India." />
@@ -78,11 +82,36 @@
     <meta name="twitter:description" content="Get SEBI registered expert research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India." />
     <meta name="twitter:image" content="https://wiseglobalresearch.com/og-image.jpg" />
 
+  <!-- Preload moved into HeroSection via Helmet to avoid unused preloads on other routes -->
+
     <!-- ✅ Chart Script for TradingView -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js" defer></script>
   </head>
 
   <body class="bg-black text-white">
+    <script>
+      // Early apply of saved accessibility settings before React mounts to avoid flashes
+      (function(){
+        try {
+          var raw = localStorage.getItem('a11ySettings');
+          if (!raw) return;
+          var s = JSON.parse(raw);
+          var root = document.documentElement;
+          // font scale
+          var scale = Math.max(0.9, Math.min(1.8, parseFloat((s.fontScale||1)*1)));
+          root.style.fontSize = (scale * 100) + '%';
+          // boolean data attrs
+          function setAttr(name, val){ if (val) root.setAttribute(name, 'true'); }
+          setAttr('data-high-contrast', !!s.highContrast);
+          setAttr('data-reduce-motion', !!s.reduceMotion);
+          setAttr('data-highlight-links', !!s.highlightLinks);
+          setAttr('data-readable-font', !!s.readableFont);
+          setAttr('data-grayscale', !!s.grayscale);
+          setAttr('data-invert', !!s.invert);
+          if (s.lineHeight === 'relaxed') root.setAttribute('data-line-height', 'relaxed');
+        } catch(e) { /* ignore */ }
+      })();
+    </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>

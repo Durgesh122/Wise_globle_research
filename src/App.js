@@ -27,6 +27,7 @@ import JobsManager from './pages/admin/JobsManager'; // Added JobsManager import
 import SeoHelmet from './components/SeoHelmet';
 import AccessibilityMenu from './components/AccessibilityMenu';
 import Breadcrumbs from './components/Breadcrumbs';
+import RouteAnnouncer from './components/RouteAnnouncer';
 import AccessibilityStatement from './pages/AccessibilityStatement';
 import AccessibilityFeedback from './pages/AccessibilityFeedback';
 import Search from './pages/Search';
@@ -121,7 +122,6 @@ const Media = lazy(() => import('./pages/Media'));
 // Lazy Loaded Admin Pages
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const ContactSubmissions = lazy(() => import('./pages/admin/ContactSubmissions'));
-const ConsentSubmissions = lazy(() => import('./pages/admin/ConsentSubmissions'));
 const ComplaintManager = lazy(() => import('./pages/admin/ComplaintManager'));
 const ReportManager = lazy(() => import('./pages/admin/ReportManager'));
 const PopupSubmissions = lazy(() => import('./pages/admin/PopupSubmissions'));
@@ -145,10 +145,26 @@ function App() {
   return undefined;
   }, []);
 
+  // When on admin pages, clear any global a11y data-* attributes so overlays/effects don't impact the admin UI
+  useEffect(() => {
+    if (isAdminPage) {
+      const htmlEl = document.documentElement;
+      // Remove any attributes like data-a11y-reading-guide, data-a11y-dyslexic, etc.
+      htmlEl.getAttributeNames()
+        .filter((n) => n.startsWith('data-a11y-'))
+        .forEach((n) => htmlEl.removeAttribute(n));
+      // Optionally reset RG CSS variables if they exist
+      htmlEl.style.removeProperty('--rg-y');
+      htmlEl.style.removeProperty('--rg-h');
+    }
+  }, [isAdminPage]);
+
   return (
     <HelmetProvider>
   {/* Skip link for keyboard users */}
   <a href="#main-content" className="skip-link">Skip to main content</a>
+  {/* Announce route changes for screen readers */}
+  <RouteAnnouncer />
 
   <TimeBasedThemeWrapper>
       <ScrollToTop />
@@ -171,12 +187,13 @@ function App() {
       {/* Navbar */}
       {!isAdminPage && <Navbar />}
 
-      {/* Page Content Wrapper */}
-      <main
+  {/* Page Content Wrapper (inside filter scope) */}
+  <div className="a11y-filter-scope">
+  <main
         id="main-content"
         role="main"
         className={`min-h-screen ${
-          isAdminPage ? '' : 'pt-16 px-2 sm:px-4 md:px-8 lg:px-12 max-w-screen-2xl mx-auto'
+          isAdminPage ? '' : 'pt-24 sm:pt-24 px-2 sm:px-4 md:px-8 lg:px-12 max-w-screen-2xl mx-auto'
         }`}
       >
   {!isAdminPage && <Breadcrumbs />}
@@ -271,7 +288,6 @@ function App() {
               <Route path="popups" element={<PopupSubmissions />} />
               <Route path="contacts" element={<ContactSubmissions />} />
               <Route path="home-contacts" element={<HomeContactSubmissions />} />
-              <Route path="consents" element={<ConsentSubmissions />} />
               <Route path="complaints" element={<ComplaintManager />} />
               <Route path="complaint-box" element={<ComplaintBox />} />
               <Route path="reports" element={<ReportManager />} />
@@ -292,10 +308,11 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
-      </main>
+  </main>
+  </div>
 
-      {/* Global Accessibility menu on all pages */}
-      <AccessibilityMenu />
+  {/* Global Accessibility menu on public pages only (hide on admin) */}
+  {!isAdminPage && <AccessibilityMenu />}
 
       {/* Footer & Floating Buttons (hide on admin) */}
       {!isAdminPage && (

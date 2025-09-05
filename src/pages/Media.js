@@ -1,8 +1,33 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import YouTubeEmbed from '../components/YouTubeEmbed';
+import AccessibleMedia from '../components/AccessibleMedia';
+
+// Minimal YouTube ID extractor (keeps iframe hidden until valid)
+function extractYouTubeId(input = '') {
+  if (!input) return '';
+  // If only an ID is passed
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+  try {
+    const url = new URL(input);
+    const v = url.searchParams.get('v');
+    if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
+    const shortId = url.hostname.includes('youtu.be') ? url.pathname.slice(1) : '';
+    if (shortId && /^[a-zA-Z0-9_-]{11}$/.test(shortId)) return shortId;
+    const parts = url.pathname.split('/');
+    const embedIndex = parts.indexOf('embed');
+    if (embedIndex !== -1 && parts[embedIndex + 1] && /^[a-zA-Z0-9_-]{11}$/.test(parts[embedIndex + 1])) {
+      return parts[embedIndex + 1];
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return '';
+}
 
 export default function Media() {
   const [ytUrl, setYtUrl] = useState('https://www.youtube.com/watch?v=ERN3abYzriw');
+  const ytId = useMemo(() => extractYouTubeId(ytUrl), [ytUrl]);
+  const isValidYt = ytUrl ? Boolean(ytId) : true; // empty allowed, else must be valid
   return (
     <section className="space-y-6">
       <header className="space-y-2">
@@ -27,12 +52,38 @@ export default function Media() {
             placeholder="https://www.youtube.com/watch?v=..."
             value={ytUrl}
             onChange={(e) => setYtUrl(e.target.value)}
-            aria-describedby="yt-help"
+            aria-describedby={isValidYt ? 'yt-help' : 'yt-help yt-error'}
+            aria-invalid={!isValidYt}
             inputMode="url"
+            required
           />
         </div>
-        <YouTubeEmbed url={ytUrl} title="Education: Topic Introduction" />
+        {!isValidYt && ytUrl ? (
+          <p id="yt-error" role="alert" aria-live="polite" className="text-sm text-red-300">
+            Please enter a valid YouTube URL.
+          </p>
+        ) : null}
+        {isValidYt && ytUrl ? (
+          <YouTubeEmbed url={ytUrl} title="Education: Topic Introduction" />
+        ) : null}
       </section>
+
+      {/* Demonstration of accessible media wrapper with placeholders for captions/transcript/ISL */}
+      <AccessibleMedia
+        type="video"
+        title="Sample training clip (placeholder)"
+        description="Demo component showing where captions, transcript and ISL interpretation would appear."
+        poster={undefined}
+        downloads={[
+          { label: 'MP4 720p', href: '#', size: '50 MB' },
+          { label: 'MP3 128 kbps', href: '#', size: '10 MB' },
+        ]}
+        chapters={[
+          { time: '00:00', label: 'Intro' },
+          { time: '01:30', label: 'Key concept' },
+          { time: '03:45', label: 'Summary' },
+        ]}
+      />
 
       <section className="rounded-xl border border-white/10 bg-white/5 p-4 md:p-5 space-y-2">
         <h2 className="text-lg font-semibold">Accessibility guidelines</h2>

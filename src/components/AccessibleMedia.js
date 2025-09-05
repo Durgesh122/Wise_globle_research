@@ -1,15 +1,4 @@
 import React from 'react';
-
-// Accessible media placeholder for future Video/Audio with Captions, Transcript and ISL
-// Contract:
-// - type: 'video' | 'audio'
-// - title: string (visible caption)
-// - description?: string (short context)
-// - src?: string (media URL when available)
-// - captionsSrc?: string (WebVTT captions file when available)
-// - transcript?: React.ReactNode (transcript content)
-// - islSrc?: string (separate ISL interpretation video URL)
-// - poster?: string (video poster image)
 export default function AccessibleMedia({
   type = 'video',
   title = 'Media placeholder',
@@ -19,9 +8,14 @@ export default function AccessibleMedia({
   transcript,
   islSrc,
   poster,
+  downloads = [], // [{label, href, size?}]
+  chapters = [], // [{time, label}]
 }) {
   return (
     <section aria-labelledby="media-title" className="rounded-xl border border-white/10 bg-white/5 p-4 md:p-5">
+      <a href="#media-after" className="sr-only focus:not-sr-only focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400">
+        Skip transcript and ISL
+      </a>
       <h3 id="media-title" className="text-lg font-semibold mb-1">{title}</h3>
       {description && (
         <p className="text-sm text-white/80 mb-3">{description}</p>
@@ -68,6 +62,30 @@ export default function AccessibleMedia({
             </div>
           </details>
 
+          {chapters?.length > 0 && (
+            <div className="rounded-md bg-white/10 p-3">
+              <h4 className="font-medium mb-2">Chapters</h4>
+              <ol className="list-decimal ml-5 text-sm space-y-1">
+                {chapters.map((c, i) => (
+                  <li key={i}>
+                    <button
+                      type="button"
+                      className="underline underline-offset-2 hover:no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+                      aria-label={`Jump to ${c.label} at ${c.time}`}
+                      // Placeholder: hook up with real player when available
+                      onClick={() => {
+                        // no-op placeholder
+                      }}
+                    >
+                      <span className="tabular-nums mr-2">{c.time}</span>
+                      <span>{c.label}</span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
           <div className="rounded-md bg-white/10 p-3">
             <div className="flex items-center justify-between mb-2">
               <h4 className="font-medium">ISL Interpretation (placeholder)</h4>
@@ -84,8 +102,28 @@ export default function AccessibleMedia({
               </p>
             )}
           </div>
+
+          {downloads?.length > 0 && (
+            <div className="rounded-md bg-white/10 p-3">
+              <h4 className="font-medium mb-2">Download</h4>
+              <ul className="list-disc ml-5 text-sm space-y-1">
+                {downloads.map((d, i) => (
+                  <li key={i}>
+                    <a
+                      className="underline underline-offset-2 hover:no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+                      href={d.href}
+                      download
+                    >
+                      {d.label}{d.size ? ` — ${d.size}` : ''}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
+      <div id="media-after" />
     </section>
   );
 }

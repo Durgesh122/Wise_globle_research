@@ -1,37 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
-// Images for each insight (scroll-framed)
-import slide1 from '../assets/images/slide1.png';
-import slide2 from '../assets/images/slide2.png';
-import slide4 from '../assets/images/slide4.png';
-import slide5 from '../assets/images/slide5.png';
 
 // Heading and richer insights content
 const heading = 'Market Insights — Today';
 
 const insights = [
-  {
-    title: 'Market Sentiment',
-    desc: 'Measure bullish vs bearish flows, positioning and short-term risk appetite across major markets.',
-    img: slide1,
-  },
-  {
-    title: 'Top Movers',
-    desc: 'Daily leaders and laggards with on-chain and volume context to spot momentum trades.',
-    img: slide2,
-  },
-  {
-    title: 'Sector Watch',
-    desc: 'Sector rotation insights and which industries are leading the market this session.',
-    img: slide4,
-  },
-  {
-    title: 'Macro Trends',
-    desc: 'Key macro indicators and events shaping risk — rates, inflation, and central bank cues.',
-    img: slide5,
-  },
+  { title: 'Market Sentiment', desc: 'Measure bullish vs bearish flows, positioning and short-term risk appetite across major markets.', name: 'slide1' },
+  { title: 'Top Movers', desc: 'Daily leaders and laggards with on-chain and volume context to spot momentum trades.', name: 'slide2' },
+  { title: 'Sector Watch', desc: 'Sector rotation insights and which industries are leading the market this session.', name: 'slide4' },
+  { title: 'Macro Trends', desc: 'Key macro indicators and events shaping risk — rates, inflation, and central bank cues.', name: 'slide5' },
 ];
+
+const widths = [400, 800, 1200];
+const buildSrcSet = (name, ext) => widths.map((w) => `/assets/images/${name}-${w}.${ext} ${w}w`).join(', ');
 
 const MarketInsights = () => {
   return (
@@ -65,7 +47,11 @@ const MarketInsights = () => {
                     animate={{ scale: [0.98, 1, 0.98] }}
                     transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                   >
-                    <img src={insight.img} alt={insight.title} className="w-full h-full object-cover" />
+                    <picture>
+                      <source type="image/avif" srcSet={buildSrcSet(insight.name, 'avif')} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" />
+                      <source type="image/webp" srcSet={buildSrcSet(insight.name, 'webp')} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" />
+                      <img src={`/assets/images/${insight.name}.png`} alt={insight.title} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                    </picture>
                     {/* Scroll rolls */}
                     <span className="absolute -top-2 left-6 w-12 h-4 bg-[#e9dcc5] border border-amber-200/70 rounded-full shadow-sm" />
                     <span className="absolute -bottom-2 right-6 w-12 h-4 bg-[#e9dcc5] border border-amber-200/70 rounded-full shadow-sm" />

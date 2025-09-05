@@ -16,6 +16,22 @@ const particleVariants = {
   }),
 };
 
+// A curated set of premium gradients for the popup background.
+// One is chosen at random on each page load for a fresh look.
+const POPUP_GRADIENTS = [
+  // Light, airy pastels
+  'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)',
+  'linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%)',
+  'linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%)',
+  'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+  'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)',
+  'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)',
+  'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)',
+];
+
+// Inject keyframes once for animated gradient shift
+let __popupKeyframesInjected = false;
+
 const PopupForm = ({ onClose }) => {
   // Interest options (replaces previous experienceLevels)
   const interestOptions = [
@@ -37,6 +53,7 @@ const PopupForm = ({ onClose }) => {
   const [successMessage, setSuccessMessage] = useState('');
   const [touched, setTouched] = useState({});
   const [isLogoHovered, setIsLogoHovered] = useState(false);
+  const [bgGradient, setBgGradient] = useState(POPUP_GRADIENTS[0]);
 
   // Real-time validation
   useEffect(() => {
@@ -50,6 +67,27 @@ const PopupForm = ({ onClose }) => {
     }
     setErrors(errs);
   }, [form, touched]);
+
+  // Choose a random background gradient per refresh and inject keyframes once
+  useEffect(() => {
+    const next = POPUP_GRADIENTS[Math.floor(Math.random() * POPUP_GRADIENTS.length)];
+    setBgGradient(next);
+    const styleId = 'popup-anim-keyframes';
+    const existing = document.getElementById(styleId);
+    const css = `
+      @keyframes halo-drift { 0% { transform: translate(0, 0) } 100% { transform: translate(15%, 15%) } }
+      @keyframes glow-pulse { 0%,100% { opacity: 0.10 } 50% { opacity: 0.18 } }
+    `;
+    if (existing) {
+      existing.innerHTML = css;
+    } else if (!__popupKeyframesInjected) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.innerHTML = css;
+      document.head.appendChild(style);
+      __popupKeyframesInjected = true;
+    }
+  }, []);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -150,9 +188,14 @@ const PopupForm = ({ onClose }) => {
       style={{ background: 'transparent' }}
     >
       <motion.div
-        className="relative backdrop-blur-xl rounded-2xl p-4 sm:p-8 w-full max-w-full sm:max-w-xl md:max-w-3xl lg:max-w-2xl shadow-2xl overflow-auto max-h-[90vh] mx-4 sm:mx-0"
+        className="relative backdrop-blur-xl rounded-2xl p-4 sm:p-6 md:p-8 w-full shadow-2xl overflow-auto mx-4 sm:mx-0"
         style={{
-          backgroundImage: 'linear-gradient(135deg, #00000044 0%, #b3ffe6 100%)'
+          backgroundImage: bgGradient,
+          border: '1px solid rgba(255,255,255,0.35)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.5)',
+          width: 'min(92vw, 720px)',
+          minWidth: 'min(92vw, 320px)',
+          maxHeight: '85vh'
         }}
         onClick={(e) => e.stopPropagation()}
         initial={{ scale: 0.8, opacity: 0, y: 50 }}
@@ -160,13 +203,29 @@ const PopupForm = ({ onClose }) => {
         exit={{ scale: 0.8, opacity: 0, y: 50 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
+        {/* Subtle moving halo glow */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: '-20%',
+            left: '-20%',
+            width: '140%',
+            height: '140%',
+            pointerEvents: 'none',
+            background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.25) 20%, transparent 60%)',
+            mixBlendMode: 'soft-light',
+            animation: 'halo-drift 16s ease-in-out infinite alternate, glow-pulse 7s ease-in-out infinite'
+          }}
+        />
         {/* Header with Company Name */}
-  <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">Wise Global Research Services</h2>
-  <h3 className="text-lg font-semibold text-blue-700 text-center mb-6">Unlock Market Insights & Data-Driven Decisions</h3>
+  <h2 className="font-bold text-gray-900 text-center mb-4" style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.5rem)' }}>Wise Global Research Services</h2>
+  <h3 className="font-semibold text-blue-700 text-center mb-6" style={{ fontSize: 'clamp(1rem, 2vw, 1.125rem)' }}>Unlock Market Insights & Data-Driven Decisions</h3>
 
         {/* Logo with Particle Animation */}
         <div
-          className="relative mx-auto mb-6 h-24 w-24"
+          className="relative mx-auto mb-6"
+          style={{ height: 'clamp(64px, 12vw, 96px)', width: 'clamp(64px, 12vw, 96px)' }}
           onMouseEnter={() => setIsLogoHovered(true)}
           onMouseLeave={() => setIsLogoHovered(false)}
         >

@@ -175,6 +175,9 @@ export default function Search() {
     return scored;
   }, [terms, filteredByCategory]);
 
+  // When there is no query, allow browsing by category (or all)
+  const browseItems = useMemo(() => filteredByCategory, [filteredByCategory]);
+
   const suggestions = useMemo(() => {
     if (terms.length === 0 || results.length > 0) return [];
     const joined = debouncedQ.trim().toLowerCase();
@@ -368,9 +371,23 @@ export default function Search() {
           )}
 
           {!debouncedQ.trim() && (
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-semibold text-white/80">Start typing to search</h2>
-              <p className="text-white/60 mt-2">Results will appear here as you type.</p>
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-xl font-semibold text-white/80">Browse {category === 'All' ? 'All' : category} pages</h2>
+                <div className="text-white/60 text-sm">Showing {browseItems.length}</div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {browseItems.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className="px-3 py-2 rounded-lg bg-white/20 hover:bg-white/30 border border-white/30 text-white transition"
+                    aria-label={`${item.label} (${item.category})`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
 

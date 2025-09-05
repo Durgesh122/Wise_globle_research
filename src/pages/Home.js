@@ -73,7 +73,7 @@ const Home = () => {
         <HeroSection />
         <WhyChooseUs />
         <MarketOverview />
-        <EconomicCalendar embedUrl="https://widget.myfxbook.com/widget/calendar.html" />
+  <EconomicCalendar embedUrl="https://widget.myfxbook.com/widget/calendar.html" />
   {/* <ServicesSection /> */}
         <MarketInsights />
         <MethodologySection />

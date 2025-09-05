@@ -1,10 +1,65 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, startTransition } from 'react';
+import { FiHome, FiGrid, FiUsers, FiBarChart2, FiCreditCard, FiAlertCircle, FiPhone, FiFileText, FiChevronRight } from 'react-icons/fi';
 // useTranslation removed from this file to rely on translateWithFallback helper
 import { Link, useLocation } from 'react-router-dom';
 // Removed react-icons usage per requirement to have no icons in the navbar
 import wiseLogo from '../assets/images/wise3.png';
 import './Navbar.css';
 import { ThemeContext } from '../context/ThemeContext';
+
+// Contact info for top header bar (update with real company details)
+const CONTACT = {
+  email: 'support@wiseglobalresearch.com',
+  phone: '+91-9977909494',
+  socials: {
+    facebook: 'https://facebook.com/wiseglobal',
+    twitter: 'https://x.com/wiseglobal',
+    instagram: 'https://instagram.com/wiseglobal',
+    linkedin: 'https://linkedin.com/company/wiseglobal',
+    youtube: 'https://youtube.com/@wiseglobal',
+  },
+};
+
+// Lightweight inline social icons (no extra deps)
+function SocialIcon({ type, className = 'w-6 h-6' }) {
+  const common = { width: 10, height: 10, viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true };
+  switch (type) {
+    case 'facebook':
+      return (
+        <svg {...common} className={className} role="img" aria-label="Facebook icon">
+          <path d="M22 12.06C22 6.49 17.52 2 11.94 2S2 6.49 2 12.06c0 5.02 3.66 9.18 8.44 9.98v-7.06H7.9v-2.92h2.54V9.41c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.19 2.23.19v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.92h-2.34v7.06C18.34 21.24 22 17.08 22 12.06z" />
+        </svg>
+      );
+    case 'twitter':
+      return (
+        <svg {...common} className={className} role="img" aria-label="X (Twitter) icon">
+          <path d="M18.244 2H21l-6.5 7.432L22 22h-6.875l-4.8-6.223L4.83 22H2l7.033-8.04L2 2h6.953l4.36 5.73L18.244 2zm-1.203 18h1.884L7.04 4H5.044l11.997 16z"/>
+        </svg>
+      );
+    case 'instagram':
+      return (
+        <svg {...common} className={className} role="img" aria-label="Instagram icon">
+          <path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm0 2a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H7zm5 3.5A5.5 5.5 0 1112 18.5 5.5 5.5 0 0112 7.5zm0 2A3.5 3.5 0 1015.5 13 3.5 3.5 0 0012 9.5zM18 6.2a1.2 1.2 0 11-1.2-1.2A1.2 1.2 0 0118 6.2z"/>
+        </svg>
+      );
+    case 'linkedin':
+      return (
+        <svg {...common} className={className} role="img" aria-label="LinkedIn icon">
+          <path d="M6.94 21.5H3.56V9.25H6.94V21.5zM5.25 7.79A1.85 1.85 0 115.24 4.1a1.85 1.85 0 01.01 3.69zM21.5 21.5h-3.37v-6.3c0-1.5-.53-2.52-1.85-2.52-1.01 0-1.62.68-1.89 1.34-.1.25-.13.6-.13.95v6.53h-3.37s.04-10.6 0-11.7h3.37v1.66c.45-.69 1.25-1.67 3.05-1.67 2.22 0 3.89 1.45 3.89 4.58v7.13z"/>
+        </svg>
+      );
+    case 'youtube':
+      return (
+        <svg {...common} className={className} role="img" aria-label="YouTube icon">
+          <path d="M23.5 7.5s-.23-1.64-.94-2.36c-.9-.95-1.9-.95-2.36-1C16.97 3.75 12 3.75 12 3.75h-.01s-4.97 0-8.2.39c-.46.05-1.46.05-2.36 1C.73 5.86.5 7.5.5 7.5S.25 9.4.25 11.3v1.4c0 1.9.25 3.8.25 3.8s.23 1.64.94 2.36c.9.95 2.08.92 2.61 1.02 1.9.18 8 .38 8 .38s4.97 0 8.2-.39c.46-.05 1.46-.05 2.36-1 .71-.72.94-2.36.94-2.36s.25-1.9.25-3.8v-1.4c0-1.9-.25-3.8-.25-3.8zM9.75 14.62V7.99l6.25 3.31-6.25 3.32z"/>
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
+// Removed older TopContactBar variant and inline icon components; using a single theme-aware TopContactBar below.
 
 // Fallback helpers: when i18n is not loaded or a key isn't translated,
 // produce a readable label from the key (e.g. 'navbar.home' -> 'Home').
@@ -28,7 +83,7 @@ function translate(tFunc, key) {
       const translated = tFunc(key);
       // If translation is missing react-i18next often returns the key itself.
       if (translated && translated !== key && !/\S+\.\S+/.test(translated)) {
-        return translated;
+  return translated;
       }
     }
   } catch (e) {
@@ -341,6 +396,57 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
   );
 });
 
+function TopContactBar() {
+  const { theme, gradients } = useContext(ThemeContext);
+  const { background, textColor } = gradients?.[theme] || gradients.default;
+  // Ensure icons aren't visually clipped by aligning to middle and nudging slightly down
+  const iconStyle = { display: 'block', verticalAlign: 'middle', position: 'relative', top: 0, marginRight: 6, overflow: 'visible' };
+
+  return (
+    <div style={{ backgroundImage: background, color: textColor }} className="text-[11px] sm:text-xs">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-1.5 flex items-center justify-between gap-2">
+        <div className="flex items-center flex-wrap gap-x-3 gap-y-1" style={{ minHeight: 24, lineHeight: 1 }}>
+          <a
+            href={`mailto:${CONTACT.email}`}
+            className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded px-1 inline-flex items-center gap-2 h-6"
+            aria-label={`Email: ${CONTACT.email}`}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" role="img" aria-label="Email" style={iconStyle} className="w-6 h-6">
+              <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 3.2l-8 5-8-5V6h16v1.2zM4 18V9.6l7.4 4.63a1 1 0 001.2 0L20 9.6V18H4z" />
+            </svg>
+            {CONTACT.email}
+          </a>
+          <span className="hidden sm:inline opacity-60 mx-2" aria-hidden>│</span>
+          <a
+            href={`tel:${CONTACT.phone}`}
+            className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded px-1 inline-flex items-center gap-2 h-6"
+            aria-label={`Call: ${CONTACT.phone}`}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" role="img" aria-label="Phone" style={iconStyle} className="w-6 h-6">
+              <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.05-.24c1.12.37 2.33.57 3.54.57.55 0 1 .45 1 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.21.2 2.42.57 3.54a1 1 0 01-.24 1.05l-2.2 2.2z" />
+            </svg>
+            {CONTACT.phone}
+          </a>
+        </div>
+        <div className="flex items-center gap-3">
+          {Object.entries(CONTACT.socials).map(([key, url]) => (
+            <a
+              key={key}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Open ${key} profile`}
+              className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded p-0.5"
+              style={{ color: textColor }}
+            >
+              <SocialIcon type={key} />
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [servicesMobileOpen, setServicesMobileOpen] = useState(false);
@@ -372,15 +478,61 @@ function Navbar() {
     }
   };
   const baseSurfaceColor = getBaseSurface(textColor);
+  const hoverTint = (() => {
+    try {
+      let hex = (textColor || '').trim().replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const r = parseInt(hex.slice(0,2), 16), g = parseInt(hex.slice(2,4), 16), b = parseInt(hex.slice(4,6), 16);
+      const luminance = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
+      // If text is dark => light background; use subtle dark hover, else use subtle light hover
+      return luminance < 0.5 ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.08)';
+    } catch {
+      return 'rgba(255,255,255,0.08)';
+    }
+  })();
+
+  // Semi-transparent surface based on theme text color luminance
+  const getTranslucentSurface = (tc, alpha = 0.5) => {
+    try {
+      let hex = (tc || '').trim().replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const r = parseInt(hex.slice(0,2), 16), g = parseInt(hex.slice(2,4), 16), b = parseInt(hex.slice(4,6), 16);
+      const luminance = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
+      // If text is dark => use light translucent surface; else use dark translucent surface
+      return luminance < 0.5 ? `rgba(255,255,255,${alpha})` : `rgba(10,15,20,${alpha})`;
+    } catch {
+      return `rgba(10,15,20,${alpha})`;
+    }
+  };
+
+  // Colorful icon palette for mobile drawer
+  const iconColors = {
+    home: '#3b82f6', // blue-500
+    services: '#22c55e', // green-500
+    company: '#8b5cf6', // violet-500
+    hrZone: '#06b6d4', // cyan-500
+    insights: '#f59e0b', // amber-500
+    accessibility: '#10b981', // emerald-500
+    dashboard: '#6366f1', // indigo-500
+    more: '#64748b', // slate-500
+    payment: '#22c55e',
+    complaint: '#ef4444', // red-500
+    contact: '#06b6d4',
+    reports: '#f59e0b',
+  };
 
   const closeDrawer = () => {
-    setDrawerOpen(false);
-    setServicesMobileOpen(false);
-    setMobileDropdownsOpen({});
+    startTransition(() => {
+      setDrawerOpen(false);
+      setServicesMobileOpen(false);
+      setMobileDropdownsOpen({});
+    });
   };
 
   const toggleMobileDropdown = (key) => {
-    setMobileDropdownsOpen(prev => ({ ...prev, [key]: !prev[key] }));
+    startTransition(() => {
+      setMobileDropdownsOpen(prev => ({ ...prev, [key]: !prev[key] }));
+    });
   };
 
   useEffect(() => {
@@ -488,30 +640,38 @@ function Navbar() {
   top: 'var(--nav-offset, 0px)',
   right: 0,
   height: 'calc(100vh - var(--nav-offset, 0px))',
-    width: '100%',
-    maxWidth: '100%',
-    minWidth: '100%',
-  // Make mobile drawer opaque so page text doesn't show through
-  background: baseSurfaceColor,
-    backdropFilter: 'blur(12px)',
+    width: 'max(50vw, 300px)',
+    maxWidth: '80vw',
+  // Theme-aware, semi-transparent background: show current theme gradient with a translucent surface overlay
+    backgroundImage: background,
+    backgroundColor: getTranslucentSurface(textColor, 0.5),
+    backgroundBlendMode: 'overlay',
+    // Avoid applying expensive blur during the initial open; apply only when open
+    backdropFilter: drawerOpen ? 'blur(8px)' : 'none',
+    WebkitBackdropFilter: drawerOpen ? 'blur(8px)' : 'none',
     color: 'var(--text-color)',
+    border: '1px solid rgba(0,0,0,0.06)',
     boxShadow: '0 0 15px rgba(0,0,0,0.2)',
     zIndex: 9999,
     transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
     transition: 'transform 0.3s ease-in-out',
     overflowY: 'auto',
-    display: 'block'
+    display: 'block',
+    willChange: 'transform',
+    contain: 'content'
   };
 
   return (
     <>
-      <nav
+    <nav
         role="navigation"
         ref={navRef}
   // Use gradient + an opaque base color to block underlying content
-  style={{ background, backgroundColor: baseSurfaceColor, color: textColor }}
+  style={{ backgroundImage: background, backgroundColor: baseSurfaceColor, color: textColor }}
         className="fixed w-full z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-b-xl"
       >
+  {/* Top contact/info bar */}
+  <TopContactBar />
         <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 flex justify-between items-center">
           <Link to="/" className="flex items-center rotate-logo">
             <div className="rounded-full p-1 border-2 border-[var(--primary-green)] bg-white">
@@ -519,9 +679,9 @@ function Navbar() {
                 src={wiseLogo}
                 alt="Wise Logo"
                 className="h-10 sm:h-12 md:h-14 w-auto rounded-full logo-hover"
-                loading="eager"
-                decoding="sync"
-                fetchpriority="high"
+                loading="auto"
+                decoding="async"
+                fetchpriority="low"
                 width="56"
                 height="56"
               />
@@ -615,7 +775,7 @@ function Navbar() {
           {/* Mobile Hamburger */}
             <button
               className="lg:hidden z-[10000] drawer-toggle"
-              onClick={() => setDrawerOpen(!drawerOpen)}
+              onClick={() => startTransition(() => setDrawerOpen(prev => !prev))}
               aria-label="Toggle mobile menu"
               aria-expanded={drawerOpen}
               aria-controls="mobile-menu"
@@ -633,17 +793,35 @@ function Navbar() {
         </div>
       </nav>
 
+      {/* Mobile overlay to close on outside click */}
+      {drawerOpen && (
+        <div
+          onClick={closeDrawer}
+          aria-hidden
+          style={{
+            position: 'fixed',
+            top: 'var(--nav-offset, 0px)',
+            left: 0,
+            width: '100vw',
+            height: 'calc(100vh - var(--nav-offset, 0px))',
+            background: 'rgba(0,0,0,0.4)',
+            zIndex: 9998,
+            opacity: drawerOpen ? 1 : 0,
+            transition: 'opacity 0.25s ease'
+          }}
+        />
+      )}
+
       {/* Mobile Menu with Inline Styles */}
-  <div style={mobileDrawerStyles} ref={drawerRef} className={`mobile-menu ${drawerOpen ? 'open' : ''}`} id="mobile-menu" role="dialog" aria-modal="true">
+  <div style={mobileDrawerStyles} ref={drawerRef} className={`mobile-menu ${drawerOpen ? 'open' : ''}`} id="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title">
         <div className={`mobile-menu-items mobile-stagger`} style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <Link
-            to="/"
-            className="nav-item font-semibold py-1"
-            onClick={closeDrawer}
-    tabIndex={0}
-          >
-            {translateWithFallback(null, 'navbar.home')}
+          <h2 id="mobile-menu-title" className="sr-only">Main menu</h2>
+          {/* Primary links with icons */}
+          <Link to="/" className="nav-item font-semibold py-1" onClick={closeDrawer} tabIndex={0} style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '10px 12px', background: 'transparent', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <FiHome size={18} style={{ flexShrink: 0, color: iconColors.home }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, 'navbar.home')}</span>
           </Link>
+
+          <hr style={{ border: 'none', height: 1, background: 'rgba(128,128,128,0.2)', margin: '10px 0' }} />
 
           <MegaMenu 
             labelKey="navbar.services.title" 
@@ -661,8 +839,16 @@ function Navbar() {
                 className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
                 onClick={() => toggleMobileDropdown(key)}
               >
-                {translateWithFallback(null, dropdown.labelKey)}
-                <span className={`ml-2 transition-transform duration-200 ${mobileDropdownsOpen[key] ? 'rotate-90' : ''}`}>▶</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {key === 'company' && <FiUsers size={18} style={{ color: iconColors.company }} />}
+                  {key === 'hrZone' && <FiUsers size={18} style={{ color: iconColors.hrZone }} />}
+                  {key === 'insights' && <FiBarChart2 size={18} style={{ color: iconColors.insights }} />}
+                  {key === 'accessibility' && <FiAlertCircle size={18} style={{ color: iconColors.accessibility }} />}
+                  {key === 'dashboard' && <FiGrid size={18} style={{ color: iconColors.dashboard }} />}
+                  {key === 'more' && <FiFileText size={18} style={{ color: iconColors.more }} />}
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, dropdown.labelKey)}</span>
+                </span>
+                <FiChevronRight size={18} className={`ml-2 transition-transform duration-200 ${mobileDropdownsOpen[key] ? 'rotate-90' : ''}`} />
               </button>
               <div className={`overflow-hidden transition-all duration-300 ${mobileDropdownsOpen[key] ? 'max-h-96' : 'max-h-0'}`}>
                 {dropdown.items.map((item) => (
@@ -672,8 +858,11 @@ function Navbar() {
                         className="nav-item block py-1 pl-2"
                         onClick={closeDrawer}
                         tabIndex={drawerOpen ? 0 : -1}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 8, padding: '8px 10px', margin: '2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                       >
-      {translateWithFallback(null, item.labelKey)}
+      <FiChevronRight size={16} style={{ opacity: 0.6, flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, item.labelKey)}</span>
                       </Link>
                     ))}
               </div>
@@ -686,8 +875,15 @@ function Navbar() {
               to={link.path}
               className={`nav-item block py-1${location.pathname===link.path ? ' active' : ''}`}
               onClick={closeDrawer}
+              style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '10px 12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
-  {translateWithFallback(null, link.labelKey)}
+              {link.path === '/payment' && <FiCreditCard size={18} style={{ color: iconColors.payment, flexShrink: 0 }} />}
+              {link.path === '/complaint' && <FiAlertCircle size={18} style={{ color: iconColors.complaint, flexShrink: 0 }} />}
+              {link.path === '/contact' && <FiPhone size={18} style={{ color: iconColors.contact, flexShrink: 0 }} />}
+              {link.path === '/research-reports' && <FiFileText size={18} style={{ color: iconColors.reports, flexShrink: 0 }} />}
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, link.labelKey)}</span>
             </Link>
           ))}
 

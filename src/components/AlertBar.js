@@ -27,8 +27,34 @@ const AlertBar = () => {
     ? { duration: 30, repeat: Infinity, ease: 'linear' }
     : { duration: 0 };
 
+  // Dynamically offset below fixed navbar (and any Google Translate banner)
+  const [navHeight, setNavHeight] = React.useState(0);
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const measure = () => {
+      const nav = document.querySelector('nav[role="navigation"]');
+      const h = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
+      setNavHeight(h);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    let ro;
+    const navEl = document.querySelector('nav[role="navigation"]');
+    if (navEl && 'ResizeObserver' in window) {
+      ro = new ResizeObserver(() => measure());
+      ro.observe(navEl);
+    }
+    return () => {
+      window.removeEventListener('resize', measure);
+      if (ro) ro.disconnect();
+    };
+  }, []);
+
   return (
-    <div className="bg-white/30 backdrop-blur-sm text-white py-2 mt-5">
+    <div
+      className="bg-white/30 backdrop-blur-sm text-white py-2"
+      style={{ position: 'sticky', top: `calc(var(--nav-offset, 0px) + ${navHeight}px)`, zIndex: 49 }}
+    >
       <div className="container mx-auto px-4">
         <div className="relative overflow-hidden" role="status" aria-live="polite">
           {/* Scrolling track */}

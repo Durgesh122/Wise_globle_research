@@ -97,7 +97,7 @@
 }
 
 .hero-title-gradient {
-  background: linear-gradient(to right, #2563eb, #ca8a04);
+  background: var(--primary-gradient, var(--bg-gradient));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -113,7 +113,7 @@
 
 .hero-button {
   padding: 0.75rem 2rem;
-  background: linear-gradient(to right, #2563eb, #ca8a04);
+  background: var(--primary-gradient, var(--bg-gradient));
   color: white;
   border-radius: 0.5rem;
   font-size: 1.125rem;
@@ -262,7 +262,7 @@
 .plan-button {
   width: 100%;
   padding: 0.75rem;
-  background: linear-gradient(to right, #2563eb, #ca8a04);
+  background: var(--primary-gradient, var(--bg-gradient));
   color: white;
   border-radius: 0.5rem;
   font-weight: 700;
@@ -279,7 +279,7 @@
 
 .cta-button {
   padding: 0.75rem 2rem;
-  background: linear-gradient(to right, #2563eb, #ca8a04);
+  background: var(--primary-gradient, var(--bg-gradient));
   color: white;
   border-radius: 0.5rem;
   font-size: 1.125rem;
@@ -296,7 +296,7 @@
   left: 50%;
   width: 4px;
   height: 100%;
-  background: linear-gradient(to bottom, #2563eb, #ca8a04);
+  background: var(--primary-gradient, var(--bg-gradient));
   transform: translateX(-50%);
 }
 

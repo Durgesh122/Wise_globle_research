@@ -1,15 +1,17 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState, useContext } from 'react';
 import { Trans } from '../../i18nShim';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { FaTachometerAlt, FaEnvelope, FaFileContract, FaExclamationCircle, FaChartBar, FaSignOutAlt, FaBullhorn, FaComments, FaHome } from 'react-icons/fa';
+import { FaTachometerAlt, FaEnvelope, FaExclamationCircle, FaChartBar, FaSignOutAlt, FaBullhorn, FaComments, FaHome } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
 import { useAdmin } from '../../hooks/useAdmin';
 import AdminHeader from './AdminHeader.js';
+import { ThemeContext } from '../../context/ThemeContext';
 
 const AdminLayout = () => {
+  const { background, textColor } = useContext(ThemeContext);
   const navigate = useNavigate();
   const location = useLocation();
   const { isAdmin, isSupport, isHrOnly, checking } = useAdmin();
@@ -83,7 +85,6 @@ const AdminLayout = () => {
     { path: '/admin/home-contacts', label: 'Home Page Contacts', icon: <FaEnvelope /> },
     { path: '/admin/popups', label: 'Popup Submissions', icon: <FaBullhorn /> },
     { path: '/admin/complaint-box', label: 'Complaint Box Submission', icon: <FaExclamationCircle /> },
-    { path: '/admin/consents', label: 'Consent Submissions', icon: <FaFileContract /> },
     { path: '/admin/complaints', label: 'Complaint Manager', icon: <FaExclamationCircle /> },
     { path: '/admin/reports', label: 'Report Manager', icon: <FaChartBar /> },
     { path: '/admin/chatbot-data', label: 'Chatbot Data', icon: <FaComments /> },
@@ -150,7 +151,10 @@ const AdminLayout = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-gray-900 text-white font-sans">
+    <div
+      className="flex min-h-screen font-sans"
+      style={{ background: background, color: textColor, transition: 'background 0.5s ease-in-out, color 0.5s ease-in-out' }}
+    >
       {/* Mobile Sidebar */}
       <AnimatePresence>
         {isSidebarOpen && (

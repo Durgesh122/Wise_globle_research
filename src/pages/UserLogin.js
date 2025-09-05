@@ -10,7 +10,9 @@ import {
 import { auth } from "../firebase";
 import { toast } from "react-toastify";
 import { motion, useAnimation } from "framer-motion";
-import logo from "../assets/images/w.png"; // Verify this path is correct
+const smallLogoName = 'w';
+const smallLogoSrcSetAvif = ['/assets/images/w-64.avif 64w','/assets/images/w-96.avif 96w','/assets/images/w-112.avif 112w','/assets/images/w-128.avif 128w','/assets/images/w-256.avif 256w'].join(', ');
+const smallLogoSrcSetWebp = ['/assets/images/w-64.webp 64w','/assets/images/w-96.webp 96w','/assets/images/w-112.webp 112w','/assets/images/w-128.webp 128w','/assets/images/w-256.webp 256w'].join(', ');
 
 const UserLogin = () => {
   const authDebug = (typeof window !== 'undefined') && ((new URLSearchParams(window.location.search).get('debugAuth') === '1') || localStorage.getItem('authDebug') === '1');
@@ -22,6 +24,7 @@ const UserLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const [lastAuthError, setLastAuthError] = useState(null); // debug surface
   // No MFA state needed since phone/OTP is disabled
   const logoControls = useAnimation();
   const textControls = useAnimation();
@@ -92,6 +95,17 @@ const UserLogin = () => {
     } catch (error) {
       let errorMessage = "Login failed. Please try again.";
   // MFA not required; phone/OTP is disabled now
+      // Extract server response message if available (helps when error.code is generic)
+      let serverMessage = '';
+      try {
+        const raw = error?.customData?.serverResponse;
+        if (raw) {
+          const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+          serverMessage = parsed?.error?.message || '';
+        }
+      } catch (_) {
+        // ignore JSON parse issues
+      }
       if (error.code === "auth/user-not-found") {
         errorMessage = "User not found.";
       } else if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential" || error.code === "auth/invalid-login-credentials") {
@@ -108,11 +122,18 @@ const UserLogin = () => {
         errorMessage = "Invalid Firebase API key. Check src/firebase.js configuration.";
       } else if (error.code === 'auth/network-request-failed') {
         errorMessage = "Network error. Check your connection or Content Security Policy for identitytoolkit.googleapis.com.";
+      } else if (serverMessage === 'EMAIL_NOT_FOUND') {
+        errorMessage = 'User not found.';
+      } else if (serverMessage === 'INVALID_PASSWORD' || serverMessage === 'INVALID_LOGIN_CREDENTIALS') {
+        errorMessage = 'Invalid email or password.';
+      } else if (serverMessage === 'USER_DISABLED') {
+        errorMessage = 'This user account is disabled.';
       }
       const code = error.code || 'unknown';
       errorMessage += ` (code: ${code})`;
       if (authDebug) {
-        console.error('[AuthDebug] Login error', { code: error.code, message: error.message });
+        console.error('[AuthDebug] Login error', { code: error.code, message: error.message, serverMessage });
+        setLastAuthError({ code, message: error.message, serverMessage });
       } else {
         // Minimal console for non-debug too, to aid diagnosis if needed
         console.error('[Auth] Login error', { code: error.code, message: error.message });
@@ -275,14 +296,18 @@ const UserLogin = () => {
           onHoverEnd={handleLogoHoverEnd}
           initial={{ y: -50, opacity: 0 }}
         >
-          <img
-            src={logo}
-            alt="Company Logo"
-            className="w-20 h-20 object-contain"
-            loading="eager"
-            width={80}
-            height={80}
-          />
+          <picture>
+            <source type="image/avif" srcSet={smallLogoSrcSetAvif} sizes="80px" />
+            <source type="image/webp" srcSet={smallLogoSrcSetWebp} sizes="80px" />
+            <img
+              src={`/assets/images/${smallLogoName}.png`}
+              alt="Company Logo"
+              className="w-20 h-20 object-contain"
+              loading="eager"
+              width={80}
+              height={80}
+            />
+          </picture>
         </motion.div>
 
         {/* Title */}
@@ -357,6 +382,18 @@ const UserLogin = () => {
             {isLoading ? "Signing in..." : "Sign In"}
           </motion.button>
         </form>
+
+        {/* Debug details (only when enabled via ?debugAuth=1 or localStorage.authDebug=1) */}
+        {authDebug && lastAuthError && (
+          <div className="mt-4 p-3 rounded-lg bg-black/40 text-xs text-yellow-200 break-words">
+            <div className="font-semibold mb-1">Auth Debug</div>
+            <div><span className="opacity-70">code:</span> {lastAuthError.code}</div>
+            <div className="mt-1"><span className="opacity-70">message:</span> {lastAuthError.message}</div>
+            {lastAuthError.serverMessage && (
+              <div className="mt-1"><span className="opacity-70">server:</span> {lastAuthError.serverMessage}</div>
+            )}
+          </div>
+        )}
 
         {/* Forgot Password */}
         <div className="mt-3 text-center">

@@ -22,12 +22,27 @@
 @tailwind utilities;
 
 /* ✅ Global Font + Background */
+html {
+  /* Ensure the base page background is dark so transparent body never shows white */
+  background: #0b1220; /* matches app's dark theme */
+  overflow-x: hidden;
+  overscroll-behavior-y: none; /* prevent rubber-band revealing UA background */
+}
 body {
   font-family: 'Josefin Sans', sans-serif;
-  background: transparent; /* Enables theme backgrounds */
+  /* Keep dark background at the document level */
+  background: #0b1220;
   color: white;
+  margin: 0;
   overflow-x: hidden;
+  /* Prevents odd extra vertical scrolling from off-screen transforms */
+  overflow-y: auto;
+  overscroll-behavior-y: none;
 }
+
+/* Ensure React root also paints dark background and fills screen */
+html, body, #root { min-height: 100%; }
+#root { background: #0b1220; }
 
 /* Accessible focus outline */
 :focus-visible {

@@ -1,7 +1,6 @@
 // src/components/TimeBasedThemeWrapper.js
 import React, { useContext, useEffect } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
-import back2 from '../assets/images/daniele1.png';
 
 const TimeBasedThemeWrapper = ({ children }) => {
   const { theme, gradients } = useContext(ThemeContext);
@@ -23,23 +22,7 @@ const TimeBasedThemeWrapper = ({ children }) => {
         overflow: 'hidden',
       }}
     >
-      {/* ✨ Subtle Smooth Texture Overlay - Only show on default theme */}
-      {theme === 'default' && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            backgroundImage: `url(${back2})`,
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            zIndex: 1,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
+  {/* Removed image-based overlay as requested */}
 
       {/* 🧠 Actual Content */}
       <div style={{ position: 'relative', zIndex: 2 }}>{children}</div>

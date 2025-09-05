@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ref, onValue, update, remove } from 'firebase/database';
 import { db } from '../../firebase';
 import { toast } from 'react-toastify';
@@ -9,6 +9,9 @@ const ComplaintBox = () => {
   const [loading, setLoading] = useState(true);
   const [expandedDesc, setExpandedDesc] = useState({});
   const [expandedRes, setExpandedRes] = useState({});
+  // Delete confirmation dialog state
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, complaint: null });
+  const deleteBtnRef = useRef(null);
 
   const isLong = (text) => (text?.length || 0) > 180;
   const toggleDesc = (id) =>
@@ -48,6 +51,14 @@ const ComplaintBox = () => {
   }, []);
 
   const handleStatusChange = (id, newStatus) => {
+    const lower = (newStatus || '').toLowerCase();
+    // If setting to Closed, show delete confirmation popup
+    if (lower === 'closed') {
+      const target = complaints.find((c) => c.id === id) || { id };
+      setDeleteDialog({ open: true, complaint: target });
+      return; // Defer update until user chooses action
+    }
+
     try {
       const complaintRef = ref(db, `complaints/${id}`);
       const now = Date.now();
@@ -55,7 +66,7 @@ const ComplaintBox = () => {
         status: newStatus,
         statusUpdatedAt: now,
       };
-      if ((newStatus || '').toLowerCase() === 'closed') {
+      if (lower === 'closed') {
         updatePayload.closedAt = now;
       } else {
         // If reopening, clear closedAt
@@ -67,6 +78,56 @@ const ComplaintBox = () => {
       toast.error('Failed to update status: ' + (err?.message || err));
     }
   };
+
+  // Actions for delete dialog
+  const closeDeleteDialog = () => setDeleteDialog({ open: false, complaint: null });
+  const confirmDelete = async () => {
+    const id = deleteDialog.complaint?.id;
+    if (!id) return closeDeleteDialog();
+    try {
+      await remove(ref(db, `complaints/${id}`));
+      toast.success('Complaint deleted');
+    } catch (err) {
+      toast.error('Failed to delete: ' + (err?.message || err));
+    } finally {
+      closeDeleteDialog();
+    }
+  };
+  const justCloseWithoutDelete = async () => {
+    const id = deleteDialog.complaint?.id;
+    if (!id) return closeDeleteDialog();
+    try {
+      const now = Date.now();
+      await update(ref(db, `complaints/${id}`), {
+        status: 'Closed',
+        statusUpdatedAt: now,
+        closedAt: now,
+      });
+      toast.success('Status set to Closed');
+    } catch (err) {
+      toast.error('Failed to close: ' + (err?.message || err));
+    } finally {
+      closeDeleteDialog();
+    }
+  };
+
+  // Accessibility: focus and ESC support when dialog is open
+  useEffect(() => {
+    if (deleteDialog.open) {
+      const t = setTimeout(() => deleteBtnRef.current?.focus(), 0);
+      const onKey = (e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeDeleteDialog();
+        }
+      };
+      window.addEventListener('keydown', onKey);
+      return () => {
+        clearTimeout(t);
+        window.removeEventListener('keydown', onKey);
+      };
+    }
+  }, [deleteDialog.open]);
 
   const getStatusBadgeClass = (status) => {
     switch ((status || 'New').toLowerCase()) {
@@ -95,6 +156,55 @@ const ComplaintBox = () => {
         <div className="p-6 bg-gray-800 rounded-lg shadow text-gray-300">No complaints submitted yet.</div>
       ) : (
         <>
+          {/* Delete confirmation dialog */}
+          {deleteDialog.open && (
+            <div
+              className="fixed inset-0 z-[12000] flex items-center justify-center p-4"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="delete-title"
+            >
+              <div className="absolute inset-0 bg-black/60" onClick={closeDeleteDialog} />
+              <div className="relative w-full max-w-md rounded-lg bg-gray-800 text-gray-100 shadow-xl border border-gray-700">
+                <div className="px-5 py-4 border-b border-gray-700">
+                  <h3 id="delete-title" className="text-lg font-semibold">Delete complaint?</h3>
+                </div>
+                <div className="px-5 py-4 space-y-2 text-sm">
+                  <p>
+                    {deleteDialog.complaint?.name ? (
+                      <>
+                        You are about to permanently delete the complaint from <span className="font-semibold">{deleteDialog.complaint.name}</span>.
+                      </>
+                    ) : (
+                      <>You are about to permanently delete this complaint.</>
+                    )}
+                  </p>
+                  <p className="text-gray-300">This action cannot be undone.</p>
+                </div>
+                <div className="px-5 py-4 flex flex-col sm:flex-row gap-2 sm:justify-end bg-gray-800/70 rounded-b-lg">
+                  <button
+                    ref={deleteBtnRef}
+                    onClick={confirmDelete}
+                    className="inline-flex items-center justify-center rounded-md bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 px-4 py-2 text-sm font-semibold"
+                  >
+                    Delete permanently
+                  </button>
+                  <button
+                    onClick={justCloseWithoutDelete}
+                    className="inline-flex items-center justify-center rounded-md bg-gray-600 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300 px-4 py-2 text-sm font-semibold"
+                  >
+                    Just Close
+                  </button>
+                  <button
+                    onClick={closeDeleteDialog}
+                    className="inline-flex items-center justify-center rounded-md border border-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 px-4 py-2 text-sm font-semibold"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           {/* Desktop / Tablet table */}
           <div className="hidden md:block overflow-x-auto bg-gray-800 rounded-lg shadow custom-scrollbar">
             <table className="min-w-[1000px] md:min-w-full text-sm text-left text-gray-300">
