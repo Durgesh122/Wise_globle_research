@@ -49,6 +49,7 @@ const lazyWithRetry = (importFunc, { retries = 3, interval = 500 } = {}) => {
         if (isChunkError) {
           // Last resort: reload the page to clear cached chunks
           console.error('ChunkLoadError persists; reloading the page to recover.', err);
+          // Try to reload to the same path to invalidate old chunks
           window.location.reload();
         }
         throw err;
@@ -123,7 +124,7 @@ const Media = lazy(() => import('./pages/Media'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const ContactSubmissions = lazy(() => import('./pages/admin/ContactSubmissions'));
 const ComplaintManager = lazy(() => import('./pages/admin/ComplaintManager'));
-const ReportManager = lazy(() => import('./pages/admin/ReportManager'));
+const ReportManager = lazyWithRetry(() => import('./pages/admin/ReportManager'));
 const PopupSubmissions = lazy(() => import('./pages/admin/PopupSubmissions'));
 const HomeContactSubmissions = lazy(() => import('./pages/admin/HomeContactSubmissions'));
 const ChatbotSubmissions = lazy(() => import('./pages/admin/ChatbotSubmissions')); // Added this line

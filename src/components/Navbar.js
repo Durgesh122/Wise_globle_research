@@ -12,11 +12,11 @@ const CONTACT = {
   email: 'support@wiseglobalresearch.com',
   phone: '+91-9977909494',
   socials: {
-    facebook: 'https://facebook.com/wiseglobal',
-    twitter: 'https://x.com/wiseglobal',
-    instagram: 'https://instagram.com/wiseglobal',
-    linkedin: 'https://linkedin.com/company/wiseglobal',
-    youtube: 'https://youtube.com/@wiseglobal',
+    facebook: 'https://www.facebook.com/wiseglobalresearch/',
+    twitter: 'https://x.com/research221711',
+    instagram: 'https://www.instagram.com/wiseglobalresearch/',
+    linkedin: 'https://www.linkedin.com/in/wise-global-research-services-63b535317/',
+    youtube: 'https://www.youtube.com/@WiseGlobalResearchService',
   },
 };
 
@@ -552,8 +552,29 @@ function Navbar() {
         closeDrawer();
       }
     };
+    const handleKeydown = (e) => {
+      if (!drawerOpen) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeDrawer();
+      } else if (e.key === 'Tab') {
+        // Basic focus trap within drawer
+        const focusables = drawerRef.current?.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+        if (!focusables || !focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
     if (drawerOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeydown);
       // set initial focus into the drawer for accessibility
       setTimeout(() => {
         const focusables = drawerRef.current?.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
@@ -564,7 +585,33 @@ function Navbar() {
         }
       }, 0);
     }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeydown);
+    };
+  }, [drawerOpen]);
+
+  // Close the drawer automatically on route change (mobile navigation)
+  useEffect(() => {
+    if (drawerOpen) closeDrawer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  // Prevent background scroll when the drawer is open (mobile)
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalTouchAction = document.body.style.touchAction;
+    if (drawerOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+    } else {
+      document.body.style.overflow = originalOverflow || '';
+      document.body.style.touchAction = originalTouchAction || '';
+    }
+    return () => {
+      document.body.style.overflow = originalOverflow || '';
+      document.body.style.touchAction = originalTouchAction || '';
+    };
   }, [drawerOpen]);
 
   // When Google Translate injects its top banner (usually an iframe with
@@ -637,9 +684,9 @@ function Navbar() {
 
   const mobileDrawerStyles = {
   position: 'fixed',
-  top: 'var(--nav-offset, 0px)',
+  top: 'calc(var(--nav-offset, 0px) + env(safe-area-inset-top, 0px))',
   right: 0,
-  height: 'calc(100vh - var(--nav-offset, 0px))',
+  height: 'calc(100dvh - var(--nav-offset, 0px) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))',
     width: 'max(50vw, 300px)',
     maxWidth: '80vw',
   // Theme-aware, semi-transparent background: show current theme gradient with a translucent surface overlay
@@ -658,7 +705,8 @@ function Navbar() {
     overflowY: 'auto',
     display: 'block',
     willChange: 'transform',
-    contain: 'content'
+    contain: 'content',
+    overscrollBehavior: 'contain'
   };
 
   return (
@@ -667,7 +715,7 @@ function Navbar() {
         role="navigation"
         ref={navRef}
   // Use gradient + an opaque base color to block underlying content
-  style={{ backgroundImage: background, backgroundColor: baseSurfaceColor, color: textColor }}
+  style={{ backgroundImage: background, backgroundColor: baseSurfaceColor, color: textColor, top: 'var(--nav-offset, 0px)' }}
         className="fixed w-full z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-b-xl"
       >
   {/* Top contact/info bar */}
@@ -781,9 +829,9 @@ function Navbar() {
               aria-controls="mobile-menu"
             >
             {drawerOpen ? (
-              <span className="mobile-close-btn" style={{ color: textColor }}>Close</span>
+              <span className="mobile-close-btn" style={{ color: textColor, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>Close</span>
             ) : (
-              <div className={`hamburger ${drawerOpen ? 'open' : ''}`}>
+              <div className={`hamburger ${drawerOpen ? 'open' : ''}`} style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>
                 <div className="bar"></div>
                 <div className="bar"></div>
                 <div className="bar"></div>
@@ -817,7 +865,7 @@ function Navbar() {
         <div className={`mobile-menu-items mobile-stagger`} style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <h2 id="mobile-menu-title" className="sr-only">Main menu</h2>
           {/* Primary links with icons */}
-          <Link to="/" className="nav-item font-semibold py-1" onClick={closeDrawer} tabIndex={0} style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '10px 12px', background: 'transparent', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <Link to="/" className="nav-item font-semibold py-1" onClick={closeDrawer} tabIndex={0} style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', background: 'transparent', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}>
             <FiHome size={18} style={{ flexShrink: 0, color: iconColors.home }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, 'navbar.home')}</span>
           </Link>
 
@@ -838,6 +886,8 @@ function Navbar() {
               <button
                 className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
                 onClick={() => toggleMobileDropdown(key)}
+                aria-expanded={!!mobileDropdownsOpen[key]}
+                aria-controls={`mobile-dd-${key}`}
               >
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {key === 'company' && <FiUsers size={18} style={{ color: iconColors.company }} />}
@@ -850,7 +900,7 @@ function Navbar() {
                 </span>
                 <FiChevronRight size={18} className={`ml-2 transition-transform duration-200 ${mobileDropdownsOpen[key] ? 'rotate-90' : ''}`} />
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ${mobileDropdownsOpen[key] ? 'max-h-96' : 'max-h-0'}`}>
+              <div id={`mobile-dd-${key}`} className={`overflow-hidden transition-all duration-300 ${mobileDropdownsOpen[key] ? 'max-h-96' : 'max-h-0'}`}>
                 {dropdown.items.map((item) => (
                       <Link
                         key={item.path}
@@ -858,7 +908,7 @@ function Navbar() {
                         className="nav-item block py-1 pl-2"
                         onClick={closeDrawer}
                         tabIndex={drawerOpen ? 0 : -1}
-                        style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 8, padding: '8px 10px', margin: '2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 8, padding: '10px 12px', margin: '2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
                         onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
                         onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                       >
@@ -875,7 +925,7 @@ function Navbar() {
               to={link.path}
               className={`nav-item block py-1${location.pathname===link.path ? ' active' : ''}`}
               onClick={closeDrawer}
-              style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '10px 12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+              style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
               onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
