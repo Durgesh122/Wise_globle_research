@@ -91,6 +91,13 @@ exports.popupDigest = functions
     const submissions = qs.docs.map(d => d.data());
     console.log(`Found ${submissions.length} submissions in window.`);
 
+    if (submissions.length === 0) {
+      console.log('No submissions this window; skipping email send.');
+      // Still update lastSent to avoid re-scanning same empty window repeatedly
+      await metaRef.set({ lastSent: admin.firestore.FieldValue.serverTimestamp(), lastHour: hour, lastEmpty: true }, { merge: true });
+      return null;
+    }
+
     const html = await buildDigestHTML(submissions);
     const subject = `Popup Digest ${hour - 3}-${hour} IST (${submissions.length} new)`;
 
@@ -101,7 +108,7 @@ exports.popupDigest = functions
         subject,
         html
       });
-      await metaRef.set({ lastSent: admin.firestore.FieldValue.serverTimestamp(), lastHour: hour }, { merge: true });
+      await metaRef.set({ lastSent: admin.firestore.FieldValue.serverTimestamp(), lastHour: hour, lastEmpty: false }, { merge: true });
       console.log('Digest sent');
     } catch (err) {
       console.error('Failed to send digest', err);
