@@ -3,8 +3,16 @@ import { Trans } from '../i18nShim';
 import { FaChartLine, FaRegClock, FaUserCheck } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
+
+import { Helmet } from 'react-helmet-async';
 const EvaluationStockOption = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>Evaluation Stock Option - Wise Global Research</title>
+        <meta name="description" content="Evaluation Stock Option page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/evaluationstockoption" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.EvaluationStockOption.evaluation-stock-option"><Trans i18nKey="pages.EvaluationStockOption.evaluation-stock-option-1">Evaluation Stock Option</Trans></Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Evaluation Stock Option service is specifically designed for option traders who want to take advantage of short-term stock price movement. Wise Global Research Analyst provides recommendations to intraday traders to optimize every market movement. Our team of analysts specializes in tracking the F&O market, major sectors, and blends technical analysis with national and international events to predict market moves. Our timely technical recommendations provide adequate time to enter trades and are a supreme blend of technical and fundamental research.
@@ -119,6 +127,7 @@ const EvaluationStockOption = () => (
     </div>
 
   </div>
+  </>
 );
 
 export default EvaluationStockOption;

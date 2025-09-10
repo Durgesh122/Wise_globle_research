@@ -11,6 +11,8 @@ import { FiDownload, FiTrash2, FiUpload, FiSearch, FiEye, FiEdit } from 'react-i
 import Papa from 'papaparse';
 import PropTypes from 'prop-types';
 
+
+import { Helmet } from 'react-helmet-async';
 // Constants for weekdays and report categories
 const WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const REPORT_CATEGORIES = ['Market', 'Technical', 'Financial', 'Competitor', 'Other'];
@@ -47,7 +49,13 @@ const rowVariants = {
 
 // Loading spinner component
 const LoadingSpinner = () => (
-  <motion.div
+  
+      <Helmet>
+        <title>Contact Data - Wise Global Research</title>
+        <meta name="description" content="Contact Data page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/contactdata" />
+      </Helmet>
+<motion.div
     className="flex justify-center items-center py-6"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}

@@ -5,6 +5,8 @@ import { FiTrendingUp, FiTrendingDown, FiBell, FiBarChart2, FiDollarSign, FiPieC
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { Link } from 'react-router-dom';
 
+
+import { Helmet } from 'react-helmet-async';
 // Main MCX component
 const Mcx = () => {
   // State management for various UI components
@@ -156,7 +158,13 @@ const Mcx = () => {
   );
 
   return (
-    <div className="min-h-screen bg-transparent text-white pt-24">
+    <>
+      <Helmet>
+          <title>Mcx - Wise Global Research</title>
+          <meta name="description" content="Mcx page — Wise Global Research." />
+          <link rel="canonical" href="https://wiseglobalresearch.com/mcx" />
+      </Helmet>
+      <div className="min-h-screen bg-transparent text-white pt-24">
       {/* Enhanced Navbar with Gradient and Lower Positioning */}
       <header className="py-6 px-4 sm:px-6 lg:px-8 bg-transparent shadow-lg rounded-b-xl">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -863,8 +871,8 @@ const Mcx = () => {
         </AnimatePresence>
       </main>
 
-    
     </div>
+    </>
   );
 };
 

@@ -4,8 +4,16 @@ import { Trans } from '../i18nShim';
 import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
+
+import { Helmet } from 'react-helmet-async';
 const Metal = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>Metal - Wise Global Research</title>
+        <meta name="description" content="Metal page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/metal" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.Metal.mcx-metal">MCX Metal</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Our MCX Metal service is tailored for traders who want to maximize their returns in Gold, Silver, Copper, and Aluminum segments of the MCX market. With a unique blend of technical and fundamental research, we provide 1-2 intraday or positional recommendations daily in metals. Our timely and accurate recommendations ensure you never miss a market opportunity. Benefit from our expert analysis of global and domestic market trends, and get real-time support for all your trading needs.
@@ -92,6 +100,7 @@ const Metal = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default Metal;

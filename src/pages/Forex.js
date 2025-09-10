@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -116,6 +117,11 @@ const Forex = () => {
       animate="visible"
       variants={containerVariants}
     >
+      <Helmet>
+        <title>Forex Awareness - Wise Global Research</title>
+        <meta name="description" content="Educational forex and currency market awareness content — not trading advice. Learn macro impacts and currency behavior." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/forex" />
+      </Helmet>
       {/* Hero Section */}
       <motion.section className="text-center mb-16" variants={itemVariants}>
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4"><Trans i18nKey="pages.Forex.forex-market-awareness">Forex Market Awareness</Trans></h1>

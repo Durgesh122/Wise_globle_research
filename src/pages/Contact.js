@@ -1,5 +1,6 @@
 // src/pages/Contact.js
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import {
@@ -92,6 +93,11 @@ function Contact() {
 
   return (
     <motion.div className="relative min-h-screen py-20 px-4 text-white bg-transparent" initial="hidden" animate="visible">
+      <Helmet>
+        <title>Contact Wise Global Research</title>
+        <meta name="description" content="Get in touch with Wise Global Research — contact details, enquiry form and support for research services." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/contact" />
+      </Helmet>
       {/* ✅ Fully transparent background */}
       <div className="absolute inset-0 bg-transparent z-0" />
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { db } from '../firebase';
 import { ref, push } from 'firebase/database';
 
+
+import { Helmet } from 'react-helmet-async';
 export default function AccessibilityFeedback() {
   const [form, setForm] = useState({
     name: '',
@@ -77,16 +79,23 @@ export default function AccessibilityFeedback() {
 
   if (submitted) {
     return (
-      <section className="min-h-screen flex items-center justify-center p-4">
-        <div role="status" aria-live="polite" className="w-full max-w-xl p-6 rounded-xl bg-green-900/30 border border-green-600 backdrop-blur">
-          <h1 className="text-2xl font-semibold mb-2">Thank you</h1>
-          <p>Your accessibility feedback has been recorded. We will review and address it as soon as possible.</p>
-          {submissionId && (
-            <p className="text-sm text-white/80 mt-2">Submission ID: <span className="font-mono">{submissionId}</span></p>
-          )}
-          <a href="/" className="inline-block mt-4 px-4 py-2 rounded bg-white/10 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400">Go home</a>
-        </div>
-      </section>
+      <>
+        <Helmet>
+          <title>Accessibility Feedback - Wise Global Research</title>
+          <meta name="description" content="Accessibility Feedback page — Wise Global Research." />
+          <link rel="canonical" href="https://wiseglobalresearch.com/accessibilityfeedback" />
+        </Helmet>
+        <section className="min-h-screen flex items-center justify-center p-4">
+          <div role="status" aria-live="polite" className="w-full max-w-xl p-6 rounded-xl bg-green-900/30 border border-green-600 backdrop-blur">
+            <h1 className="text-2xl font-semibold mb-2">Thank you</h1>
+            <p>Your accessibility feedback has been recorded. We will review and address it as soon as possible.</p>
+            {submissionId && (
+              <p className="text-sm text-white/80 mt-2">Submission ID: <span className="font-mono">{submissionId}</span></p>
+            )}
+            <a href="/" className="inline-block mt-4 px-4 py-2 rounded bg-white/10 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400">Go home</a>
+          </div>
+        </section>
+      </>
     );
   }
 

@@ -5,8 +5,16 @@ import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 
+
+import { Helmet } from 'react-helmet-async';
 const GalaxyMCX = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>Galaxy M C X - Wise Global Research</title>
+        <meta name="description" content="Galaxy M C X page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/galaxymcx" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.GalaxyMCX.galaxy-mcx">Galaxy MCX</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Our MCX Commodity Service provides real-time trading insights, research-backed recommendations, and expert research recommendations for F&O commodities such as gold, silver, crude oil, natural gas, and base metals. Designed for both beginners and experienced traders, whether you’re trading for short-term profits or long-term investments, our MCX Commodity Service is your reliable partner in navigating the Indian commodities market with confidence.
@@ -113,6 +121,7 @@ const GalaxyMCX = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default GalaxyMCX;

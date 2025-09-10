@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedChart from '../components/AnimatedChart';
@@ -59,8 +60,26 @@ const Future = () => {
   return (
     <div 
       className="min-h-screen w-full py-8 px-4 sm:px-6 lg:px-8 text-white"
-      
     >
+      <Helmet>
+        <title>Equity Futures Dashboard & Analytics | Wise Global</title>
+        <meta name="description" content="Equity futures dashboard with comprehensive analytics, live charts, and trading tools for NIFTY, Bank NIFTY and stock futures. Stay informed with market insights and strategies." />
+        <meta name="keywords" content="equity futures, futures dashboard, NIFTY futures, Bank NIFTY futures, futures analytics, futures trading tools" />
+        <link rel="canonical" href="https://wiseglobal.com/future" />
+        <meta property="og:title" content="Equity Futures Dashboard & Analytics | Wise Global" />
+        <meta property="og:description" content="Real-time futures analytics, strategies and market insights for NIFTY, Bank NIFTY and stock futures." />
+        <meta property="og:url" content="https://wiseglobal.com/future" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            'name': 'Equity Futures Dashboard & Analytics',
+            'description': 'Real-time futures analytics and trading tools for NIFTY, Bank NIFTY and stock futures provided by Wise Global.'
+          })}
+        </script>
+      </Helmet>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -2,6 +2,8 @@ import React from 'react';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 
+
+import { Helmet } from 'react-helmet-async';
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -19,7 +21,13 @@ const itemVariants = {
 
 const InvestorCharter = () => {
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-trasprint text-white">
+    <>
+      <Helmet>
+        <title>Investor Chart - Wise Global Research</title>
+        <meta name="description" content="Investor Chart page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/investorchart" />
+      </Helmet>
+<div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-trasprint text-white">
       <motion.div className="max-w-4xl mx-auto" initial="hidden" animate="visible" variants={containerVariants}>
 
         {/* Header */}
@@ -176,6 +184,7 @@ const InvestorCharter = () => {
 
       </motion.div>
     </div>
+    </>
   );
 };
 

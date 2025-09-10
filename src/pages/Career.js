@@ -4,6 +4,7 @@ import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import careersImg from '../assets/images/careers.png';
 import { FaBriefcase, FaUpload } from 'react-icons/fa';
+import { Helmet } from 'react-helmet-async';
 import { db } from '../firebase';
 import { ref as dbRef, push, set, onValue, query, orderByChild, equalTo } from 'firebase/database';
 import { toast } from 'react-toastify';
@@ -186,6 +187,11 @@ const Career = () => {
       animate="visible"
       style={{ perspective: '1000px' }}
     >
+      <Helmet>
+        <title>Careers at Wise Global Research</title>
+        <meta name="description" content="Join Wise Global Research — open roles, internships and application process for researchers and developers." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/career" />
+      </Helmet>
       {/* Header Section */}
       <motion.div className="text-center mb-12" variants={itemVariants}>
         <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4"><Trans i18nKey="pages.Career.career-opportunities">Career Opportunities</Trans></h1>

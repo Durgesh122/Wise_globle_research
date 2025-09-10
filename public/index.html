@@ -61,8 +61,8 @@
       }
     </script>
     <!-- ✅ SEO Meta Tags -->
-    <meta name="description" content="Wise Global Research Services - SEBI Registered Research Analyst. Get expert stock market research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India." />
-    <meta name="keywords" content="Wise Global Research, SEBI, stock market, research analyst, trading, investment, India, equity, MCX, Nifty, Sensex, portfolio, financial services" />
+  <meta name="description" content="Wise Global Research Services — SEBI registered research analyst providing stock market research, live market news, Nifty & Sensex analysis, intraday tips, and long-term investment insights for Indian investors." />
+  <meta name="keywords" content="stock market research, Nifty, Sensex, intraday tips, share market analysis, stock recommendations, SEBI research analyst, live market news, Wise Global Research" />
     <meta name="author" content="Wise Global Research Services Pvt Ltd" />
     <link rel="canonical" href="https://wiseglobalresearch.com/" />
     <meta name="robots" content="index, follow" />
@@ -81,6 +81,34 @@
     <meta name="twitter:title" content="Wise Global Research Services - SEBI Registered Research Analyst" />
     <meta name="twitter:description" content="Get SEBI registered expert research, trading strategies, and investment insights. Trusted by thousands of investors and traders in India." />
     <meta name="twitter:image" content="https://wiseglobalresearch.com/og-image.jpg" />
+
+    <!-- Structured data: Organization & WebSite with potentialSearchAction -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "Wise Global Research Services",
+          "url": "https://wiseglobalresearch.com/",
+          "logo": "https://wiseglobalresearch.com/og-image.jpg",
+          "sameAs": [
+            "https://www.linkedin.com/company/wise-global-research"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "url": "https://wiseglobalresearch.com/",
+          "name": "Wise Global Research Services",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://wiseglobalresearch.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+    </script>
 
   <!-- Preload moved into HeroSection via Helmet to avoid unused preloads on other routes -->
 

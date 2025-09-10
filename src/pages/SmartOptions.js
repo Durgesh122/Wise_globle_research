@@ -4,8 +4,16 @@ import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Trans } from '../i18nShim';
 import { Link } from 'react-router-dom';
 
+
+import { Helmet } from 'react-helmet-async';
 const SmartOptions = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>Smart Options - Wise Global Research</title>
+        <meta name="description" content="Smart Options page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/smartoptions" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.SmartOptions.smart-options">Smart Options</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Smart Options service is specifically designed for option traders trading who want to take advantage of short term stock price movement. Wise Global Research Analyst provides the recommendations to intraday traders to optimize every market movement. We have a team of analysts who are specialized in Tracking F&amp;O market and keep a complete track of all the national and international events and Major Sectors and blend it with technical analysis to predict the market moves.<br/><br/><Trans i18nKey="pages.SmartOptions.our-timely-generated-technical-recommend"><Trans i18nKey="pages.SmartOptions.our-timely-generated-technical-recommend-1">Our timely generated technical recommendations provide adequate time to enter in trades. Our recommendations are supreme blend of Technical and fundamental research.</Trans></Trans></p>
@@ -121,6 +129,7 @@ const SmartOptions = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default SmartOptions;

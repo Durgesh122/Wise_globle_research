@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 const steps = [
   {
@@ -28,6 +29,11 @@ const steps = [
 const About = () => {
   return (
   <div className="min-h-screen bg-transparent text-white">
+    <Helmet>
+      <title>About Wise Global Research</title>
+      <meta name="description" content="Wise Global Research — market insights, recommendations and research for Indian financial markets." />
+      <link rel="canonical" href="https://wiseglobalresearch.com/about" />
+    </Helmet>
     <div className="container mx-auto px-4 py-12">
   <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-center"><Trans i18nKey="pages.About.title">About Wise Global Research</Trans></h1>
   <p className="text-lg text-center mb-8 text-white/80"><Trans i18nKey="pages.About.subtitle">We provide market research, analytics, and actionable investment insights tailored for Indian investors and traders.</Trans></p>

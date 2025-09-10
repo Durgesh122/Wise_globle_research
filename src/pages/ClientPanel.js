@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
@@ -37,6 +38,11 @@ function ClientPanel() {
 
   return (
     <Layout>
+      <Helmet>
+        <title>Client Panel — Wise Global</title>
+        <meta name="description" content="Client login panel for Wise Global clients. Access your account, reports, and subscription details." />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <div className="min-h-screen flex items-center justify-center bg-trasprint via-gray-800 to-black px-4 py-10">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}

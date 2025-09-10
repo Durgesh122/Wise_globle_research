@@ -1,12 +1,18 @@
 // src/components/Energy.js
 
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { FaBolt, FaFire, FaLeaf } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const Energy = () => (
   <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+    <Helmet>
+      <title>MCX Energy - Wise Global Research</title>
+      <meta name="description" content="MCX Energy research and recommendations — crude oil, natural gas, coal insights and trading guidance for Indian markets." />
+      <link rel="canonical" href="https://wiseglobalresearch.com/energy" />
+    </Helmet>
 
 
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.Energy.mcx-energy">MCX Energy</Trans></h1>

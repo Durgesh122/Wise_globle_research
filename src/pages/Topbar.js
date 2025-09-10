@@ -1,9 +1,17 @@
 import React from 'react';
 import { FaPhoneAlt, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
 
+
+import { Helmet } from 'react-helmet-async';
 function Topbar() {
   return (
-    <div className="bg-[#1a252f] text-white text-sm py-2 px-4 flex justify-between items-center">
+    
+      <Helmet>
+        <title>Topbar - Wise Global Research</title>
+        <meta name="description" content="Topbar page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/topbar" />
+      </Helmet>
+<div className="bg-[#1a252f] text-white text-sm py-2 px-4 flex justify-between items-center">
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-1">
           <FaPhoneAlt />

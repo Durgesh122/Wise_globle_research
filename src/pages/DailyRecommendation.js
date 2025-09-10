@@ -1,5 +1,6 @@
 // src/pages/DailyRecommendation.js
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { FaArrowUp, FaArrowDown, FaBullseye, FaStopCircle, FaPlus, FaMinus } from 'react-icons/fa';
@@ -114,6 +115,20 @@ const DailyRecommendation = () => {
       initial="hidden"
       animate="visible"
     >
+      <Helmet>
+        <title>Today's Market Recommendations — Wise Global Research</title>
+        <meta name="description" content="Daily market recommendations and trade calls for Nifty, BankNifty, stocks and commodities. Includes entry, target and stop-loss levels." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/daily-recommendation" />
+        <script type="application/ld+json">
+          {`{
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Today's Market Recommendations",
+            "url": "https://wiseglobalresearch.com/daily-recommendation",
+            "description": "Daily market recommendations, trade calls, and targets for intraday and positional trades."
+          }`}
+        </script>
+      </Helmet>
       {/* Recommendations Section */}
       <motion.div className="text-center mb-12" variants={itemVariants}>
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4"><Trans i18nKey="pages.DailyRecommendation.today-s-market-recommendations"><Trans i18nKey="pages.DailyRecommendation.today-s-market-recommendations-1">Today's Market Recommendations</Trans></Trans></h1>

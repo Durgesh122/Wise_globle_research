@@ -2,6 +2,7 @@ import React from 'react';
 import { Trans } from '../i18nShim';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -30,6 +31,12 @@ function Currency() {
       animate="visible"
       variants={staggerContainer}
     >
+      <Helmet>
+        <title>Currency Market Awareness — Wise Global</title>
+        <meta name="description" content="Educational resources on currency markets, rupee dynamics, and regulatory guidance. Wise Global provides awareness content only; not forex trading advice." />
+        <meta name="keywords" content="currency market, rupee, forex education, currency awareness" />
+        <link rel="canonical" href="https://wiseglobalresearch.com/currency" />
+      </Helmet>
       <div className="max-w-4xl mx-auto">
         <motion.h1
           className="text-3xl md:text-4xl font-bold font-josefin mb-8 text-center text-white"

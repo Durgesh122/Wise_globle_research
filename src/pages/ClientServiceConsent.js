@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { ref as dbRef, push, set } from 'firebase/database';
 
+
+import { Helmet } from 'react-helmet-async';
 // Animation variants for container and items
 const containerVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -177,7 +179,13 @@ const ClientServiceConsent = () => {
   // Build Digio-compatible payload from form data. Matches PHP example structure.
   // Render input field with icon (binds to formData and handleChange)
   const renderInput = (id, label, icon, type = 'text', attrs = {}, note) => (
-    <motion.div variants={itemVariants} className="w-full">
+    <>
+      <Helmet>
+        <title>Client Service Consent - Wise Global Research</title>
+        <meta name="description" content="Client Service Consent page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/clientserviceconsent" />
+      </Helmet>
+<motion.div variants={itemVariants} className="w-full">
       <label htmlFor={id} className="block text-sm font-medium text-white mb-2">
         {label}
       </label>
@@ -205,6 +213,7 @@ const ClientServiceConsent = () => {
       </div>
       {note && <p className="text-xs text-gray-400 mt-1">{note}</p>}
     </motion.div>
+    </>
   );
 
   // no file inputs required anymore

@@ -4,8 +4,16 @@ import { Trans } from '../i18nShim';
 import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
+
+import { Helmet } from 'react-helmet-async';
 const Bullions = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>Bullions - Wise Global Research</title>
+        <meta name="description" content="Bullions page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/bullions" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.Bullions.bullions">Bullions</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Our Bullions service is designed for traders who want to maximize their returns in the Gold, Silver, and Platinum segments of the MCX market. With a unique blend of technical and fundamental research, we provide 1-2 intraday or positional recommendations daily in Bullions. Our timely and accurate recommendations ensure you never miss a market opportunity. Benefit from our expert analysis of global and domestic market trends, and enjoy real-time customer support for your trading needs.
@@ -93,6 +101,7 @@ const Bullions = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default Bullions;

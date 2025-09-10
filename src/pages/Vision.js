@@ -4,6 +4,8 @@ import { FaChartLine, FaShieldAlt, FaBookOpen, FaLightbulb, FaBullseye } from 'r
 import Layout from '../components/Layout';
 import Card from '../components/Card';
 
+
+import { Helmet } from 'react-helmet-async';
 // Vision pillars and core values data (same as before)
 const visionPillars = [
   {
@@ -66,7 +68,13 @@ const coreValues = [
 ];
 
 const Vision = () => (
-  <Layout>
+  <>
+      <Helmet>
+        <title>Vision - Wise Global Research</title>
+        <meta name="description" content="Vision page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/vision" />
+      </Helmet>
+<Layout>
     <section className="container mx-auto py-12">
       <h1 className="text-3xl font-bold mb-8 text-center">Our Vision & Mission</h1>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -97,6 +105,7 @@ const Vision = () => (
       </div>
     </section>
   </Layout>
+  </>
 );
 
 export default Vision;

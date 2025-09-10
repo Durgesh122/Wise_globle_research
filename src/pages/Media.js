@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import YouTubeEmbed from '../components/YouTubeEmbed';
 import AccessibleMedia from '../components/AccessibleMedia';
 
@@ -30,6 +31,11 @@ export default function Media() {
   const isValidYt = ytUrl ? Boolean(ytId) : true; // empty allowed, else must be valid
   return (
     <section className="space-y-6">
+      <Helmet>
+        <title>Media & Educational Videos - Wise Global Research</title>
+        <meta name="description" content="Educational videos and accessible media from Wise Global Research. Video embeds, captions, and transcripts for financial literacy." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/media" />
+      </Helmet>
       <header className="space-y-2">
         <h1 className="text-2xl md:text-3xl font-bold">Education: Video / Audio</h1>
         <p className="text-white/80 text-sm md:text-base">

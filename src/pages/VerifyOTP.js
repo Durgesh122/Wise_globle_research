@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify'; // For notifications
+import { toast } from 'react-toastify'; 
+import { Helmet } from 'react-helmet-async';
+// For notifications
 
 function VerifyOTP() {
   const [otp, setOtp] = useState('');
@@ -23,7 +25,13 @@ function VerifyOTP() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
+    <>
+      <Helmet>
+        <title>Verify O T P - Wise Global Research</title>
+        <meta name="description" content="Verify O T P page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/verifyotp" />
+  </Helmet>
+  <div className="min-h-screen flex items-center justify-center bg-black text-white">
       <form onSubmit={handleVerify} className="bg-white/10 p-6 rounded-lg backdrop-blur w-full max-w-sm">
   <h2 className="text-xl font-bold mb-4 text-center">Enter OTP</h2>
         <input
@@ -37,7 +45,8 @@ function VerifyOTP() {
         />
   <button className="w-full bg-green-500 py-2 rounded font-bold hover:bg-green-600">Verify</button>
       </form>
-    </div>
+      </div>
+    </>
   );
 }
 

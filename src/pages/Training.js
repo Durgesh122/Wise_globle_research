@@ -6,6 +6,8 @@ import { db } from '../firebase';
 import { toast } from 'react-toastify';
 import { FaChartLine, FaBookOpen, FaShieldAlt, FaUsers } from 'react-icons/fa';
 
+
+import { Helmet } from 'react-helmet-async';
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0, rotateX: 30 },
@@ -168,7 +170,13 @@ const Training = () => {
   };
 
   return (
-    <motion.div
+    <>
+      <Helmet>
+        <title>Training - Wise Global Research</title>
+        <meta name="description" content="Training page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/training" />
+      </Helmet>
+<motion.div
       className="container mx-auto py-12 px-4 max-w-5xl bg-blur"
       variants={containerVariants}
       initial="hidden"
@@ -376,6 +384,7 @@ const Training = () => {
           <strong>Disclaimer:</strong> Investments in the securities market are subject to market risks. Read all related documents carefully before investing. Wise Global Research is not responsible for any profit or loss that may occur.</p>
       </motion.div>
     </motion.div>
+    </>
   );
 };
 

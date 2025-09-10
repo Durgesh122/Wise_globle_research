@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { FiClock, FiBookmark, FiShare2 } from 'react-icons/fi';
 import { BsArrowUpRight, BsDot } from 'react-icons/bs';
@@ -122,6 +123,34 @@ function MarketNews() {
   };
 
   return (
+    <>
+      <Helmet>
+        <title>Live Market News - Wise Global Research</title>
+        <meta name="description" content="Live stock market news, Nifty & Sensex updates, and real-time market headlines from Wise Global Research. Stay informed for better trading decisions." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/market-news" />
+        <meta property="og:title" content="Live Market News - Wise Global Research" />
+        <meta property="og:description" content="Live stock market news, Nifty & Sensex updates, and real-time market headlines from Wise Global Research." />
+        <script type="application/ld+json">
+          {`{
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "name": "Wise Global Research",
+                "url": "https://wiseglobalresearch.com/",
+                "@id": "https://wiseglobalresearch.com/#org"
+              },
+              {
+                "@type": "CollectionPage",
+                "name": "Live Market News",
+                "description": "Live stock market news and updates covering Nifty, Sensex, stocks, commodities and economic headlines.",
+                "url": "https://wiseglobalresearch.com/market-news",
+                "isPartOf": { "@id": "https://wiseglobalresearch.com/#org" }
+              }
+            ]
+          }`}
+        </script>
+      </Helmet>
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -332,6 +361,7 @@ function MarketNews() {
         </AnimatePresence>
       )}
     </motion.div>
+    </>
   );
 }
 

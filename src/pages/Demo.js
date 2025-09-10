@@ -1,9 +1,18 @@
 import React from 'react';
 
 import { Trans } from '../i18nShim';
+
+import { Helmet } from 'react-helmet-async';
 function Demo() {
   return (
-    <div
+    
+  <>
+  <Helmet>
+        <title>Demo - Wise Global Research</title>
+        <meta name="description" content="Demo page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/demo" />
+      </Helmet>
+<div
       className="py-16 px-6 bg-white text-gray-800 max-w-4xl mx-auto"
       data-aos="fade-up"
     >
@@ -43,7 +52,9 @@ function Demo() {
         ><Trans i18nKey="pages.Demo.message-on-whatsapp">Message on WhatsApp</Trans></a>
       </div>
     </div>
+  </>
   );
 }
 
 export default Demo;
+

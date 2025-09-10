@@ -1,9 +1,24 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 
 import { Trans } from '../i18nShim';
 function GuideForInvesting() {
   return (
     <div className="max-w-3xl mx-auto py-8 px-2 sm:px-4 md:px-8 animate-fadein">
+      <Helmet>
+        <title>Investing Guide for Beginners — Wise Global Research</title>
+        <meta name="description" content="Beginner-friendly investing guide: diversification, risk management, and practical tips for Indian investors in stocks, options and commodities." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/guide-for-investing" />
+        <script type="application/ld+json">
+          {`{
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Guide For Investing",
+            "description": "Beginner-friendly investing guide covering diversification, risk management, and practical tips for Indian investors.",
+            "url": "https://wiseglobalresearch.com/guide-for-investing"
+          }`}
+        </script>
+      </Helmet>
       <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-white text-center drop-shadow-lg"><Trans i18nKey="pages.GuideForInvesting.guide-for-investing">Guide For Investing</Trans></h1>
       <div className="space-y-8 text-base sm:text-lg text-white">
         <section className="transition-transform duration-700 hover:scale-105 bg-white/30 rounded-xl p-4 shadow-lg">

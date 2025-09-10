@@ -16,6 +16,8 @@ import {
   Filler
 } from 'chart.js';
 
+
+import { Helmet } from 'react-helmet-async';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -30,7 +32,13 @@ ChartJS.register(
 
 // Reusable Section Component
 const Section = ({ title, children }) => (
-  <section className="py-12 px-6 md:px-16 bg-white/30 backdrop-blur-md text-white rounded-lg mb-8">
+  <>
+      <Helmet>
+        <title>N C D E X - Wise Global Research</title>
+        <meta name="description" content="N C D E X page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/ncdex" />
+      </Helmet>
+<section className="py-12 px-6 md:px-16 bg-white/30 backdrop-blur-md text-white rounded-lg mb-8">
     <motion.h2
       className="text-3xl font-bold mb-6 text-center"
       initial={{ opacity: 0, y: 40 }}
@@ -41,6 +49,7 @@ const Section = ({ title, children }) => (
     </motion.h2>
     {children}
   </section>
+  </>
 );
 
 // Chart Config

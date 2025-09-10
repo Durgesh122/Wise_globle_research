@@ -16,6 +16,23 @@ function StockOption() {
         <title>{t('pages.StockOption.professional-stock-options-trading-wise-', 'Professional Stock Options Trading | Wise Global')}</title>
         <meta name="description" content="SEBI-registered stock options advisory with proven strategies. Get expert calls, risk management techniques, and real-time alerts for maximum returns." />
         <meta name="keywords" content="stock options trading, Nifty options, Bank Nifty options, options strategies, SEBI registered advisor, options trading tips" />
+        <link rel="canonical" href="https://wiseglobal.com/stock-options" />
+        <meta property="og:title" content="Professional Stock Options Trading | Wise Global" />
+        <meta property="og:description" content="Get expert stock options trading calls with risk management from SEBI-registered advisors." />
+        <meta property="og:url" content="https://wiseglobal.com/stock-options" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Professional Stock Options Trading | Wise Global" />
+        <meta name="twitter:description" content="SEBI-registered stock options advisory with proven strategies and real-time alerts." />
+        <meta name="twitter:image" content="https://wiseglobal.com/assets/og-stock-options.jpg" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            'name': 'Professional Stock Options Trading',
+            'description': 'SEBI-registered stock options advisory offering expert calls, risk management techniques, and real-time alerts.'
+          })}
+        </script>
         <meta property="og:title" content="Professional Stock Options Trading | Wise Global" />
         <meta property="og:description" content="Get expert stock options trading calls with risk management from SEBI-registered advisors." />
       </Helmet>

@@ -2,8 +2,16 @@ import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Trans } from '../i18nShim';
 import { Link } from 'react-router-dom';
 
+
+import { Helmet } from 'react-helmet-async';
 const SmartIndexOption = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>Smart Index Option - Wise Global Research</title>
+        <meta name="description" content="Smart Index Option page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/smartindexoption" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.SmartIndexOption.smart-index-option">Smart Index Option</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Smart Index Option service is specifically designed for option traders trading with precise technical research recommendation for Index Options. We provide the recommendations to intraday traders to optimize every market movement. It offers you nearly 1-2 intraday recommendations in a day as per market conditions with good market opportunity. The recommendations are given in Nifty and Bank Nifty Options only. Our timely generated technical recommendations provide adequate time to enter and exit in trades. We have a team of analysts who are specialized in Tracking the F&O market and keep a complete track of all the national and international events and Major Sectors and blend it with technical analysis to predict the market moves. If you are looking for Index Options research/recommendation and do not want to invest much of times then this pack are perfect for you.
@@ -120,6 +128,7 @@ const SmartIndexOption = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default SmartIndexOption;

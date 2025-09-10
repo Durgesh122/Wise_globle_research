@@ -2,8 +2,16 @@
 import React from 'react';
 
 import { Trans } from '../i18nShim';
+
+import { Helmet } from 'react-helmet-async';
 const GrievanceRedressalProcess = () => (
-  <div className="min-h-screen bg-transparent text-white p-6 sm:p-12">
+  <>
+      <Helmet>
+        <title>Grievance Redressal Process - Wise Global Research</title>
+        <meta name="description" content="Grievance Redressal Process page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/grievanceredressalprocess" />
+      </Helmet>
+<div className="min-h-screen bg-transparent text-white p-6 sm:p-12">
     <h1 className="text-3xl font-bold mb-6"><Trans i18nKey="pages.GrievanceRedressalProcess.grievance-redressal-process"><Trans i18nKey="pages.GrievanceRedressalProcess.grievance-redressal-process-1">Grievance Redressal Process</Trans></Trans></h1>
     <h2 className="text-xl font-semibold mb-4"><Trans i18nKey="pages.GrievanceRedressalProcess.about-us">About Us</Trans></h2>
     <p className="mb-4">We believe that Investor service is a vital element for sustained business growth and we want to ensure that our Investors receive exemplary service across different touch points. Prompt and efficient service is essential for retaining existing relationships and therefore Investor satisfaction becomes critical to us, especially since we follow the Direct‐to‐Investor model. Investor queries and complaints constitute an important voice of Investor, and this policy details grievance handling through a structured grievance redressal framework. Grievance redressal is supported by a review mechanism, to minimize the recurrence of similar issues in future.</p>
@@ -99,6 +107,7 @@ const GrievanceRedressalProcess = () => (
       <li><Trans i18nKey="pages.GrievanceRedressalProcess.the-client-may-also-consider-the-online-"><Trans i18nKey="pages.GrievanceRedressalProcess.the-client-may-also-consider-the-online--1">The client may also consider the Online Dispute Resolution (ODR) through the Smart ODR portal at:</Trans></Trans><a href="https://smartodr.in" className="underline text-blue-300" target="_blank" rel="noopener noreferrer"><Trans i18nKey="pages.GrievanceRedressalProcess.https-smartodr-in"><Trans i18nKey="pages.GrievanceRedressalProcess.https-smartodr-in-1">https://smartodr.in</Trans></Trans></a></li>
     </ul>
   </div>
+  </>
 );
 
 export default GrievanceRedressalProcess;

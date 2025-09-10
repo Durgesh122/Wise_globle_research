@@ -2,7 +2,9 @@ import React from 'react';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { FaMoneyCheckAlt } from 'react-icons/fa';
-import qrImage from '../assets/images/QR.png'; // Ensure this image exists
+import qrImage from '../assets/images/QR.png'; 
+import { Helmet } from 'react-helmet-async';
+// Ensure this image exists
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -18,7 +20,13 @@ const fadeInUp = {
 
 const PaymentInfo = () => {
   return (
-    <motion.div
+    <>
+      <Helmet>
+        <title>Payment Info - Wise Global Research</title>
+        <meta name="description" content="Payment Info page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/paymentinfo" />
+      </Helmet>
+<motion.div
       className="relative min-h-screen py-20 px-4 text-white overflow-hidden bg-transparent backdrop-blur-none"
       initial="hidden"
       animate="visible"
@@ -156,6 +164,7 @@ const PaymentInfo = () => {
           ⚠️ <strong><Trans i18nKey="pages.PaymentInfo.note">Note:</Trans></strong><Trans i18nKey="pages.PaymentInfo.we-accept-payments-only-through-the-deta"><Trans i18nKey="pages.PaymentInfo.we-accept-payments-only-through-the-deta-1">We accept payments only through the details listed above. Do not pay to any personal account.</Trans></Trans></motion.p>
       </motion.div>
     </motion.div>
+    </>
   );
 };
 

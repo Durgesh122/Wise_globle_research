@@ -3,8 +3,16 @@ import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Trans } from '../i18nShim';
 import { Link } from 'react-router-dom';
 
+
+import { Helmet } from 'react-helmet-async';
 const SmartFuture = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>Smart Future - Wise Global Research</title>
+        <meta name="description" content="Smart Future page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/smartfuture" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.SmartFuture.smart-future">Smart Future</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Smart Future is designed and destined to deliver returns that you deserve. It offers you nearly 2-3 intraday recommendations with good level of accuracy and market return. The recommendations are given in scrip traded on NSE. Our timely generated technical recommendations provide adequate time to enter in trades. Our recommendations are supreme blend of Technical and fundamental research.<br/><br/><Trans i18nKey="pages.SmartFuture.we-have-a-team-of-analysts-who-are-speci"><Trans i18nKey="pages.SmartFuture.we-have-a-team-of-analysts-who-are-speci-1">We have a team of analysts who are specialized in Tracking F&amp;O market and keep a complete track of all the national and international events and Major Sectors and blend it with technical analysis to predict the market moves.</Trans></Trans><br/><br/><Trans i18nKey="pages.SmartFuture.if-you-are-looking-for-best-research-rec"><Trans i18nKey="pages.SmartFuture.if-you-are-looking-for-best-research-rec-1">If you are looking for best research/recommendation and do not want to invest much of times, then this pack is perfect for you.</Trans></Trans></p>
@@ -119,6 +127,7 @@ const SmartFuture = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default SmartFuture;

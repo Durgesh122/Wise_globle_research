@@ -2,9 +2,15 @@
 import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Trans } from '../i18nShim';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const Cash = () => (
   <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+      <Helmet>
+        <title>Cash Recommendations — Wise Global</title>
+        <meta name="description" content="Cash-segment recommendations and trading rules for NSE stocks. Research-backed intraday and positional calls." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/cash" />
+      </Helmet>
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.Cash.cash">Cash</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Wise Global Research Analyst provides Equity research in the NSE cash segment by dedicated and experienced Research Analysts after in-depth technical analysis to our client. Our Equity trading research are produced with a high level of accuracy. We believe in such kind of volatile market our customers should only focus on intraday recommendations and should not carry forward any position for the next day. Stock cash is designed and destined to deliver returns that you deserve. It offers you nearly 2 to 3 intraday recommendations with a good level of accuracy. The recommendations are given in script traded on NSE. Our timely generated technical recommendations provide adequate time to enter in trades. Our recommendations are supreme blend of Technical and fundamental research. A pure intraday product, where customer receives stock recommendations in NSE cash segment.

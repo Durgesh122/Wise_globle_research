@@ -3,6 +3,8 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import { FaTimesCircle } from 'react-icons/fa';
 
+
+// Helmet removed: not used in this component
 // Basic catalog of site pages to search through
 const pages = [
   { path: '/', label: 'Home', description: 'Return to the main page.', category: 'General' },

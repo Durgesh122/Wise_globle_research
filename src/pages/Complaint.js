@@ -13,6 +13,8 @@ import {
 } from 'react-icons/fa';
 import { RiCustomerService2Fill } from 'react-icons/ri';
 
+
+import { Helmet } from 'react-helmet-async';
 const Complaint = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -57,7 +59,13 @@ const Complaint = () => {
   const prevStep = () => setCurrentStep(prev => prev - 1);
 
   return (
-    <motion.div
+    <>
+      <Helmet>
+        <title>Complaint - Wise Global Research</title>
+        <meta name="description" content="Complaint page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/complaint" />
+      </Helmet>
+<motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -276,6 +284,7 @@ const Complaint = () => {
 
       </div>
     </motion.div>
+    </>
   );
 };
 

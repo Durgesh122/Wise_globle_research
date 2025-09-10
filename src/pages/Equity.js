@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bar, Line } from 'react-chartjs-2';
@@ -145,6 +146,20 @@ const Equity = () => {
       animate="visible"
       variants={containerVariants}
     >
+      <Helmet>
+        <title>Equity Services & Plans — Wise Global Research</title>
+        <meta name="description" content="Equity investment services, portfolio construction, and performance analytics for Indian investors. Plans for individual and institutional clients." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/equity" />
+        <script type="application/ld+json">
+          {`{
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Equity Services - Wise Global Research",
+            "url": "https://wiseglobalresearch.com/equity",
+            "description": "Equity investment services, portfolio construction and performance analytics."
+          }`}
+        </script>
+      </Helmet>
       {/* Hero Section */}
       <motion.section className="text-center mb-16" variants={itemVariants}>
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4"><Trans i18nKey="pages.Equity.equity-services">Equity Services</Trans></h1>

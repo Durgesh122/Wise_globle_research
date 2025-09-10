@@ -4,6 +4,8 @@ import { ref, onValue } from 'firebase/database';
 import { db } from '../firebase';
 import { motion } from 'framer-motion';
 
+
+import { Helmet } from 'react-helmet-async';
 const ComplaintData = () => {
   const [tableData, setTableData] = useState([]);
   const [loadingTable, setLoadingTable] = useState(true);
@@ -41,7 +43,13 @@ const ComplaintData = () => {
   }, []);
 
   return (
-    <motion.section
+    
+      <Helmet>
+        <title>Complaint Data - Wise Global Research</title>
+        <meta name="description" content="Complaint Data page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/complaintdata" />
+      </Helmet>
+<motion.section
       className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
+
+import { Helmet } from 'react-helmet-async';
 const Index = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState('nifty');
@@ -82,7 +84,13 @@ const Index = () => {
   const activeIndex = indicesData[activeTab];
 
   return (
-    <motion.div 
+    <>
+      <Helmet>
+        <title>Index - Wise Global Research</title>
+        <meta name="description" content="Index page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/index" />
+      </Helmet>
+<motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -330,6 +338,7 @@ const Index = () => {
 
       {/* Regulatory Disclaimer removed as per request */}
     </motion.div>
+    </>
   );
 };
 

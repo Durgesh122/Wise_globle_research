@@ -221,6 +221,19 @@ const StockIndexOption = () => {
           name="description"
           content="Wise Global offers SEBI-registered stock index options advisory with research-driven calls, real-time alerts, and advanced strategies for Nifty and Bank Nifty. Start trading confidently."
         />
+        <link rel="canonical" href="https://wiseglobal.com/stock-index-options" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Stock Index Options Trading India | Wise Global" />
+        <meta name="twitter:description" content="Join Wise Global for SEBI-registered stock index options advisory with real-time alerts and advanced strategies for Nifty and Bank Nifty." />
+        <meta name="twitter:image" content="https://wiseglobal.com/assets/og-index-options.jpg" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            'name': 'Stock Index Options Trading India',
+            'description': 'SEBI-registered stock index options advisory for Nifty and Bank Nifty with research-driven calls and real-time alerts.'
+          })}
+        </script>
         <meta
           name="keywords"
           content="stock index options trading, Nifty options, Bank Nifty options, options trading India, SEBI registered advisor, index options strategies, financial advisory India"

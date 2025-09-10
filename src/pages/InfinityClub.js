@@ -3,8 +3,16 @@ import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Trans } from '../i18nShim';
 import { Link } from 'react-router-dom';
 
+
+import { Helmet } from 'react-helmet-async';
 const InfinityClub = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>Infinity Club - Wise Global Research</title>
+        <meta name="description" content="Infinity Club page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/infinityclub" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.InfinityClub.infinity-club">Infinity Club</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       In Infinity Club, we provide you Future and Option intraday recommendations with proper target &amp; Stop loss in NSE Stock Market. The Pack is specially designed for traders who’s working in all segment of NSE market with proper research-based recommendations and believes in limited but quality trades. Our highly experienced teams always focus on proper entry and exit time of customer; we provide you research on the in-depth analysis using technical and fundamental analysis.
@@ -111,6 +119,7 @@ const InfinityClub = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default InfinityClub;

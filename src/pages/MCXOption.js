@@ -5,8 +5,16 @@ import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 
+
+import { Helmet } from 'react-helmet-async';
 const MCXOption = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>M C X Option - Wise Global Research</title>
+        <meta name="description" content="M C X Option page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/mcxoption" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.MCXOption.mcx-options">MCX Options</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       MCX Options service is crafted for traders seeking actionable and timely options trading recommendations on MCX commodities. Our expert team blends technical and fundamental research to deliver 1-2 intraday or positional options calls daily in Bullions, Base Metals, and Energy. Each recommendation is delivered with clear entry, exit, targets, and stop loss, ensuring you have the edge in the options market.
@@ -94,6 +102,7 @@ const MCXOption = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default MCXOption;

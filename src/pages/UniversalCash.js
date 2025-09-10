@@ -1,9 +1,28 @@
 
 import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const UniversalCash = () => (
   <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+    <Helmet>
+      <title>Universal Cash Recommendations | Wise Global</title>
+      <meta name="description" content="Universal Cash: Cash-segment recommendations (intraday/BTST/positional) for NSE with clear targets and stop-loss levels. Research-backed trades delivered to registered channels." />
+      <meta name="keywords" content="universal cash, cash segment recommendations, intraday calls, BTST recommendations, positional trades, NSE stock recommendations" />
+      <link rel="canonical" href="https://wiseglobal.com/universal-cash" />
+      <meta property="og:title" content="Universal Cash Recommendations | Wise Global" />
+      <meta property="og:description" content="High-quality cash-segment recommendations for NSE traders, including intraday, BTST and positional calls with clear entry, targets and stop-loss." />
+      <meta property="og:url" content="https://wiseglobal.com/universal-cash" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          'name': 'Universal Cash',
+          'description': 'Universal Cash provides cash-segment recommendations for NSE stocks with clear targets and stop-loss levels, delivered by Wise Global.'
+        })}
+      </script>
+    </Helmet>
   <h1 className="text-4xl font-extrabold mb-4 text-center text-white">Universal Cash</h1>
     <p className="text-lg mb-6 text-center text-white">
       Universal Cash provides cash-segment recommendations (intraday / BTST / positional) for the NSE stock market with clear targets and stop‑loss levels. This pack is designed for traders focused on the cash segment who prefer a small number of high‑quality, research-backed trades. Our experienced research team provides in-depth technical and fundamental analysis and shares recommendations via your registered contact channel.

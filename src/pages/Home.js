@@ -51,15 +51,51 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Wise Global Research Services — Market Research & Insights</title>
-        <meta name="description" content="Wise Global Research Services delivers market research, analytics, and data-driven insights to help businesses make informed decisions." />
-        <meta property="og:title" content="Wise Global Research Services — Market Research & Insights" />
-        <meta property="og:description" content="Market research, analytics, and strategic insights from Wise Global Research Services." />
+        <title>Wise Global Research — Nifty & Sensex analysis, Stock Recommendations</title>
+        <meta name="description" content="SEBI-registered stock market research: live Nifty & Sensex updates, intraday tips, stock recommendations, and futures/options analysis for Indian traders." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/" />
+        <meta property="og:title" content="Wise Global Research — Nifty & Sensex analysis, Stock Recommendations" />
+        <meta property="og:description" content="Live market updates, high-probability stock recommendations, and research-backed trading strategies for NSE, BSE and MCX." />
         <meta property="og:url" content="https://wiseglobalresearch.com/" />
         <meta property="og:image" content="https://wiseglobalresearch.com/og-image.jpg" />
-        <meta name="twitter:title" content="Wise Global Research Services — Market Research & Insights" />
-        <meta name="twitter:description" content="Wise Global Research Services delivers market research, analytics, and data-driven insights to help businesses make informed decisions." />
+        <meta name="twitter:title" content="Wise Global Research — Market Research & Stock Tips" />
+        <meta name="twitter:description" content="Get Nifty & Sensex updates, intraday signals, and research-backed stock recommendations for Indian investors." />
         <meta name="twitter:image" content="https://wiseglobalresearch.com/og-image.jpg" />
+        <script type="application/ld+json">
+          {`{
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": "https://wiseglobalresearch.com/#org",
+                "name": "Wise Global Research",
+                "url": "https://wiseglobalresearch.com/",
+                "logo": "https://wiseglobalresearch.com/og-image.jpg",
+                "sameAs": []
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://wiseglobalresearch.com/#website",
+                "url": "https://wiseglobalresearch.com/",
+                "name": "Wise Global Research",
+                "publisher": { "@id": "https://wiseglobalresearch.com/#org" },
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://wiseglobalresearch.com/search?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              },
+              {
+                "@type": "WebPage",
+                "@id": "https://wiseglobalresearch.com/#homepage",
+                "url": "https://wiseglobalresearch.com/",
+                "name": "Wise Global Research — Home",
+                "isPartOf": { "@id": "https://wiseglobalresearch.com/#website" },
+                "description": "SEBI-registered stock market research, live market updates, intraday tips, and stock recommendations for Indian traders."
+              }
+            ]
+          }`}
+        </script>
       </Helmet>
       <motion.div
         className="min-h-screen bg-transparent text-white relative overflow-hidden"

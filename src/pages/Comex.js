@@ -1,5 +1,6 @@
 // src/pages/Comex.js
 import React, { useState, useEffect, useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSearch, FaPlus, FaTrash } from 'react-icons/fa';
@@ -113,6 +114,13 @@ const Comex = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+      <Helmet>
+        <title>Comex Dashboard — Indian Stock Market Overview | Wise Global</title>
+        <meta name="description" content="Comex dashboard: searchable mock NIFTY-500 style stock list, watchlist, and market filters for quick research." />
+        <meta name="keywords" content="Comex, stock dashboard, NIFTY, watchlist, stock research" />
+        <link rel="canonical" href="https://wiseglobalresearch.com/comex" />
+        <meta name="twitter:card" content="summary" />
+      </Helmet>
       <div className="max-w-7xl mx-auto">
         <motion.h1
           className="text-3xl font-bold text-white text-center mb-8  block px-4 py-2 rounded mx-auto"

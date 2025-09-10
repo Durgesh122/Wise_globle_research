@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import AccessibleMedia from '../components/AccessibleMedia';
 
+
+import { Helmet } from 'react-helmet-async';
 export default function AccessibilityStatement() {
   // Format date as `DD MMMM YYYY`
   const formatDate = (date) =>
@@ -72,7 +74,13 @@ export default function AccessibilityStatement() {
   };
 
   return (
-    <section aria-labelledby="a11y-title" className="min-h-screen text-white p-4 sm:p-6 md:p-10 print:bg-white print:text-black">
+    <>
+      <Helmet>
+        <title>Accessibility Statement - Wise Global Research</title>
+        <meta name="description" content="Accessibility Statement page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/accessibilitystatement" />
+      </Helmet>
+      <section aria-labelledby="a11y-title" className="min-h-screen text-white p-4 sm:p-6 md:p-10 print:bg-white print:text-black">
       <div className="max-w-4xl mx-auto text-center">
         <h1 id="a11y-title" className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
           Accessibility Statement
@@ -307,5 +315,6 @@ export default function AccessibilityStatement() {
         </div>
       </div>
     </section>
+    </>
   );
 }

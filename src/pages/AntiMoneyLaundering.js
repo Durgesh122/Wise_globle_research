@@ -1,10 +1,20 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import ant2Image from '../assets/images/Ant2.png';
 import mlImage from '../assets/images/MoneyLaundering.png';
 
 const AntiMoneyLaundering = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-5 text-white">
+      <Helmet>
+        <title>Anti-Money Laundering (AML) — Wise Global</title>
+        <meta name="description" content="Anti-Money Laundering (AML) overview, controls, KYC and monitoring practices as implemented by financial institutions and regulators." />
+        <meta name="keywords" content="anti money laundering, AML, KYC, transaction monitoring, financial compliance" />
+        <link rel="canonical" href="https://wiseglobalresearch.com/anti-money-laundering" />
+        <meta property="og:title" content="Anti-Money Laundering (AML) — Wise Global" />
+        <meta property="og:description" content="Overview of AML policies, KYC processes, transaction monitoring, and controls used by financial institutions to prevent money laundering." />
+        <meta name="twitter:card" content="summary" />
+      </Helmet>
       <h1 className="mt-8 text-3xl font-bold">Anti-Money Laundering (AML)</h1>
       <img
         src={ant2Image}

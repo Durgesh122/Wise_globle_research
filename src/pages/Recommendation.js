@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import '../styles/Recommendation.css';
 import { motion } from 'framer-motion';
@@ -35,6 +36,20 @@ const Recommendation = () => {
       initial="hidden"
       animate="visible"
     >
+      <Helmet>
+        <title>Market Research & Stock Recommendations — Wise Global Research</title>
+        <meta name="description" content="Research-backed stock recommendations, market insights, and SEBI-compliant disclosures from Wise Global Research. Read disclaimers before acting on any recommendation." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/recommendation" />
+        <script type="application/ld+json">
+          {`{
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Market Research & Stock Recommendations",
+            "url": "https://wiseglobalresearch.com/recommendation",
+            "description": "Research-backed stock recommendations and market insights for Indian investors."
+          }`}
+        </script>
+      </Helmet>
       {/* Hero Section */}
       <motion.section
         className="bg-gradient-to-r from-gray-800 to-gray-900 text-center py-20 lg:py-24 recommendation-bg recommendation-white-text"

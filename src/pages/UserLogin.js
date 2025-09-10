@@ -10,6 +10,8 @@ import {
 import { auth } from "../firebase";
 import { toast } from "react-toastify";
 import { motion, useAnimation } from "framer-motion";
+
+import { Helmet } from 'react-helmet-async';
 const smallLogoName = 'w';
 const smallLogoSrcSetAvif = ['/assets/images/w-64.avif 64w','/assets/images/w-96.avif 96w','/assets/images/w-112.avif 112w','/assets/images/w-128.avif 128w','/assets/images/w-256.avif 256w'].join(', ');
 const smallLogoSrcSetWebp = ['/assets/images/w-64.webp 64w','/assets/images/w-96.webp 96w','/assets/images/w-112.webp 112w','/assets/images/w-128.webp 128w','/assets/images/w-256.webp 256w'].join(', ');
@@ -248,7 +250,13 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-transparent">
+    <>
+      <Helmet>
+        <title>User Login - Wise Global Research</title>
+        <meta name="description" content="User Login page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/userlogin" />
+      </Helmet>
+<div className="min-h-screen flex items-center justify-center bg-transparent">
       <motion.div
         variants={formVariants}
         initial="hidden"
@@ -413,6 +421,7 @@ const UserLogin = () => {
   {/* No MFA UI */}
       </motion.div>
     </div>
+    </>
   );
 };
 

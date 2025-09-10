@@ -5,8 +5,16 @@ import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 
+
+import { Helmet } from 'react-helmet-async';
 const MCXSupreme = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>M C X Supreme - Wise Global Research</title>
+        <meta name="description" content="M C X Supreme page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/mcxsupreme" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.MCXSupreme.mcx-supreme">MCX Supreme</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       MCX Supreme is designed and destined to deliver recommendations with good market moves. Its unique blend of technical and fundamental research makes it one of the most exciting and rewarding products for commodity traders. Receive 1-2 intraday recommendations daily in Bullions, Base Metals, and Energy traded on MCX. Our timely technical recommendations provide you with adequate time to enter trades, while our supreme blend of technical and globally covered fundamental research ensures you stay ahead in the market.
@@ -120,6 +128,7 @@ const MCXSupreme = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default MCXSupreme;

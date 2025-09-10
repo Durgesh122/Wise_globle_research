@@ -3,8 +3,16 @@ import { FaLightbulb, FaBolt, FaLock } from 'react-icons/fa';
 import { Trans } from '../i18nShim';
 import { Link } from 'react-router-dom';
 
+
+import { Helmet } from 'react-helmet-async';
 const ImpulseIndexOptions = () => (
-  <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+  <>
+      <Helmet>
+        <title>Impulse Index Options - Wise Global Research</title>
+        <meta name="description" content="Impulse Index Options page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/impulseindexoptions" />
+      </Helmet>
+<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.ImpulseIndexOptions.impulse-index-options"><Trans i18nKey="pages.ImpulseIndexOptions.impulse-index-options-3">Impulse Index Options</Trans></Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Impulse Index Options focuses on high-volatility index trading, capitalizing on rapid index movements. Our expert team provides intraday and positional recommendations in index options, with a focus on timely entry and exit, proper targets, and stop loss. The service is designed for traders who want to benefit from sharp index moves with research-backed signals and disciplined risk management.
@@ -110,6 +118,7 @@ const ImpulseIndexOptions = () => (
       </div>
     </div>
   </div>
+  </>
 );
 
 export default ImpulseIndexOptions;

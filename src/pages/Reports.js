@@ -14,6 +14,7 @@ import { FiSearch, FiEye } from 'react-icons/fi';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet-async';
 
 // Constants
 const WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -41,14 +42,21 @@ const buttonVariants = {
 
 // Loading spinner component
 const LoadingSpinner = () => (
-  <motion.div
-    className="flex justify-center items-center py-6"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.5 }}
-  >
-    <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-  </motion.div>
+  <>
+    <Helmet>
+      <title>Reports - Wise Global Research</title>
+      <meta name="description" content="Reports page — Wise Global Research." />
+      <link rel="canonical" href="https://wiseglobalresearch.com/reports" />
+    </Helmet>
+    <motion.div
+      className="flex justify-center items-center py-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+    </motion.div>
+  </>
 );
 
 

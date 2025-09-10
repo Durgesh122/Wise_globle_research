@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 
@@ -88,6 +89,13 @@ const BTST = () => {
 
   return (
     <div className="min-h-screen py-20 px-4 sm:px-6 bg-transparent text-white relative">
+      <Helmet>
+        <title>BTST — Buy Today Sell Tomorrow Research | Wise Global</title>
+        <meta name="description" content="BTST research and reports — short-term Buy Today Sell Tomorrow strategies, entries, targets and stop-loss guidance from SEBI-registered analysts." />
+        <meta name="keywords" content="BTST, Buy Today Sell Tomorrow, short term trading, BTST research" />
+        <link rel="canonical" href="https://wiseglobalresearch.com/btst" />
+        <meta name="twitter:card" content="summary" />
+      </Helmet>
       {/* Sample Report Modal */}
       {showReport && (
         <motion.div 

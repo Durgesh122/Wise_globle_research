@@ -4,9 +4,17 @@ import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { FaCheckCircle } from 'react-icons/fa';
 
+
+import { Helmet } from 'react-helmet-async';
 function Terms() {
   return (
-    <div
+    <>
+      <Helmet>
+        <title>Terms - Wise Global Research</title>
+        <meta name="description" content="Terms page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/terms" />
+      </Helmet>
+<div
       className="container mx-auto px-4 py-12 min-h-screen bg-transparent text-white"
       data-aos="fade-in"
     >
@@ -166,6 +174,7 @@ function Terms() {
         </section>
       </motion.div>
     </div>
+    </>
   );
 }
 
