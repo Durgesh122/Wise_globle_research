@@ -6,7 +6,9 @@ import { BASE_URL, DEFAULT_META, ROUTE_META, isNoIndexPath } from './seo-config'
 const toAbsoluteUrl = (path) => {
   if (!path) return undefined;
   if (/^https?:\/\//i.test(path)) return path;
-  return `${BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+  // ensure single slash between BASE_URL and path
+  const p = path.startsWith('/') ? path : `/${path}`;
+  return `${BASE_URL}${p}`;
 };
 
 export default function SeoHelmet() {
@@ -16,7 +18,7 @@ export default function SeoHelmet() {
   const description = routeMeta.description || DEFAULT_META.description;
   const keywords = routeMeta.keywords || DEFAULT_META.keywords;
   const robots = isNoIndexPath(pathname) ? 'noindex, nofollow' : (routeMeta.robots || DEFAULT_META.robots);
-  const canonical = `${BASE_URL}${pathname === '/' ? '' : pathname}`;
+  const canonical = toAbsoluteUrl(pathname === '/' ? '' : pathname);
   const ogImage = toAbsoluteUrl(routeMeta.image || DEFAULT_META.image);
   const orgJsonLd = {
     '@context': 'https://schema.org',
@@ -46,8 +48,8 @@ export default function SeoHelmet() {
       <link rel="canonical" href={canonical} />
 
       {/* Open Graph */}
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content={canonical} />
+  <meta property="og:type" content={pathname === '/market-news' ? 'article' : 'website'} />
+  <meta property="og:url" content={canonical} />
       <meta property="og:title" content={title} />
       {description && <meta property="og:description" content={description} />}
       {ogImage && <meta property="og:image" content={ogImage} />}
@@ -62,6 +64,28 @@ export default function SeoHelmet() {
   {/* JSON-LD structured data */}
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+  {/* Minimal NewsArticle JSON-LD for market-news to help rich results */}
+  {pathname === '/market-news' && (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'NewsArticle',
+          headline: title,
+          description,
+          url: canonical,
+          image: ogImage ? [ogImage] : undefined,
+          datePublished: new Date().toISOString(),
+          publisher: {
+            '@type': 'Organization',
+            name: 'Wise Global Research',
+            logo: { '@type': 'ImageObject', url: toAbsoluteUrl('/assets/images/logo.png') }
+          }
+        })
+      }}
+    />
+  )}
     </Helmet>
   );
 }

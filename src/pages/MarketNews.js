@@ -109,6 +109,48 @@ function MarketNews() {
     ? news 
     : news.filter(item => item.category === activeCategory);
 
+  // Build JSON-LD graph including Organization, CollectionPage and NewsArticle entries
+  const jsonLdGraph = React.useMemo(() => {
+    const org = {
+      "@type": "Organization",
+      "name": "Wise Global Research",
+      "url": "https://wiseglobalresearch.com/",
+      "@id": "https://wiseglobalresearch.com/#org"
+    };
+
+    const collection = {
+      "@type": "CollectionPage",
+      "name": "Live Market News",
+      "description": "Live stock market news and updates covering Nifty, Sensex, stocks, commodities and economic headlines.",
+      "url": "https://wiseglobalresearch.com/market-news",
+      "isPartOf": { "@id": "https://wiseglobalresearch.com/#org" }
+    };
+
+    const articles = news.map((item) => {
+      const now = new Date().toISOString();
+      return {
+        "@type": "NewsArticle",
+        "headline": item.title,
+        "description": item.summary,
+        "datePublished": now,
+        "dateModified": now,
+        "author": { "@type": "Person", "name": item.source || 'Wise Global Research' },
+        "image": item.image ? [item.image] : undefined,
+        "mainEntityOfPage": { "@type": "WebPage", "@id": item.url && item.url !== '#' ? item.url : `https://wiseglobalresearch.com/market-news#news-${item.id}` },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Wise Global Research",
+          "logo": { "@type": "ImageObject", "url": "https://wiseglobalresearch.com/assets/images/logo.png" }
+        }
+      };
+    });
+
+    return {
+      "@context": "https://schema.org",
+      "@graph": [org, collection, ...articles]
+    };
+  }, [news]);
+
   // Color scheme that works well in both light and dark modes
   const colors = {
     primary: isDarkMode ? '#60a5fa' : '#2563eb',
@@ -131,24 +173,7 @@ function MarketNews() {
         <meta property="og:title" content="Live Market News - Wise Global Research" />
         <meta property="og:description" content="Live stock market news, Nifty & Sensex updates, and real-time market headlines from Wise Global Research." />
         <script type="application/ld+json">
-          {`{
-            "@context": "https://schema.org",
-            "@graph": [
-              {
-                "@type": "Organization",
-                "name": "Wise Global Research",
-                "url": "https://wiseglobalresearch.com/",
-                "@id": "https://wiseglobalresearch.com/#org"
-              },
-              {
-                "@type": "CollectionPage",
-                "name": "Live Market News",
-                "description": "Live stock market news and updates covering Nifty, Sensex, stocks, commodities and economic headlines.",
-                "url": "https://wiseglobalresearch.com/market-news",
-                "isPartOf": { "@id": "https://wiseglobalresearch.com/#org" }
-              }
-            ]
-          }`}
+          {JSON.stringify(jsonLdGraph)}
         </script>
       </Helmet>
     <motion.div 

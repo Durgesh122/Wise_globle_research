@@ -15,11 +15,12 @@ export const DEFAULT_META = {
 // Route-specific meta (keys must match the configured routes in App.js)
 export const ROUTE_META = {
   '/': {
-    title: 'Wise Global Research – Stock Market Research & Advisory (SEBI RA)',
+    // Candidate A (short, keyword-focused)
+    title: 'Wise Global Research — SEBI Registered Stock Market Research',
     description:
-      'SEBI-registered research and actionable insights for equity, MCX & index options. Improve your trading performance with disciplined strategies and risk control.',
+      'SEBI-registered research analyst offering equity, MCX and index options insights, trade ideas and risk-managed strategies.',
     keywords:
-      'SEBI research analyst, stock market tips, equity research, MCX advisory, index options, intraday trading, swing trading, investment insights',
+      'SEBI research analyst, stock market research, equity insights, MCX advisory, index options, trading strategies',
   },
   '/about': {
     title: 'About Us | Wise Global Research',
