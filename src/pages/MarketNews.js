@@ -23,88 +23,68 @@ function MarketNews() {
     return () => darkModeMediaQuery.removeListener(handleChange);
   }, []);
 
-  // NewsAPI integration
+  // Static data (no external API)
   useEffect(() => {
-    const fetchNews = async () => {
-      setLoading(true);
-      try {
-  // Use server-side proxy to avoid exposing API keys in client bundle
-  const proxyUrl = process.env.REACT_APP_NEWS_PROXY_URL || '/api/news?q=stock+market+OR+nifty+OR+sensex+OR+sebi';
-  const response = await fetch(proxyUrl);
-  const data = await response.json();
-        
-  if (data && data.articles) {
-          const processedNews = data.articles.slice(0, 10).map((article, index) => ({
-            id: index,
-            title: article.title,
-            source: article.source.name,
-            time: new Date(article.publishedAt).toLocaleTimeString(),
-            category: getCategory(article.title),
-            impact: getImpact(article.title),
-            summary: article.description || article.content?.substring(0, 150) + '...',
-            image: article.urlToImage || 'https://via.placeholder.com/150',
-            url: article.url
-          }));
-          setNews(processedNews);
-          setLastUpdated(new Date().toLocaleTimeString());
-        }
-  } catch (error) {
-        console.error("Error fetching news:", error);
-        // Fallback to mock data if API fails
-        setNews(getMockData());
-      } finally {
-        setLoading(false);
+    const staticItems = [
+      {
+        id: 1,
+        title: 'Nifty holds above 24,000; PSU banks and IT stocks lead gains',
+        source: 'Economic Times',
+        time: 'Just now',
+        category: 'markets',
+        impact: 'medium',
+        summary: 'Benchmark indices trade in a tight range with positive bias as select banking and IT heavyweights see fresh buying interest.',
+        image: 'https://via.placeholder.com/150',
+        url: '#'
+      },
+      {
+        id: 2,
+        title: 'RBI seen holding repo rate; focus shifts to liquidity stance',
+        source: 'Moneycontrol',
+        time: '5 min ago',
+        category: 'economy',
+        impact: 'high',
+        summary: 'Analysts expect the central bank to keep rates unchanged while fine-tuning liquidity operations amid stable core inflation.',
+        image: 'https://via.placeholder.com/150',
+        url: '#'
+      },
+      {
+        id: 3,
+        title: 'Gold prices steady; rupee movement and global yields in focus',
+        source: 'Business Standard',
+        time: '12 min ago',
+        category: 'commodities',
+        impact: 'medium',
+        summary: 'Bullion trades flat domestically as traders watch US treasury yields and INR trajectory for near-term direction cues.',
+        image: 'https://via.placeholder.com/150',
+        url: '#'
+      },
+      {
+        id: 4,
+        title: 'SEBI proposes tighter disclosure norms for large cap IPOs',
+        source: 'Financial Express',
+        time: '20 min ago',
+        category: 'regulations',
+        impact: 'high',
+        summary: 'Draft consultation suggests enhanced risk factor articulation and granular use-of-proceeds reporting for upcoming big-ticket IPOs.',
+        image: 'https://via.placeholder.com/150',
+        url: '#'
+      },
+      {
+        id: 5,
+        title: 'IT majors eye margin resilience despite wage hikes',
+        source: 'LiveMint',
+        time: '30 min ago',
+        category: 'stocks',
+        impact: 'medium',
+        summary: 'Tier-1 IT services firms expected to defend operating margins through utilization optimization and pyramid realignment.',
+        image: 'https://via.placeholder.com/150',
+        url: '#'
       }
-    };
-
-    // Helper functions
-    const getCategory = (title) => {
-      if (/nifty|sensex|stock market|bse|nse/i.test(title)) return 'markets';
-      if (/tcs|reliance|hdfc|infosys|itc|stock/i.test(title)) return 'stocks';
-      if (/rbi|economy|gdp|inflation/i.test(title)) return 'economy';
-      if (/gold|silver|oil|commodity/i.test(title)) return 'commodities';
-      if (/sebi|regulation|law/i.test(title)) return 'regulations';
-      return 'general';
-    };
-
-    const getImpact = (title) => {
-      return /rate cut|rbi|sebi|regulation|surge|plunge|crisis/i.test(title) 
-        ? 'high' 
-        : 'medium';
-    };
-
-    const getMockData = () => {
-      return [
-        {
-          id: 1,
-          title: 'RBI keeps repo rate unchanged at 6.5% for seventh consecutive time',
-          source: 'Economic Times',
-          time: '2 hours ago',
-          category: 'economy',
-          impact: 'high',
-          summary: 'The Reserve Bank of India maintained the repo rate at 6.5% in its bi-monthly monetary policy meeting today, in line with market expectations.',
-          image: 'https://via.placeholder.com/150',
-          url: '#'
-        },
-        {
-          id: 2,
-          title: 'Nifty 50 hits new all-time high of 22,500 led by banking stocks',
-          source: 'Moneycontrol',
-          time: '4 hours ago',
-          category: 'markets',
-          impact: 'medium',
-          summary: 'The Nifty 50 index crossed the 22,500 mark for the first time ever as banking stocks surged after RBI policy announcement.',
-          image: 'https://via.placeholder.com/150',
-          url: '#'
-        }
-      ];
-    };
-
-    fetchNews();
-    
-    // Set up refresh interval (every 15 minutes to stay within API limits)
-    const interval = setInterval(fetchNews, 900000);
-    return () => clearInterval(interval);
+    ];
+    setNews(staticItems);
+    setLastUpdated(new Date().toLocaleTimeString());
+    setLoading(false);
   }, []);
 
   const categories = [
@@ -241,19 +221,17 @@ function MarketNews() {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ delay: index * 0.1, type: 'spring', stiffness: 100 }}
-                className="rounded-lg overflow-hidden transition-shadow hover:shadow-lg"
+                className="rounded-lg overflow-hidden transition-transform"
                 style={{ 
                   backgroundColor: colors.cardBg,
                   borderColor: colors.border,
                   borderWidth: '1px',
-                  backdropFilter: 'blur(10px)'
-                }}
-                whileHover={{ 
-                  y: -5,
+                  backdropFilter: 'blur(10px)',
                   boxShadow: isDarkMode 
-                    ? '0 10px 25px -5px rgba(0, 0, 0, 0.25)' 
-                    : '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
+                    ? '0 2px 6px -1px rgba(0,0,0,0.4)' 
+                    : '0 2px 6px -1px rgba(0,0,0,0.12)'
                 }}
+                whileHover={{ y: -4 }}
               >
                 <div className="p-4 md:p-6">
                   <div className="flex justify-between items-start">
@@ -308,12 +286,11 @@ function MarketNews() {
                         className="ml-4 hidden md:block"
                       >
                         <img 
-                          src={item.image} 
+                          src={item.image.startsWith('data:') ? item.image : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" rx="8" fill="%23e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="10" fill="%236b7280" font-family="Arial">NEWS</text></svg>'}
                           alt={item.title}
                           className="w-24 h-24 object-cover rounded"
                           loading="lazy"
                           decoding="async"
-                          onError={(e) => { e.currentTarget.onerror = null; }}
                         />
                       </motion.div>
                     )}

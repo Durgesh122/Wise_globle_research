@@ -1,118 +1,169 @@
+/* Firebase Cloud Function to email popup form submissions.
+ * Fetches data from Realtime Database node `popoForms`, converts to CSV, and emails using SMTP.
+ * Requires environment config (set with firebase functions:config:set):
+ *   smtp.host="smtp.example.com"
+ *   smtp.port="587"
+ *   smtp.user="username"
+ *   smtp.pass="password"
+ *   smtp.secure="false"   // or true for 465
+ *   admin.email="admin@example.com" // destination email (comma separated allowed)
+ */
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
-admin.initializeApp();
-const db = admin.firestore();
-
-// Use secret (set via: firebase functions:secrets:set RESEND_API_KEY)
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Helper: IST now and aligned windows
-function getISTDate(now = new Date()) {
-  // IST = UTC +5:30
-  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-  return new Date(utc + (5.5 * 60 * 60000));
+// Initialize app only once
+if (!admin.apps.length) {
+	admin.initializeApp();
 }
 
-// Windows: 9-12,12-15,15-18,18 cutoff (only run at 9,12,15,18 IST)
-// Schedule Cloud Functions in UTC equivalent times: 03:30,06:30,09:30,12:30 UTC
-// We still guard internally with hour checks to avoid accidental multiple executions.
+const db = admin.database();
 
-async function buildDigestHTML(submissions) {
-  if (!submissions.length) {
-    return '<p>No new popup submissions in this window.</p>';
-  }
-  const rows = submissions.map(s => {
-    const d = s.createdAt ? s.createdAt.toDate ? s.createdAt.toDate() : s.createdAt : null;
-    const when = d ? d.toISOString().replace('T',' ').substring(0,16) : '';
-    return `<tr>
-      <td style="border:1px solid #ddd;padding:6px;">${when}</td>
-      <td style="border:1px solid #ddd;padding:6px;">${(s.name||'').replace(/</g,'&lt;')}</td>
-      <td style="border:1px solid #ddd;padding:6px;">${(s.email||'').replace(/</g,'&lt;')}</td>
-      <td style="border:1px solid #ddd;padding:6px;">${(s.phone||'').replace(/</g,'&lt;')}</td>
-      <td style="border:1px solid #ddd;padding:6px;">${(s.message||'').replace(/</g,'&lt;')}</td>
-    </tr>`;
-  }).join('');
-  return `<!DOCTYPE html><html><body>
-    <h2 style="font-family:Arial;margin:0 0 12px;">Popup Submissions Digest</h2>
-    <p style="font-family:Arial;margin:0 0 16px;">Window summary of latest leads.</p>
-    <table style="border-collapse:collapse;font-family:Arial;font-size:13px;min-width:600px;">
-      <thead>
-        <tr>
-          <th style="border:1px solid #ddd;padding:6px;text-align:left;">Time (UTC)</th>
-          <th style="border:1px solid #ddd;padding:6px;text-align:left;">Name</th>
-          <th style="border:1px solid #ddd;padding:6px;text-align:left;">Email</th>
-          <th style="border:1px solid #ddd;padding:6px;text-align:left;">Phone</th>
-          <th style="border:1px solid #ddd;padding:6px;text-align:left;">Message</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-  </body></html>`;
+// Build transporter from functions config
+function buildTransporter() {
+	const cfg = functions.config();
+	if (!cfg.smtp || !cfg.smtp.host) {
+		throw new functions.https.HttpsError(
+			'failed-precondition',
+			'SMTP configuration missing. Set functions config smtp.*'
+		);
+	}
+	return nodemailer.createTransport({
+		host: cfg.smtp.host,
+		port: cfg.smtp.port ? parseInt(cfg.smtp.port, 10) : 587,
+		secure: cfg.smtp.secure === 'true' || cfg.smtp.port === '465',
+		auth: cfg.smtp.user
+			? {
+					user: cfg.smtp.user,
+					pass: cfg.smtp.pass,
+				}
+			: undefined,
+	});
 }
 
-exports.popupDigest = functions
-  .runWith({ secrets: ["RESEND_API_KEY"], timeoutSeconds: 120, memory: '256MB' })
-  .pubsub.schedule('30 3,6,9,12 * * *') // 03:30,06:30,09:30,12:30 UTC = 09:00,12:00,15:00,18:00 IST (WITHOUT DST confusion for IST)
-  .timeZone('UTC')
-  .onRun(async () => {
-    const nowIST = getISTDate();
-    const hour = nowIST.getHours();
-    if (![9,12,15,18].includes(hour)) {
-      console.log('Guard hour mismatch, skipping', hour);
-      return null;
-    }
+// Helper: convert JSON array to CSV (simple implementation)
+function toCSV(rows) {
+	if (!rows.length) return '';
+	const headers = Object.keys(rows[0]);
+	const escape = (v) => {
+		if (v == null) return '';
+		const s = String(v).replace(/"/g, '""');
+		if (/[",\n]/.test(s)) return `"${s}"`;
+		return s;
+	};
+	const lines = [headers.join(',')];
+	for (const row of rows) {
+		lines.push(headers.map((h) => escape(row[h])).join(','));
+	}
+	return lines.join('\n');
+}
 
-    const metaRef = db.collection('_meta').doc('popupDigest');
-    const metaSnap = await metaRef.get();
-    let lastSent = null;
-    if (metaSnap.exists) {
-      lastSent = metaSnap.data().lastSent?.toDate ? metaSnap.data().lastSent.toDate() : metaSnap.data().lastSent;
-    }
+exports.emailPopupSubmissions = functions.https.onCall(async (data, context) => {
+	// Optional auth check
+	if (!context.auth) {
+		throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+	}
 
-    // Determine window start: if lastSent within 2h -> use that, else current hour-3
-    let windowStartIST = new Date(nowIST.getTime());
-    windowStartIST.setHours(hour - 3, 0, 0, 0);
-    if (lastSent) {
-      // ensure we don't overlap backwards: use max(lastSent, windowStartIST)
-      if (lastSent > windowStartIST) windowStartIST = lastSent;
-    }
+	try {
+		const snapshot = await db.ref('popoForms').once('value');
+		const val = snapshot.val();
+		if (!val) {
+			return { sent: false, reason: 'No submissions' };
+		}
+		const list = Object.keys(val)
+			.map((k) => ({ id: k, ...val[k] }))
+			.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-    // Convert to UTC timestamp for querying
-    const windowStartUTC = new Date(windowStartIST.getTime() - (5.5 * 60 * 60000));
+		const csvRows = list.map((s) => ({
+			id: s.id,
+			timestamp: s.timestamp,
+			name: s.name || '',
+			mobile: s.mobile || '',
+			city: s.city || '',
+			interest: s.interest || '',
+		}));
 
-    const submissionsRef = db.collection('popupSubmissions');
-    const qs = await submissionsRef
-      .where('createdAt', '>=', admin.firestore.Timestamp.fromDate(windowStartUTC))
-      .orderBy('createdAt', 'asc')
-      .get();
+		const csv = toCSV(csvRows);
 
-    const submissions = qs.docs.map(d => d.data());
-    console.log(`Found ${submissions.length} submissions in window.`);
+		const cfg = functions.config();
+		const to = (cfg.admin && cfg.admin.email) || data.to;
+		if (!to) {
+			throw new functions.https.HttpsError(
+				'invalid-argument',
+				'Destination email not provided (config admin.email or data.to)'
+			);
+		}
 
-    if (submissions.length === 0) {
-      console.log('No submissions this window; skipping email send.');
-      // Still update lastSent to avoid re-scanning same empty window repeatedly
-      await metaRef.set({ lastSent: admin.firestore.FieldValue.serverTimestamp(), lastHour: hour, lastEmpty: true }, { merge: true });
-      return null;
-    }
+		const transporter = buildTransporter();
+		const info = await transporter.sendMail({
+			from: cfg.smtp.user || 'no-reply@example.com',
+			to,
+			subject: data.subject || 'Popup Form Submissions',
+			text: 'Attached are the latest popup form submissions.',
+			attachments: [
+				{
+					filename: 'popup_submissions.csv',
+					content: csv,
+					contentType: 'text/csv',
+				},
+			],
+		});
 
-    const html = await buildDigestHTML(submissions);
-    const subject = `Popup Digest ${hour - 3}-${hour} IST (${submissions.length} new)`;
+		return { sent: true, messageId: info.messageId, count: list.length };
+	} catch (err) {
+		console.error('emailPopupSubmissions error', err);
+		if (err instanceof functions.https.HttpsError) throw err;
+		throw new functions.https.HttpsError('internal', err.message);
+	}
+});
 
-    try {
-      await resend.emails.send({
-        from: 'Wise Global <no-reply@yourdomain.com>',
-        to: ['hemraj8087@gmail.com'],
-        subject,
-        html
-      });
-      await metaRef.set({ lastSent: admin.firestore.FieldValue.serverTimestamp(), lastHour: hour, lastEmpty: false }, { merge: true });
-      console.log('Digest sent');
-    } catch (err) {
-      console.error('Failed to send digest', err);
-    }
+// Scheduled function: send submissions at 09:00,12:00,15:00,18:00 Asia/Kolkata and then purge
+exports.scheduledEmailPopupSubmissions = functions.pubsub
+	.schedule('0 9,12,15,18 * * *') // UTC by default; we'll specify timeZone below
+	.timeZone('Asia/Kolkata')
+	.onRun(async () => {
+		const snapshot = await db.ref('popoForms').once('value');
+		const val = snapshot.val();
+		if (!val) {
+			console.log('No submissions to email at this interval.');
+			return null;
+		}
+		const list = Object.keys(val)
+			.map((k) => ({ id: k, ...val[k] }))
+			.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+		const csvRows = list.map((s) => ({
+			id: s.id,
+			timestamp: s.timestamp,
+			name: s.name || '',
+			mobile: s.mobile || '',
+			city: s.city || '',
+			interest: s.interest || '',
+		}));
+		const csv = toCSV(csvRows);
+		try {
+			const cfg = functions.config();
+			const to = cfg.admin && cfg.admin.email;
+			if (!to) {
+				console.warn('admin.email not set; skipping email send');
+				return null;
+			}
+			const transporter = buildTransporter();
+			await transporter.sendMail({
+				from: cfg.smtp.user || 'no-reply@example.com',
+				to,
+				subject: `Popup Submissions Batch (${list.length})`,
+				text: 'Attached batch of popup form submissions. They will now be purged from database.',
+				attachments: [
+					{ filename: 'popup_submissions_batch.csv', content: csv, contentType: 'text/csv' },
+				],
+			});
+			// Purge old records
+			await db.ref('popoForms').remove();
+			console.log(`Emailed and purged ${list.length} submissions.`);
+		} catch (err) {
+			console.error('scheduledEmailPopupSubmissions error', err);
+		}
+		return null;
+	});
 
-    return null;
-  });

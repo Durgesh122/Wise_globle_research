@@ -31,22 +31,32 @@ const AlertBar = () => {
   const [navHeight, setNavHeight] = React.useState(0);
   React.useEffect(() => {
     if (typeof window === 'undefined') return undefined;
-    const measure = () => {
+    let rafId = null;
+    const read = () => {
       const nav = document.querySelector('nav[role="navigation"]');
       const h = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
-      setNavHeight(h);
+      setNavHeight(prev => (prev !== h ? h : prev));
     };
-    measure();
-    window.addEventListener('resize', measure);
+    const schedule = () => {
+      if (rafId != null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        read();
+      });
+    };
+    schedule();
+    const onResize = () => schedule();
+    window.addEventListener('resize', onResize, { passive: true });
     let ro;
     const navEl = document.querySelector('nav[role="navigation"]');
     if (navEl && 'ResizeObserver' in window) {
-      ro = new ResizeObserver(() => measure());
+      ro = new ResizeObserver(() => schedule());
       ro.observe(navEl);
     }
     return () => {
-      window.removeEventListener('resize', measure);
+      window.removeEventListener('resize', onResize);
       if (ro) ro.disconnect();
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 

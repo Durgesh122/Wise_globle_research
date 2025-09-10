@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const rateLimit = require('express-rate-limit');
 const admin = require('firebase-admin');
 const { z } = require('zod');
+// NOTE: We intentionally avoid X-Frame-Options (deprecated in favour of CSP frame-ancestors)
 dotenv.config();
 
 const app = express();
@@ -41,6 +42,43 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(express.json());
+
+// ---------------------------------------------------------------------------
+// Security & Compatibility Headers Middleware
+// ---------------------------------------------------------------------------
+app.use((req, res, next) => {
+  // Content negotiation is handled by express.json / res.json; ensure charset for any text/html responses
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', "camera=(), microphone=(), geolocation=(), fullscreen=* ");
+  // A pragmatic CSP allowing required third‑party embeds; tighten further if possible
+  const csp = [
+    "default-src 'self'",
+    "script-src 'self' https://www.googletagmanager.com https://s3.tradingview.com 'unsafe-inline'",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com data:",
+    "img-src 'self' data: https:",
+  "connect-src 'self' https://www.googletagmanager.com https://s3.tradingview.com https://widget.myfxbook.com https://fonts.googleapis.com https://fonts.gstatic.com",
+    "frame-src https://www.youtube-nocookie.com https://www.tradingview.com https://s.tradingview.com https://widget.myfxbook.com",
+    "frame-ancestors 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'"
+  ].join('; ');
+  res.setHeader('Content-Security-Policy', csp);
+  // Avoid deprecated headers flagged by audit (no P3P, Pragma, X-Frame-Options etc.)
+
+  // Cache policy: shorter max-age for API, allow revalidation; health always no-store
+  if (req.path === '/health') {
+    res.setHeader('Cache-Control', 'no-store');
+  } else if (req.path.startsWith('/api/')) {
+    res.setHeader('Cache-Control', 'private, max-age=0, no-cache, no-store, must-revalidate');
+  } else {
+    // Allow modest caching with revalidation for any future static HTML served via this server
+    res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=60');
+  }
+  next();
+});
 
 // Rate limiter: limit each IP to 100 requests per 15 minutes
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
@@ -157,6 +195,8 @@ app.post('/api/submit-client-form', requireAdminAuth, async (req, res) => {
 
 // Simple health check
 app.get('/health', (req, res) => {
+  // Explicit content-type / charset for consistency with audit expectations
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.json({ status: 'ok' });
 });
 

@@ -654,28 +654,37 @@ function Navbar() {
     // Apply by setting a CSS variable on the root element. The navbar
     // and mobile drawer read `--nav-offset` so the layout updates
     // responsively (desktop and mobile) without fighting utility classes.
+    // Throttle layout reads (getBoundingClientRect) to once per frame
+    let rafId = null;
+    let pending = false;
     const apply = () => {
-      const h = getBannerHeight();
-      const docEl = document.documentElement;
-      if (h) {
-        docEl.style.setProperty('--nav-offset', `${h}px`);
-      } else {
-        docEl.style.setProperty('--nav-offset', '0px');
-      }
+      if (pending) return; // already scheduled
+      pending = true;
+      rafId = requestAnimationFrame(() => {
+        pending = false;
+        const h = getBannerHeight();
+        const docEl = document.documentElement;
+        if (h) {
+          docEl.style.setProperty('--nav-offset', `${h}px`);
+        } else {
+          docEl.style.setProperty('--nav-offset', '0px');
+        }
+      });
     };
 
     // Observe DOM changes since translate banner is injected dynamically
-    const mo = new MutationObserver(() => apply());
+  const mo = new MutationObserver(() => apply());
     mo.observe(document.documentElement || document.body, { childList: true, subtree: true });
 
     // Also apply immediately and on resize
     apply();
     const onResize = () => apply();
-    window.addEventListener('resize', onResize);
+  window.addEventListener('resize', onResize, { passive: true });
 
     return () => {
-      mo.disconnect();
-      window.removeEventListener('resize', onResize);
+  mo.disconnect();
+  window.removeEventListener('resize', onResize);
+  if (rafId) cancelAnimationFrame(rafId);
       const docEl = document.documentElement;
       if (docEl) docEl.style.setProperty('--nav-offset', '0px');
       if (navEl) navEl.style.top = '';

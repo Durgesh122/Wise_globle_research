@@ -121,8 +121,17 @@ const gradients = {
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // restore default theme to the original gradient
-  const [theme, setTheme] = useState('default');
+  // Try to read persisted theme lazily (guards SSR / non-browser)
+  const getInitialTheme = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = window.localStorage.getItem('app.theme');
+        if (stored && gradients[stored]) return stored;
+      } catch (_) { /* ignore */ }
+    }
+    return 'default';
+  };
+  const [theme, setTheme] = useState(getInitialTheme);
   const [previewTheme, setPreviewTheme] = useState(null); // For previewing themes
 
   // Apply theme transition and background to html, body, and #root for full-page consistency
@@ -152,6 +161,11 @@ export const ThemeProvider = ({ children }) => {
     setTheme(newTheme);
     setPreviewTheme(null); // Clear preview when applying
   };
+
+  // Persist theme whenever it changes
+  useEffect(() => {
+    try { window.localStorage.setItem('app.theme', theme); } catch(_) { /* ignore */ }
+  }, [theme]);
 
   // Preview a theme temporarily
   const previewThemeFunc = (themeName) => {

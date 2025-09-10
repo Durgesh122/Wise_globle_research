@@ -164,6 +164,12 @@ function Footer() {
       document.cookie = `googtrans=${cookieValue}; path=/; max-age=31536000`;
       // Some older widgets also check _googtrans
       document.cookie = `_googtrans=${cookieValue}; path=/; max-age=31536000`;
+  // Persist the language in localStorage so other components can pick it up immediately after reload
+  try {
+    window.localStorage.setItem('route.lang', JSON.stringify(lang));
+    // mark that this was a manual selection so components don't auto-override it
+    try { window.localStorage.setItem('route.langManual', JSON.stringify(true)); } catch (e) { /* ignore */ }
+  } catch (e) { /* ignore */ }
       // Reload to let widget pick up the cookie and translate
       window.location.reload();
     } catch (e) {

@@ -4,17 +4,15 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { cardVariants } from '../utils/animationVariants';
-import slide2Img from '../assets/images/slide2.png';
-import slide4Img from '../assets/images/slide4.png';
+// Use placeholder/fallback PNG only if modern formats fail; dynamic responsive sources built from naming convention
+import '../assets/images/slide1.png';
+import '../assets/images/slide2.png';
+import '../assets/images/slide4.png';
+import { pictureSources, largest, buildPlaceholder } from '../utils/imageSources';
 
 // framer-motion loaded after first hero image completes to avoid main-thread contention before LCP
 
-const sliderImages = [
-  
-  { name: 'slide1', original: '/assets/images/slide1.png' },
-  { name: 'slide2', original: slide2Img },
-  { name: 'slide4', original: slide4Img },
-];
+const sliderImages = ['slide1','slide2','slide4'];
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -22,8 +20,8 @@ const HeroSection = () => {
   const [firstLoaded, setFirstLoaded] = useState(false);
   const [motion, setMotion] = useState(null);
   const [isFading, setIsFading] = useState(false);
-  const [backSrc, setBackSrc] = useState(sliderImages[0].original);
-  const [frontSrc, setFrontSrc] = useState(sliderImages[0].original);
+  const [backName, setBackName] = useState(sliderImages[0]);
+  const [frontName, setFrontName] = useState(sliderImages[0]);
   const rafRef = useRef(null);
 
   // Reduced motion preference
@@ -73,11 +71,11 @@ const HeroSection = () => {
   useEffect(() => {
     if (!sliderImages?.length) return;
     const preload = (idx) => {
-      const src = sliderImages[idx]?.original;
-      if (!src) return;
+      const name = sliderImages[idx];
+      if (!name) return;
       const img = new Image();
       img.decoding = 'async';
-      img.src = src;
+      img.src = largest(name, 'webp');
     };
     const next = (currentSlide + 1) % sliderImages.length;
     const prev = (currentSlide - 1 + sliderImages.length) % sliderImages.length;
@@ -88,21 +86,21 @@ const HeroSection = () => {
   // On slide change, decode next image then crossfade front->back for smoothness
   useEffect(() => {
     const nextIdx = currentSlide;
-    const nextImg = sliderImages[nextIdx]?.original;
-    if (!nextImg) return;
+  const nextName = sliderImages[nextIdx];
+  if (!nextName) return;
 
     // If already showing, nothing to do
-    if (frontSrc === nextImg) return;
+  if (frontName === nextName) return;
 
     let canceled = false;
     const img = new Image();
     img.decoding = 'async';
-    img.src = nextImg;
+  img.src = largest(nextName, 'webp');
     const swap = () => {
       if (canceled) return;
       // Back layer becomes current
-      setBackSrc(frontSrc);
-      setFrontSrc(nextImg);
+  setBackName(frontName);
+  setFrontName(nextName);
       // Trigger crossfade
       setIsFading(true);
       // Ensure fade ends even if transitionend doesn’t fire
@@ -121,60 +119,67 @@ const HeroSection = () => {
       canceled = true;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [currentSlide, frontSrc]);
+  }, [currentSlide, frontName]);
 
   return (
     <section className="relative pt-0 flex items-center justify-center overflow-hidden" style={{ minHeight: 'calc(100vh - 4rem)' }}>
       <Helmet>
-        <link rel="preload" as="image" href={sliderImages[0].original} />
+  <link rel="preload" as="image" href={largest(sliderImages[0], 'webp')} imagesrcset={`${largest(sliderImages[0], 'webp')} 1600w`} />
       </Helmet>
       <div className="absolute inset-0 z-0">
         {/* Double-buffered crossfade: back (fading out) and front (fading in) */}
         <div className="absolute inset-0 w-full h-full will-change-transform" style={{contain:'strict'}}>
-          {/* Back layer */}
-          <img
-            src={backSrc}
-            alt="Background slide"
-            className="w-full h-full object-cover pointer-events-none select-none"
-            decoding="async"
-            width="1600"
-            height="900"
-            sizes="100vw"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              transform: 'translateZ(0)',
-              opacity: isFading && !prefersReduced ? 0 : 1,
-              transition: prefersReduced ? 'none' : 'opacity 500ms ease',
-            }}
-            aria-hidden
-          />
-          {/* Front layer */}
-          <img
-            src={frontSrc}
-            alt="Foreground slide"
-            className="w-full h-full object-cover"
-            decoding="async"
-            fetchpriority="high"
-            width="1600"
-            height="900"
-            sizes="100vw"
-            importance="high"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              transform: 'translateZ(0)',
-              opacity: 1,
-              transition: prefersReduced ? 'none' : 'opacity 500ms ease',
-            }}
-            onLoad={() => {
-              if (currentSlide === 0 && !firstLoaded) setFirstLoaded(true);
-            }}
-            onError={(e) => {
-              e.currentTarget.src = '/logo192.png';
-              console.warn('Failed to load slide');
-            }}
-          />
+      {/* Back layer (decorative) */}
+      <picture>
+            <source type="image/avif" srcSet={pictureSources(backName).avif} sizes="100vw" />
+            <source type="image/webp" srcSet={pictureSources(backName).webp} sizes="100vw" />
+            <img
+        src={pictureSources(backName).fallback}
+        alt=""
+              className="w-full h-full object-cover pointer-events-none select-none"
+              decoding="async"
+              width="1600"
+              height="900"
+              sizes="100vw"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                transform: 'translateZ(0)',
+                opacity: isFading && !prefersReduced ? 0 : 1,
+                transition: prefersReduced ? 'none' : 'opacity 500ms ease',
+              }}
+            />
+          </picture>
+          {/* Front layer (primary visual) */}
+          <picture>
+            <source type="image/avif" srcSet={pictureSources(frontName).avif} sizes="100vw" />
+            <source type="image/webp" srcSet={pictureSources(frontName).webp} sizes="100vw" />
+            <img
+              src={pictureSources(frontName).fallback}
+              alt="Research analytics visual"
+              className="w-full h-full object-cover"
+              decoding="async"
+              fetchpriority="high"
+              width="1600"
+              height="900"
+              sizes="100vw"
+              importance="high"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                transform: 'translateZ(0)',
+                opacity: 1,
+                transition: prefersReduced ? 'none' : 'opacity 500ms ease',
+              }}
+              onLoad={() => {
+                if (currentSlide === 0 && !firstLoaded) setFirstLoaded(true);
+              }}
+              onError={(e) => {
+                e.currentTarget.src = buildPlaceholder(frontName, 'webp');
+                console.warn('Failed to load slide');
+              }}
+            />
+          </picture>
         </div>
 
         <button onClick={prevSlide} aria-label="Previous slide" className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 text-white text-2xl p-2 bg-black/50 rounded-full transition-colors hover:bg-black/75 focus:outline-none focus:ring-2 focus:ring-white">

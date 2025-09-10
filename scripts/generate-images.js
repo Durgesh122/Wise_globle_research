@@ -10,7 +10,7 @@ const outDir = path.join(__dirname, '..', 'public', 'assets', 'images');
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
 // Include small sizes for logos/icons and larger sizes for hero/headers
-const widths = [64, 96, 112, 128, 256, 400, 800, 1200, 1600];
+const widths = [32, 64, 96, 112, 128, 256, 400, 800, 1200, 1600];
 
 async function processImage(file) {
   const name = path.parse(file).name;

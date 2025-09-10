@@ -27,6 +27,9 @@ html {
   background: #0b1220; /* matches app's dark theme */
   overflow-x: hidden;
   overscroll-behavior-y: none; /* prevent rubber-band revealing UA background */
+  /* Add cross-browser text size adjust to satisfy audit */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 body {
   font-family: 'Josefin Sans', sans-serif;
@@ -162,8 +165,9 @@ html, body, #root { min-height: 100%; }
 .custom-box-bg {
   /* subtle translucent panel for both dark and light backgrounds */
   background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
+  /* Place -webkit- prefixed backdrop filter before the standard property */
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
