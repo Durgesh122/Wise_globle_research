@@ -48,22 +48,41 @@ app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // Serve React build (if present). This allows the same server to serve
-// the frontend static files when deployed (e.g., Render). The build
-// directory is located at repository root (`../build`) relative to server/.
-const buildPath = path.join(__dirname, '..', 'build');
-if (fs.existsSync(buildPath)) {
-  app.use(express.static(buildPath));
+// the frontend static files when deployed (e.g., Render). Try a couple
+// of likely locations because deployment environments may set the
+// process working directory differently.
+const candidateBuildPaths = [
+  path.join(__dirname, '..', 'build'), // repository root build/
+  path.join(process.cwd(), 'build'),   // current working directory build/
+];
+
+let resolvedBuildPath = null;
+for (const p of candidateBuildPaths) {
+  if (fs.existsSync(p)) {
+    resolvedBuildPath = p;
+    break;
+  }
+}
+
+if (resolvedBuildPath) {
+  app.use(express.static(resolvedBuildPath));
 
   // Serve index.html on the root and for any non-API routes to support
   // client-side routing. Keep API routes and health checks untouched.
-  app.get('/', (req, res) => res.sendFile(path.join(buildPath, 'index.html')));
+  app.get('/', (req, res) => res.sendFile(path.join(resolvedBuildPath, 'index.html')));
 
   app.get('*', (req, res, next) => {
     // Let API and special endpoints be handled by existing routes
     if (req.path.startsWith('/api') || req.path === '/health' || req.path.startsWith('/send-email') || req.path.startsWith('/submit-popup')) {
       return next();
     }
-    res.sendFile(path.join(buildPath, 'index.html'));
+    res.sendFile(path.join(resolvedBuildPath, 'index.html'));
+  });
+} else {
+  // Fallback: when no build exists in the deployed app, return a helpful
+  // message at root rather than an opaque 404 so the deploy logs make sense.
+  app.get('/', (req, res) => {
+    res.status(200).send('Server is running, but static frontend (build/) is missing. Please run `npm run build` or configure the deploy to build the frontend.');
   });
 }
 
