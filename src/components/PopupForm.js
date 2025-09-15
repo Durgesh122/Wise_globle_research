@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { db } from '../firebase';
+import { ref, push, set } from 'firebase/database';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../utils/api';
 import wImg from '../assets/images/w.png';
 
 // Particle animation variants for logo hover
@@ -125,16 +126,58 @@ const PopupForm = ({ onClose }) => {
 
     setIsSubmitting(true);
     try {
-      // Submit to backend; backend writes to RTDB
-      const res = await api.post('/popup', {
-        ...form,
+      // Determine API base URL: prefer REACT_APP_API_URL. In development use localhost:3002.
+      // In production when REACT_APP_API_URL is not provided, default to the Render server
+      // where the backend is hosted so the popup can reach the API.
+      const apiBase =
+        process.env.REACT_APP_API_URL ||
+        (window.location.hostname === 'localhost' ? 'http://localhost:3002' : 'https://wise-global-contact-systems.onrender.com');
+      const endpoint = apiBase ? `${apiBase.replace(/\/$/, '')}/send-email` : '/send-email';
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          mobile: form.mobile,
+          city: form.city,
+          interest: form.interest,
+        }),
       });
-      if (!res.ok) throw new Error('Server rejected');
+
+      // Some servers (404 HTML responses) will not return JSON; handle that gracefully
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        // Non-JSON response (likely HTML 404 page). Create a helpful error.
+        const text = await res.text().catch(() => 'Non-JSON response from server');
+        throw new Error(`Unexpected server response: ${res.status} ${res.statusText} - ${text.substring(0, 200)}`);
+      }
+
+      if (!res.ok || !data.success) throw new Error(data.error?.message || 'Server rejected');
       // Google Ads Conversion Tracking
       if (window.gtag) {
         window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
       }
   setSuccessMessage('Thank you! Your submission was successful.');
+      // Save to Firebase Realtime Database so admin can view submissions
+      try {
+        const submissionsRef = ref(db, 'popoForms');
+        const newRef = push(submissionsRef);
+        await set(newRef, {
+          name: form.name || '',
+          mobile: form.mobile || '',
+          city: form.city || '',
+          interest: form.interest || '',
+          timestamp: new Date().toISOString(),
+        });
+      } catch (dbErr) {
+        // Log DB error but keep the UX successful; show non-blocking console message
+        console.error('Failed to save submission to Realtime DB:', dbErr);
+      }
+
+      setSuccessMessage('Thank you! Your submission was successful.');
       setForm({
         name: '',
         mobile: '',

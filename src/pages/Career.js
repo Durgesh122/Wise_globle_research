@@ -163,6 +163,36 @@ const Career = () => {
         honeypot: '',
       });
 
+      // Also POST to server /send-email so HR receives an email (server will forward to career email)
+      try {
+        const form = new FormData();
+        form.append('name', formData.name);
+        form.append('email', formData.email);
+        form.append('mobile', formData.phone);
+        form.append('city', '');
+        form.append('interest', formData.jobId || 'career');
+        form.append('message', formData.whyHire || '');
+        form.append('source', 'Career');
+        if (formData.resume) form.append('resume', formData.resume, formData.resume.name);
+
+  // Use full backend URL in development to avoid CRA dev-server proxy issues
+  const backendUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3002/send-email' : '/send-email';
+  const resp = await fetch(backendUrl, {
+          method: 'POST',
+          body: form,
+        });
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          console.warn('Server /send-email failed', err);
+          toast.warn('Application saved but email notification failed');
+        } else {
+          toast.info('We have emailed your application to HR');
+        }
+      } catch (mailErr) {
+        console.warn('Failed to POST to /send-email', mailErr);
+        toast.warn('Application saved but email notification failed');
+      }
+
       toast.success('Application submitted successfully!', { position: 'top-center' });
   setFormData({ name: '', email: '', phone: '', resume: null, whyHire: '', jobId: '' });
       setFileName('No file chosen');

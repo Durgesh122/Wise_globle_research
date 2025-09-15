@@ -29,7 +29,7 @@ const UniversalCash = () => (
     </p>
 
     <div className="mb-8">
-  <h2 className="text-2xl font-bold mb-2 text-white">Infinity Club Features</h2>
+  <h2 className="text-2xl font-bold mb-2 text-white">Universal Cash</h2>
     <ul className="list-disc pl-6 text-base mb-4 text-white">
   <li>We provide 2–3 intraday/positional recommendations per day (subject to market conditions).</li>
   <li>All recommendations include two targets and a clear stop‑loss.</li>

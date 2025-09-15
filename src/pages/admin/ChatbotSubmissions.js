@@ -11,19 +11,32 @@ const ChatbotSubmissions = () => {
 
   useEffect(() => {
     const submissionsRef = ref(db, 'chatbot-submissions');
-    onValue(submissionsRef, (snapshot) => {
+    const listener = onValue(submissionsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const submissionList = Object.keys(data).map(key => ({
-          id: key,
-          ...data[key]
-        })).sort((a, b) => b.timestamp - a.timestamp); // Sort by newest first
+        const cutoff = Date.now() - 72 * 60 * 60 * 1000;
+        const entries = Object.entries(data);
+        const toDelete = [];
+        const keep = [];
+        for (const [key, value] of entries) {
+          const ts = value?.timestamp ? (typeof value.timestamp === 'number' ? value.timestamp : new Date(value.timestamp).getTime()) : 0;
+          if (ts && ts < cutoff) toDelete.push(key);
+          else keep.push({ id: key, ...value });
+        }
+        if (toDelete.length > 0) {
+          toDelete.forEach((id) => remove(ref(db, `chatbot-submissions/${id}`)).catch(() => null));
+          toast.info(`${toDelete.length} old chatbot submission(s) auto-deleted`);
+        }
+        const submissionList = keep.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
         setSubmissions(submissionList);
       } else {
         setSubmissions([]);
       }
       setLoading(false);
     });
+    return () => {
+      try { listener(); } catch(_) {}
+    };
   }, []);
 
   const handleStatusChange = (id, newStatus) => {
@@ -67,7 +80,8 @@ const ChatbotSubmissions = () => {
                 <th scope="col" className="px-6 py-3">City</th>
                 <th scope="col" className="px-6 py-3">Address</th>
                 <th scope="col" className="px-6 py-3">Mobile</th>
-                <th scope="col" className="px-6 py-3">Service</th>
+                      <th scope="col" className="px-6 py-3">Service</th>
+                      <th scope="col" className="px-6 py-3">Message</th>
                 <th scope="col" className="px-6 py-3">Status</th>
                 <th scope="col" className="px-6 py-3">Actions</th>
               </tr>
@@ -85,7 +99,17 @@ const ChatbotSubmissions = () => {
                       {sub.mobile}
                     </a>
                   </td>
-      <td className="px-6 py-4 break-words">{sub.service}</td>
+            <td className="px-6 py-4 break-words">
+              <div className="flex items-center gap-3">
+                <div className="text-sm font-medium break-words">
+                  {sub?.service && typeof sub.service === 'object' ? sub.service.title : (sub.service || '-')}
+                </div>
+                {sub?.partial ? (
+                  <span className="inline-block text-xs px-2 py-0.5 rounded bg-yellow-400 text-black">Partial</span>
+                ) : null}
+              </div>
+            </td>
+      <td className="px-6 py-4 break-words max-w-[16rem] whitespace-pre-wrap">{sub.message || '-'}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${sub.status === 'New' ? 'bg-blue-500' : sub.status === 'Contacted' ? 'bg-yellow-500' : 'bg-green-500'}`}>
                       {sub.status}

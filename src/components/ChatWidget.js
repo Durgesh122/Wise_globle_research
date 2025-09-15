@@ -1,156 +1,212 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaTimes, FaUser, FaCity, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../utils/api';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { db } from '../firebase';
+import { ref as dbRef, push, set, update } from 'firebase/database';
+import { services } from '../pages/Services';
 
-// Proper chatbot icon: circular badge + robot head with antenna and blinking eyes
-const ChatLogo = ({ className = 'w-6 h-6', animated = false }) => (
-  <motion.svg
-    viewBox="0 0 64 64"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    aria-hidden="true"
-    initial={animated ? { rotate: 0 } : false}
-    animate={animated ? { rotate: [0, -2.5, 2.5, -1.5, 0] } : undefined}
-    transition={animated ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' } : undefined}
-  >
-    <defs>
-      <linearGradient id="wg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#8fa1f07a" />
-        <stop offset="100%" stopColor="#2263c4c2" />
-      </linearGradient>
-    </defs>
-    {/* Outer circular badge */}
-    <circle cx="32" cy="32" r="28" fill="url(#wg-gradient)" />
-    {/* Chat tail */}
-    <path d="M24 50 L28 46 L30 52 Z" fill="#4f46e5" opacity="0.85" />
-  {/* Robot head (scaled up around center without changing outer circle) */}
-  <g transform="translate(32 32) scale(1.3) translate(-32 -32)">
-      <rect x="19" y="22" width="26" height="20" rx="8" fill="#ffffff" opacity="0.96" />
-      {/* Ears */}
-      <rect x="16" y="27" width="4" height="10" rx="2" fill="#e9d5ff" />
-      <rect x="45" y="27" width="4" height="10" rx="2" fill="#e9d5ff" />
-      {/* Antenna */}
-      <line x1="32" y1="20" x2="32" y2="22" stroke="#ffffff" strokeWidth="2" />
-      <motion.circle cx="32" cy="18" r="2.6" fill="#ffffff"
-        initial={{ y: 0, scale: 1, opacity: 0.95 }}
-        animate={animated ? { y: [-1.5, 0, -1.5], scale: [0.95, 1.05, 0.95], opacity: [0.85, 1, 0.85] } : undefined}
-        transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      {/* Eyes */}
-      <motion.circle cx="26" cy="32" r="2.6" fill="#111827"
-        initial={{ scaleY: 1 }}
-        animate={animated ? { scaleY: [1, 0.15, 1] } : undefined}
-        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', times: [0, 0.05, 1], delay: 0.2 }}
-        style={{ transformOrigin: '26px 32px' }}
-      />
-      <motion.circle cx="38" cy="32" r="2.6" fill="#111827"
-        initial={{ scaleY: 1 }}
-        animate={animated ? { scaleY: [1, 0.15, 1] } : undefined}
-        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', times: [0, 0.05, 1], delay: 0.35 }}
-        style={{ transformOrigin: '38px 32px' }}
-      />
-      {/* Mouth */}
-      <motion.rect x="27" y="37" width="10" height="3" rx="1.5" fill="#4b5563"
-        initial={{ width: 10 }}
-        animate={animated ? { width: [8, 12, 8] } : undefined}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-      />
-    </g>
-  </motion.svg>
-);
+// Chat badge icon (uses FaRobot) — replaces the earlier SVG robot with a simpler badge
+const ChatLogo = ({ className = 'w-6 h-6', animated = false }) => {
+  const reduceMotion = useReducedMotion();
+  const groupAnimate = !reduceMotion && animated ? { y: [0, -3, 0], scale: [1, 1.06, 1] } : undefined;
+  return (
+    <motion.div
+      className={`${className} rounded-[10px] flex items-center justify-center bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white`}
+      aria-hidden="true"
+      initial={animated ? { rotate: 0 } : false}
+      animate={animated ? { rotate: [0, -3, 3, -1.5, 0] } : undefined}
+      transition={animated ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' } : undefined}
+    >
+      {/* Inline widgetIcon1.svg (converted to JSX) animated via framer-motion */}
+        <div className="relative w-full h-full flex items-center justify-center">
+          {/* animated background blob */}
+          <motion.span
+            className="absolute inset-0 rounded-[10px]"
+            aria-hidden="true"
+            animate={!useReducedMotion ? { scale: [1, 1.06, 1], rotate: [0, 2, -1, 0] } : undefined}
+            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ background: 'linear-gradient(90deg, rgba(201, 157, 36, 0.98), rgba(103, 140, 18, 0.88))' }}
+          />
+          <motion.svg viewBox="0 0 40 9.684" xmlns="http://www.w3.org/2000/svg" fill="none" className="w-3/4 h-3/4 relative z-10" aria-hidden="true">
+            <defs>
+              <clipPath id="chatlogoClip"><path fill="#fff" d="M0 0h40v9.684H0z" /></clipPath>
+            </defs>
+            <motion.g clipPath="url(#chatlogoClip)" fill="#000" animate={groupAnimate} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
+              <path d="M.361 4.842C.361 2.316 2.409.268 4.935.268s4.574 2.048 4.574 4.574-2.048 4.574-4.574 4.574S.361 7.368.361 4.842zm30.377 0c0-2.526 2.048-4.574 4.574-4.574s4.574 2.048 4.574 4.574-2.048 4.574-4.574 4.574-4.574-2.048-4.574-4.574zm-5.868 0a4.57 4.57 0 0 1-.348 1.75 4.59 4.59 0 0 1-.991 1.484c-.424.425-.929.762-1.484.992a4.57 4.57 0 0 1-3.5 0c-.555-.23-1.059-.567-1.484-.992s-.762-.929-.991-1.484a4.59 4.59 0 0 1-.348-1.75h9.147z" />
+            </motion.g>
+          </motion.svg>
+        </div>
+    </motion.div>
+  );
+};
 
-// Service buttons removed — chat now only collects name, city and mobile.
-
+// Autonomous chatbot (English-only). No data collection or external JSON used.
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState('greeting');
-  const [formData, setFormData] = useState({ 
-    name: '', 
-    city: '', 
-    address: '',
-    mobile: '', 
-    service: '', 
-    extra: {} 
-  });
+  const [formData, setFormData] = useState({});
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   // Periodic teaser when closed
   const [errorText, setErrorText] = useState('');
-  const [invalidPulse, setInvalidPulse] = useState(false);
+  const [invalidPulse] = useState(false);
   const messagesEndRef = useRef(null);
   const introSentRef = useRef(false);
+  const inputRef = useRef(null);
+  const [pendingSubmissionKey, setPendingSubmissionKey] = useState(null);
   // Teaser popup state and timers
   const [showTeaser, setShowTeaser] = useState(false);
   const teaserTimerRef = useRef(null);
   const teaserAutoHideRef = useRef(null);
-  const [userActivity, setUserActivity] = useState({
-    lastInteraction: null,
-    messageCount: 0,
-    sessionStart: new Date()
-  });
+  // Topic / service UI state
+  const [showTopicOptions, setShowTopicOptions] = useState(false);
+  const [showServiceOptions, setShowServiceOptions] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  
+  // Track unread messages received while the widget is closed
+  const [unreadCount, setUnreadCount] = useState(0);
+  const origFaviconRef = useRef(null);
 
-  // Curated Q&A for site-specific FAQs
-  const qaPairs = useMemo(() => [
-    { q: /(services|aap kya karte|kya-kya|offer|provide|kaam)/i, a: 'We provide market research, competitive analysis, investment research reports, and data-driven insights tailored to your business needs.' },
-    { q: /(sebi|registered|license|ra number)/i, a: 'Wise Global Research Services operates with strict compliance. We provide research and analytics. Investment decisions remain your responsibility.' },
-    { q: /(subscription|plan|charges|pricing|fees|kitna)/i, a: 'We offer flexible plans for brief, standard, and comprehensive research. Share your scope and timeline for an exact quote.' },
-    { q: /(report|sample|demo|preview)/i, a: 'You can preview reports on the Reports page and request a customized sample based on your sector/market.' },
-    { q: /(data|source|methodology|approach|how)/i, a: 'We combine secondary research, public filings, paid databases, and expert interviews. Methods vary by project scope.' },
-    { q: /(time|delivery|timeline|kab tak)/i, a: 'Typical timelines: brief 2-3 days, standard 5-7 days, comprehensive 10-15 days, depending on complexity.' },
-    { q: /(support|contact|help|hours|timing)/i, a: 'Support hours 9:30AM–6:30PM IST, Mon–Sat. Share your details here and our team will contact you.' },
-    { q: /(refund|privacy|security)/i, a: 'We follow a transparent scope sign-off before billing. Data is handled per our privacy policy. Refunds are case-based on scope adherence.' }
-  ], []);
-
-  // Validations per step
-  const validators = {
-    askName: (v) => {
-      const s = v.trim();
-      if (s.length < 3) return 'Please enter your full name (min 3 characters).';
-  // Using ASCII-safe pattern for wider build compatibility (no Unicode property escapes)
-  if (!/^[A-Za-z][A-Za-z .'-]{2,48}$/.test(s)) return 'Name can only contain letters, spaces, dots, hyphens and apostrophes.';
-      return '';
-    },
-    askCity: (v) => {
-      const s = v.trim();
-      if (s.length < 2) return 'Please enter a valid city name.';
-  // Using ASCII-safe pattern for wider build compatibility (no Unicode property escapes)
-  if (!/^[A-Za-z][A-Za-z .'-]{1,48}$/.test(s)) return 'City can only contain letters and spaces.';
-      return '';
-    },
-    askAddress: (v) => {
-      const s = v.trim();
-      if (s.length < 10) return 'Address seems too short. Add house/street, area and pincode.';
-      if (!/\b\d{6}\b/.test(s)) return 'Please include a valid 6-digit pincode.';
-      return '';
-    },
-    askMobile: (v) => {
-      const digits = v.replace(/\D/g, '');
-      if (digits.length !== 10) return 'Enter a 10-digit mobile number.';
-      if (!/^[6-9]/.test(digits)) return 'Mobile should start with 6/7/8/9.';
-      return '';
+  // Helper: set favicon href (creates link if missing)
+  const setFaviconHref = (href) => {
+    if (typeof document === 'undefined') return;
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
     }
+    link.href = href;
   };
 
-  const triggerInvalid = (msg) => {
-    setErrorText(msg);
-    setInvalidPulse(true);
-    setTimeout(() => setInvalidPulse(false), 450);
+  // Create a small red badge favicon (canvas) with count (or dot)
+  const makeRedDotFavicon = (count) => {
+    if (typeof document === 'undefined') return '';
+    const size = 64;
+    const c = document.createElement('canvas');
+    c.width = size;
+    c.height = size;
+    const ctx = c.getContext('2d');
+    // transparent background
+    ctx.clearRect(0, 0, size, size);
+    // red circle
+    ctx.fillStyle = '#ef4444'; // red-500
+    const cx = size - 16;
+    const cy = 16;
+    const r = 14;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+    // white count text
+    ctx.fillStyle = '#0e0e0eff';
+    ctx.font = 'bold 22px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const label = count > 99 ? '99+' : String(count);
+    // If too long, just show dot
+    if (label.length <= 3) ctx.fillText(label, cx, cy + 1);
+    return c.toDataURL('image/png');
   };
 
-  // Track user activity
+  // (Removed system desktop notifications) — we only show in-tab badge, favicon and title updates.
+
+  // Inject small keyframes for bobbing animation once
   useEffect(() => {
-    const updateActivity = () => {
-      setUserActivity(prev => ({
-        ...prev,
-        lastInteraction: new Date(),
-        messageCount: prev.messageCount + 1
-      }));
-    };
+    try {
+      const ID = 'chat-widget-animations';
+      if (document.getElementById(ID)) return;
+      const style = document.createElement('style');
+      style.id = ID;
+      style.textContent = `
+  /* damru-tilt: small alternating rotations resembling a damru drum shake */
+  @keyframes damru-tilt { 0% { transform: rotate(0deg);} 10% { transform: rotate(-12deg);} 20% { transform: rotate(10deg);} 30% { transform: rotate(-8deg);} 40% { transform: rotate(6deg);} 50% { transform: rotate(-4deg);} 60% { transform: rotate(4deg);} 70% { transform: rotate(-2deg);} 80% { transform: rotate(2deg);} 100% { transform: rotate(0deg);} } 
+  @keyframes chat-shake { 0% { transform: translateX(0) rotate(0deg);} 20% { transform: translateX(-2px) rotate(-2deg);} 40% { transform: translateX(2px) rotate(2deg);} 60% { transform: translateX(-1px) rotate(-1deg);} 80% { transform: translateX(1px) rotate(1deg);} 100% { transform: translateX(0) rotate(0deg);} } 
 
+  /* Zigzag / half-round animated border for launcher */
+  @keyframes zigzag-move {
+    0% { background-position: 0% 50%; } 
+    25% { background-position: 25% 60%; } 
+    50% { background-position: 50% 40%; } 
+    75% { background-position: 75% 60%; } 
+    100% { background-position: 100% 50%; } 
+  }
+
+  .chat-launcher-animated-border {
+    position: relative;
+    overflow: visible;
+  }
+
+  /* using a pseudo-element simulated via an inner span to create a half-round zigzag border */
+  .chat-launcher-animated-border .border-effect {
+    pointer-events: none;
+    position: absolute;
+    inset: -6px -6px auto -6px; /* top/bottom/left/right offsets: show around top half */
+    height: 36px; /* controls visible band height for half-round */
+    border-radius: 14px; /* rounded look */
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 10%, rgba(255,255,255,0.06) 11%, rgba(255,255,255,0) 12%);
+    z-index: 30;
+    mix-blend-mode: screen;
+    background-size: 200% 200%;
+    transform-origin: center;
+    animation: zigzag-move 3.2s linear infinite;
+    mask-image: radial-gradient(closest-side at 50% 100%, black 40%, transparent 100%);
+  }
+
+  /* stronger colored zigzag overlay using repeating-linear-gradient */
+  .chat-launcher-animated-border .border-effect::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0) 0 6px, rgba(255,255,255,0.12) 6px 12px);
+    mix-blend-mode: screen;
+    filter: blur(6px);
+    opacity: 0.95;
+    transform: translateZ(0);
+  }
+
+  /* alternative colorful stroke around top edges */
+  .chat-launcher-animated-border.hovered .border-effect {
+    background: linear-gradient(90deg, rgba(37,211,102,0.95) 0%, rgba(18,140,126,0.95) 50%, rgba(99,102,241,0.95) 100%);
+    background-size: 300% 100%;
+    animation: zigzag-move 2.6s linear infinite;
+    filter: drop-shadow(0 6px 12px rgba(18,140,126,0.12));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chat-bob, .chat-shake, .chat-launcher-animated-border .border-effect { animation: none !important; }
+  }
+  /* when there are unread messages, slightly intensify the damru tilt and shake */
+  .chat-launcher-unread { animation: damru-tilt 1.2s ease-in-out infinite, chat-shake 2s ease-in-out 0s infinite !important; }
+  .chat-launcher-unread .border-effect { filter: drop-shadow(0 8px 18px rgba(37,211,102,0.18)); transform: translateZ(0) scale(1.03); }
+      `;
+      document.head.appendChild(style);
+    } catch (e) {
+      // ignore
+    }
+  }, [messages.length]);
+
+  // To make the chatbot more intelligent, you can replace getLocalResponse 
+  // with a function that calls an AI service like Gemini or ChatGPT.
+  // For now, it uses a predefined set of questions and answers.
+
+  // Derive topic options and services mapping from exported `services` in Services.js
+  // Use service.category as topic and map service entries under each category
+  const topicOptions = Array.from(new Set(services.map((s) => s.category))).filter(Boolean);
+
+  const servicesByTopic = topicOptions.reduce((acc, topic) => {
+    acc[topic] = services
+      .filter((s) => s.category === topic)
+      .map((s, i) => ({ id: `${topic.toLowerCase().replace(/\s+/g, '-')}-${i}`, title: s.name, desc: s.description }));
+    return acc;
+  }, {});
+
+  // Track user activity minimally (message count and last interaction)
+  useEffect(() => {
     if (messages.length > 0 && messages[messages.length - 1].fromUser) {
-      updateActivity();
+      // update last interaction/time in local state if needed later
+      // kept minimal to avoid unused variable warnings
     }
   }, [messages]);
 
@@ -167,6 +223,16 @@ const ChatWidget = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
+
+  // Keep the input focused when step changes or widget opens so user can continue typing
+  useEffect(() => {
+    if (!isOpen) return;
+    // small delay to allow input to mount
+    const t = setTimeout(() => {
+      try { inputRef.current?.focus(); } catch (e) {}
+    }, 60);
+    return () => clearTimeout(t);
+  }, [step, isOpen]);
 
 
   // (removed) previous one-time nudge logic in favor of lively launcher effects
@@ -209,14 +275,86 @@ const ChatWidget = () => {
     };
   }, [showTeaser]);
 
+  // Increment unread counter when a bot message arrives while the widget is closed
   useEffect(() => {
-    // When widget opens first time, introduce the assistant 'Dudu' and offer a short suggestion.
-    if (isOpen && messages.length === 0 && !introSentRef.current) {
-      sendBotMessage("Hi 👋, I'm Dudu. I just need your full name, city, address, and mobile number to connect you. What's your full name?", 400);
-      setStep('askName');
-      introSentRef.current = true;
+    if (typeof document !== 'undefined' && origFaviconRef.current === null) {
+      const link = document.querySelector("link[rel~='icon']");
+      origFaviconRef.current = link ? link.href : null;
+    }
+
+    if (!isOpen && messages.length > 0) {
+      const last = messages[messages.length - 1];
+      if (last && !last.fromUser) {
+        setUnreadCount((c) => {
+          const next = c + 1;
+          // show in-tab notification: favicon/title/badge already handled below
+          // update favicon to red badge
+          try {
+            const faviconData = makeRedDotFavicon(next);
+            if (faviconData) setFaviconHref(faviconData);
+          } catch (e) {}
+          return next;
+        });
+      }
+    }
+  }, [messages, isOpen]);
+
+  // Clear unread count whenever user opens the widget and start the conversation
+  useEffect(() => {
+    if (isOpen) {
+      setUnreadCount(0);
+      if (messages.length === 0 && !introSentRef.current) {
+        setIsTyping(true);
+        const _id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        setTimeout(() => {
+          setMessages((prev) => [...prev, { fromUser: false, text: "Hello! To help you better, let's start with a few details. What is your name?", id: _id }]);
+          setIsTyping(false);
+        }, 400);
+        setStep('askName');
+        introSentRef.current = true;
+      }
     }
   }, [isOpen, messages.length]);
+
+  // Show unread count in the browser tab title when widget is closed
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    // remember original title once
+    let original = document.title || '';
+    let stored = document.body.getAttribute('data-chat-original-title');
+    if (!stored) document.body.setAttribute('data-chat-original-title', original);
+
+    if (!isOpen && unreadCount > 0) {
+      document.title = `(${unreadCount}) ${original}`;
+    } else {
+      // restore
+      const orig = document.body.getAttribute('data-chat-original-title') || original;
+      document.title = orig;
+    }
+
+    // cleanup on unmount: restore original
+    return () => {
+      const orig = document.body.getAttribute('data-chat-original-title') || original;
+      document.title = orig;
+    };
+  }, [unreadCount, isOpen]);
+
+  // Restore favicon when unread cleared or widget opened; restore on unmount
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (isOpen || unreadCount === 0) {
+      // restore original favicon
+      try {
+        if (origFaviconRef.current) setFaviconHref(origFaviconRef.current);
+      } catch (e) {}
+    }
+
+    return () => {
+      try {
+        if (origFaviconRef.current) setFaviconHref(origFaviconRef.current);
+      } catch (e) {}
+    };
+  }, [isOpen, unreadCount]);
 
   const sendBotMessage = (content, delay = 1000) => {
     setIsTyping(true);
@@ -231,33 +369,113 @@ const ChatWidget = () => {
 
   const getLocalResponse = async (userMessage) => {
     await new Promise((r) => setTimeout(r, 250));
-  const topic = formData.service || 'the topic you provided';
-  const pair = qaPairs.find((p) => p.q.test(userMessage));
-  if (pair) return pair.a;
-    
+    const topic = formData.service || 'the topic you mentioned';
+
+    // Greeting handling: reply and prompt for name
+    if (/^\s*(hi|hello|hey|namaste|hii)\b/i.test(userMessage)) {
+      return `Hello! To get started, may I have your full name?`;
+    }
+
+    // Fallback responses for common topics (English)
     if (/data|dataset|report|csv|excel/i.test(userMessage)) {
-      return `We can prepare datasets and a research brief — please tell me the timeframe and key metrics you need.`;
+      return `We can prepare datasets and a research brief for you — please tell me the timeline and key metrics you need.`;
     }
-    if (/price|cost|fee|pricing|quote/i.test(userMessage)) {
-      return `Pricing depends on scope. For "${topic}", please share desired depth (brief/standard/comprehensive) and timeline for a tailored quote.`;
+    if (/intraday/i.test(userMessage)) {
+      return `Intraday trading means buying and selling within the same trading day. Key points: use stop-losses, manage position size, prefer liquid stocks, and avoid excessive leverage. This is educational information, not financial advice.`;
     }
-    if (/methodology|how|approach/i.test(userMessage)) {
-      return `Our typical methodology for "${topic}" includes secondary research, expert interviews, and data analysis — tell me which you'd like to prioritise.`;
+    if (/swing|delivery|positional/i.test(userMessage)) {
+      return `Swing or positional trading holds positions for days to weeks. Focus on trend analysis, fundamental triggers and risk management. Consider diversification and position sizing.`;
     }
-    if (/what is (wise global|your company)|kya aap sebi/i.test(userMessage.toLowerCase())) {
-      return `We are a SEBI-registered research analyst firm providing market research, stock insights and research reports. Established in 2024 and based in Indore, MP. We provide general research and analysis — not personalised investment advice or portfolio management; final investment decisions are your responsibility.`;
+    if (/how to pick|stock pick|select stock|best stocks/i.test(userMessage)) {
+      return `To pick stocks consider consistent revenue/earnings, reasonable valuation, sector momentum and liquidity. Use a combination of quantitative screening and qualitative analysis. This is educational only.`;
     }
-    if (/charges|price|pricing|fees|charge/i.test(userMessage.toLowerCase())) {
-      return `We have different subscription plans. Exact charges depend on the scope — would you like subscription details?`;
+    if (/indicator|rsi|macd|moving average|sma|ema/i.test(userMessage)) {
+      return `Indicators like RSI, MACD and moving averages help identify momentum and trend. Combine indicators with price action and volume; avoid relying on a single signal and backtest before using live.`;
     }
-    if (/thank|thanks|dhanyavad|shukriya/i.test(userMessage.toLowerCase())) {
-      return `You're welcome! Is there anything else I can help you with?`;
+    if (/what is (wise global|your company)|sebi|registered/i.test(userMessage.toLowerCase())) {
+      return `We are a SEBI-registered research services firm providing market research, reports and analytics. We are located in Indore and offer research products — not personalised investment advice.`;
     }
-    if (/bye|goodbye|see you|exit|close/i.test(userMessage.toLowerCase())) {
-      return `Thank you for chatting with us. Have a great day! Our team will contact you shortly.`;
+
+    // Generic fallback (English)
+    return `Thanks for your message. How can I help you with ${topic}? If you'd like, type 'topics' or 'services' to see what we offer.`;
+  };
+
+  // Validation helpers
+  const invalidNameTokens = ['abc', 'xyz', 'test', 'aaa', 'bbb', 'abcd'];
+  const isValidName = (name) => {
+    if (!name) return false;
+    const cleaned = name.trim().toLowerCase();
+    if (cleaned.length < 3) return false;
+    // reject obvious junk tokens or single-letter names
+    if (invalidNameTokens.includes(cleaned)) return false;
+    // require at least one letter and allow spaces, dots, hyphens
+    if (!/[a-zA-Z]/.test(cleaned)) return false;
+    // avoid names that are just greetings
+    if (/^\s*(hi|hello|hey|namaste|hii)\b/i.test(name)) return false;
+    return true;
+  };
+
+  const isValidCity = (city) => {
+    if (!city) return false;
+    const cleaned = city.trim();
+    if (cleaned.length < 2 || cleaned.length > 40) return false;
+    // reject any digits in city
+    if (/\d/.test(cleaned)) return false;
+    // allow up to 3 words (e.g., 'New Delhi') each with letters, hyphens or dots
+    const words = cleaned.split(/\s+/);
+    if (words.length > 3) return false;
+    for (const w of words) {
+      if (!/^[A-Za-z\u00C0-\u024F.-]+$/.test(w)) return false;
     }
-    
-    return `Thanks for your message. How else can I assist you with "${formData.service || 'our services'}"?`;
+    return true;
+  };
+
+  const isValidAddress = (addr) => {
+    if (!addr) return false;
+    const cleaned = addr.trim();
+    // require at least 5 characters and do not allow standalone digits-only addresses
+    if (cleaned.length < 5) return false;
+    // address shouldn't be just numbers; require at least one alphabetic character
+    if (!/[A-Za-z\u00C0-\u024F]/.test(cleaned)) return false;
+    return true;
+  };
+
+  const isValidMobile = (m) => {
+    if (!m) return false;
+    const digits = m.replace(/\D/g, '');
+    // Normalize to plain digits and check patterns
+    // Accept 10-digit, or with country code 91 (e.g., 919876543210 or +919876543210), or leading 0
+    let d = digits;
+    // strip leading country/zeros for validation
+    if (/^91\d{10}$/.test(d)) d = d.slice(2);
+    if (/^0\d{10}$/.test(d)) d = d.slice(1);
+    if (!/^\d{10}$/.test(d)) return false;
+    // Indian mobile numbers must start with 6-9
+    if (!/^[6-9]/.test(d)) return false;
+    // reject trivial repeats like all digits same
+    if (/^(\d)\1{9}$/.test(d)) return false;
+    // reject common sequential substrings (e.g., 012345, 123456, 234567, ...)
+    const badSeqs = ['012345', '123456', '234567', '345678', '456789', '567890'];
+    for (const seq of badSeqs) {
+      if (d.includes(seq)) return false;
+    }
+    return true;
+  };
+
+  const normalizeMobile = (m) => {
+    if (!m) return null;
+    let digits = m.replace(/\D/g, '');
+    // handle leading 0 or country prefix 91
+    if (digits.length === 13 && digits.startsWith('091')) {
+      digits = digits.slice(3);
+    }
+    if (digits.length === 12 && digits.startsWith('91')) {
+      digits = digits.slice(2);
+    }
+    if (digits.length === 11 && digits.startsWith('0')) {
+      digits = digits.slice(1);
+    }
+    return digits.length === 10 ? digits : null;
   };
 
 // Service selection flow removed — minimal capture only.
@@ -266,170 +484,199 @@ const ChatWidget = () => {
     if (input.trim() === '') return;
     const userMessage = input.trim();
     const userMsgId = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
-    if (validators[step]) {
-      const err = validators[step](userMessage);
-      if (err) {
-        triggerInvalid(err);
-        return;
-      }
-    }
+    // Add user's message to chat
     setMessages((prev) => [...prev, { fromUser: true, text: userMessage, id: userMsgId }]);
     setInput('');
     setErrorText('');
-    
-    // Flow: askName -> askCity -> askMobile -> askService -> deep questions -> conversion
-    if (step === 'askName') {
-      setFormData((prev) => ({ ...prev, name: userMessage.trim() }));
-      sendBotMessage(`Nice to meet you, ${userMessage.trim()}. Please tell us your city.`, 600);
-      setStep('askCity');
-      return;
+
+    // For autonomous chat, always use the local responder
+    setIsTyping(true);
+    try {
+      const aiResponse = await getLocalResponse(userMessage);
+      sendBotMessage(aiResponse, 500);
+    } catch (err) {
+      sendBotMessage('Sorry, something went wrong. Please try again later.');
+    } finally {
+      setIsTyping(false);
+      // keep focus on the input so user can continue typing
+      setTimeout(() => { try { inputRef.current?.focus(); } catch (e) {} }, 80);
     }
+  };
 
-    if (step === 'askCity') {
-      setFormData((prev) => ({ ...prev, city: userMessage.trim() }));
-      sendBotMessage(`Thanks. Please share your full address (house/street, area, pincode).`, 600);
-      setStep('askAddress');
-      return;
-    }
+  // When user selects a topic from options
+  const handleSelectTopic = (topic) => {
+    setSelectedTopic(topic);
+    setFormData((f) => ({ ...f, topic }));
+    setShowTopicOptions(false);
+    setShowServiceOptions(true);
+    // bot message: list services
+    const id = `${Date.now()}-topic`;
+    setMessages((prev) => [...prev, { fromUser: false, text: `Great — you selected: ${topic}. Which of these services interest you?`, id }]);
+  };
 
-    if (step === 'askAddress') {
-      setFormData((prev) => ({ ...prev, address: userMessage.trim() }));
-      sendBotMessage(`Got it. Please share your mobile number so we can contact you.`, 600);
-      setStep('askMobile');
-      return;
-    }
+  const handleSelectService = (service) => {
+  // persist chosen service into formData so getLocalResponse/topic logic can use it
+    setFormData((f) => ({ ...f, service: service.title }));
+    setShowServiceOptions(false);
+    // show service details and give confirmation
+    const id = `${Date.now()}-service`;
+    setMessages((prev) => [...prev, { fromUser: false, text: `${service.title}: ${service.desc}` , id }]);
+    setTimeout(async () => {
+      const finalId = `${Date.now()}-final`;
+      setMessages((prev) => [...prev, { fromUser: false, text: `Thank you for your interest in ${service.title}. Our team will contact you shortly about this service.`, id: finalId }]);
+      setStep('chatting'); // End of flow
 
-    if (step === 'askMobile') {
-      const rawMobile = userMessage.trim();
-      const digitsOnly = rawMobile.replace(/\D/g, '').slice(0, 10);
-      setFormData((prev) => ({ ...prev, mobile: digitsOnly }));
-
-      // submit collected details and finish the conversation
-      const submissionData = {
-        ...formData,
+      // prepare payload and save to Realtime Database
+      const payload = {
+        name: formData.name || '',
+        city: formData.city || '',
         address: formData.address || '',
-        mobile: digitsOnly,
-        message: `Inquiry via Chat: ${formData.name || 'Unknown'} | ${formData.city || 'Unknown City'} | ${digitsOnly}`,
-        honeypot: '',
-        // server will set timestamp
+        mobile: formData.mobile || '',
+        service: service.title || '',
+  // include a short message to satisfy the DB write rule that requires a 'message' string
+  message: `Interested in ${service.title} - ${service.desc || ''}`,
+        timestamp: Date.now(),
         status: 'New',
-        userActivity: {
-          lastInteraction: userActivity.lastInteraction instanceof Date ? userActivity.lastInteraction.getTime() : null,
-          messageCount: userActivity.messageCount,
-          sessionStart: userActivity.sessionStart instanceof Date ? userActivity.sessionStart.getTime() : null
-        }
       };
 
-  api.post('/chatbot-submissions', submissionData)
-        .then((res) => {
-          if (!res.ok) throw new Error('Server rejected');
-          sendBotMessage(`Thank you, ${formData.name || ''}! We've received your details. Our team will contact you shortly on ${digitsOnly}.`, 700);
-          // close and reset after a short delay so user can read message
-          setTimeout(() => {
-            closeWithFade(500, () => {
-              setMessages([]);
-              setFormData({ name: '', city: '', address: '', mobile: '', service: '', extra: {} });
-              setStep('greeting');
-              introSentRef.current = false;
-            });
-          }, 2200);
-        })
-        .catch((error) => {
-          console.error('Error saving data to Firebase: ', error);
-          sendBotMessage('Sorry, a technical problem occurred while saving your details. Please try again later.', 700);
-        });
+      try {
+        if (pendingSubmissionKey) {
+          // update existing partial submission
+          const targetRef = dbRef(db, `chatbot-submissions/${pendingSubmissionKey}`);
+          // ensure partial flag is cleared when updating with final data
+          await update(targetRef, { ...payload, partial: false });
+          setPendingSubmissionKey(null);
+        } else {
+          const submissionsRef = dbRef(db, 'chatbot-submissions');
+          const newRef = push(submissionsRef);
+          await set(newRef, payload);
+        }
+      } catch (e) {
+        console.error('Failed to save chatbot submission', e);
+      }
 
-      return;
-    }
-
-    if (step === 'askService') {
-      // Service selection is now handled by the ServiceButtons component and handleServiceSelection function
-      // We can leave this block empty or add a fallback message
-      sendBotMessage('Please select a service from the options above.', 600);
-      return;
-    }
-
-    // Deep question flows
-    if (step === 'stock-period') {
-      // record preference
-      setFormData((prev) => ({ ...prev, extra: { ...prev.extra, stockPeriod: userMessage } }));
-      sendBotMessage('Are you a beginner or do you already have experience?', 600);
-      setStep('stock-experience');
-      return;
-    }
-
-    if (step === 'stock-experience') {
-      setFormData((prev) => ({ ...prev, extra: { ...prev.extra, experience: userMessage } }));
-      sendBotMessage('Thank you — our team will prepare personalized tips for you. Would you like us to send you FREE demo tips on WhatsApp?', 800);
-      setStep('conversion');
-      return;
-    }
-
-    if (step === 'investment-details') {
-      setFormData((prev) => ({ ...prev, extra: { ...prev.extra, investmentPrefs: userMessage } }));
-      sendBotMessage('Understood. Our team will contact you. Would you like to receive FREE demo tips on WhatsApp?', 800);
-      setStep('conversion');
-      return;
-    }
-
-    if (step === 'intraday-details') {
-      setFormData((prev) => ({ ...prev, extra: { ...prev.extra, intradayPrefs: userMessage } }));
-      sendBotMessage('Thanks — our trading desk will contact you. Would you like to receive FREE demo tips on WhatsApp?', 800);
-      setStep('conversion');
-      return;
-    }
-
-  if (step === 'conversion') {
-      // capture opt-in yes/no
-      if (/yes|haan|h|yep|sure|1|ok|okay/i.test(userMessage.toLowerCase())) {
-    // Details already saved after mobile; just confirm
-    sendBotMessage('Great! Our team will contact you to send FREE demo tips on WhatsApp. Thank you 🙏', 700);
-    // explicit follow-up confirmation
-    sendBotMessage('Our team will contact you shortly on the mobile number you provided — please be available.', 1200);
-    // final thank you and keep chat open
-    setStep('chatting');
-    // close and reset the widget shortly after messages are delivered
-    setTimeout(() => {
-      closeWithFade(400, () => {
-      // clear messages and reset form so next open is fresh
-      setMessages([]);
-      setFormData({ name: '', city: '', address: '', mobile: '', service: '', extra: {} });
-      setStep('greeting');
-      // allow intro to be sent again if needed in later sessions
-      introSentRef.current = false;
+      // Close the widget after a short delay so user can read the final message
+      closeWithFade(700, () => {
+        setMessages([]);
+        setFormData({ name: '', city: '', address: '', mobile: '', service: '', extra: {} });
+        setStep('greeting');
+        introSentRef.current = false;
       });
-    }, 2600);
-        return;
-      }
-      if (/no|nah|nahi|0|not now|later/i.test(userMessage.toLowerCase())) {
-        sendBotMessage('Okay — we are always here if you ever need us. Our team will still contact you for the inquiry.', 700);
-        setStep('chatting');
-        return;
-      }
-      // otherwise treat as general chat
-      setIsTyping(true);
-      try {
-        const aiResponse = await getLocalResponse(userMessage);
-        sendBotMessage(aiResponse, 600);
-      } catch (err) {
-        sendBotMessage('Sorry, something went wrong. Please try again later.');
-      } finally {
-        setIsTyping(false);
-      }
+    }, 800);
+  };
+
+  // Handlers for collecting personal info step-by-step
+  const submitName = (name) => {
+    if (!name) {
+      setErrorText('Please enter your name');
+      try { inputRef.current?.focus(); } catch (e) {}
       return;
     }
-
-    if (step === 'chatting') {
-      setIsTyping(true);
-      try {
-        const aiResponse = await getLocalResponse(userMessage);
-        sendBotMessage(aiResponse, 600);
-      } catch (err) {
-        sendBotMessage('Sorry, something went wrong. Please try again later.');
-      } finally {
-        setIsTyping(false);
-      }
+    if (!isValidName(name)) {
+      setErrorText('Please enter a valid full name (no test words).');
+      try { inputRef.current?.focus(); } catch (e) {}
+      return;
     }
+    setErrorText('');
+    setFormData((f) => ({ ...f, name }));
+    const userId = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+    const botId = `${Date.now()}-askcity`;
+    setMessages((prev) => [...prev, { fromUser: true, text: name, id: userId }, { fromUser: false, text: `Thanks ${name}. Which city are you in?`, id: botId }]);
+    setStep('askCity');
+  };
+
+  const submitCity = (city) => {
+    if (!city) {
+      setErrorText('Please enter your city');
+      try { inputRef.current?.focus(); } catch (e) {}
+      return;
+    }
+    if (!isValidCity(city)) {
+      setErrorText('Please enter a valid city name');
+      try { inputRef.current?.focus(); } catch (e) {}
+      return;
+    }
+    setErrorText('');
+    setFormData((f) => ({ ...f, city }));
+    const userId = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+    const botId = `${Date.now()}-askaddr`;
+    setMessages((prev) => [...prev, { fromUser: true, text: city, id: userId }, { fromUser: false, text: `Got it — ${city}. Please share your full address.`, id: botId }]);
+    setStep('askAddress');
+  };
+
+  const submitAddress = (address) => {
+    const val = (address || '').trim();
+    if (!val) {
+      setErrorText('Address is required. Please enter your full address.');
+      try { inputRef.current?.focus(); } catch (e) {}
+      return;
+    }
+    if (!isValidAddress(val)) {
+      setErrorText('Please enter a valid address (at least 5 characters and include street/locality text; no digits-only).');
+      try { inputRef.current?.focus(); } catch (e) {}
+      return;
+    }
+    setErrorText('');
+    setFormData((f) => ({ ...f, address: val }));
+    const userId = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+    const botId = `${Date.now()}-askmobile`;
+    setMessages((prev) => [...prev, { fromUser: true, text: val, id: userId }, { fromUser: false, text: `Thanks. Finally, please share your mobile number so our team can contact you.`, id: botId }]);
+    setStep('askMobile');
+  };
+
+  const submitMobile = (mobile) => {
+    if (!mobile) {
+      setErrorText('Please enter your mobile number');
+      try { inputRef.current?.focus(); } catch (e) {}
+      return;
+    }
+    const normalized = normalizeMobile(mobile);
+    if (!isValidMobile(mobile) || !normalized) {
+      setErrorText('Please enter a valid Indian mobile number (10 digits, starts with 6/7/8/9; allow +91 or leading 0). Avoid simple sequences like 123456 or repeating digits.');
+      try { inputRef.current?.focus(); } catch (e) {}
+      return;
+    }
+    setErrorText('');
+    setFormData((f) => ({ ...f, mobile: normalized }));
+    const userId = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+    const botId = `${Date.now()}-asktopic`;
+    setMessages((prev) => [...prev, { fromUser: true, text: normalized, id: userId }, { fromUser: false, text: `Thank you! Saving your contact...`, id: botId }]);
+
+    // Save a partial submission so we can update later when service is selected
+    (async () => {
+      try {
+        const submissionsRef = dbRef(db, 'chatbot-submissions');
+        const newRef = push(submissionsRef);
+        const payload = {
+          name: formData.name || '',
+          city: formData.city || '',
+          address: formData.address || '',
+          mobile: normalized || '',
+          service: formData.service || '',
+          // partial save marker
+          partial: true,
+          // include a minimal message so unauthenticated writes match DB rules
+          message: 'Partial submission (mobile received)',
+          timestamp: Date.now(),
+          status: 'New',
+        };
+        await set(newRef, payload);
+        setPendingSubmissionKey(newRef.key);
+
+        // After partial save completes, prompt user to select topic/services
+        const doneId = `${Date.now()}-asktopic2`;
+        setMessages((prev) => [...prev, { fromUser: false, text: `Now, let's find the right service for you. Which of these topics are you interested in?`, id: doneId }]);
+        setShowTopicOptions(true);
+        setStep('selectingTopic');
+      } catch (e) {
+        console.error('Failed to save partial submission', e);
+        // even if save failed, still show options so user can continue; admin may not receive record
+        const failId = `${Date.now()}-asktopicfail`;
+        setMessages((prev) => [...prev, { fromUser: false, text: `Couldn't save your contact right now — please try again or continue to choose a service.`, id: failId }]);
+        setShowTopicOptions(true);
+        setStep('selectingTopic');
+      }
+    })();
   };
 
   const handleKeyPress = (e) => {
@@ -501,9 +748,9 @@ const ChatWidget = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="w-80 mr-16 h-[28rem] bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl border border-gray-200 flex flex-col overflow-hidden relative z-40"
+            className="w-80 mr-16 h-[28rem] bg-white/90 backdrop-blur-xl shadow-2xl rounded-[28px] border border-gray-200 flex flex-col overflow-hidden relative z-40"
           >
-            <div className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-3 flex justify-between items-center rounded-t-xl">
+            <div className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white px-4 py-3 flex justify-between items-center rounded-t-[28px]">
               <div className="flex items-center gap-2">
                 <div className="bg-white/20 p-1 rounded-full">
                   <ChatLogo className="w-6 h-6" animated />
@@ -551,9 +798,11 @@ const ChatWidget = () => {
             </div>
 
             <div className="flex-1 p-3 overflow-y-auto space-y-3 text-sm bg-gradient-to-b from-indigo-50/70 to-white/80">
+              {/* Topic/service UI moved below messages to appear above input */}
+
               {messages.length === 0 ? (
                 <div className="text-center mt-8">
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="bg-gradient-to-r from-indigo-600 to-violet-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="bg-gradient-to-r from-[#25D366] to-[#128C7E] w-16 h-16 rounded-full flex items-center justify-center mx-auto">
                     <ChatLogo className="w-8 h-8" animated />
                   </motion.div>
                   <p className="text-gray-700 mt-4 font-medium">Welcome to Wise Global Research Services</p>
@@ -569,7 +818,7 @@ const ChatWidget = () => {
                     </motion.div>
                   ))}
 
-                  {isTyping && (
+              {isTyping && (
                     <div className="flex justify-start">
                       <div className="bg-white/90 backdrop-blur text-gray-800 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-100">
                         <div className="flex items-center gap-3">
@@ -592,24 +841,97 @@ const ChatWidget = () => {
                 </>
               )}
             </div>
-
             <div className="p-3 border-t border-gray-200 bg-white">
               {step !== 'chatting' && step !== 'askService' && <StepIndicator />}
+
+              {/* Moved Topic/Service options: show just above input area */}
+              {(showTopicOptions || (showServiceOptions && selectedTopic)) && (
+                <div className="mb-3 px-1">
+                  {showTopicOptions && (
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium text-black">Which topic are you interested in?</div>
+                      <div className="grid grid-cols-1 gap-2">
+                        {topicOptions.map((t) => (
+                          <button key={t} onClick={() => handleSelectTopic(t)} className="text-left p-2 bg-white border border-gray-200 rounded-lg hover:shadow transition text-black">
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {showServiceOptions && selectedTopic && (
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium text-black">Select a service for {selectedTopic}:</div>
+                      <div className="space-y-2">
+                        {servicesByTopic[selectedTopic]?.map((s) => (
+                          <div key={s.id} className="p-2 bg-white border border-gray-100 rounded-lg text-black">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <div className="font-medium text-black">{s.title}</div>
+                                <div className="text-xs text-gray-700">{s.desc}</div>
+                              </div>
+                              <div>
+                                <button onClick={() => handleSelectService(s)} className="text-sm text-indigo-600 px-3 py-1 rounded hover:bg-indigo-50">Select</button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <motion.div animate={invalidPulse ? { x: [0, -8, 8, -6, 6, -3, 3, 0] } : { x: 0 }} transition={{ duration: 0.45 }} className="flex items-center gap-2">
-                <input
-                  type={getInputType()}
-                  placeholder={getInputPlaceholder()}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all bg-white/90 backdrop-blur"
-                  disabled={step === 'askService'}
-                />
-                <motion.button onClick={handleSend} disabled={input.trim() === '' || step === 'askService'} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-2.5 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                  </svg>
-                </motion.button>
+                {/* Conditional input UI based on step */}
+                {(step === 'chatting') && (
+                  <>
+                    <input
+                      type={getInputType()}
+                      placeholder={getInputPlaceholder()}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      ref={inputRef}
+                      className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all bg-white/90 backdrop-blur"
+                      disabled={false}
+                    />
+                    <motion.button onClick={handleSend} disabled={input.trim() === ''} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-2.5 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                      </svg>
+                    </motion.button>
+                  </>
+                )}
+
+                {step === 'askName' && (
+                  <div className="flex gap-2 w-full">
+                    <input type="text" ref={inputRef} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500" placeholder="Your full name" onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => { if (e.key === 'Enter') { submitName(input.trim()); setInput(''); } }} />
+                    <button onClick={() => { submitName(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full">Send</button>
+                  </div>
+                )}
+
+                {step === 'askCity' && (
+                  <div className="flex gap-2 w-full">
+                    <input type="text" ref={inputRef} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500" placeholder="Your city" onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => { if (e.key === 'Enter') { submitCity(input.trim()); setInput(''); } }} />
+                    <button onClick={() => { submitCity(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full">Send</button>
+                  </div>
+                )}
+
+                {step === 'askAddress' && (
+                  <div className="flex gap-2 w-full">
+                    <input type="text" ref={inputRef} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500" placeholder="Full address or 'skip'" onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => { if (e.key === 'Enter') { submitAddress(input.trim()); setInput(''); } }} />
+                    <button onClick={() => { submitAddress(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full">Send</button>
+                  </div>
+                )}
+
+                {step === 'askMobile' && (
+                  <div className="flex gap-2 w-full">
+                    <input type="tel" ref={inputRef} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500" placeholder="Mobile number" onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => { if (e.key === 'Enter') { submitMobile(input.trim()); setInput(''); } }} />
+                    <button onClick={() => { submitMobile(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full">Send</button>
+                  </div>
+                )}
               </motion.div>
               {errorText && <div className="mt-2 text-xs text-rose-600 font-medium">{errorText}</div>}
             </div>
@@ -639,7 +961,7 @@ const ChatWidget = () => {
                 <div className="mt-0.5">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
                 </div>
-                <div className="flex-1">Hii, I’m Dudu.</div>
+                <div className="flex-1">Hi, I'm Dudu.</div>
                 <button onClick={() => setShowTeaser(false)} className="ml-1 text-gray-400 hover:text-gray-600" aria-label="Dismiss chat teaser">
                   <FaTimes size={10} />
                 </button>
@@ -649,27 +971,47 @@ const ChatWidget = () => {
           )}
         </AnimatePresence>
 
-        <motion.button
+          <motion.button
           key="chat-open-button"
           whileHover={{ scale: 1.08, rotate: 2 }}
           whileTap={{ scale: 0.95, rotate: -2 }}
+          onMouseEnter={(e) => {
+            // add hovered class for stronger effect
+            e.currentTarget.classList.add('hovered');
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.classList.remove('hovered');
+          }}
           onClick={() => {
             setIsOpen(true);
             setShowTeaser(false);
           }}
-          className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white w-14 h-14 p-0 rounded-full shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all flex items-center justify-center"
-          aria-label="Open Dudu chat"
+          aria-label={isOpen ? 'Close chat' : `Open Dudu chat (${unreadCount || 0} new)`}
+          aria-live="polite"
+          aria-atomic="true"
+          // apply combined animations (bob + subtle shake); reduced-motion media query will disable via injected CSS
+          // use damru-tilt for primary continuous motion, keep chat-shake as subtle lateral motion
+          style={{ animation: 'damru-tilt 1.6s ease-in-out infinite, chat-shake 6s ease-in-out 4s infinite' }}
+          className={"chat-launcher-animated-border bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white w-14 h-14 p-0 rounded-lg shadow-xl shadow-[#128C7E]/30 hover:shadow-[#128C7E]/50 transition-all flex items-center justify-center" + (unreadCount > 0 ? ' chat-launcher-unread' : '')}
         >
-          <motion.div
-            initial={{ scale: 0.92, opacity: 0.95, rotate: 0, y: 0 }}
-            animate={{ scale: [0.96, 1, 0.96], opacity: 1, rotate: [-3, 3, -2, 2, 0], y: [0, -1.5, 0] }}
-            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-9 h-9 relative"
-          >
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0.95, y: 0 }}
+              animate={{ scale: [0.98, 1, 0.98], opacity: 1, y: [0, -2, 0] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-9 h-9 relative"
+            >
             <ChatLogo className="w-9 h-9" animated />
             <motion.span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-white/90" initial={{ scale: 0.8, opacity: 0.8 }} animate={{ scale: [0.8, 1.3, 0.8], opacity: [0.6, 1, 0.6] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }} />
             <motion.span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full bg-white/70" initial={{ scale: 0.8, opacity: 0.8 }} animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.5, 0.9, 0.5] }} transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }} />
           </motion.div>
+          {/* unread badge */}
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-4 px-1.5 rounded-full bg-rose-500 text-white text-[11px] font-medium flex items-center justify-center shadow-lg transform translate-x-1 translate-y-[-2px]">
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </span>
+          )}
+          {/* border effect element for zigzag/half-round animation */}
+          <span aria-hidden="true" className="border-effect" />
         </motion.button>
       </div>
     </div>

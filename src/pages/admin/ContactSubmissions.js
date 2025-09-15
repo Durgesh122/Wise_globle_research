@@ -102,8 +102,24 @@ const ContactSubmissions = () => {
     const submissionsRef = ref(db, 'homeFormSubmissions');
     const unsubscribe = onValue(submissionsRef, (snapshot) => {
       const data = snapshot.val();
-      const submissionList = data ? Object.entries(data).map(([key, value]) => ({ id: key, ...value })) : [];
-      setSubmissions(submissionList);
+      if (data) {
+        const cutoff = Date.now() - 72 * 60 * 60 * 1000;
+        const entries = Object.entries(data);
+        const toDelete = [];
+        const keep = [];
+        for (const [key, value] of entries) {
+          const ts = value?.timestamp ? (typeof value.timestamp === 'number' ? value.timestamp : new Date(value.timestamp).getTime()) : 0;
+          if (ts && ts < cutoff) toDelete.push(key);
+          else keep.push({ id: key, ...value });
+        }
+        if (toDelete.length > 0) {
+          toDelete.forEach((id) => remove(ref(db, `homeFormSubmissions/${id}`)).catch(() => null));
+          toast.info(`${toDelete.length} old contact submission(s) auto-deleted`);
+        }
+        setSubmissions(keep);
+      } else {
+        setSubmissions([]);
+      }
       setIsLoading(false);
     }, (error) => {
       toast.error('Failed to load submissions: ' + error.message);

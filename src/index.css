@@ -24,7 +24,7 @@
 /* ✅ Global Font + Background */
 html {
   /* Ensure the base page background is dark so transparent body never shows white */
-  background: #0b1220; /* matches app's dark theme */
+  background: var(--bg-surface, #0b1220);
   overflow-x: hidden;
   overscroll-behavior-y: none; /* prevent rubber-band revealing UA background */
   /* Add cross-browser text size adjust to satisfy audit */
@@ -34,8 +34,8 @@ html {
 body {
   font-family: 'Josefin Sans', sans-serif;
   /* Keep dark background at the document level */
-  background: #0b1220;
-  color: white;
+  background: var(--bg-surface, #0b1220);
+  color: var(--text-body, white);
   margin: 0;
   overflow-x: hidden;
   /* Prevents odd extra vertical scrolling from off-screen transforms */
@@ -45,11 +45,11 @@ body {
 
 /* Ensure React root also paints dark background and fills screen */
 html, body, #root { min-height: 100%; }
-#root { background: #0b1220; }
+#root { background: var(--bg-surface, #0b1220); }
 
 /* Accessible focus outline */
 :focus-visible {
-  outline: 3px solid #22c55e;
+  outline: 3px solid var(--accent, #22c55e);
   outline-offset: 2px;
 }
 
@@ -164,11 +164,12 @@ html, body, #root { min-height: 100%; }
 /* ✅ Blurred background for components */
 .custom-box-bg {
   /* subtle translucent panel for both dark and light backgrounds */
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--bg-muted, rgba(255, 255, 255, 0.06));
   /* Place -webkit- prefixed backdrop filter before the standard property */
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--navbar-border, rgba(255, 255, 255, 0.08));
+  box-shadow: var(--card-shadow, 0 8px 24px rgba(0, 0, 0, 0.3));
 }
 
 /* ✅ Background for dark sections */
@@ -340,3 +341,5 @@ html[data-line-height="relaxed"] body, html[data-line-height="relaxed"] * { line
   white-space: nowrap !important;
   border: 0 !important;
 }
+
+

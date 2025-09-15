@@ -6,7 +6,7 @@ import { FaPlus, FaMinus, FaChartLine, FaRegLightbulb, FaStar, FaShieldAlt } fro
 import { Helmet } from 'react-helmet-async';
 
 // Services data reflecting a SEBI Registered Research Analyst firm
-const services = [
+export const services = [
   {
     category: 'Equity Cash',
     name: 'Smart Cash',

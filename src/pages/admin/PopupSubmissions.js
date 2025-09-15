@@ -30,12 +30,23 @@ const PopupSubmissions = () => {
       (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          const submissionList = Object.keys(data)
-            .map((key) => ({
-              id: key,
-              ...data[key],
-            }))
-            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sort by newest first
+          const cutoff = Date.now() - 72 * 60 * 60 * 1000; // 72 hours
+          const entries = Object.entries(data);
+          const toDelete = [];
+          const keep = [];
+          for (const [key, value] of entries) {
+            const ts = value?.timestamp ? new Date(value.timestamp).getTime() : 0;
+            if (ts && ts < cutoff) toDelete.push(key);
+            else keep.push({ id: key, ...value });
+          }
+
+          // Fire-and-forget deletions of old entries
+          if (toDelete.length > 0) {
+            toDelete.forEach((id) => remove(ref(db, `popoForms/${id}`)).catch(() => null));
+            toast.info(`${toDelete.length} old popup submission(s) auto-deleted`);
+          }
+
+          const submissionList = keep.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
           setSubmissions(submissionList);
         } else {
           setSubmissions([]);

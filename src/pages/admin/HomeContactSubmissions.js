@@ -104,8 +104,24 @@ const HomeContactSubmissions = () => {
       submissionsRef,
       (snapshot) => {
         const data = snapshot.val();
-        const list = data ? Object.entries(data).map(([key, value]) => ({ id: key, ...value })) : [];
-        setSubmissions(list);
+        if (data) {
+          const cutoff = Date.now() - 72 * 60 * 60 * 1000; // 72 hours
+          const entries = Object.entries(data);
+          const toDelete = [];
+          const keep = [];
+          for (const [key, value] of entries) {
+            const ts = value?.timestamp ? (typeof value.timestamp === 'number' ? value.timestamp : new Date(value.timestamp).getTime()) : 0;
+            if (ts && ts < cutoff) toDelete.push(key);
+            else keep.push({ id: key, ...value });
+          }
+          if (toDelete.length > 0) {
+            toDelete.forEach((id) => remove(ref(db, `homePageContactSubmissions/${id}`)).catch(() => null));
+            toast.info(`${toDelete.length} old contact submission(s) auto-deleted`);
+          }
+          setSubmissions(keep);
+        } else {
+          setSubmissions([]);
+        }
         setIsLoading(false);
       },
       (error) => {

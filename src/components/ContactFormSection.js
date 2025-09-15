@@ -32,6 +32,27 @@ const ContactForm = ({ contactFormRef }) => {
 
   toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
       reset();
+      // Send an email copy to server (best-effort, non-blocking)
+    (async () => {
+        try {
+      const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:3002' : '';
+      await fetch(apiBase + '/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: formData.name,
+              email: formData.email || '',
+              mobile: formData.phone || '',
+              city: '',
+              interest: formData.interest || 'Contact Form',
+              message: formData.message || '',
+              source: 'ContactFormSection'
+            })
+          });
+        } catch (e) {
+      console.warn('Failed to send email copy for contact form:', e);
+        }
+      })();
     } catch (error) {
       console.error('Error submitting form:', error);
   const errorMessage = error.message ? error.message : String(error);

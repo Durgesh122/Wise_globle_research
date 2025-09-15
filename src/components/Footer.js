@@ -12,7 +12,8 @@ const logoSrcSetWebp = ['/assets/images/wise3-64.webp 64w','/assets/images/wise3
 
 function Footer() {
   const { changeTheme, theme, gradients } = useContext(ThemeContext);
-  const { background, textColor } = gradients[theme] || gradients.default;
+  const currentTheme = gradients[theme] || gradients.default;
+  const { background, textColor, footer } = currentTheme;
   const [langQuery, setLangQuery] = useState('');
   const [showAllWidget, setShowAllWidget] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -181,8 +182,11 @@ function Footer() {
 
       <footer
         role="contentinfo"
-        style={{ background, color: textColor }}
-        className="relative z-30 transition-all duration-1000 pt-8 pb-4 px-4 mx-2 my-2 border-4 border-[#64ed37] rounded-xl shadow-xl overflow-x-hidden"
+        style={{
+          background: footer?.background || background,
+          color: footer?.textColor || textColor,
+        }}
+        className="relative z-30 transition-all duration-1000 pt-8 pb-4 px-4 mx-2 my-2 rounded-xl shadow-xl overflow-x-hidden"
       >
   {/* Language selector removed — app uses static English text */}
         <div className="custom-scrollbar px-2 sm:px-0">

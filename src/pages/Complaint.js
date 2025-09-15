@@ -48,6 +48,27 @@ const Complaint = () => {
       };
       await push(ref(db, 'complaints'), newComplaint);
       setSubmitted(true);
+      // Best-effort: also notify server to send an email copy to support
+      (async () => {
+        try {
+          const apiBase = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3002' : '');
+          await fetch((apiBase ? apiBase.replace(/\/$/, '') : '') + '/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: newComplaint.name || '',
+              email: newComplaint.email || '',
+              mobile: newComplaint.mobile || '',
+              city: '',
+              interest: 'Complaint Form',
+              message: `Type: ${newComplaint.complaintType}\n\nDescription: ${newComplaint.description}\n\nPreferred resolution: ${newComplaint.resolution || ''}`,
+              source: 'Complaints'
+            })
+          });
+        } catch (err) {
+          console.warn('Failed to POST to /send-email from Complaint page:', err);
+        }
+      })();
     } catch (error) {
       console.error('Error saving complaint:', error);
       toast.error('Failed to submit complaint: ' + error.message);

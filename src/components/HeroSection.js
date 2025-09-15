@@ -23,6 +23,8 @@ const HeroSection = () => {
   const [backName, setBackName] = useState(sliderImages[0]);
   const [frontName, setFrontName] = useState(sliderImages[0]);
   const rafRef = useRef(null);
+  const sectionRef = useRef(null);
+  const [shouldPreload, setShouldPreload] = useState(false);
 
   // Reduced motion preference
   const prefersReduced = useMemo(() =>
@@ -121,11 +123,33 @@ const HeroSection = () => {
     };
   }, [currentSlide, frontName]);
 
+  useEffect(() => {
+    if (!sectionRef.current || typeof IntersectionObserver === 'undefined') {
+      // If no IntersectionObserver (old browsers) or ref not available, enable preload by default
+      setShouldPreload(true);
+      return undefined;
+    }
+    let mounted = true;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!mounted) return;
+        if (entry.isIntersecting) {
+          setShouldPreload(true);
+          obs.disconnect();
+        }
+      });
+    }, { rootMargin: '200px' });
+    obs.observe(sectionRef.current);
+    return () => { mounted = false; obs.disconnect(); };
+  }, []);
+
   return (
-    <section className="relative pt-0 flex items-center justify-center overflow-hidden" style={{ minHeight: 'calc(100vh - 4rem)' }}>
-      <Helmet>
-  <link rel="preload" as="image" href={largest(sliderImages[0], 'webp')} imagesrcset={`${largest(sliderImages[0], 'webp')} 1600w`} />
-      </Helmet>
+    <section ref={sectionRef} className="relative pt-0 flex items-center justify-center overflow-hidden" style={{ minHeight: 'calc(100vh - 4rem)' }}>
+      {shouldPreload && (
+        <Helmet>
+          <link rel="preload" as="image" href={largest(sliderImages[0], 'webp')} imagesrcset={`${largest(sliderImages[0], 'webp')} 1600w`} imagesizes="100vw" />
+        </Helmet>
+      )}
       <div className="absolute inset-0 z-0">
         {/* Double-buffered crossfade: back (fading out) and front (fading in) */}
         <div className="absolute inset-0 w-full h-full will-change-transform" style={{contain:'strict'}}>

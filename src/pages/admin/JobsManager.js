@@ -72,6 +72,18 @@ export default function JobsManager() {
     catch (e) { toast.error(`Failed: ${e?.message || e}`); }
   };
 
+  // Delete a single application by id
+  const deleteApplication = async (appId) => {
+    if (!window.confirm('Delete this application? This cannot be undone.')) return;
+    try {
+      await remove(dbRef(db, `jobApplications/${appId}`));
+      setApps((prev) => prev.filter((a) => a.id !== appId));
+      toast.success('Application deleted');
+    } catch (e) {
+      toast.error(`Failed to delete application: ${e?.message || e}`);
+    }
+  };
+
   const loadApplications = async (jobId) => {
     // Clean previous listener if any
     if (appsUnsubRef.current) {
@@ -89,9 +101,21 @@ export default function JobsManager() {
         q,
         (snap) => {
           const val = snap.val() || {};
-          const list = Object.entries(val)
-            .map(([id, v]) => ({ id, ...v }))
-            .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+          const cutoff = Date.now() - 72 * 60 * 60 * 1000; // 72 hours
+          const entries = Object.entries(val);
+          const toDelete = [];
+          const keep = [];
+          for (const [id, v] of entries) {
+            const ts = v?.timestamp || 0;
+            if (ts && ts < cutoff) toDelete.push(id);
+            else keep.push({ id, ...v });
+          }
+          if (toDelete.length > 0) {
+            // remove old entries (fire-and-forget)
+            toDelete.forEach((id) => remove(dbRef(db, `jobApplications/${id}`)).catch(()=>null));
+            toast.info(`${toDelete.length} old application(s) auto-deleted`);
+          }
+          const list = keep.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
           setApps(list);
           setAppsError('');
           setLoadingApps(false);
@@ -160,7 +184,17 @@ export default function JobsManager() {
 
       {/* Jobs List */}
       <div className="bg-white/10 rounded">
-        <div className="p-4 border-b border-white/10 font-semibold">All Jobs</div>
+        <div className="p-4 border-b border-white/10 flex items-center justify-between">
+          <div className="font-semibold">All Jobs</div>
+          <div>
+            <button
+              className="px-3 py-2 bg-emerald-600 rounded flex items-center gap-2 text-sm"
+              onClick={() => loadApplications('general')}
+            >
+              <FaList/> General Applications
+            </button>
+          </div>
+        </div>
         <div className="divide-y divide-white/10">
           {jobList.length === 0 && (
             <div className="p-4 text-white/70">No jobs yet. Create one above.</div>
@@ -185,8 +219,10 @@ export default function JobsManager() {
       {/* Applications drawer */}
       {viewAppsFor && (
         <div className="bg-white/10 rounded">
-          <div className="p-4 border-b border-white/10 flex items-center justify-between">
-            <div className="font-semibold">Applications for Job #{viewAppsFor}</div>
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <div className="font-semibold">
+                  {viewAppsFor === 'general' ? 'General Applications' : (`Applications for ${jobs?.[viewAppsFor]?.title || `Job #${viewAppsFor}`}`)}
+                </div>
             <button
               className="text-sm underline"
               onClick={() => {
@@ -212,8 +248,15 @@ export default function JobsManager() {
               {apps.length === 0 && <div className="p-4 text-white/70">No applications yet.</div>}
               {apps.map(a => (
                 <div key={a.id} className="p-4">
-                  <div className="font-semibold">{a.name} • {a.email} • {a.phone}</div>
-                  <div className="text-white/80 text-sm mb-2">{new Date(a.timestamp||0).toLocaleString()}</div>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="font-semibold">{a.name} • {a.email} • {a.phone}</div>
+                      <div className="text-white/80 text-sm mb-2">{new Date(a.timestamp||0).toLocaleString()}</div>
+                    </div>
+                    <div className="ml-4 flex-shrink-0">
+                      <button className="px-3 py-1 bg-red-600 rounded text-sm" onClick={()=>deleteApplication(a.id)}>Delete</button>
+                    </div>
+                  </div>
                   {a.resumeData && a.resumeMeta && (
                     <a
                       className="text-blue-300 underline"

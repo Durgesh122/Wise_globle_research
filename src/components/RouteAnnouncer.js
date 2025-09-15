@@ -200,6 +200,12 @@ const getAnnouncementMessage = (lang, pathname) => {
 
 export default function RouteAnnouncer() {
   const { pathname } = useLocation();
+  // Admin path detection: don't show floating controls on any admin pages
+  const isAdminPath = (() => {
+    if (!pathname) return false;
+    const p = pathname.toLowerCase();
+    return p === '/admin' || p.startsWith('/admin/') || p.includes('/admin-panel') || p.includes('/wp-admin');
+  })();
   const [message, setMessage] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [adaptiveLight, setAdaptiveLight] = useState(false);
@@ -422,14 +428,18 @@ export default function RouteAnnouncer() {
 
   const visuallyHiddenStyle = { position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 };
   const floatingButtonStyle = {
-    position: 'fixed',
-    bottom: '230px',
-    right: '20px',
-    zIndex: 1100,
-    width: '57px',
-    height: '57px',
-    borderRadius: '50%',
-    background: 'linear-gradient(145deg, #25D366, #25D366, #25D366, #25D366)',
+  position: 'fixed',
+  // Match AccessibilityMenu's placement (Tailwind bottom-40 => 160px, right-6 => 24px)
+  // Stack this button directly above the accessibility button (same right offset)
+  // Accessibility button bottom = 160px; place speaker above it with ~64px gap
+  bottom: '224px',
+  right: '24px',
+  zIndex: 9000,
+  width: '56px',
+  height: '56px',
+  borderRadius: '9999px',
+  // Use the same green as AccessibilityMenu (tailwind green-500)
+  background: '#10b981',
     color: '#fff',
     border: 'none',
     boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
@@ -462,7 +472,9 @@ export default function RouteAnnouncer() {
   return (
     <>
       <div aria-live="polite" aria-atomic="true" style={visuallyHiddenStyle}>{message}</div>
-      
+      {/* Do not render floating controls on admin pages */}
+      {isAdminPath ? null : (
+      <>
       <button
         aria-label={lang==='hi' ? 'स्पीकर मेनू खोलें' : 'Open speaker menu'}
         aria-expanded={menuOpen}
@@ -471,7 +483,7 @@ export default function RouteAnnouncer() {
         onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
         onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
-        <FaVolumeUp aria-hidden="true" size={20} />
+        <FaVolumeUp aria-hidden="true" size={36} />
       </button>
 
       {menuOpen && (
@@ -482,9 +494,10 @@ export default function RouteAnnouncer() {
           onMouseLeave={() => setMenuOpen(false)}
           style={{
             position: 'fixed',
-            bottom: '300px',
-            right: '20px',
-            zIndex: 1110,
+            // place panel above the button and aligned with accessibility panel
+            bottom: '288px',
+            right: '24px',
+            zIndex: 9001,
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',
@@ -494,6 +507,7 @@ export default function RouteAnnouncer() {
             alignItems: 'center',
             background: adaptiveLight ? 'rgba(255, 255, 255, 0.8)' : 'rgba(30, 30, 30, 0.8)',
             backdropFilter: 'blur(10px)',
+            minWidth: '220px',
           }}
         >
           <button
@@ -658,7 +672,9 @@ export default function RouteAnnouncer() {
           </button>
 
         </div>
-      )}
+  )}
+  </>
+  )}
     </>
   );
 }
