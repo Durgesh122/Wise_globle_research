@@ -26,17 +26,21 @@ const ContactForm = ({ contactFormRef }) => {
   await push(ref(db, 'homePageContactSubmissions'), formData);
 
       // Google Ads Conversion Tracking
-      if (window.gtag) {
-        window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
-      }
+      // Push analytics event (works with GTM dataLayer helper)
+      try {
+        if (window.analyticsPush) {
+          window.analyticsPush('contact_form_submit', { formId: 'contactForm' });
+        }
+      } catch (e) { /* ignore */ }
 
   toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
       reset();
       // Send an email copy to server (best-effort, non-blocking)
     (async () => {
         try {
-      const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:3002' : '';
-      await fetch(apiBase + '/send-email', {
+      const apiBase = 'https://wise-global-contact-systems.onrender.com';
+      const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+      await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -74,13 +78,13 @@ const ContactForm = ({ contactFormRef }) => {
         }}
       >
         <motion.h2
-          className="text-2xl sm:text-3xl font-bold text-center mb-8"
+          className="text-2xl sm:text-3xl font-bold text-center mb-8 text-adaptive"
           variants={itemVariants}
           id="contact-form-heading"
         >
           Get in Touch
         </motion.h2>
-  <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6" aria-labelledby="contact-form-heading">
+  <form id="contactForm" data-gtm-event="contact_form_submit" onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6" aria-labelledby="contact-form-heading">
           {/* Honeypot field for bots */}
           <input
             type="text"
@@ -92,7 +96,7 @@ const ContactForm = ({ contactFormRef }) => {
             className="hidden"
           />
           <div>
-            <label className="block text-sm font-medium mb-1 text-white" htmlFor="name">Name</label>
+            <label className="block text-sm font-medium mb-1 text-adaptive" htmlFor="name">Name</label>
             <input
               id="name"
               {...register('name', {
@@ -110,7 +114,7 @@ const ContactForm = ({ contactFormRef }) => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium mb-1 text-white" htmlFor="email">Email</label>
+              <label className="block text-sm font-medium mb-1 text-adaptive" htmlFor="email">Email</label>
               <input
                 id="email"
                 {...register('email', {
@@ -130,7 +134,7 @@ const ContactForm = ({ contactFormRef }) => {
               {errors.email && <p id="email-error" className="text-red-500 text-xs sm:text-sm mt-1">{errors.email.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1 text-white" htmlFor="phone">Phone</label>
+              <label className="block text-sm font-medium mb-1 text-adaptive" htmlFor="phone">Phone</label>
               <input
                 id="phone"
                 {...register('phone', {
@@ -151,7 +155,7 @@ const ContactForm = ({ contactFormRef }) => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-white" htmlFor="interest">Area of Interest</label>
+            <label className="block text-sm font-medium mb-1 text-adaptive" htmlFor="interest">Area of Interest</label>
             <select
               id="interest"
               {...register('interest', { required: 'Please select an area of interest' })}
@@ -169,7 +173,7 @@ const ContactForm = ({ contactFormRef }) => {
             {errors.interest && <p id="interest-error" className="text-red-500 text-xs sm:text-sm mt-1">{errors.interest.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-white" htmlFor="message">Message</label>
+            <label className="block text-sm font-medium mb-1 text-adaptive" htmlFor="message">Message</label>
             <textarea
               id="message"
               {...register('message', {
@@ -188,9 +192,10 @@ const ContactForm = ({ contactFormRef }) => {
           <motion.button
             type="submit"
             disabled={submitting}
+            // Add text-adaptive via separate class so the template string remains clear
             className={`shine-hover w-full py-2 sm:py-3 rounded-lg shadow-md text-sm sm:text-base ${
               submitting ? 'bg-gray-500 cursor-not-allowed' : 'bg-gradient-to-r from-blue-500 to-purple-500'
-            } text-white`}
+            } text-white text-adaptive`}
             whileHover={{ scale: submitting ? 1 : 1.02, rotateY: submitting ? 0 : 10 }}
             whileTap={{ scale: submitting ? 1 : 0.98 }}
           >

@@ -342,4 +342,17 @@ html[data-line-height="relaxed"] body, html[data-line-height="relaxed"] * { line
   border: 0 !important;
 }
 
+/* Adaptive helpers: prefer CSS variables so text and backgrounds remain readable
+  when switching between dark and light theme backgrounds. Use these classes
+  on components that currently assume white text. */
+.text-adaptive { color: var(--text-body) !important; }
+.bg-adaptive { background: var(--bg-surface) !important; }
+
+/* Ensure utility classes that explicitly set white text don't break on light
+  backgrounds: provide a fallback when the computed --text-body is dark. We use
+  a data attribute `data-theme-light="true"` which the ThemeProvider may set
+  if a light background is active (optional). */
+html[data-theme-light="true"] .text-white { color: #0b1220 !important; }
+html[data-theme-light="true"] .bg-white { background-color: #ffffff !important; }
+
 

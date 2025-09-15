@@ -5,7 +5,7 @@ import { cardVariants } from '../utils/animationVariants';
 const CallToAction = ({ scrollToContactForm }) => (
   <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
     <motion.div
-      className="container text-center rounded-xl p-6 sm:p-8 shadow-lg border-2 border-white/30 bg-white/20 backdrop-blur-lg hover:shadow-2xl"
+      className="container text-center rounded-xl p-6 sm:p-8 shadow-lg border-2 border-white/30 bg-white/20 backdrop-blur-lg hover:shadow-2xl text-adaptive"
       style={{
         background: 'rgba(255, 255, 255, 0.2)',
         backdropFilter: 'blur(15px)',
@@ -23,7 +23,7 @@ const CallToAction = ({ scrollToContactForm }) => (
       </p>
       <motion.button
         onClick={scrollToContactForm}
-        className="shine-hover px-6 py-2 sm:px-8 sm:py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg text-base sm:text-lg font-bold"
+        className="shine-hover px-6 py-2 sm:px-8 sm:py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-adaptive rounded-lg text-base sm:text-lg font-bold"
         whileHover={{ scale: 1.05, rotateY: 10 }}
         whileTap={{ scale: 0.95 }}
       >

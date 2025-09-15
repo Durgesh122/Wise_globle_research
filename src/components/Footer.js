@@ -185,6 +185,7 @@ function Footer() {
         style={{
           background: footer?.background || background,
           color: footer?.textColor || textColor,
+          borderTop: '4px solid #2eed1c'
         }}
         className="relative z-30 transition-all duration-1000 pt-8 pb-4 px-4 mx-2 my-2 rounded-xl shadow-xl overflow-x-hidden"
       >
@@ -391,8 +392,22 @@ function Footer() {
         </div>
       </div>
 
-      <div className="bg-black text-white text-center text-xs py-2 px-2 break-words">
-        Copyright 2024, Wise Global Research. All Rights Reserved &nbsp;|&nbsp; Powered by <a href="https://mrxads.com" target="_blank" rel="noopener noreferrer" className="text-yellow-400 underline">MRXADS</a>
+      <div
+        className="text-center"
+        style={{
+          backgroundColor: '#071013',
+          color: '#ffffff',
+          padding: '0.9rem 0.75rem',
+          fontSize: '0.95rem',
+          fontWeight: 600,
+          borderTop: '4px solid #2eed1c',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)',
+          zIndex: 40,
+        }}
+      >
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          Copyright 2024, Wise Global Research. All Rights Reserved &nbsp;|&nbsp; Powered by <a href="https://mrxads.com" target="_blank" rel="noopener noreferrer" style={{ color: '#FFD54A', textDecoration: 'underline', fontWeight: 700 }}>MRXADS</a>
+        </div>
       </div>
 
 

@@ -42,7 +42,7 @@ const MarketOverview = () => {
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
       <div className="container">
         <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-adaptive"
           variants={itemVariants}
         >
           Market Overview
@@ -51,7 +51,7 @@ const MarketOverview = () => {
           {marketData.map((item, index) => (
             <motion.div
               key={index}
-              className="bg-white/20 backdrop-blur-lg rounded-xl p-4 sm:p-6 shadow-md border-2 border-white/30 hover:shadow-2xl"
+              className="bg-white/30 backdrop-blur-lg rounded-xl p-4 sm:p-6 shadow-md border-2 border-white/30 hover:shadow-2xl"
               variants={cardVariants}
               initial="hidden"
               animate="visible"
@@ -72,22 +72,45 @@ const MarketOverview = () => {
           ))}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {marketSymbols.slice(0, 6).map((symbol, index) => (
-            <motion.div
-              key={index}
-              className="custom-box-bg rounded-xl p-4 sm:p-6 shadow-lg border border-gray-200/20"
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover="hover"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              <h3 className="text-lg sm:text-xl font-bold mb-4 text-center">{symbol.name} Trend</h3>
-              <div className="h-48 sm:h-64 w-full">
-                <AnimatedChart symbol={symbol.symbol} />
-              </div>
-            </motion.div>
-          ))}
+          {
+            // highlight key indices with the requested pale-blue background
+            (() => {
+              // Target trend names to highlight with the pale-blue translucent surface
+              const targets = [
+                'Nifty 50',
+                'Sensex',
+                'Bank Nifty',
+                'Midcap Nifty',
+                'Nifty IT',
+                'Nifty Pharma',
+              ].map((s) => s.toLowerCase().replace(/\s+/g, ''));
+
+              return marketSymbols.slice(0, 6).map((symbol, index) => {
+                const normalized = (symbol.name || '').toLowerCase().replace(/\s+/g, '');
+                const isHighlighted = targets.includes(normalized);
+                return (
+                  <motion.div
+                    key={index}
+                    className={`rounded-xl p-4 sm:p-6 shadow-lg ${isHighlighted ? 'border-2' : 'border'} `}
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    whileHover="hover"
+                    style={{
+                      transformStyle: 'preserve-3d',
+                      background: isHighlighted ? 'rgba(212,227,255,0.30)' : undefined,
+                      borderColor: isHighlighted ? 'rgba(212,227,255,0.6)' : undefined,
+                    }}
+                  >
+                    <h3 className="text-lg sm:text-xl font-bold mb-4 text-center text-adaptive">{symbol.name} Trend</h3>
+                    <div className="h-48 sm:h-64 w-full">
+                      <AnimatedChart symbol={symbol.symbol} />
+                    </div>
+                  </motion.div>
+                );
+              });
+            })()
+          }
         </div>
       </div>
     </section>

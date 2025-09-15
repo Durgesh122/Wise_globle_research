@@ -145,13 +145,15 @@ const PopupSubmissions = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-gray-800/50 p-6 rounded-lg shadow-lg"
+      className="p-6 rounded-lg shadow-sm"
+      style={{ background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}
     >
   <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
-        <h1 className="text-2xl font-bold text-white"><Trans i18nKey="pages.admin_PopupSubmissions.popup-form-submissions"><Trans i18nKey="pages.admin_PopupSubmissions.popup-form-submissions-1">Popup Form Submissions</Trans></Trans></h1>
+        <h1 className="text-2xl font-bold text-adaptive"><Trans i18nKey="pages.admin_PopupSubmissions.popup-form-submissions"><Trans i18nKey="pages.admin_PopupSubmissions.popup-form-submissions-1">Popup Form Submissions</Trans></Trans></h1>
         <motion.button
           onClick={handleExportCSV}
-          className="bg-green-500/80 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-600/90 transition-colors"
+          className="px-4 py-2 rounded-lg flex items-center gap-2"
+          style={{ background: 'linear-gradient(90deg,#2eed1c,#1fbf18)', color: '#000' }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -163,38 +165,38 @@ const PopupSubmissions = () => {
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search submissions..." />
       </div>
       {filteredSubmissions.length === 0 ? (
-        <p className="text-gray-400"><Trans i18nKey="pages.admin_PopupSubmissions.no-submissions-yet"><Trans i18nKey="pages.admin_PopupSubmissions.no-submissions-yet-1">No submissions yet.</Trans></Trans></p>
+        <p className="text-gray-600 text-adaptive"><Trans i18nKey="pages.admin_PopupSubmissions.no-submissions-yet"><Trans i18nKey="pages.admin_PopupSubmissions.no-submissions-yet-1">No submissions yet.</Trans></Trans></p>
       ) : (
         <>
           <div className="overflow-x-auto h-scroll custom-scrollbar">
-            <table className="min-w-[720px] sm:min-w-full bg-gray-900/70 rounded-lg text-xs sm:text-sm">
-              <thead className="bg-gray-700/50">
+            <table className="min-w-[720px] sm:min-w-full rounded-lg text-xs sm:text-sm text-adaptive">
+              <thead>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                    <button onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')} className="hover:text-indigo-400 transition-colors">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <button onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')} className="hover:text-indigo-600 transition-colors">
                       Timestamp {sortOrder === 'desc' ? '↓' : '↑'}
                     </button>
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.name">Name</Trans></th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.mobile">Mobile</Trans></th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.city">City</Trans></th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Interest</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.actions">Actions</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.name">Name</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.mobile">Mobile</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.city">City</Trans></th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Interest</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"><Trans i18nKey="pages.admin_PopupSubmissions.actions">Actions</Trans></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700">
+              <tbody className="divide-y divide-gray-200">
                 {filteredSubmissions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((submission) => (
-                  <tr key={submission.id} className="hover:bg-gray-800/50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{new Date(submission.timestamp).toLocaleString('en-IN')}</td>
-                    <td className="px-6 py-4 break-words text-gray-300">{submission.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{submission.mobile}</td>
-                    <td className="px-6 py-4 break-words text-gray-300">{submission.city}</td>
-                    <td className="px-6 py-4 break-words text-gray-300">{submission.interest}</td>
+                  <tr key={submission.id} className="hover:bg-gray-100 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-700 text-adaptive">{new Date(submission.timestamp).toLocaleString('en-IN')}</td>
+                    <td className="px-6 py-4 break-words text-gray-700 text-adaptive">{submission.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-700 text-adaptive">{submission.mobile}</td>
+                    <td className="px-6 py-4 break-words text-gray-700 text-adaptive">{submission.city}</td>
+                    <td className="px-6 py-4 break-words text-gray-700 text-adaptive">{submission.interest}</td>
                     <td className="px-6 py-4 whitespace-nowrap font-medium">
                       <motion.button
                         onClick={() => handleDeleteClick(submission.id)}
-                        className="text-red-500 hover:text-red-700"
-                        whileHover={{ scale: 1.2 }}
+                        className="text-red-600 hover:text-red-800"
+                        whileHover={{ scale: 1.02 }}
                         aria-label="Delete submission"
                       >
                         <FiTrash2 />

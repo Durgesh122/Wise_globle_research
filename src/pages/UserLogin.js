@@ -93,6 +93,7 @@ const UserLogin = () => {
   const emailTrimmed = email.trim();
   await signInWithEmailAndPassword(auth, emailTrimmed, password);
   toast.success("Login successful.", { position: "top-center" });
+    try{ if (window.analyticsPush) window.analyticsPush('user_login', { email: emailTrimmed }); }catch(e){}
       // onAuthStateChanged will handle the navigation automatically
     } catch (error) {
       let errorMessage = "Login failed. Please try again.";
@@ -167,6 +168,7 @@ const UserLogin = () => {
       setIsResetting(true);
       await sendPasswordResetEmail(auth, emailTrimmed);
       toast.success("Password reset email sent. Check your inbox.", { position: "top-center" });
+  try{ if (window.analyticsPush) window.analyticsPush('password_reset_request', { email: emailTrimmed }); }catch(e){}
     } catch (error) {
       let msg = "Couldn't send reset email. Please try again.";
       if (error.code === "auth/user-not-found") msg = "No user found with this email.";
@@ -261,9 +263,10 @@ const UserLogin = () => {
         variants={formVariants}
         initial="hidden"
         animate="visible"
-        className="relative backdrop-blur-lg bg-white/10 p-8 rounded-2xl shadow-xl border border-white/20 w-full max-w-md"
+        className="relative p-8 rounded-2xl shadow-xl w-full max-w-md text-adaptive"
         role="region"
         aria-label="Admin login form"
+        style={{ backdropFilter: 'blur(12px)', background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}
       >
   {/* MFA/OTP disabled: no reCAPTCHA used */}
         {authDebug && (
@@ -320,7 +323,7 @@ const UserLogin = () => {
 
         {/* Title */}
           <motion.h2
-          className="text-2xl text-white font-semibold text-center mb-6"
+          className="text-2xl text-adaptive font-semibold text-center mb-6"
           animate={textControls}
           onHoverStart={handleTextHover}
           onHoverEnd={handleTextHoverEnd}
@@ -335,8 +338,8 @@ const UserLogin = () => {
           <div className="relative">
             <motion.input
               type="email"
-              placeholder={"Email address"}
-              className="px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
+                placeholder={"Email address"}
+                className="px-4 py-3 rounded-lg bg-white/5 text-adaptive placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -357,8 +360,8 @@ const UserLogin = () => {
           <div className="relative">
             <motion.input
               type="password"
-              placeholder={"Password"}
-              className="px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
+                placeholder={"Password"}
+                className="px-4 py-3 rounded-lg bg-white/5 text-adaptive placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -379,7 +382,7 @@ const UserLogin = () => {
           <motion.button
             type="submit"
             disabled={isLoading}
-            className={`bg-yellow-500 text-white font-medium py-3 rounded-lg transition duration-300 shadow-md ${
+            className={`bg-yellow-500 text-black font-medium py-3 rounded-lg transition duration-300 shadow-md ${
               isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-yellow-600"
             }`}
             variants={buttonVariants}
@@ -392,13 +395,13 @@ const UserLogin = () => {
         </form>
 
         {/* Debug details (only when enabled via ?debugAuth=1 or localStorage.authDebug=1) */}
-        {authDebug && lastAuthError && (
-          <div className="mt-4 p-3 rounded-lg bg-black/40 text-xs text-yellow-200 break-words">
+          {authDebug && lastAuthError && (
+          <div className="mt-4 p-3 rounded-lg" style={{ background: 'rgba(17,24,39,0.45)' }}>
             <div className="font-semibold mb-1">Auth Debug</div>
-            <div><span className="opacity-70">code:</span> {lastAuthError.code}</div>
-            <div className="mt-1"><span className="opacity-70">message:</span> {lastAuthError.message}</div>
+            <div className="text-xs text-adaptive"><span className="opacity-70">code:</span> {lastAuthError.code}</div>
+            <div className="mt-1 text-xs text-adaptive"><span className="opacity-70">message:</span> {lastAuthError.message}</div>
             {lastAuthError.serverMessage && (
-              <div className="mt-1"><span className="opacity-70">server:</span> {lastAuthError.serverMessage}</div>
+              <div className="mt-1 text-xs text-adaptive"><span className="opacity-70">server:</span> {lastAuthError.serverMessage}</div>
             )}
           </div>
         )}
@@ -410,7 +413,7 @@ const UserLogin = () => {
             onClick={handlePasswordReset}
             disabled={isResetting || isLoading}
             className={`text-sm underline underline-offset-4 transition-colors ${
-              isResetting || isLoading ? "text-white/40" : "text-yellow-300 hover:text-yellow-200"
+              isResetting || isLoading ? "text-adaptive/40" : "text-adaptive/90"
             }`}
             aria-label="Forgot password"
           >

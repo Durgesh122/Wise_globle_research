@@ -30,11 +30,12 @@ const buttonVariants = {
 
 const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggle }) => (
     <motion.div
-      className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20 overflow-x-auto h-scroll custom-scrollbar p-2"
+      className="rounded-xl shadow-sm overflow-x-auto h-scroll custom-scrollbar p-2"
+      style={{ background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}
     variants={itemVariants}
   >
-    <table className="min-w-[700px] sm:min-w-full table-auto text-white text-xs sm:text-sm">
-      <thead className="bg-gray-700/50">
+    <table className="min-w-[700px] sm:min-w-full table-auto text-adaptive text-xs sm:text-sm">
+      <thead className="" style={{ background: 'transparent' }}>
         <tr>
           <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Name</th>
           <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Email</th>
@@ -192,10 +193,10 @@ const ContactSubmissions = () => {
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
-  <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions-1">Contact Submissions</Trans></Trans></h2>
+  <h2 className="text-3xl font-bold text-adaptive mb-6"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions-1">Contact Submissions</Trans></Trans></h2>
   <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search contacts..." />
-        <motion.button onClick={handleExportCSV} className="bg-green-500/80 text-white px-4 py-2 rounded-lg flex items-center gap-2" variants={buttonVariants} whileHover="hover">
+        <motion.button onClick={handleExportCSV} className="px-4 py-2 rounded-lg flex items-center gap-2" style={{ background: 'linear-gradient(90deg,#2eed1c,#1fbf18)', color: '#000' }} variants={buttonVariants} whileHover="hover">
           <FiDownload /><Trans i18nKey="pages.admin_ContactSubmissions.export-csv">Export CSV</Trans></motion.button>
       </div>
       {isLoading ? <LoadingSpinner /> : (

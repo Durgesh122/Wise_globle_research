@@ -44,19 +44,20 @@ const ComplaintData = () => {
 
   return (
     
-      <Helmet>
-        <title>Complaint Data - Wise Global Research</title>
-        <meta name="description" content="Complaint Data page — Wise Global Research." />
-        <link rel="canonical" href="https://wiseglobalresearch.com/complaintdata" />
-      </Helmet>
-<motion.section
-      className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="container">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-white"><Trans i18nKey="pages.ComplaintData.complaint-data-for-july-2025"><Trans i18nKey="pages.ComplaintData.complaint-data-for-july-2025-1">Complaint Data for July 2025</Trans></Trans></h2>
+      <>
+        <Helmet>
+          <title>Complaint Data - Wise Global Research</title>
+          <meta name="description" content="Complaint Data page — Wise Global Research." />
+          <link rel="canonical" href="https://wiseglobalresearch.com/complaintdata" />
+        </Helmet>
+        <motion.section
+          className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="container">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-adaptive"><Trans i18nKey="pages.ComplaintData.complaint-data-for-july-2025"><Trans i18nKey="pages.ComplaintData.complaint-data-for-july-2025-1">Complaint Data for July 2025</Trans></Trans></h2>
         {loadingTable ? (
           <>
             <div className="flex justify-center items-center py-6">
@@ -67,12 +68,12 @@ const ComplaintData = () => {
           <div className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center text-white">
             {errorTable}
           </div>
-        ) : (
-          <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
-            <table
-              className="w-full border-collapse text-left text-xs sm:text-sm bg-white/10 backdrop-blur-[10px] -webkit-backdrop-blur-[10px] text-white"
-              aria-label="Complaint Data for July 2025"
-            >
+          ) : (
+            <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
+              <table
+                className="w-full border-collapse text-left text-xs sm:text-sm bg-white/10 backdrop-blur-[10px] -webkit-backdrop-blur-[10px] text-adaptive"
+                aria-label="Complaint Data for July 2025"
+              >
               <thead>
                 <tr className="bg-white/20">
                   <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.sr-no">Sr. No.</Trans></th>
@@ -102,9 +103,17 @@ const ComplaintData = () => {
             </table>
           </div>
         )}
-        <p className="mt-4 text-xs sm:text-sm text-gray-300"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total-1">^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.</Trans></Trans></p>
-      </div>
-    </motion.section>
+          <p className="mt-4 text-xs sm:text-sm text-adaptive/70"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total-1">^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.</Trans></Trans></p>
+
+          <div className="mt-3 text-xs sm:text-sm text-adaptive/70 space-y-1">
+            <p><strong>*</strong> Inclusive of complaints of previous months resolved in the current month.</p>
+            <p><strong>#</strong> Inclusive of complaints pending as on the last day of the month.</p>
+            <p><strong>*</strong> Inclusive of complaints of previous years resolved in the current year.</p>
+            <p><strong>#</strong> Inclusive of complaints pending as on the last day of the year (as on 31st March).</p>
+          </div>
+        </div>
+      </motion.section>
+    </>
   );
 };
 

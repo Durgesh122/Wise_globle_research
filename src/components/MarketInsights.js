@@ -32,7 +32,7 @@ const MarketInsights = () => {
           {insights.map((insight) => (
             <motion.article
               key={insight.title}
-              className="bg-white/30 dark:bg-white/10 rounded-xl p-5 sm:p-6 backdrop-blur-sm border border-white/10 hover:shadow-xl transition-shadow duration-300"
+              className="bg-white/30 rounded-xl p-5 sm:p-6 backdrop-blur-sm border border-white/30 hover:shadow-xl transition-shadow duration-300"
               variants={cardVariants}
               initial="hidden"
               animate="visible"
@@ -59,8 +59,8 @@ const MarketInsights = () => {
                 </div>
               </div>
 
-              <h3 className="text-lg sm:text-xl font-semibold mb-1 text-gray-900 dark:text-gray-100">{insight.title}</h3>
-              <p className="text-sm sm:text-base text-gray-200 dark:text-gray-300">{insight.desc}</p>
+              <h3 className="text-lg sm:text-xl font-semibold mb-1 text-adaptive">{insight.title}</h3>
+              <p className="text-sm sm:text-base text-adaptive">{insight.desc}</p>
             </motion.article>
           ))}
         </div>

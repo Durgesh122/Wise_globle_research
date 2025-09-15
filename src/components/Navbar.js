@@ -20,6 +20,16 @@ const CONTACT = {
   },
 };
 
+// Styling for social icons: pale-blue background and per-network icon colors
+const SOCIAL_ICON_BG = '#D4E3FF';
+const SOCIAL_ICON_COLORS = {
+  facebook: '#1877F2',
+  twitter: '#1DA1F2',
+  instagram: '#E1306C',
+  linkedin: '#0A66C2',
+  youtube: '#FF0000',
+};
+
 // Lightweight inline social icons (no extra deps)
 function SocialIcon({ type, className = 'w-6 h-6' }) {
   const common = { width: 10, height: 10, viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true };
@@ -436,10 +446,10 @@ function TopContactBar() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Open ${key} profile`}
-              className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded p-0.5"
-              style={{ color: textColor }}
+              className="focus:outline-none focus:ring-2 focus:ring-[var(--primary-green)] rounded"
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || textColor, borderRadius: 8 }}
             >
-              <SocialIcon type={key} />
+              <SocialIcon type={key} className="w-5 h-5" />
             </a>
           ))}
         </div>
@@ -971,6 +981,22 @@ function Navbar() {
             >
               Back
             </button>
+            {/* Social icons row (mobile) */}
+            <div style={{ display: 'flex', gap: 8, marginTop: 8, marginLeft: 2 }} aria-hidden={false}>
+              {Object.entries(CONTACT.socials).map(([key, url]) => (
+                <a
+                  key={key}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${key} profile`}
+                  className="focus:outline-none"
+                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || 'var(--text-color)', borderRadius: 10 }}
+                >
+                  <SocialIcon type={key} className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
         </div>
       </div>
     </>

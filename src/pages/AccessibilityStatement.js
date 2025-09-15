@@ -80,12 +80,12 @@ export default function AccessibilityStatement() {
         <meta name="description" content="Accessibility Statement page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/accessibilitystatement" />
       </Helmet>
-      <section aria-labelledby="a11y-title" className="min-h-screen text-white p-4 sm:p-6 md:p-10 print:bg-white print:text-black">
+      <section aria-labelledby="a11y-title" className="min-h-screen text-gray-900 p-4 sm:p-6 md:p-10 print:bg-white print:text-black">
       <div className="max-w-4xl mx-auto text-center">
-        <h1 id="a11y-title" className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
+        <h1 id="a11y-title" className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
           Accessibility Statement
         </h1>
-        <p className="mt-3 text-white/80">
+        <p className="mt-3 text-gray-700">
           We are committed to ensuring our website and services are accessible and usable by all users, including
           persons with disabilities. Our goal is to provide an inclusive digital environment aligned with SEBI’s
           digital accessibility guidelines and the WCAG 2.1 Level AA standards.
@@ -94,16 +94,16 @@ export default function AccessibilityStatement() {
         <div className="mt-10 space-y-10">
           {/* Easy Read summary */}
           <div className="inline-block text-left w-full">
-            <h2 className="text-2xl font-semibold text-center">Easy Read summary</h2>
-            <p className="mt-2 text-white/85">
+            <h2 className="text-2xl font-semibold text-center text-gray-900">Easy Read summary</h2>
+            <p className="mt-2 text-gray-700">
               This website should be easy to use for everyone. You can use the keyboard, change text size, and turn off
               animations. Videos have captions and transcripts. If you face any problem, you can tell us.
             </p>
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold">Conformance status</h2>
-            <p className="mt-2 text-white/85">
+            <h2 className="text-2xl font-semibold text-gray-900">Conformance status</h2>
+            <p className="mt-2 text-gray-700">
               Our target is WCAG 2.1 Level AA conformance. To achieve and maintain this, we regularly:
             </p>
             <div className="mt-3 inline-block text-left">
@@ -117,11 +117,11 @@ export default function AccessibilityStatement() {
 
           {/* WCAG self-audit summary */}
           <div>
-            <h2 className="text-2xl font-semibold">WCAG 2.1 AA self-audit (summary)</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">WCAG 2.1 AA self-audit (summary)</h2>
             <div className="mt-3 overflow-x-auto">
-              <table className="min-w-full text-left text-sm border border-white/20 rounded-lg">
+              <table className="min-w-full text-left text-sm border border-gray-200 rounded-lg">
                 <caption className="sr-only">Summary of notable WCAG success criteria status</caption>
-                <thead className="bg-white/10">
+                <thead className="bg-gray-100">
                   <tr>
                     <th scope="col" className="px-3 py-2">Criterion</th>
                     <th scope="col" className="px-3 py-2">Description</th>
@@ -130,29 +130,29 @@ export default function AccessibilityStatement() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="odd:bg-white/5">
-                    <th scope="row" className="px-3 py-2 whitespace-nowrap">1.3.1</th>
-                    <td className="px-3 py-2">Info and Relationships</td>
-                    <td className="px-3 py-2 text-green-300">Compliant</td>
-                    <td className="px-3 py-2">{lastUpdated}</td>
+                  <tr className="odd:bg-gray-50">
+                    <th scope="row" className="px-3 py-2 whitespace-nowrap text-gray-900">1.3.1</th>
+                    <td className="px-3 py-2 text-gray-700">Info and Relationships</td>
+                    <td className="px-3 py-2 text-green-600">Compliant</td>
+                    <td className="px-3 py-2 text-gray-700">{lastUpdated}</td>
                   </tr>
-                  <tr className="odd:bg-white/5">
-                    <th scope="row" className="px-3 py-2 whitespace-nowrap">1.4.3</th>
-                    <td className="px-3 py-2">Contrast (Minimum)</td>
-                    <td className="px-3 py-2 text-green-300">Compliant</td>
-                    <td className="px-3 py-2">{lastUpdated}</td>
+                  <tr className="odd:bg-gray-50">
+                    <th scope="row" className="px-3 py-2 whitespace-nowrap text-gray-900">1.4.3</th>
+                    <td className="px-3 py-2 text-gray-700">Contrast (Minimum)</td>
+                    <td className="px-3 py-2 text-green-600">Compliant</td>
+                    <td className="px-3 py-2 text-gray-700">{lastUpdated}</td>
                   </tr>
-                  <tr className="odd:bg-white/5">
-                    <th scope="row" className="px-3 py-2 whitespace-nowrap">2.1.1</th>
-                    <td className="px-3 py-2">Keyboard</td>
-                    <td className="px-3 py-2 text-green-300">Compliant</td>
-                    <td className="px-3 py-2">{lastUpdated}</td>
+                  <tr className="odd:bg-gray-50">
+                    <th scope="row" className="px-3 py-2 whitespace-nowrap text-gray-900">2.1.1</th>
+                    <td className="px-3 py-2 text-gray-700">Keyboard</td>
+                    <td className="px-3 py-2 text-green-600">Compliant</td>
+                    <td className="px-3 py-2 text-gray-700">{lastUpdated}</td>
                   </tr>
-                  <tr className="odd:bg-white/5">
-                    <th scope="row" className="px-3 py-2 whitespace-nowrap">2.4.7</th>
-                    <td className="px-3 py-2">Focus Visible</td>
-                    <td className="px-3 py-2 text-green-300">Compliant</td>
-                    <td className="px-3 py-2">{lastUpdated}</td>
+                  <tr className="odd:bg-gray-50">
+                    <th scope="row" className="px-3 py-2 whitespace-nowrap text-gray-900">2.4.7</th>
+                    <td className="px-3 py-2 text-gray-700">Focus Visible</td>
+                    <td className="px-3 py-2 text-green-600">Compliant</td>
+                    <td className="px-3 py-2 text-gray-700">{lastUpdated}</td>
                   </tr>
                 </tbody>
               </table>
@@ -160,7 +160,7 @@ export default function AccessibilityStatement() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold">What we’ve implemented</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">What we’ve implemented</h2>
             <div className="mt-3 inline-block text-left">
               <ul className="list-disc list-inside marker:text-green-300/90">
                 <li>Keyboard navigable interface and visible focus states</li>
@@ -173,8 +173,8 @@ export default function AccessibilityStatement() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold">Compatibility</h2>
-            <p className="mt-2 text-white/85">
+            <h2 className="text-2xl font-semibold text-gray-900">Compatibility</h2>
+            <p className="mt-2 text-gray-700">
               The site is compatible with modern browsers (Chromium, Firefox, Safari) and leading screen readers
               (NVDA, JAWS, VoiceOver) on supported operating systems.
             </p>
@@ -182,7 +182,7 @@ export default function AccessibilityStatement() {
 
           {/* Quick help */}
           <div>
-            <h2 className="text-2xl font-semibold">Quick help: keyboard & landmarks</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">Quick help: keyboard & landmarks</h2>
             <div className="mt-3 inline-block text-left">
               <ul className="list-disc list-inside marker:text-green-300/90">
                 <li>Use Tab/Shift+Tab to move between interactive elements.</li>
@@ -193,7 +193,7 @@ export default function AccessibilityStatement() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold">How we test</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">How we test</h2>
             <div className="mt-3 inline-block text-left">
               <ul className="list-disc list-inside marker:text-green-300/90">
                 <li>Automated scans (axe, eslint-plugin-jsx-a11y, pa11y)</li>
@@ -206,8 +206,8 @@ export default function AccessibilityStatement() {
 
           {/* Live test snapshot (placeholder) */}
           <div>
-            <h2 className="text-2xl font-semibold">Latest automated scan (snapshot)</h2>
-            <p className="mt-2 text-white/85">Summary from our most recent automated scan.</p>
+            <h2 className="text-2xl font-semibold text-gray-900">Latest automated scan (snapshot)</h2>
+            <p className="mt-2 text-gray-700">Summary from our most recent automated scan.</p>
             <div className="mt-3 inline-block text-left">
               <ul className="list-disc list-inside marker:text-green-300/90">
                 <li>Critical: 0</li>
@@ -216,12 +216,12 @@ export default function AccessibilityStatement() {
                 <li>Last run: {lastUpdated}</li>
               </ul>
             </div>
-            <p className="mt-2 text-white/60 text-sm">Note: Programmatic CI wiring can publish exact counts here.</p>
+            <p className="mt-2 text-gray-600 text-sm">Note: Programmatic CI wiring can publish exact counts here.</p>
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold">Known limitations</h2>
-            <p className="mt-2 text-white/85">
+            <h2 className="text-2xl font-semibold text-gray-900">Known limitations</h2>
+            <p className="mt-2 text-gray-700">
               Some third‑party widgets or tools may be outside our direct control. Where possible, we provide
               alternative solutions or fallbacks.
             </p>
@@ -234,8 +234,8 @@ export default function AccessibilityStatement() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold">Media accessibility</h2>
-            <p className="mt-2 text-white/85">
+            <h2 className="text-2xl font-semibold text-gray-900">Media accessibility</h2>
+            <p className="mt-2 text-gray-700">
               For audio/video content we publish, we will provide:
             </p>
             <div className="mt-3 inline-block text-left">
@@ -245,7 +245,7 @@ export default function AccessibilityStatement() {
                 <li>Indian Sign Language (ISL) interpretation where appropriate</li>
               </ul>
             </div>
-            <p className="mt-3 text-white/85">The preview below demonstrates our standard accessible media layout.</p>
+            <p className="mt-3 text-gray-700">The preview below demonstrates our standard accessible media layout.</p>
             <div className="mt-6">
               <AccessibleMedia
                 type="video"
@@ -256,15 +256,15 @@ export default function AccessibilityStatement() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold">Controls for you</h2>
-            <p className="mt-2 text-white/85">
+            <h2 className="text-2xl font-semibold text-gray-900">Controls for you</h2>
+            <p className="mt-2 text-gray-700">
               Use the Accessibility Menu (floating button) to change text size, contrast, line spacing, motion, and more.
               Shortcut: press “/” or Ctrl/⌘+K to jump directly to site search.
             </p>
             <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
               <a
                 href="/accessibility-statement.html"
-                className="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/30"
+                className="px-4 py-2 rounded-full bg-[#ffffff4d] hover:bg-[#ffffff66] border border-gray-300 text-gray-900"
                 aria-label="Download HTML version"
               >
                 Download HTML version
@@ -272,14 +272,14 @@ export default function AccessibilityStatement() {
               <button
                 type="button"
                 onClick={handlePrint}
-                className="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/30"
+                className="px-4 py-2 rounded-full bg-[#ffffff4d] hover:bg-[#ffffff66] border border-gray-300 text-gray-900"
               >
                 Save as PDF (Print)
               </button>
               <button
                 type="button"
                 onClick={handleDownloadJSON}
-                className="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/30"
+                className="px-4 py-2 rounded-full bg-[#ffffff4d] hover:bg-[#ffffff66] border border-gray-300 text-gray-900"
               >
                 Download JSON conformance
               </button>
@@ -287,26 +287,26 @@ export default function AccessibilityStatement() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold">Feedback and contact</h2>
-            <p className="mt-2 text-white/85">
+            <h2 className="text-2xl font-semibold text-gray-900">Feedback and contact</h2>
+            <p className="mt-2 text-gray-700">
               If you encounter any accessibility issues or need content in an alternative format, please tell us.
               We typically respond within 5 business days.
             </p>
             <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/accessibility-feedback" className="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/30 text-green-200 underline-offset-2">
+              <Link to="/accessibility-feedback" className="px-4 py-2 rounded-full bg-[#ffffff4d] hover:bg-[#ffffff66] border border-gray-300 text-green-700 underline-offset-2">
                 Open Accessibility Feedback form
               </Link>
-              <a href="mailto:support@wiseglobal.example" className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20">
+              <a href="mailto:support@wiseglobal.example" className="px-4 py-2 rounded-full bg-[#ffffff4d] hover:bg-[#ffffff66] border border-gray-300 text-gray-900">
                 support@wiseglobal.example
               </a>
             </div>
-            <p className="mt-3 text-white/70 text-sm">
-              Standards and references: <a className="underline hover:text-green-200" href="https://www.w3.org/TR/WCAG21/">WCAG 2.1</a> •{' '}
-              <a className="underline hover:text-green-200" href="https://www.w3.org/WAI/">WAI</a> • SEBI digital accessibility guidance
+            <p className="mt-3 text-gray-600 text-sm">
+              Standards and references: <a className="underline hover:text-green-600" href="https://www.w3.org/TR/WCAG21/">WCAG 2.1</a> •{' '}
+              <a className="underline hover:text-green-600" href="https://www.w3.org/WAI/">WAI</a> • SEBI digital accessibility guidance
             </p>
           </div>
 
-          <p className="text-sm text-white/70">Last updated: {lastUpdated}</p>
+          <p className="text-sm text-gray-600">Last updated: {lastUpdated}</p>
 
           <script
             type="application/ld+json"

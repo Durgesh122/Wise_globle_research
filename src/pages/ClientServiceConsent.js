@@ -186,11 +186,11 @@ const ClientServiceConsent = () => {
         <link rel="canonical" href="https://wiseglobalresearch.com/clientserviceconsent" />
       </Helmet>
 <motion.div variants={itemVariants} className="w-full">
-      <label htmlFor={id} className="block text-sm font-medium text-white mb-2">
+      <label htmlFor={id} className="block text-sm font-medium text-gray-900 mb-2">
         {label}
       </label>
       <div className="relative">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-white/70 text-xl">
+        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-700 text-xl">
           {icon}
         </span>
         <input
@@ -200,7 +200,7 @@ const ClientServiceConsent = () => {
           value={formData[id] || ''}
           onChange={handleChange}
           placeholder={attrs.placeholder || `Enter your ${label.replace('*', '').toLowerCase()}`}
-          className={`w-full pl-11 pr-4 py-3 rounded-lg border custom-box-bg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
+          className={`w-full pl-11 pr-4 py-3 rounded-lg border bg-white/0 text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
           {...(id === 'email' ? { autoComplete: 'email' } : {})}
           {...(id === 'clientName' ? { autoComplete: 'name' } : {})}
           {...(id === 'fatherName' ? { autoComplete: 'additional-name' } : {})}
@@ -233,20 +233,20 @@ const ClientServiceConsent = () => {
         </motion.div>
 
         <motion.div
-          className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-white/20"
+          className="bg-[#ffffff4d] backdrop-blur-md p-8 rounded-2xl shadow-xl border border-gray-300/50"
           variants={itemVariants}
         >
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent Form</Trans></h2>
-            <p className="mt-2 text-gray-300">Please fill out the form below.</p>
+            <h2 className="text-3xl font-extrabold text-gray-900"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent Form</Trans></h2>
+            <p className="mt-2 text-gray-700">Please fill out the form below.</p>
           </div>
 
   <form onSubmit={handleSubmit} noValidate className="space-y-6">
             <motion.div
               variants={containerVariants}
-              className="p-6 rounded-lg bg-white/5 border border-white/10"
+              className="p-6 rounded-lg bg-[#ffffff4d] border border-gray-300/30"
             >
-              <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2 mb-6"><Trans i18nKey="pages.ClientServiceConsent.client-information">Client Information</Trans></h3>
+              <h3 className="text-xl font-semibold text-gray-900 border-b border-gray-300/40 pb-2 mb-6"><Trans i18nKey="pages.ClientServiceConsent.client-information">Client Information</Trans></h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {renderInput(
                   'clientName',
@@ -303,12 +303,12 @@ const ClientServiceConsent = () => {
 
             <motion.div
               variants={containerVariants}
-              className="p-6 rounded-lg bg-white/5 border border-white/10"
+              className="p-6 rounded-lg bg-[#ffffff4d] border border-gray-300/30"
             >
               <motion.div variants={itemVariants}>
                 <label
                   htmlFor="address"
-                  className="block text-sm font-medium text-white mb-2"
+                  className="block text-sm font-medium text-gray-900 mb-2"
                 ><Trans i18nKey="pages.ClientServiceConsent.address">Address*</Trans></label>
                 <textarea
                   id="address"
@@ -318,7 +318,7 @@ const ClientServiceConsent = () => {
                   rows="4"
                   placeholder="Enter Full Address"
                   autoComplete="street-address"
-                  className={`w-full px-4 py-3 rounded-lg border custom-box-bg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
+                  className={`w-full px-4 py-3 rounded-lg border bg-white/0 text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
                 ></textarea>
               </motion.div>
             </motion.div>
@@ -344,7 +344,7 @@ const ClientServiceConsent = () => {
                     {message.text}
                   </span>
                   <button
-                    className="mt-4 px-4 py-2 rounded bg-white/20 text-white hover:bg-white/40 transition"
+                    className="mt-4 px-4 py-2 rounded bg-gray-900 text-white hover:bg-gray-800 transition"
                     onClick={() => setShowPopup(false)}
                   >Close</button>
                 </div>

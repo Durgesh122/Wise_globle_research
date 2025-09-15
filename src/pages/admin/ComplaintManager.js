@@ -114,22 +114,24 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="bg-gray-800/50 backdrop-blur-lg p-6 rounded-xl shadow-xl border border-gray-200/20 max-w-md w-full text-white"
+            className="p-6 rounded-xl shadow-xl border max-w-md w-full"
+            style={{ background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
           >
-            <h3 className="text-lg font-semibold mb-4">Edit Row {rowData?.srNo}</h3>
+            <h3 className="text-lg font-semibold mb-4 text-adaptive">Edit Row {rowData?.srNo}</h3>
             <div className="space-y-4">
               {Object.keys(editedRow).map(key => (
                 key !== 'srNo' && (
                   <div key={key}>
-                    <label className="capitalize text-sm text-gray-400">{key.replace(/([A-Z])/g, ' $1')}</label>
+                    <label className="capitalize text-sm text-adaptive/70">{key.replace(/([A-Z])/g, ' $1')}</label>
                     <input
                       type={typeof editedRow[key] === 'number' ? 'number' : 'text'}
                       value={editedRow[key] || ''}
                       onChange={(e) => setEditedRow({ ...editedRow, [key]: e.target.value })}
-                      className="w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="w-full p-2 rounded-lg"
+                      style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-body, #0b1220)' }}
                       placeholder={key}
                       disabled={key === 'source' && rowData?.srNo === 'Grand Total'}
                     />
@@ -138,8 +140,8 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
               ))}
             </div>
             <div className="flex justify-end gap-4 mt-6">
-              <motion.button onClick={onClose} className="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-600" variants={buttonVariants} whileHover="hover"><Trans i18nKey="pages.admin_ComplaintManager.cancel">Cancel</Trans></motion.button>
-              <motion.button onClick={handleSave} className="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600" variants={buttonVariants} whileHover="hover"><Trans i18nKey="pages.admin_ComplaintManager.save">Save</Trans></motion.button>
+              <motion.button onClick={onClose} className="px-4 py-2 rounded-lg" style={{ background: 'rgba(0,0,0,0.06)' }} variants={buttonVariants} whileHover="hover"><Trans i18nKey="pages.admin_ComplaintManager.cancel">Cancel</Trans></motion.button>
+              <motion.button onClick={handleSave} className="px-4 py-2 rounded-lg" style={{ background: 'linear-gradient(90deg,#2eed1c,#1fbf18)', color: '#000' }} variants={buttonVariants} whileHover="hover"><Trans i18nKey="pages.admin_ComplaintManager.save">Save</Trans></motion.button>
             </div>
           </motion.div>
         </motion.div>

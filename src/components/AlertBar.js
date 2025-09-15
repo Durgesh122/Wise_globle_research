@@ -62,7 +62,7 @@ const AlertBar = () => {
 
   return (
     <div
-      className="bg-white/30 backdrop-blur-sm text-white py-2"
+  className="bg-white/30 backdrop-blur-sm text-white text-adaptive py-2"
       style={{ position: 'sticky', top: `calc(var(--nav-offset, 0px) + ${navHeight}px)`, zIndex: 49 }}
     >
       <div className="container mx-auto px-4">

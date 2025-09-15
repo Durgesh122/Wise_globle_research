@@ -47,8 +47,8 @@ const CertificationsSection = () => {
               >
                 <div className="relative inline-block w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto rounded-full p-1">
                   <motion.div
-                    className="relative z-10 rounded-full border-4 shadow-xl transition-transform duration-300 transform flex items-center justify-center bg-white/30"
-                    style={{ borderColor: '#4efc03', minHeight: '100%' }}
+                    className="relative z-10 rounded-full border shadow-xl transition-transform duration-300 transform flex items-center justify-center"
+                    style={{ background: 'rgba(212,227,255,0.30)', borderColor: 'rgba(212,227,255,0.6)', minHeight: '100%', width: '100%', height: '100%', boxSizing: 'border-box' }}
                     whileHover={{ scale: 1.06, rotate: 3 }}
                     transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                   >
@@ -61,21 +61,21 @@ const CertificationsSection = () => {
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
                           const ph = document.createElement('div');
-                          ph.className = 'text-xs text-white/90 text-center';
+                              ph.className = 'text-xs text-adaptive text-center';
                           ph.textContent = L.name || 'logo';
-                          e.currentTarget.parentNode.appendChild(ph);
+                  e.currentTarget.parentNode.appendChild(ph);
                         }}
                         className="w-full h-full object-contain block"
                       />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs text-white/90 rounded-full">{L.name || 'logo'}</div>
+                      ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xs text-adaptive rounded-full">{L.name || 'logo'}</div>
                     )}
                   </motion.div>
                 </div>
 
                 <div className="mt-3 text-center">
-                  <p className="font-semibold text-sm sm:text-base">{L.name || ''}</p>
-                  <p className="text-xs text-gray-300 mt-1">{L.short || ''}</p>
+                  <p className="font-semibold text-sm sm:text-base text-adaptive">{L.name || ''}</p>
+                  <p className="text-xs text-adaptive/80 mt-1">{L.short || ''}</p>
                 </div>
 
                 <div className="mt-2 sm:hidden px-2">
@@ -86,7 +86,7 @@ const CertificationsSection = () => {
           })}
         </div>
 
-        <p className="text-center text-sm sm:text-base text-gray-200 mt-6 max-w-3xl mx-auto">Recognized and certified by industry-leading organizations.</p>
+        <p className="text-center text-sm sm:text-base text-adaptive mt-6 max-w-3xl mx-auto">Recognized and certified by industry-leading organizations.</p>
       </div>
     </section>
   );

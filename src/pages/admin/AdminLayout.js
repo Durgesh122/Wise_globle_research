@@ -107,9 +107,10 @@ const AdminLayout = () => {
       initial="closed"
       animate="open"
       exit="closed"
-      className="absolute top-0 left-0 h-full w-64 bg-black bg-opacity-50 backdrop-blur-lg p-4 border-r border-gray-700 flex flex-col z-20 md:relative md:translate-x-0"
+      className="absolute top-0 left-0 h-full w-64 p-4 flex flex-col z-20 md:relative md:translate-x-0"
+      style={{ background: '#ffffff4d', backdropFilter: 'blur(8px)', borderRight: '1px solid rgba(0,0,0,0.06)' }}
     >
-      <h2 className="text-2xl font-bold mb-8 text-center text-blue-400">
+      <h2 className="text-2xl font-bold mb-8 text-center text-adaptive">
         <Trans i18nKey="pages.admin_AdminLayout.admin-panel">Admin Panel</Trans>
       </h2>
       <nav className="flex flex-col space-y-2 flex-grow">
@@ -120,7 +121,7 @@ const AdminLayout = () => {
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors duration-200 ${
-                isActive ? 'bg-blue-600 text-white shadow-lg' : 'hover:bg-gray-700/50'
+                isActive ? 'bg-blue-600 text-adaptive shadow-lg' : 'hover:bg-gray-200/60 text-adaptive/90'
               }`
             }
           >
@@ -131,7 +132,8 @@ const AdminLayout = () => {
       </nav>
       <motion.button
         onClick={handleGoHome}
-        className="mt-4 mb-2 w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
+        className="mt-4 mb-2 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors"
+        style={{ background: 'linear-gradient(90deg,#2eed1c,#1fbf18)', color: '#000' }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -140,7 +142,8 @@ const AdminLayout = () => {
       </motion.button>
       <motion.button
         onClick={handleLogout}
-        className="w-full flex items-center justify-center gap-3 px-4 py-2 bg-red-600/80 hover:bg-red-700 rounded-lg transition-colors"
+        className="w-full flex items-center justify-center gap-3 px-4 py-2 rounded-lg transition-colors"
+        style={{ background: 'rgba(255,99,71,0.08)', color: 'var(--text-body, #111827)' }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -170,12 +173,12 @@ const AdminLayout = () => {
         <Sidebar />
       </div>
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col text-adaptive">
         <AdminHeader 
           pageTitle={getPageTitle()} 
           toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} 
         />
-        <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00))' }}>
           <Suspense fallback={
             <div className="flex justify-center items-center h-full">
               <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>

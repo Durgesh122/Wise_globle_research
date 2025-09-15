@@ -47,8 +47,9 @@ function Contact() {
       // Best-effort: also notify server to send an email copy
       (async () => {
         try {
-          const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:3002' : '';
-          await fetch(apiBase + '/send-email', {
+          const apiBase = 'https://wise-global-contact-systems.onrender.com';
+          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+          await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

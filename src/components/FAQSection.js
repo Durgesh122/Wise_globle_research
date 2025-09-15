@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from '../i18nShim';
 import { motion } from 'framer-motion';
+import { FaLock } from 'react-icons/fa';
 import { itemVariants, cardVariants } from '../utils/animationVariants';
 
 const FAQSection = () => {
@@ -27,7 +28,10 @@ const FAQSection = () => {
               whileHover="hover"
               style={{ transformStyle: 'preserve-3d' }}
             >
-              <h3 className="text-lg sm:text-xl font-bold mb-2">{faq.question}</h3>
+              <div className="flex items-start justify-between">
+                <h3 className="text-lg sm:text-xl font-bold mb-2">{faq.question}</h3>
+                <FaLock className="ml-3 text-black" aria-hidden="true" title="Locked content" />
+              </div>
               <p className="text-sm sm:text-base">{faq.answer}</p>
             </motion.div>
           ))}

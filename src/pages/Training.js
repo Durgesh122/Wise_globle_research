@@ -157,6 +157,11 @@ const Training = () => {
       toast.success('Registration submitted successfully!', { position: 'top-center' });
       setFormData({ name: '', email: '', phone: '', course: '', message: '' });
       setErrors({});
+      try{
+        if (window.analyticsPush) {
+          window.analyticsPush('training_registration', { course: formData.course || '' });
+        }
+      }catch(e){}
     } catch (err) {
       const msg = err?.message || String(err);
       toast.error(`Failed to submit registration: ${msg}`, { position: 'top-center' });

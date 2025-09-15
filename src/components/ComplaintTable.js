@@ -70,7 +70,7 @@ const ComplaintTable = () => {
             <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : errorTable ? (
-          <div className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center text-white">
+          <div className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center text-white text-adaptive">
             {errorTable}
           </div>
         ) : (
@@ -86,7 +86,7 @@ const ComplaintTable = () => {
             >
         <caption className="sr-only">Monthly complaint receipt and resolution statistics by source</caption>
               <thead>
-                <tr className="text-white" style={{ background: 'rgba(255, 255, 255, 0.3)' }}>
+                <tr className="text-white text-adaptive" style={{ background: 'rgba(255, 255, 255, 0.3)' }}>
           <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
           <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Received from</th>
           <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Pending at the end of last month</th>
@@ -119,7 +119,7 @@ const ComplaintTable = () => {
             </table>
           </div>
         )}
-        <p className="mt-4 text-xs sm:text-sm text-gray-300">
+        <p className="mt-4 text-xs sm:text-sm text-adaptive">
           ^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.
         </p>
       </div>

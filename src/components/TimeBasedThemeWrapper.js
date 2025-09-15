@@ -6,11 +6,11 @@ const TimeBasedThemeWrapper = ({ children }) => {
   const { theme, gradients } = useContext(ThemeContext);
   const { background: themeBackground, textColor } = gradients[theme] || gradients.default;
 
-  // default background image path (served from `public/assets/images/pick6.png`)
-  const defaultBackgroundImage = "url('/assets/images/pick6.png')";
+  // default background (light subtle gradient) when no theme background provided
+  const defaultBackground = 'linear-gradient(to right, #f7fafc, #eef2f7)';
 
   // If theme provides a background, use it; otherwise use the default image with a dark overlay color fallback
-  const background = themeBackground || `linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), ${defaultBackgroundImage}`;
+  const background = themeBackground || defaultBackground;
 
   useEffect(() => {
     // Apply background with sensible positioning and fallback

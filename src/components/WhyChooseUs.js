@@ -47,7 +47,7 @@ const WhyChooseUs = () => {
 
   return (
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
-      <div className="container max-w-3xl mx-auto text-white">
+      <div className="container max-w-3xl mx-auto text-white text-adaptive">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8">Frequently Asked Questions</h2>
 
         <div className="space-y-4">
@@ -93,7 +93,7 @@ const WhyChooseUs = () => {
                       exit="closed"
                       variants={itemVariants}
                       transition={{ duration: 0.35, ease: 'easeInOut' }}
-                      className="px-4 pt-0 pb-4 text-white/80"
+                      className="px-4 pt-0 pb-4 text-white/80 text-adaptive"
                     >
                       <div className="overflow-hidden">
                         <p>{f.a}</p>

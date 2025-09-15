@@ -105,7 +105,7 @@ const Home = () => {
       >
   {showPopup && <PopupForm onClose={() => setShowPopup(false)} />}
         <AlertBar />
-       <TradingViewTicker />
+  <TradingViewTicker suppressHelmet={true} />
         <HeroSection />
         <WhyChooseUs />
         <MarketOverview />

@@ -129,10 +129,8 @@ const PopupForm = ({ onClose }) => {
       // Determine API base URL: prefer REACT_APP_API_URL. In development use localhost:3002.
       // In production when REACT_APP_API_URL is not provided, default to the Render server
       // where the backend is hosted so the popup can reach the API.
-      const apiBase =
-        process.env.REACT_APP_API_URL ||
-        (window.location.hostname === 'localhost' ? 'http://localhost:3002' : 'https://wise-global-contact-systems.onrender.com');
-      const endpoint = apiBase ? `${apiBase.replace(/\/$/, '')}/send-email` : '/send-email';
+      const apiBase = 'https://wise-global-contact-systems.onrender.com';
+const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -156,10 +154,12 @@ const PopupForm = ({ onClose }) => {
       }
 
       if (!res.ok || !data.success) throw new Error(data.error?.message || 'Server rejected');
-      // Google Ads Conversion Tracking
-      if (window.gtag) {
-        window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
-      }
+      // Push analytics event for popup submissions
+      try{
+        if (window.analyticsPush) {
+          window.analyticsPush('popup_form_submit', { interest: form.interest || '' });
+        }
+      }catch(e){}
   setSuccessMessage('Thank you! Your submission was successful.');
       // Save to Firebase Realtime Database so admin can view submissions
       try {
@@ -316,7 +316,7 @@ const PopupForm = ({ onClose }) => {
         </AnimatePresence>
 
         {/* Form */}
-  <form onSubmit={handleSubmit} className="w-full max-w-lg mx-auto space-y-6 px-4 sm:px-0 text-gray-900">
+  <form data-gtm-event="popup_form_submit" onSubmit={handleSubmit} className="w-full max-w-lg mx-auto space-y-6 px-4 sm:px-0 text-gray-900">
           {/* Honeypot Field (Hidden for Bot Detection) */}
           <input
             type="text"
@@ -420,7 +420,7 @@ const PopupForm = ({ onClose }) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-3 rounded-lg text-white font-semibold transition-colors ${ isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
+            className={`w-full py-3 rounded-lg text-white text-adaptive font-semibold transition-colors ${ isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
           >
             {isSubmitting ? (
               <motion.span

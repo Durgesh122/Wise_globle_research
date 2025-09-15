@@ -64,18 +64,18 @@ const A11yFeedback = () => {
   }, []);
 
   return (
-    <div className="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+    <div className="space-y-4 p-4 rounded-lg" style={{ background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}>
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3">
-        <h2 className="text-2xl font-semibold">A11y Feedback</h2>
+        <h2 className="text-2xl font-semibold text-adaptive">A11y Feedback</h2>
         <div className="flex gap-2">
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search..."
-            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+            className="rounded-md border border-gray-300 bg-white/80 px-3 py-2 text-sm text-adaptive placeholder:text-gray-500 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-300"
           />
-          <button onClick={() => setSortDesc((v) => !v)} className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">Sort {sortDesc ? '↓' : '↑'}</button>
-          <button onClick={exportCsv} className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">Export CSV</button>
+          <button onClick={() => setSortDesc((v) => !v)} className="rounded-md border border-gray-300 bg-white/80 px-3 py-2 text-sm text-adaptive hover:bg-gray-50">Sort {sortDesc ? '↓' : '↑'}</button>
+          <button onClick={exportCsv} className="rounded-md border border-gray-300 bg-white/80 px-3 py-2 text-sm text-adaptive hover:bg-gray-50">Export CSV</button>
         </div>
       </div>
 
@@ -83,26 +83,26 @@ const A11yFeedback = () => {
         <div className="text-sm text-gray-400">Loading…</div>
       ) : (
         <>
-    <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 bg-white/80 shadow-sm">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-white/80">
                 <tr>
       {['Name','Email','Type','Severity','Device','Page','Message','Submitted','Actions'].map((h) => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">{h}</th>
+                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-adaptive">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-100">
                 {filtered.map((r) => (
-                  <tr key={r.id} className="align-top">
-                    <td className="px-4 py-3 text-sm text-gray-900 break-words">{r.name || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 break-all">{r.email || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{r.type || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{r.severity || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{r.device || '—'}</td>
+                  <tr key={r.id} className="align-top hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm text-adaptive break-words">{r.name || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-adaptive break-all">{r.email || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-adaptive">{r.type || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-adaptive">{r.severity || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-adaptive">{r.device || '—'}</td>
                     <td className="px-4 py-3 text-sm text-blue-700 underline break-all">{r.pageUrl ? <a href={r.pageUrl} target="_blank" rel="noreferrer">{r.pageUrl}</a> : '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 max-w-xs truncate break-words" title={r.message}>{r.message || '—'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{r.timestamp ? new Date(r.timestamp).toLocaleString() : '—'}</td>
+                    <td className="px-4 py-3 text-sm text-adaptive max-w-xs truncate break-words" title={r.message}>{r.message || '—'}</td>
+                    <td className="px-4 py-3 text-sm text-adaptive">{r.timestamp ? new Date(r.timestamp).toLocaleString() : '—'}</td>
                     <td className="px-4 py-3 text-sm">
                       <button onClick={() => onDelete(r.id)} className="rounded-md border border-red-300 bg-white px-2 py-1 text-xs text-red-700 hover:bg-red-50">Delete</button>
                     </td>
@@ -110,7 +110,7 @@ const A11yFeedback = () => {
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={9} className="px-4 py-10 text-center text-sm text-gray-500">No records found.</td>
+                    <td colSpan={9} className="px-4 py-10 text-center text-sm text-adaptive">No records found.</td>
                   </tr>
                 )}
               </tbody>
@@ -119,10 +119,10 @@ const A11yFeedback = () => {
 
           <div className="md:hidden space-y-3">
             {filtered.map((r) => (
-              <div key={r.id} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+              <div key={r.id} className="rounded-lg border border-gray-200 bg-white/80 p-4 shadow-sm">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 break-words">{r.name || '—'}</p>
+                    <p className="text-sm font-semibold text-adaptive break-words">{r.name || '—'}</p>
                     <p className="text-xs text-gray-500">{r.timestamp ? new Date(r.timestamp).toLocaleString() : '—'}</p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -130,13 +130,13 @@ const A11yFeedback = () => {
                     <button onClick={() => onDelete(r.id)} className="rounded-md border border-red-300 bg-white px-2 py-1 text-xs text-red-700 hover:bg-red-50">Delete</button>
                   </div>
                 </div>
-                <div className="mt-2 text-xs text-gray-600 break-all">{r.email}</div>
+                <div className="mt-2 text-xs text-adaptive break-all">{r.email}</div>
                 {r.pageUrl && <a className="mt-1 inline-block text-sm text-blue-700 underline break-all" href={r.pageUrl} target="_blank" rel="noreferrer">{r.pageUrl}</a>}
-                <div className="mt-2 text-sm text-gray-900 whitespace-pre-wrap">{r.message}</div>
+                <div className="mt-2 text-sm text-adaptive whitespace-pre-wrap">{r.message}</div>
               </div>
             ))}
             {filtered.length === 0 && (
-              <div className="rounded-lg border border-dashed border-gray-200 p-8 text-center text-sm text-gray-500">No records found.</div>
+              <div className="rounded-lg border border-dashed border-gray-200 p-8 text-center text-sm text-adaptive">No records found.</div>
             )}
           </div>
         </>

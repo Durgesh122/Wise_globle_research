@@ -51,8 +51,9 @@ const Complaint = () => {
       // Best-effort: also notify server to send an email copy to support
       (async () => {
         try {
-          const apiBase = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3002' : '');
-          await fetch((apiBase ? apiBase.replace(/\/$/, '') : '') + '/send-email', {
+          const apiBase = 'https://wise-global-contact-systems.onrender.com';
+          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+          await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

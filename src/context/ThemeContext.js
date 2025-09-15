@@ -3,9 +3,9 @@ import React, { createContext, useState, useEffect } from 'react';
 // Define an extensive set of vibrant, sexy gradients (restored) + premium dark themes
 const gradients = {
   default: {
-  // Requested light gradient
-   background: 'linear-gradient(to right, #4272ff, #365dff)',
-    textColor: '#ffffff',
+  // Default uses a light, subtle gradient (no image)
+   background: 'linear-gradient(to right, rgba(212,227,255,1), rgba(212,227,255,0.6))',
+    textColor: '#0b1220',
     transition: 'background 0.5s ease-in-out',
   },
   // ...removed two top colors (fire, purpleDream) per user request
@@ -149,11 +149,65 @@ export const ThemeProvider = ({ children }) => {
 
     // Synchronize backgrounds across the full document so no fallback peeks through
     htmlEl.style.background = active.background;
+    htmlEl.style.backgroundSize = 'cover';
+    htmlEl.style.backgroundRepeat = 'no-repeat';
+    htmlEl.style.backgroundPosition = 'center center';
     bodyEl.style.background = active.background;
-    if (rootEl) rootEl.style.background = active.background;
+    bodyEl.style.backgroundSize = 'cover';
+    bodyEl.style.backgroundRepeat = 'no-repeat';
+    bodyEl.style.backgroundPosition = 'center center';
+    if (rootEl) {
+      rootEl.style.background = active.background;
+      rootEl.style.backgroundSize = 'cover';
+      rootEl.style.backgroundRepeat = 'no-repeat';
+      rootEl.style.backgroundPosition = 'center center';
+    }
 
     // Text color on body (components still control their own text utilities)
     bodyEl.style.color = active.textColor;
+
+    // Also set CSS variables used across the app so components relying on
+    // `var(--text-body)` and `var(--bg-surface)` pick up the current theme.
+    try {
+      // Set background and text CSS vars
+      htmlEl.style.setProperty('--bg-surface', active.background);
+      htmlEl.style.setProperty('--text-body', active.textColor);
+
+      // Simple heuristic to decide if the theme is light or dark based on text color
+      const hex = (active.textColor || '#ffffff').replace('#', '');
+      const hex6 = hex.length === 3 ? hex.split('').map(c => c + c).join('') : hex;
+      const r = parseInt(hex6.substring(0,2), 16);
+      const g = parseInt(hex6.substring(2,4), 16);
+      const b = parseInt(hex6.substring(4,6), 16);
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      const isTextLight = brightness > 200; // if text color is very light, treat as light-on-dark
+
+      if (isTextLight) {
+        // Keep dark-style muted variables for high contrast on dark backgrounds
+        htmlEl.style.setProperty('--bg-muted', 'rgba(255, 255, 255, 0.06)');
+        htmlEl.style.setProperty('--navbar-border', 'rgba(255, 255, 255, 0.08)');
+        htmlEl.style.setProperty('--card-shadow', '0 8px 24px rgba(0, 0, 0, 0.3)');
+        htmlEl.style.setProperty('--accent', '#22c55e');
+  // Transparent surface and border for overlays on dark themes
+  htmlEl.style.setProperty('--bg-transparent', 'rgba(255, 255, 255, 0.06)');
+  htmlEl.style.setProperty('--bg-border', 'rgba(255, 255, 255, 0.08)');
+        // mark html as dark-theme (so light text remains as-is)
+        htmlEl.setAttribute('data-theme-light', 'false');
+      } else {
+        // Light theme variables (dark text on light backgrounds)
+        htmlEl.style.setProperty('--bg-muted', 'rgba(11, 18, 32, 0.04)');
+        htmlEl.style.setProperty('--navbar-border', 'rgba(11, 18, 32, 0.06)');
+        htmlEl.style.setProperty('--card-shadow', '0 8px 24px rgba(11, 18, 32, 0.06)');
+        htmlEl.style.setProperty('--accent', '#0b6b4a');
+  // Use white/30 for translucent surfaces and white/30 border tint per request
+  htmlEl.style.setProperty('--bg-transparent', 'rgba(255, 255, 255, 0.30)');
+  htmlEl.style.setProperty('--bg-border', 'rgba(255, 255, 255, 0.30)');
+        // mark html as light-theme so CSS fallbacks can flip white text
+        htmlEl.setAttribute('data-theme-light', 'true');
+      }
+    } catch (e) {
+      // Ignore failures when running in non-browser environments
+    }
   }, [theme, previewTheme]);
 
   // Change theme permanently

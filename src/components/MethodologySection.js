@@ -49,14 +49,14 @@ const MethodologySection = () => {
 
       <div className="container mx-auto relative z-10">
         <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-4 sm:mb-6"
+          className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-4 sm:mb-6 text-adaptive"
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           {heading}
         </motion.h2>
-        <p className="text-center text-sm sm:text-base text-gray-300 max-w-2xl mx-auto mb-8">
+        <p className="text-center text-sm sm:text-base text-adaptive max-w-2xl mx-auto mb-8">
           A clear, repeatable process — from verified data sources to actionable recommendations.
           Designed for transparency and reproducibility.
         </p>
@@ -65,7 +65,7 @@ const MethodologySection = () => {
           {steps.map((step, idx) => (
             <motion.div
               key={idx}
-              className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-xl border border-white/6 overflow-hidden transform-gpu"
+              className="relative bg-white/30 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-xl border border-white/30 overflow-hidden transform-gpu"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.08 * idx, duration: 0.5 }}
@@ -97,8 +97,8 @@ const MethodologySection = () => {
                   />
                 </div>
 
-                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-100">{step.title}</h3>
-                <p className="text-sm sm:text-base text-gray-300 max-w-md">{step.desc}</p>
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-adaptive">{step.title}</h3>
+                <p className="text-sm sm:text-base text-adaptive max-w-md">{step.desc}</p>
               </div>
             </motion.div>
           ))}

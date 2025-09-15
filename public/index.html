@@ -36,30 +36,90 @@
 
   <!-- Removed Font Awesome CSS to avoid webfont downloads; using SVG icon packages instead -->
 
-    <!-- Google tag (gtag.js) - load script async, defer config and conversion until after load to avoid blocking LCP/TBT -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1137180109"></script>
+    <!-- Google Analytics & Ads moved to Google Tag Manager (GTM).
+         Keeping a minimal dataLayer initialization so page-level pushes work before GTM loads. -->
     <script>
-      // Initialize dataLayer and a lightweight gtag shim immediately so we don't depend on window 'load'.
       window.dataLayer = window.dataLayer || [];
-      function gtag(){ dataLayer.push(arguments); }
-
-      function initAnalytics() {
-        try {
-          gtag('js', new Date());
-          gtag('config', 'AW-1137180109');
-        } catch (e) { /* no-op */ }
-        // Fire conversion later so it doesn't compete with LCP work
-        setTimeout(function(){
-          try { gtag('event', 'conversion', { send_to: 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA' }); } catch (e) {}
-        }, 2000);
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAnalytics);
-      } else {
-        initAnalytics();
-      }
+      // Example: dataLayer.push({ event: 'page_view', page_path: location.pathname });
     </script>
+    <!-- dataLayer helpers: automatic form instrumentation and consent mode scaffold -->
+    <script>
+      (function(){
+        // Ensure dataLayer exists
+        window.dataLayer = window.dataLayer || [];
+
+        // Helper to push analytics events in a consistent shape
+        window.analyticsPush = function(eventName, payload){
+          try{
+            var obj = Object.assign({event: eventName}, payload || {});
+            window.dataLayer.push(obj);
+            return obj;
+          }catch(e){ console.error('analyticsPush error', e); }
+        };
+
+        // Auto-instrument forms that include `data-gtm-event` attribute
+        function instrumentForms(){
+          try{
+            var forms = document.querySelectorAll('form[data-gtm-event]');
+            Array.prototype.forEach.call(forms, function(form){
+              if (form.__gtm_instrumented) return; // idempotent
+              form.addEventListener('submit', function(e){
+                try{
+                  var ev = form.getAttribute('data-gtm-event') || 'form_submit';
+                  var value = form.getAttribute('data-gtm-value');
+                  var payload = {
+                    formId: form.id || form.getAttribute('name') || null,
+                    formAction: form.action || null
+                  };
+                  if (value) payload.value = parseFloat(value) || value;
+                  window.analyticsPush(ev, payload);
+                }catch(err){ /* don't block submit */ }
+              }, {passive:true});
+              form.__gtm_instrumented = true;
+            });
+          }catch(e){ /* ignore */ }
+        }
+
+        // Run on DOMContentLoaded and also in case forms are added later
+        if (document.readyState === 'loading'){
+          document.addEventListener('DOMContentLoaded', instrumentForms);
+        } else {
+          instrumentForms();
+        }
+
+        // Expose a convenience method to re-scan forms dynamically
+        window.gtmInstrumentForms = instrumentForms;
+
+        // Consent Mode scaffold: set default and update consent state
+        // Usage: window.setConsentDefaults(); window.updateConsent({ad_storage:'granted',analytics_storage:'granted'});
+        window.setConsentDefaults = function(){
+          try{
+            window.dataLayer.push({
+              'event': 'consent_default',
+              'consent': { ad_storage: 'denied', analytics_storage: 'denied' }
+            });
+          }catch(e){ }
+        };
+
+        window.updateConsent = function(consentObj){
+          try{
+            // consentObj example: { ad_storage: 'granted', analytics_storage: 'granted' }
+            window.dataLayer.push({ event: 'consent_update', consent: consentObj });
+          }catch(e){ }
+        };
+
+        // Initialize default consent (safe default)
+        window.setConsentDefaults();
+      })();
+    </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KMZN36W7');</script>
+  <!-- End Google Tag Manager -->
+    <!-- Note: AW-specific duplicate gtag removed to avoid double-loading. If you prefer managing GA4/AW via GTM, I can move configs into GTM next. -->
     <!-- ✅ SEO Meta Tags -->
   <meta name="description" content="Wise Global Research Services — SEBI registered research analyst providing stock market research, live market news, Nifty & Sensex analysis, intraday tips, and long-term investment insights for Indian investors." />
   <meta name="keywords" content="stock market research, Nifty, Sensex, intraday tips, share market analysis, stock recommendations, SEBI research analyst, live market news, Wise Global Research" />
@@ -117,6 +177,10 @@
   </head>
 
   <body class="bg-black text-white">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KMZN36W7"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <script>
       // Early apply of saved accessibility settings before React mounts to avoid flashes
       (function(){

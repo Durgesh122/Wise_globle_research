@@ -1,15 +1,17 @@
 import React from 'react';
 
-
 import { Helmet } from 'react-helmet-async';
-const TradingViewTicker = () => {
+
+const TradingViewTicker = ({ suppressHelmet = false }) => {
   return (
     <>
-      <Helmet>
-        <title>Trading View Ticker - Wise Global Research</title>
-        <meta name="description" content="Trading View Ticker page — Wise Global Research." />
-        <link rel="canonical" href="https://wiseglobalresearch.com/tradingviewticker" />
-      </Helmet>
+      {!suppressHelmet && (
+        <Helmet>
+          <title>Trading View Ticker - Wise Global Research</title>
+          <meta name="description" content="Trading View Ticker page — Wise Global Research." />
+          <link rel="canonical" href="https://wiseglobalresearch.com/tradingviewticker" />
+        </Helmet>
+      )}
 <div className="w-full overflow-hidden relative -top-3 sm:-top-4 md:-top-6" aria-hidden={false} role="region" aria-label="Market Ticker" style={{ position: 'relative', zIndex: 10 }}>
       <iframe
         title="TradingView Ticker Tape"
