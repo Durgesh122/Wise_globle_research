@@ -13,6 +13,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const fs = require('fs');
+const path = require('path');
 
 // Middleware
 // If behind a proxy (e.g., Render), trust it so correct proto/host are detected
@@ -44,6 +46,26 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(express.json());
+
+// Serve React build (if present). This allows the same server to serve
+// the frontend static files when deployed (e.g., Render). The build
+// directory is located at repository root (`../build`) relative to server/.
+const buildPath = path.join(__dirname, '..', 'build');
+if (fs.existsSync(buildPath)) {
+  app.use(express.static(buildPath));
+
+  // Serve index.html on the root and for any non-API routes to support
+  // client-side routing. Keep API routes and health checks untouched.
+  app.get('/', (req, res) => res.sendFile(path.join(buildPath, 'index.html')));
+
+  app.get('*', (req, res, next) => {
+    // Let API and special endpoints be handled by existing routes
+    if (req.path.startsWith('/api') || req.path === '/health' || req.path.startsWith('/send-email') || req.path.startsWith('/submit-popup')) {
+      return next();
+    }
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+}
 
 // ---------------------------------------------------------------------------
 // Security & Compatibility Headers Middleware
