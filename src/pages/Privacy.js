@@ -3,7 +3,7 @@ import React from 'react';
 import { Trans, useTranslation } from '../i18nShim';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { FaShieldAlt, FaEye, FaEnvelope, FaSync } from 'react-icons/fa';
+import { FaShieldAlt, FaEnvelope } from 'react-icons/fa';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -55,7 +55,7 @@ function Privacy() {
 
       <motion.section variants={fadeIn} className="mb-8">
         <h2 className="text-2xl font-semibold mb-4"><Trans i18nKey="pages.Privacy.website-visits">Website Visits</Trans></h2>
-        <p className="text-base leading-relaxed"><Trans i18nKey="pages.Privacy.generally-you-may-visit">Generally, you may visit</Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><FaEye className="inline mr-1"/><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com">https://wiseglobalresearch.com/</Trans></a><Trans i18nKey="pages.Privacy.anonymously-and-obtain-information-about"><Trans i18nKey="pages.Privacy.anonymously-and-obtain-information-about-1">anonymously and obtain information about our organization and products and services without providing any personal information, such as your phone number or postal or e-mail address.</Trans></Trans></p>
+  <p className="text-base leading-relaxed"><Trans i18nKey="pages.Privacy.generally-you-may-visit">Generally, you may visit</Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com">https://wiseglobalresearch.com/</Trans></a><Trans i18nKey="pages.Privacy.anonymously-and-obtain-information-about"><Trans i18nKey="pages.Privacy.anonymously-and-obtain-information-about-1">anonymously and obtain information about our organization and products and services without providing any personal information, such as your phone number or postal or e-mail address.</Trans></Trans></p>
       </motion.section>
 
       <motion.section variants={fadeIn} className="mb-8">
@@ -75,7 +75,7 @@ function Privacy() {
 
       <motion.section variants={fadeIn} className="mb-8">
         <h2 className="text-2xl font-semibold mb-4"><Trans i18nKey="pages.Privacy.changes-to-this-policy">Changes to this Policy</Trans></h2>
-        <p className="text-base leading-relaxed"><Trans i18nKey="pages.Privacy.we-may-from-time-to-time-update-this-pol"><Trans i18nKey="pages.Privacy.we-may-from-time-to-time-update-this-pol-1">We may from time to time update this Policy. When we do so, we will post notice of any revisions on this site. We encourage you to review our Privacy Policy whenever you visit our Web Site</Trans></Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><FaSync className="inline mr-1"/><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com-1"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com-2">https://wiseglobalresearch.com/.</Trans></Trans></a>
+  <p className="text-base leading-relaxed"><Trans i18nKey="pages.Privacy.we-may-from-time-to-time-update-this-pol"><Trans i18nKey="pages.Privacy.we-may-from-time-to-time-update-this-pol-1">We may from time to time update this Policy. When we do so, we will post notice of any revisions on this site. We encourage you to review our Privacy Policy whenever you visit our Web Site</Trans></Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com-1"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com-2">https://wiseglobalresearch.com/.</Trans></Trans></a>
         </p>
       </motion.section>
 

@@ -147,72 +147,74 @@ export default function JobsManager() {
   }, []);
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-2xl font-bold">Jobs Manager</h1>
+    <div className="space-y-8 admin-section">
+      <h1 className="text-2xl font-bold text-adaptive">Jobs Manager</h1>
 
       {/* Create / Edit Form */}
-      <form onSubmit={saveJob} className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white/10 p-4 rounded">
+      <form onSubmit={saveJob} className="admin-section grid grid-cols-1 md:grid-cols-2 gap-4 rounded">
         <div>
           <label className="block text-sm mb-1">Title</label>
-          <input className="w-full p-2 rounded bg-gray-700 text-white" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} required />
+          <input className="w-full p-2 rounded text-adaptive" style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)' }} value={form.title} onChange={e=>setForm({...form,title:e.target.value})} required />
         </div>
         <div>
           <label className="block text-sm mb-1">Location</label>
-          <input className="w-full p-2 rounded bg-gray-700 text-white" value={form.location} onChange={e=>setForm({...form,location:e.target.value})} required />
+          <input className="w-full p-2 rounded text-adaptive" style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)' }} value={form.location} onChange={e=>setForm({...form,location:e.target.value})} required />
         </div>
         <div className="md:col-span-2">
           <label className="block text-sm mb-1">Description</label>
-          <textarea className="w-full p-2 rounded bg-gray-700 text-white" rows={3} value={form.description} onChange={e=>setForm({...form,description:e.target.value})} />
+          <textarea className="w-full p-2 rounded text-adaptive" rows={3} value={form.description} onChange={e=>setForm({...form,description:e.target.value})} />
         </div>
         <div className="md:col-span-2">
           <label className="block text-sm mb-1">Requirements (one per line)</label>
-          <textarea className="w-full p-2 rounded bg-gray-700 text-white" rows={4} value={form.requirements} onChange={e=>setForm({...form,requirements:e.target.value})} />
+          <textarea className="w-full p-2 rounded text-adaptive" style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)' }} rows={4} value={form.requirements} onChange={e=>setForm({...form,requirements:e.target.value})} />
         </div>
         <label className="inline-flex items-center gap-2">
           <input type="checkbox" checked={form.active} onChange={e=>setForm({...form,active:e.target.checked})} />
           <span>Active</span>
         </label>
-        <div className="md:col-span-2 flex gap-2">
-          <button className="px-4 py-2 bg-green-600 rounded text-white flex items-center gap-2" type="submit">
+        <div className="md:col-span-2 flex gap-2 admin-actions">
+          <button className="btn px-4 py-2 rounded text-white flex items-center gap-2" style={{ background: 'var(--accent)' }} type="submit">
             {editingId ? (<><FaEdit/> Update</>) : (<><FaPlus/> Create</>)}
           </button>
           {editingId && (
-            <button type="button" className="px-3 py-2 bg-gray-600 rounded" onClick={resetForm}>Cancel</button>
+            <button type="button" className="btn px-3 py-2 rounded" style={{ background: 'var(--bg-border)' }} onClick={resetForm}>Cancel</button>
           )}
         </div>
       </form>
 
       {/* Jobs List */}
-      <div className="bg-white/10 rounded">
-        <div className="p-4 border-b border-white/10 flex items-center justify-between">
-          <div className="font-semibold">All Jobs</div>
+      <div className="admin-section">
+        <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--bg-border)' }}>
+          <div className="font-semibold text-adaptive">All Jobs</div>
           <div>
             <button
-              className="px-3 py-2 bg-emerald-600 rounded flex items-center gap-2 text-sm"
+              className="px-3 py-2 rounded flex items-center gap-2 text-sm"
               onClick={() => loadApplications('general')}
             >
               <FaList/> General Applications
             </button>
           </div>
         </div>
-        <div className="divide-y divide-white/10">
+        <div>
           {jobList.length === 0 && (
-            <div className="p-4 text-white/70">No jobs yet. Create one above.</div>
+            <div className="p-4 text-adaptive">No jobs yet. Create one above.</div>
           )}
-          {jobList.map(job => (
-            <div key={job.id} className="p-4 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
-              <div className="flex-1">
-                <div className="font-bold">{job.title} {job.active === false && <span className="ml-2 text-xs bg-red-600 px-2 py-0.5 rounded">Inactive</span>}</div>
-                <div className="text-white/80 text-sm">{job.location}</div>
-                <div className="text-white/80 text-sm line-clamp-2">{job.description}</div>
-              </div>
-              <div className="flex gap-2">
-                <button className="px-3 py-2 bg-blue-600 rounded flex items-center gap-2" onClick={()=>editJob(job)}><FaEdit/> Edit</button>
-                <button className="px-3 py-2 bg-red-600 rounded flex items-center gap-2" onClick={()=>deleteJob(job.id)}><FaTrash/> Delete</button>
-                <button className="px-3 py-2 bg-emerald-600 rounded flex items-center gap-2" onClick={()=>loadApplications(job.id)}><FaList/> Applications</button>
-              </div>
-            </div>
-          ))}
+          <ul className="admin-list p-0">
+            {jobList.map(job => (
+              <li key={job.id} className="p-4 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
+                <div className="flex-1">
+                  <div className="font-bold text-adaptive">{job.title} {job.active === false && <span className="ml-2 text-xs" style={{ background: 'var(--accent)', color: '#000', padding: '0 6px', borderRadius: 4 }}>Inactive</span>}</div>
+                  <div className="text-adaptive text-sm">{job.location}</div>
+                  <div className="text-adaptive text-sm line-clamp-2">{job.description}</div>
+                </div>
+                <div className="flex gap-2 admin-actions">
+                  <button className="px-3 py-2 rounded flex items-center gap-2 btn" style={{ background: 'var(--accent)' }} onClick={()=>editJob(job)}><FaEdit/> Edit</button>
+                  <button className="px-3 py-2 rounded flex items-center gap-2 btn" style={{ background: 'rgba(255,0,0,0.6)' }} onClick={()=>deleteJob(job.id)}><FaTrash/> Delete</button>
+                  <button className="px-3 py-2 rounded flex items-center gap-2 btn" style={{ background: 'var(--accent)' }} onClick={()=>loadApplications(job.id)}><FaList/> Applications</button>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 

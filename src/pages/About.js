@@ -48,28 +48,46 @@ const About = () => {
           </div>
 
       <div className="flex flex-col md:flex-row justify-center gap-8 mb-10">
-        <div className="bg-white/30 rounded-xl p-6 flex-1 text-center">
+        <div className="bg-white/30 rounded-xl p-6 flex-1 text-center transition duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
           <h2 className="text-2xl font-bold mb-2 text-adaptive"><Trans i18nKey="pages.About.sections.whoWeAre.title">Who we are</Trans></h2>
           <p className="text-adaptive/80"><Trans i18nKey="pages.About.sections.whoWeAre.desc">A SEBI-registered analyst firm focused on delivering unbiased, actionable market research for Indian exchanges.</Trans></p>
         </div>
-        <div className="bg-white/30 rounded-xl p-6 flex-1 text-center">
+        <div className="bg-white/30 rounded-xl p-6 flex-1 text-center transition duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
           <h2 className="text-2xl font-bold mb-2 text-adaptive"><Trans i18nKey="pages.About.sections.ourMission.title">Our mission</Trans></h2>
           <p className="text-adaptive/80"><Trans i18nKey="pages.About.sections.ourMission.desc">To empower retail and institutional investors with clear, compliance-aware research and strategies.</Trans></p>
         </div>
-        <div className="bg-white/30 rounded-xl p-6 flex-1 text-center">
+        <div className="bg-white/30 rounded-xl p-6 flex-1 text-center transition duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
           <h2 className="text-2xl font-bold mb-2 text-adaptive"><Trans i18nKey="pages.About.sections.ourVision.title">Our vision</Trans></h2>
           <p className="text-adaptive/80"><Trans i18nKey="pages.About.sections.ourVision.desc">To become a trusted source of market intelligence for Indian financial participants.</Trans></p>
         </div>
       </div>
 
+      <div className="text-center my-12">
+        <h2 className="text-3xl font-bold mb-6 text-center text-adaptive"><Trans i18nKey="pages.About.values.title">Our Core Values</Trans></h2>
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="bg-white/30 rounded-xl p-6 text-center shadow transition duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
+            <h3 className="text-xl font-bold mb-2 text-adaptive"><Trans i18nKey="pages.About.values.integrity.title">Integrity</Trans></h3>
+            <p className="text-adaptive/80"><Trans i18nKey="pages.About.values.integrity.desc">We uphold the highest standards of integrity in all of our actions.</Trans></p>
+          </div>
+          <div className="bg-white/30 rounded-xl p-6 text-center shadow transition duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
+            <h3 className="text-xl font-bold mb-2 text-adaptive"><Trans i18nKey="pages.About.values.clientFocus.title">Client Focus</Trans></h3>
+            <p className="text-adaptive/80"><Trans i18nKey="pages.About.values.clientFocus.desc">Our clients' success is our success. We are committed to their goals.</Trans></p>
+          </div>
+          <div className="bg-white/30 rounded-xl p-6 text-center shadow transition duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
+            <h3 className="text-xl font-bold mb-2 text-adaptive"><Trans i18nKey="pages.About.values.innovation.title">Innovation</Trans></h3>
+            <p className="text-adaptive/80"><Trans i18nKey="pages.About.values.innovation.desc">We constantly innovate to provide the best research and insights.</Trans></p>
+          </div>
+        </div>
+      </div>
+
         <div className="text-center mb-10">
-      <span className="inline-block bg-green-600 text-adaptive px-6 py-3 rounded-lg text-lg font-semibold shadow"><Trans i18nKey="pages.About.contact.cta">Need help?</Trans> <a href="tel:+919977909494" className="underline ml-2 text-adaptive" aria-label="Call Wise Global Research">+91 9977909494</a></span>
+      <span className="inline-block bg-green-600 text-adaptive px-6 py-3 rounded-lg text-lg font-semibold shadow transition duration-300 ease-in-out hover:scale-105 hover:shadow-xl"><Trans i18nKey="pages.About.contact.cta">Need help?</Trans> <a href="tel:+919977909494" className="underline ml-2 text-adaptive" aria-label="Call Wise Global Research">+91 9977909494</a></span>
         </div>
 
       <h2 className="text-3xl font-bold mb-6 text-center"><Trans i18nKey="pages.About.howWeWork">How we work</Trans></h2>
       <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         {steps.map((step, idx) => (
-          <div key={idx} className="bg-white/30 rounded-xl p-6 text-center flex flex-col items-center shadow">
+          <div key={idx} className="bg-white/30 rounded-xl p-6 text-center flex flex-col items-center shadow transition duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
             <div className="w-16 h-16 mb-4 flex items-center justify-center bg-green-700 rounded-full overflow-hidden">
               <img
                 src={step.img}

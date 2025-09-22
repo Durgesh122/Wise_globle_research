@@ -40,77 +40,58 @@ const MarketOverview = () => {
   // ...existing code...
   return (
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
-      <div className="container">
+  <div className="container max-w-3xl mx-auto">
         <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-adaptive"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8"
           variants={itemVariants}
         >
           Market Overview
         </motion.h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
-          {marketData.map((item, index) => (
-            <motion.div
-              key={index}
-              className="bg-white/30 backdrop-blur-lg rounded-xl p-4 sm:p-6 shadow-md border-2 border-white/30 hover:shadow-2xl"
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover="hover"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="font-bold text-base sm:text-lg">{item.name}</h3>
-                <FaChartLine className={`text-xl sm:text-2xl ${item.isUp ? 'text-green-500' : 'text-red-500'}`} />
-              </div>
-              <div className="mt-4">
-                <p className="text-xl sm:text-2xl font-bold">{item.value}</p>
-                <p className={`text-xs sm:text-sm ${item.isUp ? 'text-green-500' : 'text-red-500'}`}>
-                  {item.change}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {
-            // highlight key indices with the requested pale-blue background
-            (() => {
-              // Target trend names to highlight with the pale-blue translucent surface
-              const targets = [
-                'Nifty 50',
-                'Sensex',
-                'Bank Nifty',
-                'Midcap Nifty',
-                'Nifty IT',
-                'Nifty Pharma',
-              ].map((s) => s.toLowerCase().replace(/\s+/g, ''));
-
-              return marketSymbols.slice(0, 6).map((symbol, index) => {
-                const normalized = (symbol.name || '').toLowerCase().replace(/\s+/g, '');
-                const isHighlighted = targets.includes(normalized);
-                return (
-                  <motion.div
-                    key={index}
-                    className={`rounded-xl p-4 sm:p-6 shadow-lg ${isHighlighted ? 'border-2' : 'border'} `}
-                    variants={cardVariants}
-                    initial="hidden"
-                    animate="visible"
-                    whileHover="hover"
-                    style={{
-                      transformStyle: 'preserve-3d',
-                      background: isHighlighted ? 'rgba(212,227,255,0.30)' : undefined,
-                      borderColor: isHighlighted ? 'rgba(212,227,255,0.6)' : undefined,
-                    }}
-                  >
-                    <h3 className="text-lg sm:text-xl font-bold mb-4 text-center text-adaptive">{symbol.name} Trend</h3>
-                    <div className="h-48 sm:h-64 w-full">
-                      <AnimatedChart symbol={symbol.symbol} />
-                    </div>
-                  </motion.div>
-                );
-              });
-            })()
-          }
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
+            {marketData.map((item, index) => (
+              <motion.div
+                key={index}
+                className="rounded-lg overflow-hidden"
+                style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', color: '#111' }}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+              >
+                <div className="px-4 py-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-base sm:text-lg" style={{ color: '#111' }}>{item.name}</h3>
+                    <FaChartLine className={`text-xl sm:text-2xl ${item.isUp ? 'text-green-500' : 'text-red-500'}`} />
+                  </div>
+                  <div className="mt-4">
+                    <p className="text-xl sm:text-2xl font-bold" style={{ color: '#111' }}>{item.value}</p>
+                    <p className={`text-xs sm:text-sm ${item.isUp ? 'text-green-500' : 'text-red-500'}`}>{item.change}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {marketSymbols.slice(0, 6).map((symbol, index) => (
+              <motion.div
+                key={index}
+                className="rounded-lg overflow-hidden"
+                style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', color: '#111' }}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+              >
+                <div className="px-4 py-3">
+                  <h3 className="text-lg sm:text-xl font-bold mb-4 text-center" style={{ color: '#111' }}>{symbol.name} Trend</h3>
+                  <div className="h-48 sm:h-64 w-full">
+                    <AnimatedChart symbol={symbol.symbol} />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

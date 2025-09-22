@@ -5,6 +5,8 @@ import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { FaArrowUp, FaArrowDown, FaBullseye, FaStopCircle, FaPlus, FaMinus } from 'react-icons/fa';
 
+
+
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -91,16 +93,17 @@ const services = [
 const DailyRecommendation = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [expandedService, setExpandedService] = useState(null);
+  // Force background to solid white and text to black, ignoring theme context
+  const background = '#ffffff';
+  const textColor = '#000000';
 
   useEffect(() => {
     // Simulate daily data fetch
     setRecommendations(generateMockRecommendations());
-    
     // Update recommendations daily
     const interval = setInterval(() => {
       setRecommendations(generateMockRecommendations());
     }, 24 * 60 * 60 * 1000); // Every 24 hours
-
     return () => clearInterval(interval);
   }, []);
 
@@ -111,6 +114,7 @@ const DailyRecommendation = () => {
   return (
     <motion.div
       className="container mx-auto py-12 px-4"
+  style={{ background, color: textColor, minHeight: '100vh', transition: 'background 0.5s, color 0.5s' }}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -131,8 +135,8 @@ const DailyRecommendation = () => {
       </Helmet>
       {/* Recommendations Section */}
       <motion.div className="text-center mb-12" variants={itemVariants}>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4"><Trans i18nKey="pages.DailyRecommendation.today-s-market-recommendations"><Trans i18nKey="pages.DailyRecommendation.today-s-market-recommendations-1">Today's Market Recommendations</Trans></Trans></h1>
-        <p className="text-lg text-gray-600">
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: textColor }}><Trans i18nKey="pages.DailyRecommendation.today-s-market-recommendations"><Trans i18nKey="pages.DailyRecommendation.today-s-market-recommendations-1">Today's Market Recommendations</Trans></Trans></h1>
+        <p className="text-lg" style={{ color: 'var(--text-body, #666)' }}>
           Expert calls for intraday and positional trades. Last updated: {new Date().toLocaleDateString()}
         </p>
       </motion.div>
@@ -145,13 +149,20 @@ const DailyRecommendation = () => {
           <motion.div
             key={rec.id}
             className={`rounded-xl shadow-lg p-6 border-t-4 ${
-              rec.type === 'BUY' ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'
+              rec.type === 'BUY' ? 'border-green-500' : 'border-red-500'
             }`}
+            style={{
+              background: '#ffffff',
+              color: '#000000',
+              borderTopColor: rec.type === 'BUY' ? '#22c55e' : '#ef4444',
+              boxShadow: '0 10px 20px rgba(0,0,0,0.08)',
+              transition: 'background 0.5s, color 0.5s',
+            }}
             variants={itemVariants}
             whileHover={{ y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">{rec.name}</h2>
+              <h2 className="text-2xl font-bold" style={{ color: textColor }}>{rec.name}</h2>
               <span
                 className={`px-4 py-1 text-sm font-semibold rounded-full text-white ${
                   rec.type === 'BUY' ? 'bg-green-500' : 'bg-red-500'
@@ -160,7 +171,7 @@ const DailyRecommendation = () => {
                 {rec.type}
               </span>
             </div>
-            <div className="space-y-3 text-gray-700">
+            <div className="space-y-3" style={{ color: '#000000' }}>
               <div className="flex items-center">
                 {rec.type === 'BUY' ? <FaArrowUp className="mr-3 text-green-500" /> : <FaArrowDown className="mr-3 text-red-500" />}
                 <div>
@@ -180,7 +191,7 @@ const DailyRecommendation = () => {
                 </div>
               </div>
             </div>
-            <div className="text-right text-xs text-gray-500 mt-4">
+            <div className="text-right text-xs mt-4" style={{ color: '#000000' }}>
               {rec.timestamp}
             </div>
           </motion.div>
@@ -189,8 +200,8 @@ const DailyRecommendation = () => {
 
       {/* What We Offer Section */}
       <motion.div className="text-center mb-12" variants={itemVariants}>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4"><Trans i18nKey="pages.DailyRecommendation.what-we-offer">What We Offer</Trans></h1>
-        <p className="text-lg text-gray-600"><Trans i18nKey="pages.DailyRecommendation.great-offer-for-customers"><Trans i18nKey="pages.DailyRecommendation.great-offer-for-customers-1">Great Offer For Customers</Trans></Trans></p>
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: textColor }}><Trans i18nKey="pages.DailyRecommendation.what-we-offer">What We Offer</Trans></h1>
+        <p className="text-lg" style={{ color: 'var(--text-body, #666)' }}><Trans i18nKey="pages.DailyRecommendation.great-offer-for-customers"><Trans i18nKey="pages.DailyRecommendation.great-offer-for-customers-1">Great Offer For Customers</Trans></Trans></p>
       </motion.div>
 
       <motion.div
@@ -200,20 +211,28 @@ const DailyRecommendation = () => {
         {services.map((service, index) => (
           <motion.div
             key={index}
-            className="rounded-xl shadow-lg p-6 bg-white border-t-4 border-blue-500"
+            className="rounded-xl shadow-lg p-6 border-t-4 border-blue-500"
+            style={{
+              background: '#ffffff',
+              color: '#000000',
+              borderTopColor: '#3b82f6',
+              boxShadow: '0 10px 20px rgba(0,0,0,0.08)',
+              transition: 'background 0.5s, color 0.5s',
+            }}
             variants={itemVariants}
             whileHover={{ y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-800">{service.name}</h2>
+              <h2 className="text-xl font-bold" style={{ color: textColor }}>{service.name}</h2>
               <span className="px-3 py-1 text-sm font-semibold rounded-full text-white bg-blue-500">
                 {service.count}
               </span>
             </div>
-            <p className="text-gray-600 mb-4">{service.category}</p>
+            <p className="mb-4" style={{ color: '#000000' }}>{service.category}</p>
             {expandedService === index && (
               <motion.p
-                className="text-gray-700 mb-4"
+                className="mb-4"
+                style={{ color: '#000000' }}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
@@ -237,7 +256,7 @@ const DailyRecommendation = () => {
         ))}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="text-center mt-12 p-4 bg-yellow-100 text-yellow-800 rounded-lg">
+  <motion.div variants={itemVariants} className="text-center mt-12 p-4 rounded-lg" style={{ background: '#fffbe6', color: '#000000' }}>
         <p><strong><Trans i18nKey="pages.DailyRecommendation.disclaimer">Disclaimer:</Trans></strong><Trans i18nKey="pages.DailyRecommendation.investments-in-securities-market-are-sub"><Trans i18nKey="pages.DailyRecommendation.investments-in-securities-market-are-sub-1">Investments in securities market are subject to market risks. Read all the related documents carefully before investing. We are not responsible for any profit or loss that may occur.</Trans></Trans></p>
       </motion.div>
     </motion.div>

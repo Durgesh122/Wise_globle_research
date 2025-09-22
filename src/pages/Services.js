@@ -94,7 +94,7 @@ const getServicePath = (name) => {
     case 'MCX Supreme':
   return '/MCXSupreme';
     case 'Galaxy MCX':
-      return '/mcx';
+      return '/galaxymcx';
     default:
       return `/services/${routeName}`;
   }
@@ -123,26 +123,27 @@ const ServicesPage = () => {
         <meta name="twitter:image" content="https://wiseglobalresearch.com/og-image.jpg" />
       </Helmet>
       <div className="min-h-screen bg-transparent">
-        <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
-          <div className="text-center mb-12">
-            <h1 className="text-5xl font-extrabold text-white leading-tight"><Trans i18nKey="pages.Services.our-research-services">Our Research Services</Trans></h1>
-            <p className="mt-4 text-lg text-white max-w-3xl mx-auto"><Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi-"><Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi--1">Wise Global Research Services is a SEBI Registered Research Analyst firm, committed to providing unbiased, data-driven insights to empower your financial decisions.</Trans></Trans></p>
+          <div className="text-center mb-8">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight max-w-4xl mx-auto"><Trans i18nKey="pages.Services.our-research-services">Our Research Services</Trans></h1>
+            <p className="mt-4 text-base sm:text-lg text-white max-w-3xl mx-auto px-2 sm:px-0"><Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi-"><Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi--1">Wise Global Research Services is a SEBI Registered Research Analyst firm, committed to providing unbiased, data-driven insights to empower your financial decisions.</Trans></Trans></p>
           </div>
 
           {/* Services Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {services.map((service, index) => (
               <div 
                 key={index} 
-                className="bg-white/30 rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out text-white"
+                className="rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out text-white w-full"
+                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}
               >
                 <div className="p-6 flex flex-col h-full">
                   <div className="flex items-center mb-4">
-                    <div className="text-3xl mr-4">{service.icon}</div>
-                    <h2 className="text-2xl font-bold text-gray-800">{service.name}</h2>
+                    <div className="text-2xl sm:text-3xl mr-3">{service.icon}</div>
+                    <h2 className="text-xl sm:text-2xl md:text-2xl font-bold text-gray-800">{service.name}</h2>
                   </div>
-                  <p className="text-white mb-6 flex-grow">{service.description}</p>
+                  <p className="text-white mb-6 flex-grow text-sm sm:text-base">{service.description}</p>
                   <div className="flex items-center justify-between mt-auto">
                     <Link
                       to={getServicePath(service.name)}
@@ -150,7 +151,7 @@ const ServicesPage = () => {
                     ><Trans i18nKey="pages.Services.view-plan">View Plan</Trans></Link>
                     <button
                       onClick={() => toggleService(index)}
-                      className="flex items-center text-white hover:text-gray-200 font-semibold transition-colors duration-300"
+                      className="flex items-center text-white hover:text-gray-200 font-semibold transition-colors duration-300 text-sm"
                     >
                       {expandedService === index ? <FaMinus className="mr-2" /> : <FaPlus className="mr-2" />}
                       Details
@@ -158,7 +159,7 @@ const ServicesPage = () => {
                   </div>
                   {expandedService === index && (
                     <div className="mt-6 border-t border-white/50 pt-4">
-                      <p className="text-sm text-white"><Trans i18nKey="pages.Services.this-research-service-falls-under-the"><Trans i18nKey="pages.Services.this-research-service-falls-under-the-1">This research service falls under the</Trans></Trans><span className="font-semibold">{service.category}</span><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro"><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro-1">category. Our analysis is based on rigorous methodologies and market data.</Trans></Trans></p>
+                      <p className="text-sm text-white"><Trans i18nKey="pages.Services.this-research-service-falls-under-the"><Trans i18nKey="pages.Services.this-research-service-falls-under-the-1">This research service falls under the</Trans></Trans> <span className="font-semibold">{service.category}</span> <Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro"><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro-1">category. Our analysis is based on rigorous methodologies and market data.</Trans></Trans></p>
                     </div>
                   )}
                 </div>
@@ -167,9 +168,9 @@ const ServicesPage = () => {
           </div>
 
           {/* SEBI Disclaimer Section */}
-          <div className="text-center p-8 bg-white/30 text-white rounded-2xl shadow-inner">
-            <h3 className="text-2xl font-bold mb-4"><Trans i18nKey="pages.Services.important-disclosures">Important Disclosures</Trans></h3>
-            <div className="max-w-4xl mx-auto text-sm space-y-2">
+          <div className="text-center p-6 sm:p-8 text-white rounded-2xl shadow-inner" style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+            <h3 className="text-xl sm:text-2xl font-bold mb-4"><Trans i18nKey="pages.Services.important-disclosures">Important Disclosures</Trans></h3>
+            <div className="max-w-4xl mx-auto text-sm sm:text-base space-y-2 px-2 sm:px-0">
               <p>
                 <span className="font-semibold"><Trans i18nKey="pages.Services.wise-global-research-services"><Trans i18nKey="pages.Services.wise-global-research-services-1">Wise Global Research Services</Trans></Trans></span><Trans i18nKey="pages.Services.is-a-sebi-registered-research-analyst"><Trans i18nKey="pages.Services.is-a-sebi-registered-research-analyst-1">is a SEBI Registered Research Analyst.</Trans></Trans><strong className="block mt-1"><Trans i18nKey="pages.Services.sebi-registration-no-inh000016719"><Trans i18nKey="pages.Services.sebi-registration-no-inh000016719-1">SEBI Registration No:INH000016719</Trans></Trans></strong>
               </p>

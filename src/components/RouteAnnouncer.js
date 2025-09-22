@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { FaVolumeUp, FaPause, FaPlay, FaStop, FaBell } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
+import { FiX } from 'react-icons/fi';
 
 // --- CONSTANTS ---
 const ROUTE_ANNOUNCEMENT_DELAY = 150;
@@ -126,11 +127,20 @@ function useSpeechSynthesis({ lang, rate, pitch, voiceName, synthErrorCountRef, 
       utter.onerror = (e) => {
         setIsSpeaking(false);
         setIsPaused(false);
-        if (e.error) {
-            console.error(`An error occurred during speech synthesis: ${e.error}`, e);
-        } else {
-            console.error('An error occurred during speech synthesis.', e);
+        // Some browsers emit 'interrupted' when user gestures or other TTS preempts.
+        // Treat 'interrupted' as non-fatal: cleanup and call onend so queues continue.
+        const errCode = e && e.error ? e.error : (e && e.name) || 'unknown';
+        if (errCode === 'interrupted') {
+          console.warn('Speech synthesis interrupted; continuing with queue.');
+          cleanup();
+          // Call onend to mimic natural end so higher-level queue logic proceeds.
+          if (typeof onend === 'function') onend(e);
+          return;
         }
+
+        if (e && e.error) console.error(`An error occurred during speech synthesis: ${e.error}`, e);
+        else console.error('An error occurred during speech synthesis.', e);
+
         synthErrorCountRef.current = (synthErrorCountRef.current || 0) + 1;
         lastSynthErrorAtRef.current = Date.now();
         if (synthErrorCountRef.current > SPEECH_SYNTHESIS_MAX_ERRORS && (Date.now() - lastSynthErrorAtRef.current) < SPEECH_SYNTHESIS_ERROR_COOLDOWN) {
@@ -208,7 +218,10 @@ export default function RouteAnnouncer() {
   })();
   const [message, setMessage] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [adaptiveLight, setAdaptiveLight] = useState(false);
+  const [accessibilityOpen, setAccessibilityOpen] = useState(() => {
+    if (typeof document === 'undefined') return false;
+    return document.body && document.body.getAttribute('data-accessibility-open') === 'true';
+  });
 
   const [lang, setLang] = useLocalStorage('route.lang', 'en');
   const [voiceEnabled, setVoiceEnabled] = useLocalStorage('route.voice', false);
@@ -357,6 +370,94 @@ export default function RouteAnnouncer() {
     return () => clearTimeout(timer);
   }, [pathname, lang, speak, playBeep]);
 
+  // Close the floating panel when the route changes (unless user re-opened it)
+  useEffect(() => {
+    // When navigation happens, hide the menu so it doesn't overlay other screens.
+    setMenuOpen(false);
+  // Ensure the floating menu is closed on navigation.
+  }, [pathname]);
+
+  // Observe accessibility open flag so we don't render floating controls when AccessibilityMenu is active
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+    const body = document.body;
+    const update = () => setAccessibilityOpen(body.getAttribute('data-accessibility-open') === 'true');
+    update();
+    const mo = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.type === 'attributes' && m.attributeName === 'data-accessibility-open') {
+          update();
+        }
+      }
+    });
+    mo.observe(body, { attributes: true });
+  }, []);
+
+  // Close on Escape key when menu is open
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  // Move markUserGestureAndFlush above useEffect to avoid use-before-define
+  const markUserGestureAndFlush = useCallback(() => {
+    userGestureRef.current = true;
+    try {
+      const ctx = beepCtxRef.current;
+      if (ctx && ctx.state === 'suspended') try { ctx.resume(); } catch(_) {}
+      if (beepPendingRef.current) {
+        try { playBeep(); } catch(_) {}
+        beepPendingRef.current = false;
+      }
+    } catch(_) {}
+  }, [playBeep]);
+
+  // Mobile tray opener for speaker panel
+  useEffect(() => {
+    const h = () => setMenuOpen(true);
+    document.addEventListener('open-speaker-panel', h);
+
+    // Mobile/first-touch: add listeners so we can mark a user gesture and resume audio contexts.
+    const onFirstTouch = (e) => {
+      try {
+        markUserGestureAndFlush();
+      } catch (_) {}
+      // remove after first use
+      document.removeEventListener('touchstart', onFirstTouch);
+      document.removeEventListener('click', onFirstTouch);
+    };
+    document.addEventListener('touchstart', onFirstTouch, { passive: true });
+    document.addEventListener('click', onFirstTouch, { passive: true });
+
+    return () => {
+      document.removeEventListener('open-speaker-panel', h);
+      document.removeEventListener('touchstart', onFirstTouch);
+      document.removeEventListener('click', onFirstTouch);
+    };
+  }, [markUserGestureAndFlush]);
+
+  // Add a body attribute while the panel is open so global CSS can hide page logo
+  useEffect(() => {
+    try {
+      if (menuOpen) {
+        document.body.setAttribute('data-route-announcer-open', 'true');
+      } else {
+        document.body.removeAttribute('data-route-announcer-open');
+      }
+    } catch (e) {
+      // ignore server-side or restricted envs
+    }
+    return () => {
+      try { document.body.removeAttribute('data-route-announcer-open'); } catch(_) {}
+    };
+  }, [menuOpen]);
+
   const playNextInQueue = useCallback(() => {
     if (readingQueueRef.current.length === 0) {
       setIsReadingAll(false);
@@ -371,9 +472,14 @@ export default function RouteAnnouncer() {
           setIsReadingAll(false);
         }
       },
-      onerror: () => {
-        console.error('Error in playNextInQueue, stopping.');
-        setIsReadingAll(false);
+      onerror: (err) => {
+        // Don't kill the whole reading session on transient errors (e.g., 'interrupted').
+        console.warn('Error speaking item — skipping to next.', err);
+        if (readingQueueRef.current.length > 0) {
+          setTimeout(playNextInQueue, SPEECH_QUEUE_INTERVAL);
+        } else {
+          setIsReadingAll(false);
+        }
       }
     });
   }, [speak]);
@@ -383,9 +489,8 @@ export default function RouteAnnouncer() {
     cancel(); 
     const selectors = ['main', '[role="main"]', 'article', 'section'];
     const container = selectors.map(s => document.querySelector(s)).find(el => el) || document.body;
-    const texts = (container.innerText || container.textContent || '').trim();
+  const texts = ((container && (container.innerText || container.textContent)) || '').trim();
     const items = texts.split(/\r?\n|[.?!]+/).map(s => s.trim()).filter(s => s.length > 3);
-    if (items.length === 0) return;
 
     readingQueueRef.current = items;
     setIsReadingAll(true);
@@ -401,62 +506,20 @@ export default function RouteAnnouncer() {
     setIsReadingAll(false);
   }, [cancel]);
 
-  const markUserGestureAndFlush = useCallback(() => {
-    userGestureRef.current = true;
-    try {
-      const ctx = beepCtxRef.current;
-      if (ctx && ctx.state === 'suspended') try { ctx.resume(); } catch(_) {}
-      if (beepPendingRef.current) {
-        try { playBeep(); } catch(_) {}
-        beepPendingRef.current = false;
-      }
-    } catch(_) {}
-  }, [playBeep]);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const cs = window.getComputedStyle(document.body);
-      const bg = cs.backgroundColor;
-      if (bg && /^rgb/.test(bg)) {
-        const [r,g,b] = bg.match(/\d+/g).map(Number);
-        const L = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
-        setAdaptiveLight(L > 0.7);
-      }
-    } catch(_) {}
-  }, [pathname]);
+
+
+  // ...existing code...
 
   const visuallyHiddenStyle = { position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 };
-  const floatingButtonStyle = {
-  position: 'fixed',
-  // Match AccessibilityMenu's placement (Tailwind bottom-40 => 160px, right-6 => 24px)
-  // Stack this button directly above the accessibility button (same right offset)
-  // Accessibility button bottom = 160px; place speaker above it with ~64px gap
-  bottom: '224px',
-  right: '24px',
-  zIndex: 9000,
-  width: '56px',
-  height: '56px',
-  borderRadius: '9999px',
-  // Use the same green as AccessibilityMenu (tailwind green-500)
-  background: '#10b981',
-    color: '#fff',
-    border: 'none',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'transform 0.2s ease',
-    outline: 'none',
-  };
+  
   const baseButtonStyle = {
     padding: '0.5rem 0.75rem',
     fontSize: '14px',
     borderRadius: '8px',
-    border: '1px solid transparent',
-    background: adaptiveLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.1)',
-    color: 'inherit',
+    border: '1px solid #e5e7eb',
+    background: '#f3f4f6',
+    color: '#0f172a',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -464,30 +527,114 @@ export default function RouteAnnouncer() {
     transition: 'background-color 0.2s, border-color 0.2s',
   };
 
-  const handleFloatingButtonClick = () => {
+  // Small floating button style for the Route Announcer toggle
+  const labelRef = useRef(null);
+  const iconRef = useRef(null);
+
+  const handleRouteAnnouncerToggle = () => {
     markUserGestureAndFlush();
     setMenuOpen(m => !m);
   };
 
-  return (
-    <>
-      <div aria-live="polite" aria-atomic="true" style={visuallyHiddenStyle}>{message}</div>
-      {/* Do not render floating controls on admin pages */}
-      {isAdminPath ? null : (
-      <>
-      <button
-        aria-label={lang==='hi' ? 'स्पीकर मेनू खोलें' : 'Open speaker menu'}
-        aria-expanded={menuOpen}
-        style={floatingButtonStyle}
-        onClick={handleFloatingButtonClick}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-      >
-        <FaVolumeUp aria-hidden="true" size={36} />
-      </button>
+  // Pulse / attention: small state to control pulse effect
+  const [pulse, setPulse] = useState(false);
+  // Peek state: when true, the button remains partially visible (small peek) and icon is shown
+  const [peek, setPeek] = useState(false);
 
+  // Responsive: hide the route announcer on small/mobile viewports
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
+    return window.matchMedia('(max-width: 640px)').matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const mq = window.matchMedia('(max-width: 640px)');
+    const onChange = (e) => setIsMobile(e.matches);
+    try { mq.addEventListener('change', onChange); } catch (_) { mq.addListener(onChange); }
+    return () => { try { mq.removeEventListener('change', onChange); } catch (_) { mq.removeListener(onChange); } };
+  }, []);
+
+  // Small floating button style for the Route Announcer toggle
+  const routeAnnouncerButtonStyle = {
+    position: 'fixed',
+    top: '50%',
+  // default: half-hidden (approx half of 44px width = 22px outside)
+  right: peek ? '-8px' : '-22px',
+    transform: 'translateY(-50%)',
+    zIndex: 9003,
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 14px',
+    height: '56px',
+    borderRadius: '12px',
+    background: 'var(--primary-green, #158862d3)',
+    color: '#fff',
+    fontWeight: 700,
+    cursor: 'pointer',
+    boxShadow: '0 6px 18px rgba(2,6,23,0.18)',
+    border: 'none',
+    transition: 'right 200ms ease, width 200ms ease, transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    width: '44px',
+  };
+
+  // One-time-per-session: auto-open briefly, then collapse to 'peek' after 4s
+  useEffect(() => {
+    try {
+      const seen = sessionStorage.getItem('routeAnnouncerSeen');
+      if (!seen) {
+        try { sessionStorage.setItem('routeAnnouncerSeen', '1'); } catch(_) {}
+        // open fully for attention
+        setMenuOpen(true);
+        setPulse(true);
+        const el = document.querySelector('[aria-label="Route Announcer"]');
+        if (el) {
+          try { el.style.width = '200px'; el.style.transform = 'translateY(-50%) scale(1.03)'; el.style.boxShadow = '0 12px 34px rgba(2,6,23,0.26)'; } catch(_) {}
+        }
+        const t = setTimeout(() => {
+          // after 4s, collapse but leave a small peek visible and show icon
+          setMenuOpen(false);
+          // leave the button half-hidden by default
+          setPeek(true);
+          setPulse(false);
+          try {
+            if (el) {
+              // make the peek a bit more visible
+              el.style.width = '56px';
+              el.style.right = '-8px';
+              el.style.transform = 'translateY(-50%) scale(1)';
+              el.style.boxShadow = '0 6px 18px rgba(2,6,23,0.18)';
+            }
+            if (iconRef.current) iconRef.current.style.opacity = '1';
+          } catch(_) {}
+        }, 4000);
+        return () => clearTimeout(t);
+      }
+    } catch (_) {}
+  }, []);
+
+  // Inject keyframes for pulse if not present and respect prefers-reduced-motion
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined' || typeof document === 'undefined') return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (document.getElementById('ra-pulse-styles')) return;
+      const style = document.createElement('style');
+      style.id = 'ra-pulse-styles';
+  style.innerHTML = `@keyframes ra-pulse { 0% { transform: translateY(-50%) scale(1); box-shadow: 0 6px 18px rgba(2,6,23,0.18); } 50% { transform: translateY(-50%) scale(1.03); box-shadow: 0 12px 30px rgba(2,6,23,0.22); } 100% { transform: translateY(-50%) scale(1); box-shadow: 0 6px 18px rgba(2,6,23,0.18); } } @keyframes ra-peek { 0% { right: -40px; } 50% { right: -2px; } 100% { right: -40px; } }`;
+      document.head.appendChild(style);
+    } catch (_) {}
+  }, []);
+
+  return (
+    <div>
+      <div aria-live="polite" aria-atomic="true" style={visuallyHiddenStyle}>{message}</div>
       {menuOpen && (
         <div
+          className="route-announcer-panel"
           role="dialog"
           aria-label={lang==='hi' ? 'स्पीकर आइकन पैनल' : 'Speaker icon panel'}
           onMouseEnter={() => setMenuOpen(true)}
@@ -505,11 +652,36 @@ export default function RouteAnnouncer() {
             borderRadius: '12px',
             boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
             alignItems: 'center',
-            background: adaptiveLight ? 'rgba(255, 255, 255, 0.8)' : 'rgba(30, 30, 30, 0.8)',
-            backdropFilter: 'blur(10px)',
+            background: '#fff',
+            border: '2px solid #22741aff',
+            backdropFilter: 'blur(6px)',
             minWidth: '220px',
           }}
         >
+          <button
+            type="button"
+            aria-label={lang==='hi' ? 'बंद करें' : 'Close'}
+            onClick={() => { setMenuOpen(false); }}
+            style={{
+              position: 'absolute',
+              top: '-10px',
+              right: '-10px',
+              width: '28px',
+              height: '28px',
+              borderRadius: '9999px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: '#ffffff',
+              border: '1px solid #e6e6e6',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+              cursor: 'pointer',
+              zIndex: 9002
+            }}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setMenuOpen(false); } }}
+          >
+            <FiX aria-hidden="true" />
+          </button>
           <button
             type="button"
             aria-pressed={voiceEnabled}
@@ -524,9 +696,9 @@ export default function RouteAnnouncer() {
               }
             }}
             title={lang==='hi' ? (voiceEnabled ? 'आवाज़ बंद करें' : 'आवाज़ चालू करें') : (voiceEnabled ? 'Voice Off' : 'Voice On')}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center'}}
-            onMouseEnter={(e)=> e.currentTarget.style.transform = 'scale(1.08)'}
-            onMouseLeave={(e)=> e.currentTarget.style.transform = 'scale(1)'}
+            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            onMouseEnter={(e)=> { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#e6e9ee'; }}
+            onMouseLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#f3f4f6'; }}
           >
             <FaVolumeUp aria-hidden="true" />
           </button>
@@ -545,9 +717,9 @@ export default function RouteAnnouncer() {
               }
             }}
             title={lang==='hi' ? (beepEnabled ? 'बीप बंद करें' : 'बीप चालू करें') : (beepEnabled ? 'Beep Off' : 'Beep On')}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center'}}
-            onMouseEnter={(e)=> e.currentTarget.style.transform = 'scale(1.08)'}
-            onMouseLeave={(e)=> e.currentTarget.style.transform = 'scale(1)'}
+            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            onMouseEnter={(e)=> { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#e6e9ee'; }}
+            onMouseLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#f3f4f6'; }}
           >
             <FaBell aria-hidden="true" />
           </button>
@@ -556,9 +728,9 @@ export default function RouteAnnouncer() {
             type="button"
             onClick={()=> isReadingAll ? stopReading() : startReading()}
             title={lang==='hi' ? (isReadingAll ? 'रोकें' : 'पूरा पढ़ें') : (isReadingAll ? 'Stop' : 'Read All')}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center'}}
-            onMouseEnter={(e)=> e.currentTarget.style.transform = 'scale(1.08)'}
-            onMouseLeave={(e)=> e.currentTarget.style.transform = 'scale(1)'}
+            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            onMouseEnter={(e)=> { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#e6e9ee'; }}
+            onMouseLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#f3f4f6'; }}
           >
             {isReadingAll ? <FaStop /> : <FaPlay />}
           </button>
@@ -568,7 +740,7 @@ export default function RouteAnnouncer() {
             onClick={() => { markUserGestureAndFlush(); pause(); }}
             disabled={!isSpeaking || isPaused}
             title={lang==='hi' ? 'ठहरें' : 'Pause'}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center'}}
+            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
           >
             <FaPause />
           </button>
@@ -578,7 +750,7 @@ export default function RouteAnnouncer() {
             onClick={() => { markUserGestureAndFlush(); resume(); }}
             disabled={!isSpeaking || !isPaused}
             title={lang==='hi' ? 'जारी रखें' : 'Resume'}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center'}}
+            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
           >
             <FaPlay />
           </button>
@@ -603,21 +775,21 @@ export default function RouteAnnouncer() {
                 }
               }}
               style={{
-                ...baseButtonStyle,
-                width: '100%',
-                padding: '0.5rem',
-                color: adaptiveLight ? '#000' : '#FFF',
-                backgroundColor: adaptiveLight ? '#F0F0F0' : '#222'
-              }}
+                  ...baseButtonStyle,
+                  width: '100%',
+                  padding: '0.5rem',
+                  color: '#0f172a',
+                  backgroundColor: '#fff'
+                }}
             >
               <option value="">{lang === 'hi' ? 'डिफ़ॉल्ट' : 'Default'}</option>
               {voices
-                .filter(v => v.lang.startsWith(lang))
-                .map(voice => (
-                  <option key={voice.name} value={voice.name} style={{color: adaptiveLight ? '#000' : '#FFF', backgroundColor: adaptiveLight ? '#FFF' : '#333'}}>
-                    {voice.name.length > 25 ? `${voice.name.substring(0,22)}...` : voice.name}
-                  </option>
-                ))}
+                  .filter(v => v.lang.startsWith(lang))
+                  .map(voice => (
+                    <option key={voice.name} value={voice.name} style={{color: '#000', backgroundColor: '#FFF'}}>
+                      {voice.name.length > 25 ? `${voice.name.substring(0,22)}...` : voice.name}
+                    </option>
+                  ))}
             </select>
           </div>
 
@@ -672,9 +844,67 @@ export default function RouteAnnouncer() {
           </button>
 
         </div>
-  )}
-  </>
-  )}
-    </>
+      )}
+
+  {/* Small Route Announcer toggle button (right side) */}
+  {!isAdminPath && !accessibilityOpen && !isMobile && (
+          <button
+            type="button"
+            onClick={handleRouteAnnouncerToggle}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleRouteAnnouncerToggle(); } }}
+            onMouseEnter={(e) => {
+              // slide fully into view and expand
+              e.currentTarget.style.right = '12px';
+              e.currentTarget.style.width = '200px';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1.03)';
+              e.currentTarget.style.boxShadow = '0 12px 34px rgba(2,6,23,0.26)';
+              try { if (labelRef.current) { labelRef.current.style.opacity = '1'; labelRef.current.style.transform = 'translateX(0)'; } } catch(_) {}
+              try { if (iconRef.current) { iconRef.current.style.opacity = '1'; } } catch(_) {}
+            }}
+            onMouseLeave={(e) => {
+              // return to half-hidden state
+              e.currentTarget.style.right = peek ? '-22px' : '-22px';
+              e.currentTarget.style.width = '44px';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+              e.currentTarget.style.boxShadow = '0 6px 18px rgba(2,6,23,0.18)';
+              try { if (labelRef.current) { labelRef.current.style.opacity = '0'; labelRef.current.style.transform = 'translateX(-6px)'; } } catch(_) {}
+              try { if (iconRef.current) { iconRef.current.style.opacity = peek ? '1' : '0'; } } catch(_) {}
+            }}
+            onFocus={(e) => {
+              // keyboard focus should also slide it fully into view
+              e.currentTarget.style.right = '12px';
+              e.currentTarget.style.width = '200px';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1.03)';
+              e.currentTarget.style.boxShadow = '0 12px 34px rgba(2,6,23,0.26)';
+              try { if (labelRef.current) { labelRef.current.style.opacity = '1'; labelRef.current.style.transform = 'translateX(0)'; } } catch(_) {}
+              try { if (iconRef.current) { iconRef.current.style.opacity = '1'; } } catch(_) {}
+            }}
+            onBlur={(e) => {
+              // return to half-hidden state on blur
+              e.currentTarget.style.right = peek ? '-22px' : '-22px';
+              e.currentTarget.style.width = '44px';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+              e.currentTarget.style.boxShadow = '0 6px 18px rgba(2,6,23,0.18)';
+              try { if (labelRef.current) { labelRef.current.style.opacity = '0'; labelRef.current.style.transform = 'translateX(-6px)'; } } catch(_) {}
+              try { if (iconRef.current) { iconRef.current.style.opacity = peek ? '1' : '0'; } } catch(_) {}
+            }}
+            aria-pressed={menuOpen}
+            aria-label={lang === 'hi' ? 'रूट अनाउंसर' : 'Route Announcer'}
+            style={{...routeAnnouncerButtonStyle, ...(pulse ? { animation: 'ra-pulse 2200ms ease-in-out' } : {}), ...(peek ? { animation: 'ra-peek 1600ms ease-in-out infinite' } : {})}}
+            title={lang === 'hi' ? 'रूट अनाउंसर' : 'Route Announcer'}
+          >
+            <span style={{display: 'inline-flex', alignItems: 'center', gap: '8px', alignSelf: 'center'}}>
+              {/* small attention badge */}
+              <span aria-hidden="true" style={{width: '10px', height: '10px', borderRadius: '99px', background: '#ff4757', boxShadow: '0 0 8px rgba(255,71,87,0.6)', marginLeft: '-10px', marginRight: '6px'}} />
+              {/* label is visually clipped by default; reveal on hover/focus by expanding button width; force English text */}
+              <span ref={labelRef} className="ra-label" style={{fontSize: '15px', opacity: 0, transform: 'translateX(-6px)', transition: 'opacity 160ms ease, transform 160ms ease'}}>Route Announcer</span>
+              {/* speaker icon using FaVolumeUp; wrap in span so we can attach a ref to a DOM node */}
+              <span ref={iconRef} aria-hidden="true" style={{display: 'inline-flex', width: '20px', height: '20px', transition: 'opacity 220ms ease, transform 200ms ease', opacity: (peek ? 1 : 0)}}>
+                <FaVolumeUp />
+              </span>
+            </span>
+          </button>
+        )}
+    </div>
   );
 }

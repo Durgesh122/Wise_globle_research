@@ -1,7 +1,7 @@
 // src/pages/Contact.js
 import React, { useState, useEffect } from 'react';
 import { Trans } from '../i18nShim';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaUser, FaEnvelope, FaPhone, FaCommentDots,
   FaFacebookF, FaInstagram, FaTwitter, FaLinkedinIn, FaYoutube
@@ -22,33 +22,33 @@ function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (honeypot) {
+      console.log("Bot submission detected");
+      return;
+    }
     setLoading(true);
 
-  const submissionData = {
-  // Normalize to satisfy database.rules.json
-  name: String(formData.name || ''),
-  email: String(formData.email || ''),
-  phone: String(formData.phone || ''),
-  message: String(formData.message || ''),
-  timestamp: Date.now(), // number required by rules
-  honeypot: '' // explicitly empty so (!exists || == '') passes
+    const submissionData = {
+      name: String(formData.name || ''),
+      email: String(formData.email || ''),
+      phone: String(formData.phone || ''),
+      message: String(formData.message || ''),
+      timestamp: Date.now(),
+      honeypot: ''
     };
 
     try {
-      // Save to the same location as the Home.js form
       await push(ref(db, 'homeFormSubmissions'), submissionData);
-      // Google Ads Conversion Tracking
       if (window.gtag) {
         window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
       }
       toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
       setSuccess(true);
       setFormData({ name: '', email: '', phone: '', message: '' });
-      // Best-effort: also notify server to send an email copy
       (async () => {
         try {
           const apiBase = 'https://wise-global-contact-systems.onrender.com';
-          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+          const endpoint = `${apiBase.replace(/\$/, '')}/send-email`;
           await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -69,7 +69,6 @@ function Contact() {
     } catch (error) {
       console.error('Error submitting form to Firebase:', error);
       const msg = (error && error.message) ? error.message : String(error);
-      // Surface a friendly hint when rules reject the write
       const hint = /permission_denied/i.test(msg)
         ? ' Permission denied by database rules. Ensure email is provided and timestamp is numeric.'
         : '';
@@ -89,152 +88,190 @@ function Contact() {
     }
   }, [success]);
 
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i = 1) => ({
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+      },
+    },
+  };
+
+  const iconVariants = {
+    hover: {
+      scale: 1.2,
+      rotate: 10,
+      transition: {
+        type: 'spring',
+        stiffness: 300,
+      },
+    },
+  };
+
+  const letterVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i) => ({
       opacity: 1,
       y: 0,
-      transition: { delay: i * 0.2, duration: 0.6 },
+      transition: {
+        delay: i * 0.05,
+      },
     }),
   };
 
-  if (success) {
-    return (
-      <motion.div
-        className="min-h-screen flex flex-col justify-center items-center bg-transparent px-4 text-white"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.7 }}
-      >
-        <h2 className="text-4xl font-bold text-green-300 mb-4"><Trans i18nKey="pages.Contact.thank-you">🎉 Thank you!</Trans></h2>
-        <p className="text-lg text-center max-w-md"><Trans i18nKey="pages.Contact.your-message-has-been-successfully-submi"><Trans i18nKey="pages.Contact.your-message-has-been-successfully-submi-1">Your message has been successfully submitted. We'll contact you shortly.</Trans></Trans></p>
-      </motion.div>
-    );
-  }
+  const title = "Let's Talk";
 
   return (
-    <motion.div className="relative min-h-screen py-20 px-4 text-white bg-transparent" initial="hidden" animate="visible">
-      {/* ✅ Fully transparent background */}
-      <div className="absolute inset-0 bg-transparent z-0" />
-
+    <div className="relative min-h-screen py-20 px-4 bg-white text-gray-800 overflow-hidden">
       <div className="relative z-10 max-w-3xl mx-auto">
-        <motion.h2 className="text-4xl font-extrabold text-center mb-6" variants={fadeInUp} custom={0}><Trans i18nKey="pages.Contact.let-s-talk">Let's Talk</Trans></motion.h2>
-
-        {/* ✅ Form Card */}
-        <motion.form
-          onSubmit={handleSubmit}
-          className="bg-white/30 p-8 rounded-xl backdrop-blur border border-white/30"
-          variants={fadeInUp}
-          custom={1}
-        >
-          {/* Honeypot field for bots */}
-          <input
-            type="text"
-            name="website"
-            value={honeypot}
-            onChange={(e) => setHoneypot(e.target.value)}
-            tabIndex="-1"
-            autoComplete="off"
-            className="hidden"
-          />
-          {/* Name */}
-          <motion.div className="flex items-center gap-3 mb-4" variants={fadeInUp} custom={1.1}>
-            <FaUser />
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              required
-              onChange={handleChange}
-              value={formData.name}
-              className="flex-1 p-3 bg-transparent border-b border-white outline-none placeholder-white"
-            />
-          </motion.div>
-
-          {/* Email */}
-          <motion.div className="flex items-center gap-3 mb-4" variants={fadeInUp} custom={1.2}>
-            <FaEnvelope />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              required
-              onChange={handleChange}
-              value={formData.email}
-              className="flex-1 p-3 bg-transparent border-b border-white outline-none placeholder-white"
-            />
-          </motion.div>
-
-          {/* Phone */}
-          <motion.div className="flex items-center gap-3 mb-4" variants={fadeInUp} custom={1.3}>
-            <FaPhone />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone Number"
-              required
-              onChange={handleChange}
-              value={formData.phone}
-              className="flex-1 p-3 bg-transparent border-b border-white outline-none placeholder-white"
-            />
-          </motion.div>
-
-          {/* Message */}
-          <motion.div className="flex items-start gap-3 mb-4" variants={fadeInUp} custom={1.4}>
-            <FaCommentDots className="mt-2" />
-            <textarea
-              name="message"
-              placeholder="Your Message..."
-              rows="4"
-              required
-              onChange={handleChange}
-              value={formData.message}
-              className="flex-1 p-3 bg-transparent border border-white outline-none rounded placeholder-white"
-            />
-          </motion.div>
-
-          {/* Submit Button */}
-          <motion.button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-green-500 text-white font-bold rounded hover:bg-green-600 transition"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {loading ? 'Sending...' : 'Send Message'}
-          </motion.button>
-
-          {/* ✅ Social Media Icons */}
-          <motion.div
-            className="flex justify-center gap-6 mt-10"
-            initial="hidden"
-            animate="visible"
-          >
-            {[
-              { icon: FaFacebookF, color: 'text-blue-500', link: 'https://facebook.com' },
-              { icon: FaInstagram, color: 'text-pink-500', link: 'https://instagram.com' },
-              { icon: FaTwitter, color: 'text-sky-400', link: 'https://twitter.com' },
-              { icon: FaLinkedinIn, color: 'text-blue-700', link: 'https://linkedin.com' },
-              { icon: FaYoutube, color: 'text-red-500', link: 'https://youtube.com' },
-            ].map(({ icon: Icon, color, link }, i) => (
-              <motion.a
-                key={i}
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.3, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-                className={`${color} text-xl hover:text-white transition duration-300`}
-                variants={fadeInUp}
-                custom={1.5 + i * 0.1}
+        <AnimatePresence>
+          {success ? (
+            <motion.div
+              key="success"
+              className="min-h-screen flex flex-col justify-center items-center px-4"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.h2
+                className="text-5xl font-bold text-green-500 mb-4"
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
               >
-                <Icon />
-              </motion.a>
-            ))}
-          </motion.div>
-        </motion.form>
+                <Trans i18nKey="pages.Contact.thank-you">🎉 Thank you!</Trans>
+              </motion.h2>
+              <motion.p
+                className="text-xl text-center max-w-md text-gray-600"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4, type: 'spring', stiffness: 120 }}
+              >
+                <Trans i18nKey="pages.Contact.your-message-has-been-successfully-submi">Your message has been successfully submitted. We'll contact you shortly.</Trans>
+              </motion.p>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="form"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit={{ opacity: 0 }}
+            >
+              <motion.h2 className="text-5xl font-extrabold text-center mb-12 text-gray-900" variants={itemVariants}>
+                {title.split("").map((char, index) => (
+                  <motion.span key={index} custom={index} variants={letterVariants}>
+                    {char}
+                  </motion.span>
+                ))}
+              </motion.h2>
+
+              <motion.form
+                onSubmit={handleSubmit}
+                className="bg-gray-50 p-8 rounded-2xl shadow-xl border border-gray-200"
+                variants={itemVariants}
+              >
+                <input
+                  type="text"
+                  name="website"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex="-1"
+                  autoComplete="off"
+                  className="hidden"
+                />
+                
+                <motion.div className="relative mb-6" variants={itemVariants}>
+                  <FaUser className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400" />
+                  <motion.input
+                    type="text" name="name" placeholder="Full Name" required
+                    onChange={handleChange} value={formData.name}
+                    className="w-full p-3 pl-10 bg-white border-b-2 border-gray-300 text-gray-800 outline-none placeholder-gray-400 focus:border-blue-500 transition-colors"
+                    whileFocus={{ scale: 1.02 }}
+                  />
+                </motion.div>
+
+                <motion.div className="relative mb-6" variants={itemVariants}>
+                  <FaEnvelope className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400" />
+                  <motion.input
+                    type="email" name="email" placeholder="Email Address" required
+                    onChange={handleChange} value={formData.email}
+                    className="w-full p-3 pl-10 bg-white border-b-2 border-gray-300 text-gray-800 outline-none placeholder-gray-400 focus:border-blue-500 transition-colors"
+                    whileFocus={{ scale: 1.02 }}
+                  />
+                </motion.div>
+
+                <motion.div className="relative mb-6" variants={itemVariants}>
+                  <FaPhone className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400" />
+                  <motion.input
+                    type="tel" name="phone" placeholder="Phone Number" required
+                    onChange={handleChange} value={formData.phone}
+                    className="w-full p-3 pl-10 bg-white border-b-2 border-gray-300 text-gray-800 outline-none placeholder-gray-400 focus:border-blue-500 transition-colors"
+                    whileFocus={{ scale: 1.02 }}
+                  />
+                </motion.div>
+
+                <motion.div className="relative mb-6" variants={itemVariants}>
+                  <FaCommentDots className="absolute top-5 left-3 text-gray-400" />
+                  <motion.textarea
+                    name="message" placeholder="Your Message..." rows="4" required
+                    onChange={handleChange} value={formData.message}
+                    className="w-full p-3 pl-10 bg-white border-2 border-gray-300 text-gray-800 outline-none rounded-lg placeholder-gray-400 focus:border-blue-500 transition-colors"
+                    whileFocus={{ scale: 1.02 }}
+                  />
+                </motion.div>
+
+                <motion.button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98, y: 0 }}
+                >
+                  {loading ? 'Sending...' : 'Send Message'}
+                </motion.button>
+
+                <motion.div className="flex justify-center gap-6 mt-10" variants={itemVariants}>
+                  {[ 
+                    { icon: FaFacebookF, color: 'hover:text-blue-600', link: 'https://facebook.com' },
+                    { icon: FaInstagram, color: 'hover:text-pink-500', link: 'https://instagram.com' },
+                    { icon: FaTwitter, color: 'hover:text-sky-500', link: 'https://twitter.com' },
+                    { icon: FaLinkedinIn, color: 'hover:text-blue-800', link: 'https://linkedin.com' },
+                    { icon: FaYoutube, color: 'hover:text-red-600', link: 'https://youtube.com' },
+                  ].map(({ icon: Icon, color, link }, i) => (
+                    <motion.a
+                      key={i}
+                      href={link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`text-xl text-gray-400 ${color} transition-colors duration-300`}
+                      variants={iconVariants}
+                      whileHover="hover"
+                    >
+                      <Icon />
+                    </motion.a>
+                  ))}
+                </motion.div>
+              </motion.form>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

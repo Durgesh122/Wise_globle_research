@@ -305,14 +305,14 @@ const StockIndexOption = () => {
           className="text-sm text-white mt-4"
         >
           <FaExclamationTriangle className="inline mr-2" /><Trans i18nKey="pages.StockIndexOption.index-options-trading-carries-high-risks"><Trans i18nKey="pages.StockIndexOption.index-options-trading-carries-high-risks-1">Index options trading carries high risks. Review all offer documents carefully.</Trans></Trans></motion.div>
-        <div className="flex flex-col sm:flex-row justify-center mt-10 gap-6">
+        <div className="flex flex-col sm:flex-row justify-center mt-10 gap-6 w-full max-w-2xl mx-auto">
           <motion.button
             whileHover={{ scale: 1.1, boxShadow: '0 0 20px rgba(0, 255, 255, 0.3)' }}
             whileTap={{ scale: 0.95 }}
             animate={{ scale: [1, 1.05, 1], transition: { repeat: Infinity, duration: 1.5 } }}
             onClick={handleWhatsAppClick}
             disabled={isLoading}
-            className="flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg min-w-[260px] transition-all"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg transition-all"
           >
             {isLoading ? 'Connecting…' : (
               <>
@@ -324,7 +324,7 @@ const StockIndexOption = () => {
             whileTap={{ scale: 0.95 }}
             animate={{ scale: [1, 1.05, 1], transition: { repeat: Infinity, duration: 1.5 } }}
             onClick={handleContactClick}
- className="flex items-center justify-center gap-2 bg-transparent backdrop-blur-md text-white border border-cyan-500 px-8 py-4 rounded-full font-semibold shadow-lg min-w-[260px] transition-all"
+ className="w-full sm:w-auto flex items-center justify-center gap-2 bg-transparent backdrop-blur-md text-white border border-cyan-500 px-8 py-4 rounded-full font-semibold shadow-lg transition-all"
           >
             <FaPhoneAlt /><Trans i18nKey="pages.StockIndexOption.contact-research-team"><Trans i18nKey="pages.StockIndexOption.contact-research-team-1">Contact Research Team</Trans></Trans></motion.button>
         </div>

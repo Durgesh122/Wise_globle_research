@@ -51,7 +51,7 @@ function StockOption() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-8 px-4 max-w-5xl mx-auto">
+  <section className="py-8 px-4 sm:px-6 max-w-4xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { icon: <FaPercentage className="text-2xl text-green-500" />, value: "75%+", label: "Accuracy Rate" },
@@ -128,10 +128,10 @@ function StockOption() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl font-bold mb-4"><Trans i18nKey="pages.StockOption.start-trading-options-like-a-pro"><Trans i18nKey="pages.StockOption.start-trading-options-like-a-pro-1">Start Trading Options Like a Pro</Trans></Trans></h2>
           <p className="text-white mb-8 max-w-2xl mx-auto"><Trans i18nKey="pages.StockOption.get-your-first-3-options-trading-calls-f"><Trans i18nKey="pages.StockOption.get-your-first-3-options-trading-calls-f-1">Get your first 3 options trading calls free with our SEBI-registered advisory</Trans></Trans></p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="flex items-center justify-center gap-2 bg-white text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-full font-semibold shadow-md min-w-[240px]">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 w-full max-w-xl mx-auto">
+            <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-full font-semibold shadow-md">
               <FaWhatsapp /><Trans i18nKey="pages.StockOption.chat-on-whatsapp">Chat on WhatsApp</Trans></button>
-            <button className="flex items-center justify-center gap-2 bg-transparent text-white border border-white hover:bg-blue-800 px-6 py-3 rounded-full font-semibold shadow-md min-w-[240px]">
+            <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-transparent text-white border border-white hover:bg-blue-800 px-6 py-3 rounded-full font-semibold shadow-md">
               <FaPhoneAlt /><Trans i18nKey="pages.StockOption.call-now">Call Now</Trans></button>
           </div>
         </div>

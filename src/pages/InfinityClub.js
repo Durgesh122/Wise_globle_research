@@ -12,15 +12,15 @@ const InfinityClub = () => (
         <meta name="description" content="Infinity Club page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/infinityclub" />
       </Helmet>
-<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
-    <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.InfinityClub.infinity-club">Infinity Club</Trans></h1>
-    <p className="text-lg mb-6 text-center text-white">
+<div className="container mx-auto py-8 px-4 sm:px-6 max-w-4xl text-white">
+  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.InfinityClub.infinity-club">Infinity Club</Trans></h1>
+  <p className="text-base sm:text-lg mb-6 text-center text-white px-2 sm:px-0">
       In Infinity Club, we provide you Future and Option intraday recommendations with proper target &amp; Stop loss in NSE Stock Market. The Pack is specially designed for traders who’s working in all segment of NSE market with proper research-based recommendations and believes in limited but quality trades. Our highly experienced teams always focus on proper entry and exit time of customer; we provide you research on the in-depth analysis using technical and fundamental analysis.
     </p>
 
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.infinity-club-features">Infinity Club Features</Trans></h2>
-      <ul className="list-disc pl-6 text-base mb-4 text-white">
+    <div className="mb-8 px-2 sm:px-0">
+      <h2 className="text-xl sm:text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.infinity-club-features">Infinity Club Features</Trans></h2>
+      <ul className="list-disc pl-6 text-sm sm:text-base mb-4 text-white">
         <li><Trans i18nKey="pages.InfinityClub.we-provides-2-3-intraday-positional-reco"><Trans i18nKey="pages.InfinityClub.we-provides-2-3-intraday-positional-reco-1">We provides 2-3 Intraday/Positional recommendation’s (as per market conditions).</Trans></Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.all-recommendation-will-have-2-tgt-with-"><Trans i18nKey="pages.InfinityClub.all-recommendation-will-have-2-tgt-with--1">All recommendation will have 2 TGT with proper Stop loss.</Trans></Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.timely-follow-ups-of-all-the-trade-signa"><Trans i18nKey="pages.InfinityClub.timely-follow-ups-of-all-the-trade-signa-1">Timely Follow Ups of all the trade signals</Trans></Trans></li>
@@ -33,9 +33,9 @@ const InfinityClub = () => (
       </ul>
     </div>
 
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.trading-rules-every-trader-must-follow"><Trans i18nKey="pages.InfinityClub.trading-rules-every-trader-must-follow-1">Trading Rules Every Trader Must Follow</Trans></Trans></h2>
-      <ul className="list-decimal pl-6 text-base mb-4 text-white">
+    <div className="mb-8 px-2 sm:px-0">
+      <h2 className="text-xl sm:text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.trading-rules-every-trader-must-follow"><Trans i18nKey="pages.InfinityClub.trading-rules-every-trader-must-follow-1">Trading Rules Every Trader Must Follow</Trans></Trans></h2>
+      <ul className="list-decimal pl-6 text-sm sm:text-base mb-4 text-white">
   <li><Trans i18nKey="pages.InfinityClub.do-not-over-trade">Do not over trade.</Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.have-to-trade-on-each-recommendation-wit"><Trans i18nKey="pages.InfinityClub.have-to-trade-on-each-recommendation-wit-1">Have to trade on each Recommendation with same quantity according to Research Team.</Trans></Trans></li>
         <li><Trans i18nKey="pages.InfinityClub.profit-and-loss-is-subject-to-market-ris"><Trans i18nKey="pages.InfinityClub.profit-and-loss-is-subject-to-market-ris-1">Profit and Loss is subject to market risk and there is no guarantee or assurance for it.</Trans></Trans></li>
@@ -51,13 +51,13 @@ const InfinityClub = () => (
       </ul>
     </div>
 
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.sample-calls">Sample Calls</Trans></h2>
-  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75-"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75--1">BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50</Trans></Trans></div>
+    <div className="mb-8 px-2 sm:px-0">
+      <h2 className="text-xl sm:text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.sample-calls">Sample Calls</Trans></h2>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-sm sm:text-base text-white font-mono"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75-"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75--1">BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50</Trans></Trans></div>
     </div>
 
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2 text-white text-center"><Trans i18nKey="pages.InfinityClub.pricing-plan-for-infinity-club"><Trans i18nKey="pages.InfinityClub.pricing-plan-for-infinity-club-1">Pricing Plan For Infinity Club</Trans></Trans></h2>
+    <div className="mb-8 px-2 sm:px-0">
+      <h2 className="text-xl sm:text-2xl font-bold mb-2 text-white text-center"><Trans i18nKey="pages.InfinityClub.pricing-plan-for-infinity-club"><Trans i18nKey="pages.InfinityClub.pricing-plan-for-infinity-club-1">Pricing Plan For Infinity Club</Trans></Trans></h2>
       <div className="flex justify-center">
         <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center w-full max-w-md">
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.infinity-club">Infinity Club</Trans></h3>

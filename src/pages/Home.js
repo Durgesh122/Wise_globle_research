@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { containerVariants } from '../utils/animationVariants';
 import HeroSection from '../components/HeroSection';
+import ErrorBoundary from '../components/ErrorBoundary';
 import AlertBar from '../components/AlertBar';
 import WhyChooseUs from '../components/WhyChooseUs';
 import MarketOverview from '../components/MarketOverview';
@@ -11,7 +12,7 @@ import EconomicCalendar from '../components/EconomicCalendar';
 import MarketInsights from '../components/MarketInsights';
 import MethodologySection from '../components/MethodologySection';
 // import TeamSection from '../components/TeamSection'; // Temporarily disabled on Home page
-import TradingViewTicker from './TradingViewTicker';
+// import TradingViewTicker from '../components/TradingViewTicker';
 
 // import SubscriptionPlans from '../components/SubscriptionPlans';
 import CallToAction from '../components/CallToAction';
@@ -104,9 +105,12 @@ const Home = () => {
         animate="visible"
       >
   {showPopup && <PopupForm onClose={() => setShowPopup(false)} />}
-        <AlertBar />
-  <TradingViewTicker suppressHelmet={true} />
-        <HeroSection />
+   {/* <TradingViewTicker suppressHelmet={true} /> */}
+        <ErrorBoundary>
+          {/* Inline (non-sticky) alert shown at top of hero */}
+          <AlertBar variant="inline" />
+          <HeroSection />
+        </ErrorBoundary>
         <WhyChooseUs />
         <MarketOverview />
   <EconomicCalendar embedUrl="https://widget.myfxbook.com/widget/calendar.html" />

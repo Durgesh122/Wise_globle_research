@@ -8,6 +8,47 @@
   --nav-offset: 0px;
 }
 
+/* Ensure the main navbar content uses the navbar color variable so ThemeContext
+   overrides (like --navbar-color) reliably apply across links and buttons. We
+   avoid touching absolute dropdown panels which explicitly set their own text
+   color (e.g. `text-black`). */
+nav, nav .nav-item, nav .nav-scroll, nav .nav-scroll > *, nav .rotate-logo {
+  color: var(--navbar-color, var(--text-color, #0b1220));
+}
+
+/* Ensure the top contact bar and its social icons sit above any fixed tickers or overlays
+   and accept pointer events. */
+.top-contact-socials {
+  z-index: 11001; /* higher than ticker (was 40) and above most overlays */
+  position: relative;
+}
+.top-contact-socials a {
+  pointer-events: auto; /* ensure links receive clicks */
+}
+
+/* Elevated glassy navbar look */
+nav {
+  background-clip: padding-box; /* ensure border doesn't show through gradient */
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  -webkit-backdrop-filter: saturate(1.05) blur(6px);
+  backdrop-filter: saturate(1.05) blur(6px);
+}
+
+/* Target only top-level nav links and buttons (direct children of the nav-scroll)
+   so dropdown panels (which are nested deeper) keep their own text color. */
+.nav-scroll > * > a,
+.nav-scroll > * > button,
+.nav-scroll > * > .nav-item {
+  color: var(--navbar-color, var(--text-color, #0b1220)) !important;
+}
+
+/* Ensure nested links within nav-items also inherit the correct color */
+.nav-item a {
+  color: inherit !important;
+}
+
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
@@ -27,6 +68,30 @@
 .animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
 .animate-slideDown { animation: slideDown 0.3s ease-in-out; will-change: transform, opacity; }
 .animate-slideIn { animation: slideIn 0.4s ease-in-out; will-change: transform; }
+
+/* Underline animation for desktop nav items */
+.nav-item {
+  --underline-scale: 0;
+}
+.nav-item::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 6px;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(55,235,52,0.95), rgba(122,161,255,0.95));
+  border-radius: 999px;
+  transform-origin: left center;
+  transform: scaleX(var(--underline-scale));
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1);
+  pointer-events: none;
+}
+.nav-item:hover::after,
+.nav-item:focus::after,
+.nav-item.active::after {
+  --underline-scale: 1;
+}
 
 /* Ensure the fixed navbar respects any top offset from external banners */
 nav.fixed, nav {
@@ -59,6 +124,13 @@ nav.fixed, nav {
   transition: none;
   font-weight: 500;
   box-sizing: border-box; /* ensure borders don't change layout/size */
+  /* Responsive logo image: fill the circular container while remaining crisp and responsive */
+  .wise-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 }
 
 /* Thicker, rounded, gradient underline for nav items. Uses transform for smoother animation. */
@@ -81,6 +153,12 @@ nav.fixed, nav {
 .rotate-logo:hover img {
   transform: rotate(360deg);
   transition: transform 0.6s ease-in-out;
+}
+
+/* Slight floating effect for logo on hover */
+.rotate-logo:hover {
+  transform: translateY(-3px);
+  transition: transform 0.28s ease;
 }
 
 /* Logo wrapper and image: enforce true circle and cover behavior */
@@ -128,45 +206,6 @@ svg {
     display: none;
   }
 
-  .mobile-menu {
-    position: fixed;
-    top: var(--nav-offset, 0px);
-    right: 0;
-    width: 80%;
-    min-width: 260px;
-    max-width: 320px;
-    height: calc(100vh - var(--nav-offset, 0px));
-    background: var(--bg-opacity);
-    backdrop-filter: blur(12px);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    padding: 2rem 1rem;
-    gap: 1rem;
-    z-index: 9999;
-    transform: translateX(100%);
-    transition: transform 0.3s ease-in-out;
-    overflow-y: auto;
-  }
-
-  .mobile-menu.open {
-    transform: translateX(0);
-  }
-
-  .mobile-close-btn {
-    align-self: flex-end;
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--text-color);
-    cursor: pointer;
-    margin-bottom: 1.5rem;
-    transition: color 0.3s;
-  }
-
-  .mobile-close-btn:hover {
-    color: var(--hover-yellow);
-  }
-
   .desktop-menu,
   .group {
     display: none !important;
@@ -186,9 +225,14 @@ svg {
     transition: all 0.3s ease;
   }
 
+  /* Make hamburger bars slightly more refined */
+  .hamburger .bar { border-radius: 2px; box-shadow: 0 1px 0 rgba(0,0,0,0.08) inset; }
+
   .hamburger.open .bar:nth-child(1) {
     transform: rotate(45deg) translate(5px, 5px);
   }
+    /* Slightly reduce container for very small screens */
+    .rotate-logo > div { width: 40px; height: 40px; }
 
   .hamburger.open .bar:nth-child(2) {
     opacity: 0;
@@ -198,25 +242,62 @@ svg {
     transform: rotate(-45deg) translate(7px, -7px);
   }
 
-  /* Ensure all mobile menu text looks uniform */
-  .mobile-menu-items,
-  .mobile-menu-items * {
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    line-height: 1.4 !important;
-    color: var(--text-color) !important;
-  }
-
   .mobile-back-btn {
     margin-top: 8px;
     width: 100%;
-    padding: 12px 16px;
+    padding: 10px 12px;
     background: rgba(255, 255, 255, 0.226);
     color: var(--text-color);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 8px;
     text-align: center;
     font-weight: 700;
+  }
+
+  /* Hide long contact text in the top bar on very small screens to avoid overflow */
+  .top-contact-text {
+    display: inline-block;
+  }
+
+  /* Ensure top bar search input is usable on small screens: allow it to shrink and expand */
+  .top-contact-bar-search {
+    flex: 1 1 auto;
+    min-width: 120px;
+    max-width: 420px;
+  }
+
+  /* Social icon sizing: use em units so the svg scales with container's font-size
+     and remains crisp. Provide smaller sizes on narrow screens. */
+  .social-icon {
+    width: 1.2em;
+    height: 1.2em;
+    display: inline-block;
+  }
+
+  /* Top contact bar social anchors: make them flexible and shrink if needed */
+  .top-contact-socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    min-height: 32px;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 420px) {
+    .top-contact-text { display: none !important; }
+    .rotate-logo > div { width: 44px; height: 44px; }
+    .rotate-logo img.logo-hover { width: 44px; height: 44px; }
+    .mobile-drawer { padding: 18px 12px; }
+    .top-contact-socials a { min-width: 28px; min-height: 28px; padding: 4px; border-radius: 6px; }
+    .social-icon { width: 1em; height: 1em; }
+    /* Make search input slightly smaller on very small devices so it fits */
+    input[type="search"]#nav-search, input[type="search"]#mobile-search {
+      font-size: 13px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
   }
 
   .mobile-back-btn:active {
@@ -236,6 +317,12 @@ svg {
     animation-duration: 360ms;
     animation-fill-mode: both;
     animation-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+
+  /* Make staggered items slightly more elevated on hover */
+  .mobile-menu-items .nav-item:hover {
+    transform: translateY(-4px) scale(1.005);
+    box-shadow: 0 6px 18px rgba(2,6,23,0.08);
   }
 
   /* Provide rising delays for up to 12 immediate children */
@@ -277,7 +364,7 @@ svg {
     font-size: 0.85rem;
   }
 
-  .mobile-menu,
+  .mobile-drawer,
   .hamburger {
     display: none !important;
   }
@@ -293,7 +380,7 @@ svg {
     font-size: 1rem;
   }
 
-  .mobile-menu,
+  .mobile-drawer,
   .hamburger {
     display: none !important;
   }
@@ -373,4 +460,44 @@ svg {
   z-index: 99999 !important;
   overflow: visible !important;
   transform: translateZ(0); /* promote to its own layer to avoid clipping in some browsers */
+}
+
+.mobile-overlay {
+  position: fixed;
+  top: var(--nav-offset, 0px);
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - var(--nav-offset, 0px));
+  background: rgba(0,0,0,0.4);
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.mobile-overlay.open {
+  opacity: 1;
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: calc(var(--nav-offset, 0px) + env(safe-area-inset-top, 0px));
+  right: 0;
+  height: calc(100dvh - var(--nav-offset, 0px) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  width: max(50vw, 300px);
+  max-width: 80vw;
+  background-blend-mode: overlay;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  z-index: 9999;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+  display: block;
+  will-change: transform;
+  contain: content;
+  overscroll-behavior: contain;
+}
+
+.mobile-drawer.open {
+  transform: translateX(0);
 }

@@ -11,7 +11,7 @@ const SmartIndexOption = () => (
         <meta name="description" content="Smart Index Option page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/smartindexoption" />
       </Helmet>
-<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+<div className="container mx-auto py-8 px-4 sm:px-6 max-w-4xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.SmartIndexOption.smart-index-option">Smart Index Option</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Smart Index Option service is specifically designed for option traders trading with precise technical research recommendation for Index Options. We provide the recommendations to intraday traders to optimize every market movement. It offers you nearly 1-2 intraday recommendations in a day as per market conditions with good market opportunity. The recommendations are given in Nifty and Bank Nifty Options only. Our timely generated technical recommendations provide adequate time to enter and exit in trades. We have a team of analysts who are specialized in Tracking the F&O market and keep a complete track of all the national and international events and Major Sectors and blend it with technical analysis to predict the market moves. If you are looking for Index Options research/recommendation and do not want to invest much of times then this pack are perfect for you.
@@ -59,7 +59,7 @@ const SmartIndexOption = () => (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.pricing-plan-for-smart-index-option"><Trans i18nKey="pages.SmartIndexOption.pricing-plan-for-smart-index-option-1">Pricing Plan For Smart Index Option</Trans></Trans></h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
-        <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center">
+  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#ffffffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.smart-index-option">Smart Index Option</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹12,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartIndexOption.monthly">/ Monthly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.1-to-2-calls-in-a-day"><Trans i18nKey="pages.SmartIndexOption.1-to-2-calls-in-a-day-2">1 to 2 Calls in a Day</Trans></Trans></div>
@@ -68,7 +68,7 @@ const SmartIndexOption = () => (
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartIndexOption.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartIndexOption.note-pricing-are-excluding-gst-18-2">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
-        <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center">
+  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#ffffffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.smart-index-option">Smart Index Option</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹35,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartIndexOption.quarterly">/ Quarterly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.1-to-2-calls-in-a-day"><Trans i18nKey="pages.SmartIndexOption.1-to-2-calls-in-a-day-1">1 to 2 Calls in a Day</Trans></Trans></div>
@@ -86,17 +86,17 @@ const SmartIndexOption = () => (
     <div className="my-12">
       <h2 className="text-2xl font-bold mb-4 text-center text-white"><Trans i18nKey="pages.SmartIndexOption.why-choose-smart-index-option"><Trans i18nKey="pages.SmartIndexOption.why-choose-smart-index-option-1">Why Choose Smart Index Option?</Trans></Trans></h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLightbulb className="text-4xl mb-2 text-yellow-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartIndexOption.expert-research">Expert Research</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartIndexOption.our-analysts-specialize-in-f-o-market-an"><Trans i18nKey="pages.SmartIndexOption.our-analysts-specialize-in-f-o-market-an-1">Our analysts specialize in F&O market and combine technical & fundamental analysis for precise index option recommendations.</Trans></Trans></p>
         </div>
-        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaBolt className="text-4xl mb-2 text-blue-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartIndexOption.timely-calls">Timely Calls</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartIndexOption.receive-1-2-intraday-positional-calls-pe"><Trans i18nKey="pages.SmartIndexOption.receive-1-2-intraday-positional-calls-pe-1">Receive 1-2 intraday/positional calls per day with clear entry, targets and stop loss.</Trans></Trans></p>
         </div>
-        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLock className="text-4xl mb-2 text-green-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartIndexOption.trusted-support">Trusted Support</Trans></h3>
           <p className="text-white text-center">Real-time customer support during Indian market hours.</p>

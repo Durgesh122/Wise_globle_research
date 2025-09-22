@@ -1,7 +1,7 @@
 import React, { Suspense, useState, useContext } from 'react';
 import { Trans } from '../../i18nShim';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { FaTachometerAlt, FaEnvelope, FaExclamationCircle, FaChartBar, FaSignOutAlt, FaBullhorn, FaComments, FaHome } from 'react-icons/fa';
+import { FaTachometerAlt, FaEnvelope, FaExclamationCircle, FaChartBar, FaSignOutAlt, FaComments, FaHome } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../firebase';
@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { useAdmin } from '../../hooks/useAdmin';
 import AdminHeader from './AdminHeader.js';
 import { ThemeContext } from '../../context/ThemeContext';
+import '../../styles/admin.css';
 
 const AdminLayout = () => {
   const { background, textColor } = useContext(ThemeContext);
@@ -83,7 +84,7 @@ const AdminLayout = () => {
     { path: '/admin/dashboard', label: 'Dashboard', icon: <FaTachometerAlt /> },
     { path: '/admin/contacts', label: 'Contact Submissions', icon: <FaEnvelope /> },
     { path: '/admin/home-contacts', label: 'Home Page Contacts', icon: <FaEnvelope /> },
-    { path: '/admin/popups', label: 'Popup Submissions', icon: <FaBullhorn /> },
+  // { path: '/admin/popups', label: 'Popup Submissions', icon: <FaBullhorn /> },
     { path: '/admin/complaint-box', label: 'Complaint Box Submission', icon: <FaExclamationCircle /> },
     { path: '/admin/complaints', label: 'Complaint Manager', icon: <FaExclamationCircle /> },
     { path: '/admin/reports', label: 'Report Manager', icon: <FaChartBar /> },
@@ -107,13 +108,13 @@ const AdminLayout = () => {
       initial="closed"
       animate="open"
       exit="closed"
-      className="absolute top-0 left-0 h-full w-64 p-4 flex flex-col z-20 md:relative md:translate-x-0"
-      style={{ background: '#ffffff4d', backdropFilter: 'blur(8px)', borderRight: '1px solid rgba(0,0,0,0.06)' }}
+      className="absolute top-0 left-0 h-full p-4 flex flex-col z-20 md:relative md:translate-x-0 admin-sidebar-wrapper"
+      style={{ background: 'var(--bg-transparent, rgba(255,255,255,0.06))', backdropFilter: 'blur(8px)', borderRight: '1px solid var(--bg-border, rgba(255,255,255,0.08))' }}
     >
       <h2 className="text-2xl font-bold mb-8 text-center text-adaptive">
         <Trans i18nKey="pages.admin_AdminLayout.admin-panel">Admin Panel</Trans>
       </h2>
-      <nav className="flex flex-col space-y-2 flex-grow">
+  <nav className="flex flex-col space-y-2 flex-grow" aria-label="Admin navigation">
         {navItems.map((item) => (
           <NavLink
             key={item.path}
@@ -121,7 +122,7 @@ const AdminLayout = () => {
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors duration-200 ${
-                isActive ? 'bg-blue-600 text-adaptive shadow-lg' : 'hover:bg-gray-200/60 text-adaptive/90'
+                isActive ? 'bg-[var(--accent)] text-adaptive shadow-lg' : 'hover:opacity-90 text-adaptive/90'
               }`
             }
           >
@@ -133,7 +134,7 @@ const AdminLayout = () => {
       <motion.button
         onClick={handleGoHome}
         className="mt-4 mb-2 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors"
-        style={{ background: 'linear-gradient(90deg,#2eed1c,#1fbf18)', color: '#000' }}
+        style={{ background: 'linear-gradient(90deg,var(--accent, #22c55e), #1fbf18)', color: 'var(--text-body, #000)' }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -143,7 +144,7 @@ const AdminLayout = () => {
       <motion.button
         onClick={handleLogout}
         className="w-full flex items-center justify-center gap-3 px-4 py-2 rounded-lg transition-colors"
-        style={{ background: 'rgba(255,99,71,0.08)', color: 'var(--text-body, #111827)' }}
+        style={{ background: 'rgba(255,99,71,0.06)', color: 'var(--text-body, #111827)', border: '1px solid var(--bg-border)' }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -155,21 +156,28 @@ const AdminLayout = () => {
 
   return (
     <div
-      className="flex min-h-screen font-sans"
+      className="flex min-h-screen font-sans admin-container"
       style={{ background: background, color: textColor, transition: 'background 0.5s ease-in-out, color 0.5s ease-in-out' }}
     >
       {/* Mobile Sidebar */}
       <AnimatePresence>
         {isSidebarOpen && (
           <>
-            <div className="fixed inset-0 bg-black/60 z-10 md:hidden" onClick={() => setSidebarOpen(false)}></div>
+            <div
+              className="fixed inset-0 z-10 md:hidden admin-overlay-backdrop"
+              onClick={() => setSidebarOpen(false)}
+              role="button"
+              aria-label="Close sidebar"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Escape') setSidebarOpen(false); }}
+            ></div>
             <Sidebar />
           </>
         )}
       </AnimatePresence>
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex">
+      <div className="hidden md:flex admin-sidebar-wrapper">
         <Sidebar />
       </div>
 
@@ -178,7 +186,7 @@ const AdminLayout = () => {
           pageTitle={getPageTitle()} 
           toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} 
         />
-        <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00))' }}>
+  <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto admin-main" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00))' }}>
           <Suspense fallback={
             <div className="flex justify-center items-center h-full">
               <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>

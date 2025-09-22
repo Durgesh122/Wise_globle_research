@@ -78,7 +78,8 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => (
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-xl border border-gray-200/20 max-w-md w-full"
+          className="p-6 rounded-xl shadow-xl max-w-md w-full"
+          style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
@@ -126,7 +127,8 @@ const ReportPreviewModal = ({ isOpen, onClose, report = null }) => (
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-xl border border-gray-200/20 max-w-lg w-full"
+          className="p-6 rounded-xl shadow-xl max-w-lg w-full"
+          style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
@@ -178,7 +180,7 @@ ReportPreviewModal.propTypes = {
 
 // Search bar component
 const SearchBar = ({ searchQuery, setSearchQuery }) => (
-  <motion.div
+    <motion.div
     className="relative w-full max-w-md"
     variants={itemVariants}
     data-aos="fade-up"
@@ -187,7 +189,8 @@ const SearchBar = ({ searchQuery, setSearchQuery }) => (
     <input
       type="text"
       placeholder="Search submissions..."
-      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
+      className="w-full pl-10 pr-4 py-3 rounded-xl text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
+      style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
       aria-label="Search submissions"
@@ -203,7 +206,8 @@ SearchBar.propTypes = {
 // Submission table component
 const SubmissionTable = ({ submissions, handleDeleteSubmission, handleSortToggle, sortOrder }) => (
   <motion.div
-    className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20 overflow-x-auto mb-8"
+    className="rounded-xl shadow-lg overflow-x-auto mb-8"
+    style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', WebkitBackdropFilter: 'blur(4px)', backdropFilter: 'blur(4px)' }}
     variants={tableVariants}
     initial="hidden"
     animate="visible"
@@ -290,7 +294,8 @@ SubmissionTable.propTypes = {
 // New component for Consent Submissions Table
 const ConsentSubmissionTable = ({ submissions, handleDelete }) => (
   <motion.div
-    className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20 overflow-x-auto mb-8"
+    className="rounded-xl shadow-lg overflow-x-auto mb-8"
+    style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', WebkitBackdropFilter: 'blur(4px)', backdropFilter: 'blur(4px)' }}
     variants={tableVariants}
     initial="hidden"
     animate="visible"
@@ -514,7 +519,8 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-xl border border-gray-200/20 max-w-md w-full"
+            className="p-6 rounded-xl shadow-xl max-w-md w-full"
+            style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
@@ -527,7 +533,8 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 type="text"
                 value={editedRow.source || ''}
                 onChange={(e) => setEditedRow({ ...editedRow, source: e.target.value })}
-                className="w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="w-full p-2 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
                 placeholder="Received from"
                 disabled={rowData?.srNo === 'Grand Total'}
               />
@@ -535,42 +542,48 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 type="number"
                 value={editedRow.pendingLastMonth || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, pendingLastMonth: Number(e.target.value) || 0 })}
-                className="w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="w-full p-2 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
                 placeholder="Pending last month"
               />
               <input
                 type="number"
                 value={editedRow.received || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, received: Number(e.target.value) || 0 })}
-                className="w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="w-full p-2 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
                 placeholder="Received"
               />
               <input
                 type="number"
                 value={editedRow.resolved || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, resolved: Number(e.target.value) || 0 })}
-                className="w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="w-full p-2 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
                 placeholder="Resolved"
               />
               <input
                 type="number"
                 value={editedRow.pending || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, pending: Number(e.target.value) || 0 })}
-                className="w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="w-full p-2 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
                 placeholder="Pending"
               />
               <input
                 type="number"
                 value={editedRow.pending3Months || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, pending3Months: Number(e.target.value) || 0 })}
-                className="w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="w-full p-2 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
                 placeholder="Pending > 3 Months"
               />
               <input
                 type="number"
                 value={editedRow.avgResolutionTime || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, avgResolutionTime: Number(e.target.value) || 0 })}
-                className="w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="w-full p-2 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
                 placeholder="Avg Resolution Time"
               />
             </div>
@@ -617,7 +630,8 @@ const ReportUploadCard = ({
   handlePreviewReport,
 }) => (
   <motion.div
-    className="bg-white/5 backdrop-blur-lg p-6 rounded-xl shadow-xl border border-gray-200/10 hover:shadow-2xl transition-all duration-300"
+    className="p-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
+    style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
     variants={itemVariants}
     whileHover={{ scale: 1.02 }}
     data-aos="fade-up"
@@ -627,21 +641,24 @@ const ReportUploadCard = ({
       <input
         type="text"
         placeholder="Report Title"
-        className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm transition-all duration-300"
+  className="w-full p-3 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm transition-all duration-300"
+  style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
         value={newReport.day === day ? newReport.title : ''}
         onChange={(e) => setNewReport({ ...newReport, title: e.target.value, day })}
         aria-label={`Report title for ${day}`}
       />
       <textarea
         placeholder="Report Description"
-        className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm transition-all duration-300"
+        className="w-full p-3 rounded-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm transition-all duration-300"
+        style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
         rows="3"
         value={newReport.day === day ? newReport.description : ''}
         onChange={(e) => setNewReport({ ...newReport, description: e.target.value, day })}
         aria-label={`Report description for ${day}`}
       />
       <select
-        className="w-full p-3 rounded-lg bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm transition-all duration-300"
+        className="w-full p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm transition-all duration-300"
+        style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
         value={newReport.day === day ? newReport.category : 'Market'}
         onChange={(e) => setNewReport({ ...newReport, category: e.target.value, day })}
         aria-label={`Report category for ${day}`}
@@ -655,7 +672,8 @@ const ReportUploadCard = ({
       <input
         type="file"
         accept=".pdf"
-        className="w-full p-3 text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:bg-indigo-600 file:text-white file:border-0 file:hover:bg-indigo-700"
+        className="w-full p-3 text-black file:mr-4 file:py-2 file:px-4 file:rounded-lg file:bg-indigo-600 file:text-white file:border-0 file:hover:bg-indigo-700"
+        style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
         onChange={(e) => setNewReport({ ...newReport, file: e.target.files[0], day })}
         aria-label={`Upload report file for ${day}`}
       />
@@ -683,7 +701,8 @@ const ReportUploadCard = ({
           {reports[day].map((report) => (
             <motion.li
               key={report.id}
-              className="flex justify-between items-center p-3 bg-gray-700/20 rounded-lg hover:bg-gray-600/20 transition-colors duration-200"
+              className="flex justify-between items-center p-3 rounded-lg transition-colors duration-200"
+              style={{ background: 'transparent' }}
               variants={itemVariants}
             >
               <div>
@@ -1179,7 +1198,7 @@ function ContactData() {
       link.setAttribute('download', 'contact_submissions.csv');
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+  if (link && link.parentNode) link.parentNode.removeChild(link);
       toast.success('Submissions exported to CSV.', { position: 'top-center' });
     } catch (error) {
       console.error('Error exporting CSV:', error);
@@ -1362,7 +1381,8 @@ function ContactData() {
             <div className="flex items-center gap-2">
               <input
                 type="text"
-                className="px-3 py-2 rounded-lg bg-white/10 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="px-3 py-2 rounded-lg text-black placeholder-black/60 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)' }}
                 value={complaintTitle}
                 onChange={(e) => setComplaintTitle(e.target.value)}
                 placeholder="Complaint table title"

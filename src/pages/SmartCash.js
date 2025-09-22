@@ -12,15 +12,15 @@ const SmartCash = () => (
         <meta name="description" content="Smart Cash page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/smartcash" />
       </Helmet>
-<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
-    <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.SmartCash.smart-cash">Smart Cash</Trans></h1>
-    <p className="text-lg mb-6 text-center text-white">
+<div className="container mx-auto py-8 px-4 sm:px-6 max-w-4xl text-white">
+  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.SmartCash.smart-cash">Smart Cash</Trans></h1>
+  <p className="text-base sm:text-lg mb-6 text-center text-white px-2 sm:px-0">
       Wise Global Research Analyst provides Equity research in the NSE cash segment by dedicated and experienced Research Analysts after in-depth technical analysis to our client. Our Equity trading research are produced with a high level of accuracy. We believe in such kind of volatile market our customers should only focus on intraday recommendations and should not carry forward any position for the next day. Stock cash is designed and destined to deliver returns that you deserve. It offers you nearly 2 to 3 intraday recommendations with a good level of accuracy. The recommendations are given in script traded on NSE. Our timely generated technical recommendations provide adequate time to enter in trades. Our recommendations are supreme blend of Technical and fundamental research. A pure intraday product, where customer receives stock recommendations in NSE cash segment.
     </p>
 
-    <div className="mb-8">
+    <div className="mb-8 px-2 sm:px-0">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.what-you-will-get">What You Will Get</Trans></h2>
-      <ul className="list-disc pl-6 text-base mb-4 text-white">
+      <ul className="list-disc pl-6 text-sm sm:text-base mb-4 text-white">
         <li><Trans i18nKey="pages.SmartCash.daily-pure-intraday-stock-recommendation"><Trans i18nKey="pages.SmartCash.daily-pure-intraday-stock-recommendation-1">Daily pure intraday stock recommendation’s frequency is limited to 2 to 3 (as per market conditions)</Trans></Trans></li>
         <li><Trans i18nKey="pages.SmartCash.all-recommendation-will-have-2-tgt-with-"><Trans i18nKey="pages.SmartCash.all-recommendation-will-have-2-tgt-with--1">All recommendation will have 2 TGT with proper Stop loss.</Trans></Trans></li>
         <li><Trans i18nKey="pages.SmartCash.timely-follow-ups-of-all-the-trade-signa"><Trans i18nKey="pages.SmartCash.timely-follow-ups-of-all-the-trade-signa-1">Timely Follow Ups of all the trade signals</Trans></Trans></li>
@@ -31,9 +31,9 @@ const SmartCash = () => (
       </ul>
     </div>
 
-    <div className="mb-8">
+    <div className="mb-8 px-2 sm:px-0">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.trading-rules-every-trader-must-follow"><Trans i18nKey="pages.SmartCash.trading-rules-every-trader-must-follow-1">Trading Rules Every Trader Must Follow</Trans></Trans></h2>
-      <ul className="list-decimal pl-6 text-base mb-4 text-white">
+      <ul className="list-decimal pl-6 text-sm sm:text-base mb-4 text-white">
         <li><Trans i18nKey="pages.SmartCash.do-not-over-trade">Do not over trade.</Trans></li>
         
         <li><Trans i18nKey="pages.SmartCash.have-to-trade-on-each-recommendation-wit"><Trans i18nKey="pages.SmartCash.have-to-trade-on-each-recommendation-wit-1">Have to trade on each Recommendation with same quantity according to Research Team.</Trans></Trans></li>
@@ -50,7 +50,7 @@ const SmartCash = () => (
       </ul>
     </div>
 
-    <div className="mb-8">
+    <div className="mb-8 px-2 sm:px-0">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.sample-calls">Sample Calls</Trans></h2>
   <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.SmartCash.buy-centuryply-above-512-target-518-524-"><Trans i18nKey="pages.SmartCash.buy-centuryply-above-512-target-518-524--1">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</Trans></Trans></div>
     </div>
@@ -58,7 +58,7 @@ const SmartCash = () => (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.pricing-plan-for-smart-cash">Pricing Plan For Smart Cash</Trans></h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
-        <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center">
+  <div className="w-full border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#ffffffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.smart-cash">Smart Cash</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹12,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartCash.monthly">/ Monthly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartCash.2-to-3-calls-in-a-day">2 to 3 Calls in a Day</Trans></div>
@@ -67,7 +67,7 @@ const SmartCash = () => (
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartCash.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartCash.note-pricing-are-excluding-gst-18-2">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
-        <div className="border rounded-xl p-6 shadow-md bg-white/30 flex flex-col items-center">
+  <div className="w-full border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#ffffffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.smart-cash">Smart Cash</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹35,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartCash.quarterly">/ Quarterly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartCash.2-to-3-calls-in-a-day">2 to 3 Calls in a Day</Trans></div>
@@ -82,20 +82,20 @@ const SmartCash = () => (
     
 
     {/* Why Choose Us Section */}
-    <div className="my-12">
+    <div className="my-12 px-2 sm:px-0">
       <h2 className="text-2xl font-bold mb-4 text-center text-white"><Trans i18nKey="pages.SmartCash.why-choose-smart-cash">Why Choose Smart Cash?</Trans></h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-6">
+  <div className="rounded-lg p-6 flex flex-col items-center w-full" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLightbulb className="text-4xl mb-2 text-yellow-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartCash.expert-research">Expert Research</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartCash.our-team-combines-technical-and-fundamen"><Trans i18nKey="pages.SmartCash.our-team-combines-technical-and-fundamen-1">Our team combines technical and fundamental analysis for the most reliable recommendations.</Trans></Trans></p>
         </div>
-        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+  <div className="rounded-lg p-6 flex flex-col items-center w-full" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaBolt className="text-4xl mb-2 text-blue-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartCash.real-time-support">Real-Time Support</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartCash.get-instant-help-and-trade-updates-from-"><Trans i18nKey="pages.SmartCash.get-instant-help-and-trade-updates-from--1">Get instant help and trade updates during Indian market hours.</Trans></Trans></p>
         </div>
-        <div className="bg-white/20 rounded-lg p-6 flex flex-col items-center">
+  <div className="rounded-lg p-6 flex flex-col items-center w-full" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLock className="text-4xl mb-2 text-green-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartCash.trusted-by-traders">Trusted by Traders</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartCash.hundreds-of-cash-segment-traders-rely-on"><Trans i18nKey="pages.SmartCash.hundreds-of-cash-segment-traders-rely-on-1">Hundreds of cash segment traders rely on our signals for consistent results.</Trans></Trans></p>
@@ -104,7 +104,7 @@ const SmartCash = () => (
     </div>
 
     {/* FAQ Section */}
-    <div className="my-12">
+    <div className="my-12 px-2 sm:px-0">
       <h2 className="text-2xl font-bold mb-4 text-center text-white"><Trans i18nKey="pages.SmartCash.frequently-asked-questions">Frequently Asked Questions</Trans></h2>
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">

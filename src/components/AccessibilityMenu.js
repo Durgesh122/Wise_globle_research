@@ -250,7 +250,10 @@ function applySettingsToDocument(settings) {
 
 export default function AccessibilityMenu() {
   const [open, setOpen] = useState(false);
+  // We toggle a body attribute for CSS on resize instead of storing
+  // a component-level `isNarrow` state to avoid extra re-renders.
   const firstInteractiveRef = useRef(null);
+  // `panelRef` and `firstInteractiveRef` remain refs used for focus management
   const panelRef = useRef(null);
   const [settings, setSettings] = useState(() => {
     try {
@@ -276,6 +279,33 @@ export default function AccessibilityMenu() {
       // ignore persistence errors
     }
   }, [settings]);
+
+  // Keep a simple responsive flag to help force layout changes when viewport resizes.
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const check = () => {
+  const narrow = window.innerWidth < 768; // Tailwind md breakpoint ~768px
+      try {
+        if (narrow) document.body.setAttribute('data-accessibility-mobile', 'true');
+        else document.body.removeAttribute('data-accessibility-mobile');
+      } catch (e) {}
+    };
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => {
+      try { document.body.removeAttribute('data-accessibility-mobile'); } catch(_) {}
+      window.removeEventListener('resize', check);
+    };
+  }, []);
+
+  // Ensure body attribute reflects panel open/closed state (keeps logo hidden while panel open)
+  useEffect(() => {
+    try {
+      if (open) document.body.setAttribute('data-accessibility-open', 'true');
+      else document.body.removeAttribute('data-accessibility-open');
+    } catch (e) {}
+    return () => { try { document.body.removeAttribute('data-accessibility-open'); } catch(_) {} };
+  }, [open]);
 
   // Reading guide: move horizontal band with cursor or arrow keys
   useEffect(() => {
@@ -323,6 +353,13 @@ export default function AccessibilityMenu() {
     return () => clearTimeout(id);
   }, [open]);
 
+  // Allow mobile tray to open the accessibility menu via custom event
+  useEffect(() => {
+    const h = () => setOpen(true);
+    document.addEventListener('open-accessibility-menu', h);
+    return () => document.removeEventListener('open-accessibility-menu', h);
+  }, []);
+
   // Very small focus trap: loop focus within panel when open
   useEffect(() => {
     if (!open) return;
@@ -349,8 +386,8 @@ export default function AccessibilityMenu() {
     return () => document.removeEventListener('keydown', handler);
   }, [open]);
 
-  const btnCommon = 'px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 transition transform active:scale-95';
-  const switchCls = (active) => `flex items-center justify-between w-full text-left whitespace-normal break-words ${btnCommon} ${active ? 'ring-1 ring-green-400' : ''}`;
+  const btnCommon = 'px-3 py-2 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2eed1c] transition transform active:scale-95 border border-gray-200';
+  const switchCls = (active) => `flex items-center justify-between w-full text-left whitespace-normal break-words ${btnCommon} ${active ? 'ring-1 ring-[#2eed1c]' : ''}`;
 
   const increaseFont = () => setSettings((s) => ({ ...s, fontScale: clampFontScale(s.fontScale + 0.1) }));
   const decreaseFont = () => setSettings((s) => ({ ...s, fontScale: clampFontScale(s.fontScale - 0.1) }));
@@ -376,7 +413,7 @@ export default function AccessibilityMenu() {
         onClick={() => setOpen((v) => !v)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.96 }}
-        className="fixed bottom-40 right-6 md:right-6 z-[9000] bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-green-300 w-14 h-14 flex items-center justify-center pointer-events-auto"
+  className="hidden md:flex fixed bottom-40 right-6 md:right-6 z-[9000] bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-green-300 w-14 h-14 items-center justify-center pointer-events-auto"
       >
         <A11yIcon className="w-9 h-9" />
       </motion.button>
@@ -389,7 +426,7 @@ export default function AccessibilityMenu() {
           aria-modal="true"
           aria-label="Accessibility menu"
           id="accessibility-menu-panel"
-          className="fixed left-0 right-0 bottom-0 sm:left-auto sm:right-6 sm:bottom-56 w-full sm:w-[28rem] max-w-[100vw] sm:max-w-[92vw] max-h-[75vh] overflow-y-auto rounded-t-2xl sm:rounded-xl bg-gray-900/95 text-white shadow-2xl border border-white/10 backdrop-blur p-3 md:p-4 space-y-3 z-[9001] pointer-events-auto"
+          className="fixed left-0 right-0 bottom-0 sm:left-auto sm:right-6 sm:bottom-56 w-full sm:w-[28rem] max-w-[100vw] sm:max-w-[92vw] max-h-[75vh] overflow-y-auto rounded-t-2xl sm:rounded-xl bg-white text-gray-900 shadow-2xl border border-[#2eed1c] p-3 md:p-4 space-y-3 z-[9001] pointer-events-auto"
         >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -398,7 +435,7 @@ export default function AccessibilityMenu() {
               </div>
               <div>
                 <h2 className="text-sm font-semibold leading-tight">Accessibility</h2>
-                <p className="text-xs text-white/70">Adjust for better readability</p>
+                <span className="sr-only">Adjust for better readability</span>
               </div>
             </div>
             <button onClick={() => setOpen(false)} className={btnCommon} aria-label="Close accessibility menu">✕</button>
@@ -420,7 +457,7 @@ export default function AccessibilityMenu() {
             <div className="text-xs opacity-80">Letter spacing</div>
             <div className="grid grid-cols-4 gap-2 sm:flex sm:items-center">
               <button onClick={() => inc('letterSpacingPx', -1, 4, -1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Decrease letter spacing">−</button>
-              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-white/10 rounded" aria-live="polite">{settings.letterSpacingPx}px</div>
+              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-gray-100 rounded" aria-live="polite">{settings.letterSpacingPx}px</div>
               <button onClick={() => inc('letterSpacingPx', -1, 4, 1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Increase letter spacing">+</button>
               <button onClick={() => setSettings((s)=>({ ...s, letterSpacingPx: 0 }))} className={`${btnCommon} sm:ml-auto w-full`} aria-label="Reset letter spacing">Reset</button>
             </div>
@@ -431,7 +468,7 @@ export default function AccessibilityMenu() {
             <div className="text-xs opacity-80">Line height</div>
             <div className="grid grid-cols-4 gap-2 sm:flex sm:items-center">
               <button onClick={() => inc('lineHeightLevel', 0, 3, -1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Decrease line height">−</button>
-              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-white/10 rounded" aria-live="polite">{['Normal','1.5','1.75','2'][settings.lineHeightLevel || 0]}</div>
+              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-gray-100 rounded" aria-live="polite">{['Normal','1.5','1.75','2'][settings.lineHeightLevel || 0]}</div>
               <button onClick={() => inc('lineHeightLevel', 0, 3, 1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Increase line height">+</button>
               <button onClick={() => setSettings((s)=>({ ...s, lineHeightLevel: 0 }))} className={`${btnCommon} sm:ml-auto w-full`} aria-label="Reset line height">Reset</button>
             </div>
@@ -442,7 +479,7 @@ export default function AccessibilityMenu() {
             <div className="text-xs opacity-80">Font weight</div>
             <div className="grid grid-cols-4 gap-2 sm:flex sm:items-center">
               <button onClick={() => inc('fontWeightLevel', 0, 3, -1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Decrease font weight">−</button>
-              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-white/10 rounded" aria-live="polite">{['400','500','600','700'][settings.fontWeightLevel || 0]}</div>
+              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-gray-100 rounded" aria-live="polite">{['400','500','600','700'][settings.fontWeightLevel || 0]}</div>
               <button onClick={() => inc('fontWeightLevel', 0, 3, 1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Increase font weight">+</button>
               <button onClick={() => setSettings((s)=>({ ...s, fontWeightLevel: 0 }))} className={`${btnCommon} sm:ml-auto w-full`} aria-label="Reset font weight">Reset</button>
             </div>

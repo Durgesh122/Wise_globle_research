@@ -5,7 +5,6 @@ import {
   RiUserLine, RiUser2Line, RiIdCardLine, RiMailLine, RiCalendar2Line,
   RiBankCardLine, RiContactsBookLine, RiArrowRightSLine, RiCheckboxCircleFill, RiCloseCircleFill, RiLoader4Line
 } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { ref as dbRef, push, set } from 'firebase/database';
 
@@ -219,35 +218,30 @@ const ClientServiceConsent = () => {
   // no file inputs required anymore
 
   return (
-    <div className="py-12">
+    <div className="py-6 xs:py-8 sm:py-12">
       <motion.div
-        className="max-w-4xl mx-auto"
+        className="max-w-4xl mx-auto w-full px-2 xs:px-4 sm:px-6"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
-        <motion.div className="text-sm mb-8" variants={itemVariants}>
-          <Link to="/" className="hover:text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.home">Home</Trans></Link>
-          <span className="mx-2">/</span>
-          <span className="text-blue-400"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent Form</Trans></span>
-        </motion.div>
-
+        {/* Breadcrumb removed as requested */}
         <motion.div
-          className="bg-[#ffffff4d] backdrop-blur-md p-8 rounded-2xl shadow-xl border border-gray-300/50"
+          className="bg-[#ffffff4d] backdrop-blur-md p-4 xs:p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-300/50"
           variants={itemVariants}
         >
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-extrabold text-gray-900"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent Form</Trans></h2>
-            <p className="mt-2 text-gray-700">Please fill out the form below.</p>
+          <div className="text-center mb-6 xs:mb-8">
+            <h2 className="text-2xl xs:text-3xl font-extrabold text-gray-900"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent Form</Trans></h2>
+            <p className="mt-1 xs:mt-2 text-gray-700 text-xs xs:text-sm">Please fill out the form below.</p>
           </div>
 
-  <form onSubmit={handleSubmit} noValidate className="space-y-6">
+  <form onSubmit={handleSubmit} noValidate className="space-y-4 xs:space-y-6">
             <motion.div
               variants={containerVariants}
-              className="p-6 rounded-lg bg-[#ffffff4d] border border-gray-300/30"
+              className="p-3 xs:p-4 sm:p-6 rounded-lg bg-[#ffffff4d] border border-gray-300/30"
             >
-              <h3 className="text-xl font-semibold text-gray-900 border-b border-gray-300/40 pb-2 mb-6"><Trans i18nKey="pages.ClientServiceConsent.client-information">Client Information</Trans></h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <h3 className="text-lg xs:text-xl font-semibold text-gray-900 border-b border-gray-300/40 pb-2 mb-4 xs:mb-6"><Trans i18nKey="pages.ClientServiceConsent.client-information">Client Information</Trans></h3>
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-4 xs:gap-6">
                 {renderInput(
                   'clientName',
                   'Client Name*',
@@ -303,12 +297,12 @@ const ClientServiceConsent = () => {
 
             <motion.div
               variants={containerVariants}
-              className="p-6 rounded-lg bg-[#ffffff4d] border border-gray-300/30"
+              className="p-3 xs:p-4 sm:p-6 rounded-lg bg-[#ffffff4d] border border-gray-300/30"
             >
               <motion.div variants={itemVariants}>
                 <label
                   htmlFor="address"
-                  className="block text-sm font-medium text-gray-900 mb-2"
+                  className="block text-xs xs:text-sm font-medium text-gray-900 mb-2"
                 ><Trans i18nKey="pages.ClientServiceConsent.address">Address*</Trans></label>
                 <textarea
                   id="address"
@@ -318,7 +312,7 @@ const ClientServiceConsent = () => {
                   rows="4"
                   placeholder="Enter Full Address"
                   autoComplete="street-address"
-                  className={`w-full px-4 py-3 rounded-lg border bg-white/0 text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
+                  className={`w-full px-3 xs:px-4 py-2 xs:py-3 rounded-lg border bg-white/0 text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 text-xs xs:text-sm`}
                 ></textarea>
               </motion.div>
             </motion.div>
@@ -355,7 +349,7 @@ const ClientServiceConsent = () => {
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full shine-hover py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-300"
+                className="w-full shine-hover py-2 xs:py-3 px-3 xs:px-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-300 text-sm xs:text-base"
                 whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                 whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
               >

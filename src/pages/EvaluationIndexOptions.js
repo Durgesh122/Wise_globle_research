@@ -13,7 +13,7 @@ const EvaluationIndexOptions = () => (
         <meta name="description" content="Evaluation Index Options page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/evaluationindexoptions" />
       </Helmet>
-<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+<div className="container mx-auto py-8 px-4 sm:px-6 max-w-4xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.EvaluationIndexOptions.evaluation-index-options"><Trans i18nKey="pages.EvaluationIndexOptions.evaluation-index-options-1">Evaluation Index Options</Trans></Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       Evaluation Index Options service is specifically designed for option traders trading with precise technical research recommendations for Index Options. We provide recommendations to intraday traders to optimize every market movement. Nearly 1-2 intraday recommendations are given daily in Nifty and Bank Nifty Options, as per market conditions. Our timely technical recommendations provide adequate time to enter and exit trades. Our team of analysts specializes in tracking the F&O market, major sectors, and blends technical analysis with national and international events to predict market moves.

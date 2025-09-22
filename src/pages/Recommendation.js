@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import '../styles/Recommendation.css';
 import { motion } from 'framer-motion';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { ThemeContext } from '../context/ThemeContext';
 
 const Recommendation = () => {
   const navigate = useNavigate();
+  const { background, textColor } = useContext(ThemeContext);
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -31,7 +33,8 @@ const Recommendation = () => {
 
   return (
     <motion.div
-      className="min-h-screen recommendation-bg recommendation-white-text"
+      className="min-h-screen"
+      style={{ background, color: textColor, minHeight: '100vh', transition: 'background 0.5s, color 0.5s' }}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -52,7 +55,8 @@ const Recommendation = () => {
       </Helmet>
       {/* Hero Section */}
       <motion.section
-        className="bg-gradient-to-r from-gray-800 to-gray-900 text-center py-20 lg:py-24 recommendation-bg recommendation-white-text"
+        className="text-center py-20 lg:py-24"
+        style={{ color: textColor }}
         variants={itemVariants}
       >
         <div className="container mx-auto px-4">
@@ -62,9 +66,9 @@ const Recommendation = () => {
       </motion.section>
 
       {/* SEBI Disclaimer Section */}
-      <motion.section className="py-12 recommendation-bg recommendation-white-text" variants={itemVariants}>
+  <motion.section className="py-12" style={{ color: textColor }} variants={itemVariants}>
         <div className="container mx-auto px-4">
-          <div className="recommendation-box p-6 shadow-lg">
+          <div className="recommendation-box p-6 shadow-lg" style={{ color: textColor }}>
             <h2 className="text-2xl font-bold mb-4 flex items-center"><FiAlertTriangle className="mr-3 text-yellow-400" /><Trans i18nKey="pages.Recommendation.important-disclaimer">Important Disclaimer</Trans></h2>
             <p className="text-md mb-4">
               Wise Global Research is a SEBI Registered Research Analyst (INH000016719). Investment in the securities market is subject to market risks. Read all the related documents carefully before investing. The information provided herein is for educational purposes only and should not be construed as investment advice. We are not responsible for any losses incurred on the basis of these research insights.
@@ -75,10 +79,10 @@ const Recommendation = () => {
       </motion.section>
 
       {/* Market Insights Section */}
-      <motion.section className="py-20 recommendation-bg recommendation-white-text" variants={containerVariants}>
+  <motion.section className="py-20" style={{ color: textColor }} variants={containerVariants}>
         <div className="container mx-auto px-4">
           <motion.h2 className="text-3xl md:text-4xl font-bold text-center mb-12" variants={itemVariants}><Trans i18nKey="pages.Recommendation.market-insights-highlights"><Trans i18nKey="pages.Recommendation.market-insights-highlights-1">Market Insights & Highlights</Trans></Trans></motion.h2>
-          <motion.div className="recommendation-box p-6 shadow-lg text-lg leading-relaxed" variants={itemVariants}>
+          <motion.div className="recommendation-box p-6 shadow-lg text-lg leading-relaxed" style={{ color: textColor }} variants={itemVariants}>
             <ul className="list-disc list-inside space-y-4">
               <li><Trans i18nKey="pages.Recommendation.indian-stock-markets-have-shown-resilien"><Trans i18nKey="pages.Recommendation.indian-stock-markets-have-shown-resilien-1">Indian stock markets have shown resilience in the first half of the year, with Nifty and Sensex reaching new highs.</Trans></Trans></li>
               <li><Trans i18nKey="pages.Recommendation.it-and-pharma-sectors-have-outperformed-"><Trans i18nKey="pages.Recommendation.it-and-pharma-sectors-have-outperformed--1">IT and Pharma sectors have outperformed, while Banking and Auto sectors have seen healthy corrections and renewed buying interest.</Trans></Trans></li>
@@ -92,9 +96,9 @@ const Recommendation = () => {
       </motion.section>
 
       {/* Risk Disclosure Section */}
-      <motion.section className="py-12 recommendation-bg recommendation-white-text" variants={itemVariants}>
+  <motion.section className="py-12" style={{ color: textColor }} variants={itemVariants}>
         <div className="container mx-auto px-4">
-          <div className="recommendation-box p-6 shadow-lg">
+          <div className="recommendation-box p-6 shadow-lg" style={{ color: textColor }}>
             <h2 className="text-2xl font-bold mb-4 flex items-center"><FiInfo className="mr-3 text-blue-400" /><Trans i18nKey="pages.Recommendation.risk-disclosure">Risk Disclosure</Trans></h2>
             <p className="text-md mb-4"><Trans i18nKey="pages.Recommendation.all-investments-involve-risk-and-the-pas"><Trans i18nKey="pages.Recommendation.all-investments-involve-risk-and-the-pas-1">All investments involve risk, and the past performance of a security, industry, sector, market, or financial product does not guarantee future results or returns. As an investor, you should be aware of the risks associated with any investment and consider them carefully before making any decisions.</Trans></Trans></p>
             <ul className="list-disc list-inside space-y-2">
@@ -108,7 +112,7 @@ const Recommendation = () => {
       </motion.section>
 
       {/* Call to Action Section */}
-      <motion.section className="py-20 text-center recommendation-bg recommendation-white-text" variants={itemVariants}>
+  <motion.section className="py-20 text-center" style={{ color: textColor }} variants={itemVariants}>
         <div className="container mx-auto px-4">
           <motion.h2 className="text-3xl md:text-4xl font-bold mb-4" variants={itemVariants}><Trans i18nKey="pages.Recommendation.ready-for-in-depth-research"><Trans i18nKey="pages.Recommendation.ready-for-in-depth-research-1">Ready for In-depth Research?</Trans></Trans></motion.h2>
           <motion.p className="text-lg md:text-xl max-w-3xl mx-auto mb-8" variants={itemVariants}><Trans i18nKey="pages.Recommendation.subscribe-to-our-premium-research-servic"><Trans i18nKey="pages.Recommendation.subscribe-to-our-premium-research-servic-1">Subscribe to our premium research services for comprehensive market analysis and insights.</Trans></Trans></motion.p>

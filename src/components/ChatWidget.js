@@ -234,6 +234,23 @@ const ChatWidget = () => {
     return () => clearTimeout(t);
   }, [step, isOpen]);
 
+  // Listen for a custom event so mobile tray can open the chat
+  useEffect(() => {
+    const handler = () => setIsOpen(true);
+    document.addEventListener('open-chat-widget', handler);
+    // Also listen on window as some environments dispatch there
+    window.addEventListener && window.addEventListener('open-chat-widget', handler);
+    // Expose a global fallback function
+    try {
+      window.openChatWidget = handler;
+    } catch (e) {}
+    return () => {
+      document.removeEventListener('open-chat-widget', handler);
+      window.removeEventListener && window.removeEventListener('open-chat-widget', handler);
+      try { if (window.openChatWidget === handler) delete window.openChatWidget; } catch (e) {}
+    };
+  }, []);
+
 
   // (removed) previous one-time nudge logic in favor of lively launcher effects
 
@@ -949,7 +966,8 @@ const ChatWidget = () => {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: 8, scale: 0.98 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className="absolute right-full mr-3 top-1/3-translate-y-[60%] bg-white/95 backdrop-blur px-3 py-2 rounded-xl shadow-lg border border-gray-100 text-xs text-gray-800 max-w-[240px] cursor-pointer"
+              // show teaser only on md+ (desktop); mobile uses the MobileActionTray chat button
+              className="hidden md:flex absolute right-full mr-3 top-1/3 -translate-y-1/2 bg-white/95 backdrop-blur px-3 py-2 rounded-xl shadow-lg border border-gray-100 text-xs text-gray-800 max-w-[240px] cursor-pointer"
               role="status"
               aria-live="polite"
               onClick={() => {
@@ -958,15 +976,26 @@ const ChatWidget = () => {
               }}
             >
               <div className="flex items-start gap-2">
-                <div className="mt-0.5">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
+                {/* Mobile: show compact chat icon bubble */}
+                <div className="md:hidden flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white flex items-center justify-center shadow">
+                    <ChatLogo className="w-5 h-5" animated />
+                  </div>
                 </div>
-                <div className="flex-1">Hi, I'm Dudu.</div>
+
+                {/* Desktop: keep the original text teaser */}
+                <div className="hidden md:flex items-center gap-2">
+                  <div className="mt-0.5">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
+                  </div>
+                  <div className="flex-1">Hi, I'm Dudu.</div>
+                </div>
+
                 <button onClick={() => setShowTeaser(false)} className="ml-1 text-gray-400 hover:text-gray-600" aria-label="Dismiss chat teaser">
                   <FaTimes size={10} />
                 </button>
               </div>
-              <span className="absolute top-1/2 -translate-y-1/2 -right-1.5 w-3 h-3 bg-white rotate-45 border-r border-b border-gray-100" aria-hidden="true"></span>
+              <span className="absolute top-1/3 -translate-y-1/2 -right-1.5 w-3 h-3 bg-white rotate-45 border-r border-b border-gray-100" aria-hidden="true"></span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -992,7 +1021,8 @@ const ChatWidget = () => {
           // apply combined animations (bob + subtle shake); reduced-motion media query will disable via injected CSS
           // use damru-tilt for primary continuous motion, keep chat-shake as subtle lateral motion
           style={{ animation: 'damru-tilt 1.6s ease-in-out infinite, chat-shake 6s ease-in-out 4s infinite' }}
-          className={"chat-launcher-animated-border bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white w-14 h-14 p-0 rounded-lg shadow-xl shadow-[#128C7E]/30 hover:shadow-[#128C7E]/50 transition-all flex items-center justify-center" + (unreadCount > 0 ? ' chat-launcher-unread' : '')}
+          // hide the main launcher on small screens; the MobileActionTray provides a compact chat button there
+          className={"hidden md:flex chat-launcher-animated-border bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white w-14 h-14 p-0 rounded-lg shadow-xl shadow-[#128C7E]/30 hover:shadow-[#128C7E]/50 transition-all items-center justify-center" + (unreadCount > 0 ? ' chat-launcher-unread' : '')}
         >
             <motion.div
               initial={{ scale: 0.92, opacity: 0.95, y: 0 }}

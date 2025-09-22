@@ -48,7 +48,7 @@ const CertificationsSection = () => {
                 <div className="relative inline-block w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto rounded-full p-1">
                   <motion.div
                     className="relative z-10 rounded-full border shadow-xl transition-transform duration-300 transform flex items-center justify-center"
-                    style={{ background: 'rgba(212,227,255,0.30)', borderColor: 'rgba(212,227,255,0.6)', minHeight: '100%', width: '100%', height: '100%', boxSizing: 'border-box' }}
+                    style={{ background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)', minHeight: '100%', width: '100%', height: '100%', boxSizing: 'border-box' }}
                     whileHover={{ scale: 1.06, rotate: 3 }}
                     transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                   >

@@ -69,43 +69,44 @@ const ComplaintData = () => {
             {errorTable}
           </div>
           ) : (
-            <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
+            <div className="overflow-x-auto rounded-xl shadow-lg border custom-scrollbar" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
               <table
-                className="w-full border-collapse text-left text-xs sm:text-sm bg-white/10 backdrop-blur-[10px] -webkit-backdrop-blur-[10px] text-adaptive"
+                className="w-full border-collapse text-left text-xs sm:text-sm text-adaptive"
                 aria-label="Complaint Data for July 2025"
+                style={{ background: '#D4e3ff', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
               >
               <thead>
-                <tr className="bg-white/20">
-                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.sr-no">Sr. No.</Trans></th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.received-from">Received from</Trans></th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.pending-at-the-end-of-last-month"><Trans i18nKey="pages.ComplaintData.pending-at-the-end-of-last-month-1">Pending at the end of last month</Trans></Trans></th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.received">Received</Trans></th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.resolved">Resolved</Trans></th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.pending">Pending</Trans></th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.pending-complaints-3-months"><Trans i18nKey="pages.ComplaintData.pending-complaints-3-months-1">Pending Complaints 3 Months</Trans></Trans></th>
-                  <th className="p-2 sm:p-3 border border-gray-200/30"><Trans i18nKey="pages.ComplaintData.average-resolution-time-in-days"><Trans i18nKey="pages.ComplaintData.average-resolution-time-in-days-1">Average Resolution time (in days)^</Trans></Trans></th>
+                <tr style={{ background: '#D4e3ff' }}>
+                  <th className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}><Trans i18nKey="pages.ComplaintData.sr-no">Sr. No.</Trans></th>
+                  <th className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}><Trans i18nKey="pages.ComplaintData.received-from">Received from</Trans></th>
+                  <th className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}><Trans i18nKey="pages.ComplaintData.pending-at-the-end-of-last-month"><Trans i18nKey="pages.ComplaintData.pending-at-the-end-of-last-month-1">Pending at the end of last month</Trans></Trans></th>
+                  <th className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}><Trans i18nKey="pages.ComplaintData.received">Received</Trans></th>
+                  <th className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}><Trans i18nKey="pages.ComplaintData.resolved">Resolved</Trans></th>
+                  <th className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}><Trans i18nKey="pages.ComplaintData.pending">Pending</Trans></th>
+                  <th className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}><Trans i18nKey="pages.ComplaintData.pending-complaints-3-months"><Trans i18nKey="pages.ComplaintData.pending-complaints-3-months-1">Pending Complaints 3 Months</Trans></Trans></th>
+                  <th className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}><Trans i18nKey="pages.ComplaintData.average-resolution-time-in-days"><Trans i18nKey="pages.ComplaintData.average-resolution-time-in-days-1">Average Resolution time (in days)^</Trans></Trans></th>
                 </tr>
               </thead>
               <tbody>
                 {tableData.map((row) => (
-                  <tr key={row.srNo} className="bg-white/5 hover:bg-white/10 transition-colors">
-                    <td className="p-2 sm:p-3 border border-gray-200/30">{row.srNo}</td>
-                    <td className="p-2 sm:p-3 border border-gray-200/30">{row.source}</td>
-                    <td className="p-2 sm:p-3 border border-gray-200/30">{row.pendingLastMonth || 0}</td>
-                    <td className="p-2 sm:p-3 border border-gray-200/30">{row.received || 0}</td>
-                    <td className="p-2 sm:p-3 border border-gray-200/30">{row.resolved || 0}</td>
-                    <td className="p-2 sm:p-3 border border-gray-200/30">{row.pending || 0}</td>
-                    <td className="p-2 sm:p-3 border border-gray-200/30">{row.pending3Months || 0}</td>
-                    <td className="p-2 sm:p-3 border border-gray-200/30">{row.avgResolutionTime || 0}</td>
+                  <tr key={row.srNo} className="transition-colors" style={{ background: 'transparent' }}>
+                    <td className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>{row.srNo}</td>
+                    <td className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>{row.source}</td>
+                    <td className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>{row.pendingLastMonth || 0}</td>
+                    <td className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>{row.received || 0}</td>
+                    <td className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>{row.resolved || 0}</td>
+                    <td className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>{row.pending || 0}</td>
+                    <td className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>{row.pending3Months || 0}</td>
+                    <td className="p-2 sm:p-3 border" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>{row.avgResolutionTime || 0}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
-          <p className="mt-4 text-xs sm:text-sm text-adaptive/70"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total-1">^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.</Trans></Trans></p>
+          <p className="mt-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total"><Trans i18nKey="pages.ComplaintData.average-resolution-time-is-the-sum-total-1">^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.</Trans></Trans></p>
 
-          <div className="mt-3 text-xs sm:text-sm text-adaptive/70 space-y-1">
+          <div className="mt-3 text-xs sm:text-sm text-black dark:text-gray-300 space-y-1">
             <p><strong>*</strong> Inclusive of complaints of previous months resolved in the current month.</p>
             <p><strong>#</strong> Inclusive of complaints pending as on the last day of the month.</p>
             <p><strong>*</strong> Inclusive of complaints of previous years resolved in the current year.</p>

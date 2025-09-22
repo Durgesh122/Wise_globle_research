@@ -18,16 +18,19 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ChatWidget from './components/ChatWidget';
 import FloatingPayButton from './components/FloatingPayButton';
+import FloatingContactButton from './components/FloatingContactButton';
+import FloatingSpeakerButton from './components/FloatingSpeakerButton';
 import AdminLayout from './pages/admin/AdminLayout';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import WhatsAppButton from './components/WhatsAppButton';
+import MobileActionTray from './components/MobileActionTray';
 import ScrollToTop from './components/ScrollToTop';
-// Removed RouteAnnouncer, SeoHelmet, and A11yControls (not present in repo)
-import JobsManager from './pages/admin/JobsManager'; // Added JobsManager import
-import SeoHelmet from './components/SeoHelmet';
-import AccessibilityMenu from './components/AccessibilityMenu';
-import Breadcrumbs from './components/Breadcrumbs';
 import RouteAnnouncer from './components/RouteAnnouncer';
+// Removed SeoHelmet and A11yControls (not present in repo)
+import JobsManager from './pages/admin/JobsManager'; // Added JobsManager import
+import AccessibilityMenu from './components/AccessibilityMenu';
+import ChunkErrorBoundary from './components/ChunkErrorBoundary';
+import Breadcrumbs from './components/Breadcrumbs';
 import AccessibilityStatement from './pages/AccessibilityStatement';
 import AccessibilityFeedback from './pages/AccessibilityFeedback';
 import Search from './pages/Search';
@@ -58,40 +61,29 @@ const lazyWithRetry = (importFunc, { retries = 3, interval = 500 } = {}) => {
   });
 };
 
-const Home = lazy(() => import('./pages/Home'));
+const Home = lazyWithRetry(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Services = lazy(() => import('./pages/Services'));
-const Demo = lazy(() => import('./pages/Demo'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Legal = lazy(() => import('./pages/Legal'));
 const Disclosure = lazy(() => import('./pages/Disclosure'));
 const LiveChart = lazy(() => import('./pages/LiveChart'));
-const TradingViewTicker = lazy(() => import('./pages/TradingViewTicker'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Complaint = lazy(() => import('./pages/Complaint'));
 const PaymentInfo = lazy(() => import('./pages/PaymentInfo'));
-const Team = lazy(() => import('./pages/Team'));
 const Vision = lazy(() => import('./pages/Vision'));
 const Equity = lazy(() => import('./pages/Equity'));
 const Intraday = lazy(() => import('./pages/Intraday'));
-const Mcx = lazy(() => import('./pages/Mcx'));
 const Career = lazy(() => import('./pages/Career'));
-const Training = lazy(() => import('./pages/Training'));
 const Blogs = lazy(() => import('./pages/Blogs'));
 const MarketNews = lazy(() => import('./pages/MarketNews'));
 const UserLogin = lazyWithRetry(() => import('./pages/UserLogin'));
 const ClientPanel = lazy(() => import('./pages/ClientPanel'));
 const StockOption = lazy(() => import('./pages/StockOption'));
-const Delivery = lazy(() => import('./pages/Delivery'));
 const Index = lazy(() => import('./pages/Index'));
 const Future = lazy(() => import('./pages/Future'));
 const StockIndexOption = lazy(() => import('./pages/StockIndexOption'));
-const BTST = lazy(() => import('./pages/BTST'));
-const Cash = lazy(() => import('./pages/Cash'));
-const Bullions = lazy(() => import('./pages/Bullions'));
-const Energy = lazy(() => import('./pages/Energy'));
-const Metal = lazy(() => import('./pages/Metal'));
 const MCXOption = lazy(() => import('./pages/MCXOption'));
 const SmartCash = lazy(() => import('./pages/SmartCash'));
 const EvaluationStockCash = lazy(() => import('./pages/EvaluationStockCash'));
@@ -106,10 +98,9 @@ const UniversalCash = lazy(() => import('./pages/UniversalCash'));
 const InfinityClub = lazy(() => import('./pages/InfinityClub'));
 const MCXSupreme = lazy(() => import('./pages/MCXSupreme'));
 const GalaxyMCX = lazy(() => import('./pages/GalaxyMCX'));
-const NCDEX = lazy(() => import('./pages/NCDEX'));
-const Forex = lazy(() => import('./pages/Forex'));
 const Currency = lazy(() => import('./pages/Currency'));
-const Comex = lazy(() => import('./pages/Comex'));
+// The following pages were removed from the project; keep routes cleaned up to avoid import errors:
+// Demo, Team, Mcx, Training, Delivery, BTST, Cash, Bullions, Energy, Metal, NCDEX, Forex, Comex
 const Terms = lazy(() => import('./pages/Terms'));
 const Refund = lazy(() => import('./pages/Refund'));
 const Privacy = lazy(() => import('./pages/Privacy'));
@@ -125,7 +116,7 @@ const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const ContactSubmissions = lazy(() => import('./pages/admin/ContactSubmissions'));
 const ComplaintManager = lazy(() => import('./pages/admin/ComplaintManager'));
 const ReportManager = lazyWithRetry(() => import('./pages/admin/ReportManager'));
-const PopupSubmissions = lazy(() => import('./pages/admin/PopupSubmissions'));
+// const PopupSubmissions = lazy(() => import('./pages/admin/PopupSubmissions'));
 const HomeContactSubmissions = lazy(() => import('./pages/admin/HomeContactSubmissions'));
 const ChatbotSubmissions = lazy(() => import('./pages/admin/ChatbotSubmissions')); // Added this line
 const ComplaintBox = lazy(() => import('./pages/admin/ComplaintBox'));
@@ -162,174 +153,269 @@ function App() {
 
   return (
     <HelmetProvider>
-  {/* Skip link for keyboard users */}
-  <a href="#main-content" className="skip-link">Skip to main content</a>
-  {/* Announce route changes for screen readers */}
-  <RouteAnnouncer />
+      {/* Skip link for keyboard users */}
+      <a href="#main-content" className="skip-link">Skip to main content</a>
+      {/* Announce route changes for screen readers (guarded to avoid runtime errors during HMR) */}
+      {typeof RouteAnnouncer !== 'undefined' ? <RouteAnnouncer /> : null}
 
-  <TimeBasedThemeWrapper>
-      <ScrollToTop />
-  <SeoHelmet />
+      <TimeBasedThemeWrapper>
+        <ScrollToTop />
+        {/* <SeoHelmet /> */}
 
-      {/* Toast Notifications */}
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        theme="colored"
-        role="status"
-        ariaLive="polite"
-        newestOnTop
-        limit={3}
-      />
+        {/* Toast Notifications */}
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          theme="colored"
+          role="status"
+          ariaLive="polite"
+          newestOnTop
+          limit={3}
+        />
 
+        {/* Background particles removed as requested */}
 
-  {/* Background particles removed as requested */}
+        {/* TradingViewTicker + Navbar */}
+        {!isAdminPage && (
+          <>
+            <Navbar />
+          </>
+        )}
 
-      {/* Navbar */}
-      {!isAdminPage && <Navbar />}
-
-  {/* Page Content Wrapper (inside filter scope) */}
-  <div className="a11y-filter-scope">
-  <main
-        id="main-content"
-        role="main"
-        className={`min-h-screen ${
-          isAdminPage ? '' : 'pt-24 sm:pt-24 px-2 sm:px-4 md:px-8 lg:px-12 max-w-screen-2xl mx-auto'
-        }`}
-      >
-  {!isAdminPage && <Breadcrumbs />}
-  {/* Removed SeoHelmet and RouteAnnouncer to avoid missing module errors */}
-  <Suspense
-          fallback={
-            <div className="text-center py-10 text-primaryBlue font-josefin">
-              Loading...
-            </div>
-          }
-        >
-          <Routes>
-            <Route path="/complaint-data" element={<ContactDataPage />} />
-            <Route path="/grievance-redressal-process" element={<GrievanceRedressalProcess />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            {/* Direct premium service routes for Navbar */}
-            <Route path="/SmartCash" element={<SmartCash />} />
-            <Route path="/EvaluationIndexOptions" element={<EvaluationIndexOptions />} />
-            <Route path="/EvaluationStockCash" element={<EvaluationStockCash />} />
-            <Route path="/EvaluationStockOption" element={<EvaluationStockOption />} />
-            <Route path="/SmartFuture" element={<SmartFuture />} />
-            <Route path="/SmartOptions" element={<SmartOptions />} />
-            <Route path="/ImpulseIndexOptions" element={<ImpulseIndexOptions />} />
-            <Route path="/ImpulseOption" element={<ImpulseOption />} />
-            <Route path="/MCXSupreme" element={<MCXSupreme />} />
-            <Route path="/GalaxyMCX" element={<GalaxyMCX />} />
-            <Route path="/UniversalCash" element={<UniversalCash />} />
-            <Route path="/InfinityClub" element={<InfinityClub />} />
-            <Route path="/services/smart-cash" element={<SmartCash />} />
-            <Route path="/services/evaluation-stock-cash" element={<EvaluationStockCash />} />
-            <Route path="/services/smart-options" element={<SmartOptions />} />
-            <Route path="/services/impulse-option" element={<ImpulseOption />} />
-            <Route path="/services/smart-future" element={<SmartFuture />} />
-            <Route path="/services/evaluation-stock-option" element={<EvaluationStockOption />} />
-            <Route path="/services/evaluation-index-options" element={<EvaluationIndexOptions />} />
-            <Route path="/services/impulse-index-options" element={<ImpulseIndexOptions />} />
-            <Route path="/services/smart-index-option" element={<SmartIndexOption />} />
-            <Route path="/services/universal-cash" element={<UniversalCash />} />
-            <Route path="/services/infinity-club" element={<InfinityClub />} />
-            <Route path="/demo" element={<Demo />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/legal" element={<Legal />} />
-            <Route path="/disclosure" element={<Disclosure />} />
-            <Route path="/livechart" element={<LiveChart />} />
-            <Route path="/ticker" element={<TradingViewTicker />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/vision" element={<Vision />} />
-            <Route path="/equity" element={<Equity />} />
-            <Route path="/intraday" element={<Intraday />} />
-            <Route path="/mcx" element={<Mcx />} />
-            <Route path="/career" element={<Career />} />
-            <Route path="/training" element={<Training />} />
-            <Route path="/blogs" element={<Blogs />} />
-            <Route path="/market-news" element={<MarketNews />} />
-            <Route path="/user-login" element={<UserLogin />} />
-            <Route path="/client-panel" element={<ClientPanel />} />
-            <Route path="/complaint" element={<Complaint />} />
-            <Route path="/research-reports" element={<Reports />} />
-            {/* Backward-compatible redirect from old /reports to new /research-reports */}
-            <Route path="/reports" element={<Navigate to="/research-reports" replace />} />
-            <Route path="/payment" element={<PaymentInfo />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/refund" element={<Refund />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/recommendation" element={<Recommendation />} />
-            <Route path="/accessibility-statement" element={<AccessibilityStatement />} />
-            <Route path="/accessibility-feedback" element={<AccessibilityFeedback />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/services/equity/stock-option" element={<StockOption />} />
-            <Route path="/services/equity/delivery" element={<Delivery />} />
-            <Route path="/services/equity/index" element={<Index />} />
-            <Route path="/services/equity/future" element={<Future />} />
-            <Route path="/services/equity/stock-index-option" element={<StockIndexOption />} />
-            <Route path="/services/equity/btst" element={<BTST />} />
-            <Route path="/services/equity/cash" element={<Cash />} />
-            <Route path="/services/mcx/bullions" element={<Bullions />} />
-            <Route path="/services/mcx/energy" element={<Energy />} />
-            <Route path="/services/mcx/metal" element={<Metal />} />
-            <Route path="/services/mcx/mcx-option" element={<MCXOption />} />
-            <Route path="/services/ncdex" element={<NCDEX />} />
-            <Route path="/services/forex" element={<Forex />} />
-            <Route path="/services/currency" element={<Currency />} />
-            <Route path="/services/comex" element={<Comex />} />
-            <Route 
-              path="/admin" 
-              element={<ProtectedAdminRoute><AdminLayout /></ProtectedAdminRoute>}
+        {/* Page Content Wrapper (inside filter scope) */}
+        <div className="a11y-filter-scope">
+          <main
+            id="main-content"
+            role="main"
+            className={`min-h-screen relative z-0 ${
+              isAdminPage ? '' : 'pt-40 sm:pt-32 md:pt-24 px-2 sm:px-4 md:px-8 lg:px-12 max-w-screen-2xl mx-auto'
+            }`}
+          >
+            {!isAdminPage && <Breadcrumbs />}
+            {/* Removed SeoHelmet and RouteAnnouncer to avoid missing module errors */}
+            <ChunkErrorBoundary>
+            <Suspense
+              fallback={
+                <div className="text-center py-10 text-primaryBlue font-josefin">
+                  Loading...
+                </div>
+              }
             >
-              <Route index element={<Dashboard />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="popups" element={<PopupSubmissions />} />
-              <Route path="contacts" element={<ContactSubmissions />} />
-              <Route path="home-contacts" element={<HomeContactSubmissions />} />
-              <Route path="complaints" element={<ComplaintManager />} />
-              <Route path="complaint-box" element={<ComplaintBox />} />
-              <Route path="reports" element={<ReportManager />} />
-              <Route path="chatbot-data" element={<ChatbotSubmissions />} /> {/* Added this line */}
-              <Route path="a11y-feedback" element={<A11yFeedback />} />
-              <Route path="jobs" element={<JobsManager />} /> {/* Jobs Manager (admins only) */}
-            </Route>
-            <Route path="/client-service-consent-form" element={<ClientServiceConsent />} />
-            {/* Backward-compatible redirect from old path */}
-            <Route path="/client-service-consent" element={<Navigate to="/client-service-consent-form" replace />} />
-            <Route path="/investor-chart" element={<InvestorChart />} />
-            {/* Alias route to match Footer link */}
-            <Route path="/investor-charter" element={<InvestorChart />} />
-            <Route path="/anti-money-laundering" element={<AntiMoneyLaundering />} />
-            <Route path="/daily" element={<DailyRecommendation />} />
-            <Route path="/media" element={<Media />} />
-          <Route path="/guide" element={<GuideForInvesting />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-  </main>
-  </div>
+              <Routes>
+                {/* Redirect /home to / for SEO and user experience */}
+                <Route path="/home" element={<Navigate to="/" replace />} />
+                <Route path="/complaint-data" element={<ContactDataPage />} />
+                <Route path="/grievance-redressal-process" element={<GrievanceRedressalProcess />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/services" element={<Services />} />
+                {/* Direct premium service routes for Navbar */}
+                <Route path="/SmartCash" element={<SmartCash />} />
+                <Route path="/EvaluationIndexOptions" element={<EvaluationIndexOptions />} />
+                <Route path="/EvaluationStockCash" element={<EvaluationStockCash />} />
+                <Route path="/EvaluationStockOption" element={<EvaluationStockOption />} />
+                <Route path="/SmartFuture" element={<SmartFuture />} />
+                <Route path="/SmartOptions" element={<SmartOptions />} />
+                <Route path="/ImpulseIndexOptions" element={<ImpulseIndexOptions />} />
+                <Route path="/ImpulseOption" element={<ImpulseOption />} />
+                <Route path="/MCXSupreme" element={<MCXSupreme />} />
+                <Route path="/GalaxyMCX" element={<GalaxyMCX />} />
+                <Route path="/UniversalCash" element={<UniversalCash />} />
+                <Route path="/InfinityClub" element={<InfinityClub />} />
+                <Route path="/services/smart-cash" element={<SmartCash />} />
+                <Route path="/services/evaluation-stock-cash" element={<EvaluationStockCash />} />
+                <Route path="/services/smart-options" element={<SmartOptions />} />
+                <Route path="/services/impulse-option" element={<ImpulseOption />} />
+                <Route path="/services/smart-future" element={<SmartFuture />} />
+                <Route path="/services/evaluation-stock-option" element={<EvaluationStockOption />} />
+                <Route path="/services/evaluation-index-options" element={<EvaluationIndexOptions />} />
+                <Route path="/services/impulse-index-options" element={<ImpulseIndexOptions />} />
+                <Route path="/services/smart-index-option" element={<SmartIndexOption />} />
+                <Route path="/services/universal-cash" element={<UniversalCash />} />
+                <Route path="/services/infinity-club" element={<InfinityClub />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/legal" element={<Legal />} />
+                <Route path="/disclosure" element={<Disclosure />} />
+                <Route path="/livechart" element={<LiveChart />} />
+                
+                <Route path="/vision" element={<Vision />} />
+                <Route path="/equity" element={<Equity />} />
+                <Route path="/intraday" element={<Intraday />} />
+                <Route path="/career" element={<Career />} />
+                <Route path="/blogs" element={<Blogs />} />
+                <Route path="/market-news" element={<MarketNews />} />
+                <Route path="/user-login" element={<UserLogin />} />
+                <Route path="/client-panel" element={<ClientPanel />} />
+                <Route path="/complaint" element={<Complaint />} />
+                <Route path="/research-reports" element={<Reports />} />
+                {/* Backward-compatible redirect from old /reports to new /research-reports */}
+                <Route path="/reports" element={<Navigate to="/research-reports" replace />} />
+                <Route path="/payment" element={<PaymentInfo />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/refund" element={<Refund />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/recommendation" element={<Recommendation />} />
+                <Route path="/accessibility-statement" element={<AccessibilityStatement />} />
+                <Route path="/accessibility-feedback" element={<AccessibilityFeedback />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/services/equity/stock-option" element={<StockOption />} />
+                <Route path="/services/equity/index" element={<Index />} />
+                <Route path="/services/equity/future" element={<Future />} />
+                <Route path="/services/equity/stock-index-option" element={<StockIndexOption />} />
+                <Route path="/services/mcx/mcx-option" element={<MCXOption />} />
+                <Route path="/services/currency" element={<Currency />} />
+                {/* Removed pages and their routes: demo, team, mcx, training, delivery, BTST, cash,
+                  bullions, energy, metal, NCDEX, forex, comex. */}
+                <Route 
+                  path="/admin" 
+                  element={<ProtectedAdminRoute><AdminLayout /></ProtectedAdminRoute>}
+                >
+                  <Route index element={<Dashboard />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  {/* <Route path="popups" element={<PopupSubmissions />} /> */}
+                  <Route path="contacts" element={<ContactSubmissions />} />
+                  <Route path="home-contacts" element={<HomeContactSubmissions />} />
+                  <Route path="complaints" element={<ComplaintManager />} />
+                  <Route path="complaint-box" element={<ComplaintBox />} />
+                  <Route path="reports" element={<ReportManager />} />
+                  <Route path="chatbot-data" element={<ChatbotSubmissions />} /> {/* Added this line */}
+                  <Route path="a11y-feedback" element={<A11yFeedback />} />
+                  <Route path="jobs" element={<JobsManager />} /> {/* Jobs Manager (admins only) */}
+                </Route>
+                <Route path="/client-service-consent-form" element={<ClientServiceConsent />} />
+                {/* Backward-compatible redirect from old path */}
+                <Route path="/client-service-consent" element={<Navigate to="/client-service-consent-form" replace />} />
+                <Route path="/investor-chart" element={<InvestorChart />} />
+                {/* Alias route to match Footer link */}
+                <Route path="/investor-charter" element={<InvestorChart />} />
+                <Route path="/anti-money-laundering" element={<AntiMoneyLaundering />} />
+                <Route path="/daily" element={<DailyRecommendation />} />
+                <Route path="/media" element={<Media />} />
+                <Route path="/guide" element={<GuideForInvesting />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+            </ChunkErrorBoundary>
+            {/* Global Accessibility menu on public pages only (hide on admin) */}
+            
+          </main>
+        </div>
 
-  {/* Global Accessibility menu on public pages only (hide on admin) */}
-  {!isAdminPage && <AccessibilityMenu />}
-
-      {/* Footer & Floating Buttons (hide on admin) */}
-      {!isAdminPage && (
-        <>
-          <Footer />
-          <ChatWidget />
-          <FloatingPayButton />
-          <WhatsAppButton />
-        </>
-      )}
+        {/* Footer & Floating Buttons (hide on admin) */}
+        {!isAdminPage && (
+          <>
+            <Footer />
+            <ChatWidget />
+            <FloatingPayButton />
+            <FloatingContactButton />
+            <FloatingSpeakerButton />
+            <WhatsAppButton />
+            <MobileActionTray />
+            <AccessibilityMenu />
+          </>
+        )}
       </TimeBasedThemeWrapper>
     </HelmetProvider>
   );
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

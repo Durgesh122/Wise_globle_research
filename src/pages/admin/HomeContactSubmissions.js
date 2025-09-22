@@ -30,30 +30,33 @@ const buttonVariants = {
 
 const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggle }) => (
   <motion.div
-    className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20 overflow-x-auto h-scroll custom-scrollbar p-2"
+    className="table-responsive rounded-xl shadow-lg p-2"
+    style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}
     variants={itemVariants}
   >
-    <table className="min-w-[760px] sm:min-w-full table-auto text-white text-xs sm:text-sm">
-      <thead className="bg-gray-700/50">
+  <div>
+  <table className="min-w-full table-auto text-xs sm:text-sm" style={{ color: 'var(--text-body)' }}>
+      <thead className="bg-gray-100 dark:bg-gray-700/30">
         <tr>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Name</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Email</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Phone</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Interest</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Message</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">
-            <button onClick={handleSortToggle} className="hover:text-indigo-400 transition-colors">
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold text-adaptive">Name</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold text-adaptive">Email</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold text-adaptive">Phone</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold text-adaptive">Interest</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold text-adaptive">Message</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold text-adaptive">
+            <button onClick={handleSortToggle} className="hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
               Timestamp {sortOrder === 'desc' ? '↓' : '↑'}
             </button>
           </th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Actions</th>
+          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold text-adaptive">Actions</th>
         </tr>
       </thead>
       <tbody>
         {submissions.map((submission) => (
           <motion.tr
             key={submission.id}
-            className="border-b border-gray-200/20 hover:bg-gray-700/20 transition-colors"
+            className="border-b hover:bg-opacity-5 transition-colors"
+            style={{ borderColor: 'var(--bg-border)' }}
             variants={itemVariants}
           >
             <td className="p-4 break-words">{submission.name || 'N/A'}</td>
@@ -65,7 +68,7 @@ const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggl
             <td className="p-4">
               <motion.button
                 onClick={() => handleDelete(submission.id)}
-                className="text-red-500 hover:text-red-700"
+                className="text-red-600 hover:text-red-500"
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
@@ -76,7 +79,8 @@ const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggl
           </motion.tr>
         ))}
       </tbody>
-    </table>
+  </table>
+  </div>
   </motion.div>
 );
 
@@ -183,7 +187,7 @@ const HomeContactSubmissions = () => {
     link.setAttribute('download', 'home_page_contact_submissions.csv');
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+  if (link && link.parentNode) link.parentNode.removeChild(link);
     toast.success('Submissions exported to CSV.');
   };
 
@@ -193,8 +197,8 @@ const HomeContactSubmissions = () => {
   const totalPages = Math.ceil(filteredSubmissions.length / itemsPerPage);
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible">
-      <h2 className="text-3xl font-bold text-white mb-6">
+    <motion.div className="admin-section" variants={containerVariants} initial="hidden" animate="visible">
+  <h2 className="text-3xl font-bold text-adaptive mb-6">
         <Trans i18nKey="pages.admin_HomeContactSubmissions.heading">Home Page Contact Submissions</Trans>
       </h2>
   <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
@@ -205,7 +209,7 @@ const HomeContactSubmissions = () => {
         />
         <motion.button
           onClick={handleExportCSV}
-          className="bg-green-500/80 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+          className="bg-green-500/80 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-sm hover:bg-green-600/90 transition-colors"
           variants={buttonVariants}
           whileHover="hover"
         >
@@ -217,12 +221,40 @@ const HomeContactSubmissions = () => {
         <LoadingSpinner />
       ) : (
         <>
-          <SubmissionTable
-            submissions={currentSubmissions}
-            handleDelete={handleDeleteClick}
-            sortOrder={sortOrder}
-            handleSortToggle={() => setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc'))}
-          />
+          {/* Desktop/table view for sm+ */}
+          <div className="hidden sm:block">
+            <SubmissionTable
+              submissions={currentSubmissions}
+              handleDelete={handleDeleteClick}
+              sortOrder={sortOrder}
+              handleSortToggle={() => setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc'))}
+            />
+          </div>
+
+          {/* Mobile stacked cards for small screens */}
+          <div className="sm:hidden space-y-3">
+            {currentSubmissions.length === 0 ? (
+              <div className="rounded-xl p-4 text-sm text-adaptive" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>No submissions found.</div>
+            ) : (
+              currentSubmissions.map((s) => (
+                <motion.div key={s.id} variants={itemVariants} className="rounded-xl p-4 shadow-sm" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-sm font-semibold text-adaptive">{s.name || 'N/A'}</div>
+                    <div className="text-xs text-adaptive">{s.timestamp ? new Date(s.timestamp).toLocaleString('en-IN') : 'N/A'}</div>
+                  </div>
+                  <div className="text-sm text-adaptive mb-1"><strong>Email:</strong> {s.email || 'N/A'}</div>
+                  <div className="text-sm text-adaptive mb-1"><strong>Phone:</strong> {s.phone || 'N/A'}</div>
+                  <div className="text-sm text-adaptive mb-2"><strong>Interest:</strong> {s.interest || 'N/A'}</div>
+                  <div className="text-sm text-adaptive mb-3"><strong>Message:</strong> {s.message || 'N/A'}</div>
+                  <div className="flex justify-end">
+                    <motion.button onClick={() => handleDeleteClick(s.id)} className="text-red-600 hover:text-red-500 text-xs flex items-center gap-2" variants={buttonVariants} whileHover="hover" whileTap="tap">
+                      <FiTrash2 /> Delete
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))
+            )}
+          </div>
           {totalPages > 1 && (
             <Pagination totalPages={totalPages} currentPage={currentPage} paginate={setCurrentPage} />
           )}

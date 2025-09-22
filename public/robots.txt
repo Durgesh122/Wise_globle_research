@@ -2,5 +2,6 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /client-panel
 
 Sitemap: https://wiseglobalresearch.com/sitemap.xml

@@ -501,7 +501,7 @@ function Reports() {
         link.download = name;
         document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
+  if (link && link.parentNode) link.parentNode.removeChild(link);
         URL.revokeObjectURL(url);
       };
 
@@ -527,7 +527,7 @@ function Reports() {
         link.download = filename; // May be ignored by the browser if cross-origin without proper headers
         document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
+  if (link && link.parentNode) link.parentNode.removeChild(link);
       }
       // Otherwise, assume it's a raw base64 string without the data URL prefix
       else {
@@ -800,7 +800,7 @@ function Reports() {
           setSelectedReport(null);
         }}
         report={selectedReport}
-  onDownload={handleDownload}
+        onDownload={handleDownload}
       />
     </motion.div>
   );

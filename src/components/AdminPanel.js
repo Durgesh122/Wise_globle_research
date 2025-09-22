@@ -190,7 +190,7 @@ const AdminPanel = () => {
             <picture>
               <source type="image/avif" srcSet={logoSrcSetAvif} sizes="40px" />
               <source type="image/webp" srcSet={logoSrcSetWebp} sizes="40px" />
-              <img src={`/assets/images/${logoName}.png`} alt="Logo" className="h-10 w-10 object-contain rounded" loading="lazy" decoding="async" width="40" height="40" />
+              <img src={`/assets/images/${logoName}.png`} alt="Logo" className="h-10 w-10 object-contain rounded" loading="eager" decoding="async" fetchpriority="high" importance="high" width="40" height="40" />
             </picture>
             <div>
               <p className="font-semibold text-gray-900">Wise Global Admin</p>
@@ -264,7 +264,7 @@ const AdminPanel = () => {
               <BurgerIcon />
             </button>
             <div className="flex items-center gap-3">
-              <img src={logo} alt="Logo" className="h-7 w-7 object-contain rounded" />
+              <img src={`/assets/images/${logoName}.png`} alt="Logo" className="h-7 w-7 object-contain rounded" />
               <span className="font-semibold text-gray-900 hidden sm:block">Admin Dashboard</span>
             </div>
             <div className="ml-auto flex items-center gap-2">
@@ -286,7 +286,7 @@ const AdminPanel = () => {
                       const row = cols.map((c)=>{
                         const v = c==='timestamp' ? formatDate(r.timestamp) : (r[c] ?? '');
                         const s = String(v).replaceAll('"','""');
-                        return `"${s}` + `"`;
+                        return `"${s}"`;
                       }).join(',');
                       lines.push(row);
                     });

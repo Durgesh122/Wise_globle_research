@@ -53,20 +53,48 @@ html, body, #root { min-height: 100%; }
   outline-offset: 2px;
 }
 
-/* Skip link styles */
+/* Skip link styles
+   - Hidden off-screen by default (preserves access for screen readers)
+   - Becomes visible when focused or active so keyboard users can see it
+   - Uses transform instead of top to avoid layout shifts
+*/
 .skip-link {
   position: absolute;
   left: 8px;
-  top: -40px;
+  top: 8px; /* keep logical top for placement when visible */
+  transform: translateY(-200%); /* move off-screen visually */
   background: #111827;
   color: #fff;
-  padding: 8px 12px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
   z-index: 10000;
   border-radius: 6px;
-  transition: top 0.2s ease;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  opacity: 0;
+  pointer-events: none; /* prevent accidental mouse interactions when hidden */
 }
-.skip-link:focus {
-  top: 8px;
+
+/* Reveal when focused (keyboard) or active (some browsers) */
+.skip-link:focus,
+.skip-link:active {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+}
+
+/* Make skip link larger on small/mobile screens so it's easy to read */
+@media (max-width: 640px) {
+  .skip-link {
+    font-size: 1.1rem; /* larger on small screens */
+    padding: 14px 18px;
+    left: 14px;
+    border-radius: 10px;
+  }
 }
 
 /* ✅ Responsive Container Helpers */
@@ -354,5 +382,98 @@ html[data-line-height="relaxed"] body, html[data-line-height="relaxed"] * { line
   if a light background is active (optional). */
 html[data-theme-light="true"] .text-white { color: #0b1220 !important; }
 html[data-theme-light="true"] .bg-white { background-color: #ffffff !important; }
+
+/* On small screens the floating controls/panel can overlap the navbar logo.
+   Only hide the navbar logo and the speaker controls on narrow viewports so
+   desktop users keep the visible logo when opening these panels. */
+@media (max-width: 768px) {
+  /* Keep navbar logo visible on mobile even when panels open. */
+
+  /* Explicitly ensure logo is visible when accessibility or announcer flags exist.
+     This prevents older compiled CSS or third-party styles from hiding the image. */
+  body[data-accessibility-open="true"] .logo-hover,
+  body[data-route-announcer-open="true"] .logo-hover {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+
+  /* Also hide the floating speaker controls when accessibility menu is open on mobile */
+  body[data-accessibility-open="true"] .route-announcer-floating,
+  body[data-accessibility-open="true"] .route-announcer-panel {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+}
+
+/* When accessibility menu is flagged as mobile, make the panel cover full width at bottom like a sheet */
+body[data-accessibility-mobile="true"] #accessibility-menu-panel {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  border-radius: 1rem 1rem 0 0 !important;
+}
+
+/* ===== Global Responsive Helpers ===== */
+/* Fluid type scale: clamps between small and large screens */
+html { --fluid-type: clamp(1rem, 1rem + 0.7vw, 1.125rem); }
+body { font-size: var(--fluid-type); }
+
+/* Ensure images and media scale within their container */
+img, picture, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive embed helper for iframes and charts */
+.responsive-embed {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+.responsive-embed iframe,
+.responsive-embed embed,
+.responsive-embed object,
+.responsive-embed video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Constrain long code or table content and allow horizontal scroll on small devices */
+pre, code, table {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Consistent page paddings for small screens */
+.page-pad { padding-left: 12px; padding-right: 12px; }
+@media (min-width: 640px) { .page-pad { padding-left: 16px; padding-right: 16px; } }
+@media (min-width: 1024px) { .page-pad { padding-left: 24px; padding-right: 24px; } }
+
+/* Utility to visually cap content width on very large screens while keeping readable line-length */
+.content-cap { max-width: 760px; margin-left: auto; margin-right: auto; }
+
+/* Small-screen specific touch target improvements */
+@media (max-width: 480px) {
+  button, a.button {
+    padding: 12px 14px;
+    font-size: 1rem;
+  }
+}
+
 
 

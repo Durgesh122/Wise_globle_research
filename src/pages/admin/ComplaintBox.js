@@ -147,7 +147,7 @@ const ComplaintBox = () => {
   };
 
   return (
-    <div>
+    <div className="admin-section">
       <h2 className="text-2xl font-bold text-white mb-4">Complaint Box Submission</h2>
 
       {loading ? (
@@ -207,7 +207,8 @@ const ComplaintBox = () => {
           )}
           {/* Desktop / Tablet table */}
           <div className="hidden md:block overflow-x-auto bg-gray-800 rounded-lg shadow custom-scrollbar">
-            <table className="min-w-[1000px] md:min-w-full text-sm text-left text-gray-300">
+            <div className="table-responsive">
+            <table className="min-w-full text-sm text-left text-gray-300">
               <thead className="bg-gray-700 text-xs text-gray-200 uppercase tracking-wider">
                 <tr>
                   <th className="px-6 py-3">Date</th>
@@ -288,6 +289,7 @@ const ComplaintBox = () => {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
 
           {/* Mobile cards */}

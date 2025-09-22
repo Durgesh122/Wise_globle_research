@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef, useContext, startTransition } from 'react';
-import { FiHome, FiGrid, FiUsers, FiBarChart2, FiCreditCard, FiAlertCircle, FiPhone, FiFileText, FiChevronRight } from 'react-icons/fi';
+import { FiHome, FiGrid, FiUsers, FiBarChart2, FiCreditCard, FiAlertCircle, FiFileText, FiChevronRight, FiSearch } from 'react-icons/fi';
 // useTranslation removed from this file to rely on translateWithFallback helper
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 // Removed react-icons usage per requirement to have no icons in the navbar
 import wiseLogo from '../assets/images/wise3.png';
 import './Navbar.css';
 import { ThemeContext } from '../context/ThemeContext';
+import TradingViewTicker from './TradingViewTicker';
+import AlertBar from './AlertBar';
 
 // Contact info for top header bar (update with real company details)
 const CONTACT = {
@@ -32,35 +34,36 @@ const SOCIAL_ICON_COLORS = {
 
 // Lightweight inline social icons (no extra deps)
 function SocialIcon({ type, className = 'w-6 h-6' }) {
-  const common = { width: 10, height: 10, viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true };
+  // Use em-based sizing so the icon scales with font-size and container rules
+  const common = { viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true };
   switch (type) {
     case 'facebook':
       return (
-        <svg {...common} className={className} role="img" aria-label="Facebook icon">
+        <svg {...common} className={`${className} social-icon`} role="img" aria-label="Facebook icon">
           <path d="M22 12.06C22 6.49 17.52 2 11.94 2S2 6.49 2 12.06c0 5.02 3.66 9.18 8.44 9.98v-7.06H7.9v-2.92h2.54V9.41c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.19 2.23.19v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.92h-2.34v7.06C18.34 21.24 22 17.08 22 12.06z" />
         </svg>
       );
     case 'twitter':
       return (
-        <svg {...common} className={className} role="img" aria-label="X (Twitter) icon">
+        <svg {...common} className={`${className} social-icon`} role="img" aria-label="X (Twitter) icon">
           <path d="M18.244 2H21l-6.5 7.432L22 22h-6.875l-4.8-6.223L4.83 22H2l7.033-8.04L2 2h6.953l4.36 5.73L18.244 2zm-1.203 18h1.884L7.04 4H5.044l11.997 16z"/>
         </svg>
       );
     case 'instagram':
       return (
-        <svg {...common} className={className} role="img" aria-label="Instagram icon">
+        <svg {...common} className={`${className} social-icon`} role="img" aria-label="Instagram icon">
           <path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm0 2a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H7zm5 3.5A5.5 5.5 0 1112 18.5 5.5 5.5 0 0112 7.5zm0 2A3.5 3.5 0 1015.5 13 3.5 3.5 0 0012 9.5zM18 6.2a1.2 1.2 0 11-1.2-1.2A1.2 1.2 0 0118 6.2z"/>
         </svg>
       );
     case 'linkedin':
       return (
-        <svg {...common} className={className} role="img" aria-label="LinkedIn icon">
+        <svg {...common} className={`${className} social-icon`} role="img" aria-label="LinkedIn icon">
           <path d="M6.94 21.5H3.56V9.25H6.94V21.5zM5.25 7.79A1.85 1.85 0 115.24 4.1a1.85 1.85 0 01.01 3.69zM21.5 21.5h-3.37v-6.3c0-1.5-.53-2.52-1.85-2.52-1.01 0-1.62.68-1.89 1.34-.1.25-.13.6-.13.95v6.53h-3.37s.04-10.6 0-11.7h3.37v1.66c.45-.69 1.25-1.67 3.05-1.67 2.22 0 3.89 1.45 3.89 4.58v7.13z"/>
         </svg>
       );
     case 'youtube':
       return (
-        <svg {...common} className={className} role="img" aria-label="YouTube icon">
+        <svg {...common} className={`${className} social-icon`} role="img" aria-label="YouTube icon">
           <path d="M23.5 7.5s-.23-1.64-.94-2.36c-.9-.95-1.9-.95-2.36-1C16.97 3.75 12 3.75 12 3.75h-.01s-4.97 0-8.2.39c-.46.05-1.46.05-2.36 1C.73 5.86.5 7.5.5 7.5S.25 9.4.25 11.3v1.4c0 1.9.25 3.8.25 3.8s.23 1.64.94 2.36c.9.95 2.08.92 2.61 1.02 1.9.18 8 .38 8 .38s4.97 0 8.2-.39c.46-.05 1.46-.05 2.36-1 .71-.72.94-2.36.94-2.36s.25-1.9.25-3.8v-1.4c0-1.9-.25-3.8-.25-3.8zM9.75 14.62V7.99l6.25 3.31-6.25 3.32z"/>
         </svg>
       );
@@ -233,7 +236,6 @@ const dropdownLinks = {
     items: [
       { path: '/accessibility-statement', labelKey: 'navbar.accessibility.statement' },
       { path: '/accessibility-feedback', labelKey: 'navbar.accessibility.feedback' },
-      { path: '/search', labelKey: 'navbar.accessibility.search' },
       { path: '/media', labelKey: 'navbar.accessibility.media' },
     ]
   },
@@ -263,7 +265,6 @@ const dropdownLinks = {
 const navLinks = [
   { path: '/payment', labelKey: 'navbar.payment' },
   { path: '/complaint', labelKey: 'navbar.complaintBox' },
-  { path: '/contact', labelKey: 'navbar.contactUs' },
   { path: '/research-reports', labelKey: 'navbar.researchReports' },
 ];
 
@@ -315,14 +316,14 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
       >
         <button
           className={`nav-item font-semibold text-sm md:text-base px-2 py-1${location.pathname.startsWith('/services') ? ' active' : ''}`}
-          style={{ color: textColor }}
+          style={{ color: `var(--navbar-color, var(--text-color, ${textColor || "'#0b1220'"}))` }}
           aria-expanded={isOpen}
           aria-label={`Toggle ${translateWithFallback(null, labelKey)} menu`}
           onClick={handleClick}
         >
           {translateWithFallback(null, labelKey)}
         </button>
-        <div
+          <div
           className={`absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-lg border border-[var(--primary-green)] text-black shadow-lg rounded-xl z-50 flex flex-row p-4 w-[90vw] lg:w-[84vw] max-w-[1000px] transition-opacity duration-300 ${
             isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
           } animate-slideDown`}
@@ -375,9 +376,9 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
         className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
         onClick={handleClick}
         aria-expanded={mobileOpen}
-  aria-label={`Toggle ${translateWithFallback(null, labelKey)} menu`}
+        aria-label={`Toggle ${translateWithFallback(null, labelKey)} menu`}
       >
-  {translateWithFallback(null, labelKey)}
+        {translateWithFallback(null, labelKey)}
         <span className={`ml-2 transition-transform duration-200 ${mobileOpen ? 'rotate-90' : ''}`}>▶</span>
       </button>
       <div className={`overflow-hidden transition-all duration-300 ${mobileOpen ? 'max-h-[1000px] py-2' : 'max-h-0 py-0'}`}>
@@ -388,15 +389,16 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
               <Link
                 key={item.path}
                 to={item.path}
-                className="nav-item block py-1 pl-2 text-gray-800 flex items-center gap-2"
+                className="nav-item block py-1 pl-2 flex items-center gap-2"
                 onClick={handleLinkClick}
+                style={{ color: 'var(--text-color)' }}
               >
-                      {item.icon ? (
-                        <span style={{ display: 'inline-flex', width: 16, height: 16, color: '#000' }}>
-                          {React.cloneElement(item.icon, { style: { width: 16, height: 16, color: 'inherit' } })}
-                        </span>
-                      ) : null}
-                      {translateWithFallback(null, item.labelKey)}
+                {item.icon ? (
+                  <span style={{ display: 'inline-flex', width: 16, height: 16, color: 'currentColor' }}>
+                    {React.cloneElement(item.icon, { style: { width: 16, height: 16, color: 'inherit' } })}
+                  </span>
+                ) : null}
+                {translateWithFallback(null, item.labelKey)}
               </Link>
             ))}
           </div>
@@ -408,56 +410,82 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
 
 function TopContactBar() {
   const { theme, gradients } = useContext(ThemeContext);
-  const { background, textColor } = gradients?.[theme] || gradients.default;
+  const currentTheme = gradients?.[theme] || gradients.default;
+  const topTheme = currentTheme.topContactBar || currentTheme;
+  const background = topTheme.background;
+  // Prefer CSS variable overrides when present (ThemeContext may force --navbar-color)
+  let textColor = topTheme.textColor;
+  try {
+    if (typeof window !== 'undefined') {
+      const rootStyles = getComputedStyle(document.documentElement);
+      const cssNav = rootStyles.getPropertyValue('--navbar-color').trim();
+      const cssText = rootStyles.getPropertyValue('--text-color').trim();
+      if (cssNav) textColor = cssNav;
+      else if (cssText) textColor = cssText;
+    }
+  } catch (e) {
+    // ignore and fall back to theme value
+  }
   // Ensure icons aren't visually clipped by aligning to middle and nudging slightly down
   const iconStyle = { display: 'block', verticalAlign: 'middle', position: 'relative', top: 0, marginRight: 6, overflow: 'visible' };
 
   return (
-    <div style={{ backgroundImage: background, color: textColor }} className="text-[11px] sm:text-xs">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-1.5 flex items-center justify-between gap-2">
-        <div className="flex items-center flex-wrap gap-x-3 gap-y-1" style={{ minHeight: 24, lineHeight: 1 }}>
+    <div
+      style={{ backgroundImage: `var(--navbar-bg, ${background})`, color: textColor }}
+      className="text-[11px] sm:text-xs w-full"
+    >
+      <div
+        className="max-w-7xl mx-auto px-2 sm:px-4 py-1.5 flex flex-wrap items-center justify-between gap-2"
+        style={{ minHeight: 24, lineHeight: 1 }}
+      >
+        <div className="flex items-center flex-wrap gap-x-3 gap-y-1 min-w-0 w-full sm:w-auto overflow-x-auto" style={{ minHeight: 24 }}>
           <a
             href={`mailto:${CONTACT.email}`}
-            className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded px-1 inline-flex items-center gap-2 h-6"
+            className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded px-1 inline-flex items-center gap-2 h-6 whitespace-nowrap"
             aria-label={`Email: ${CONTACT.email}`}
+            style={{ color: '#fff', fontWeight: 'bold', letterSpacing: '0.5px' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" role="img" aria-label="Email" style={iconStyle} className="w-6 h-6">
               <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 3.2l-8 5-8-5V6h16v1.2zM4 18V9.6l7.4 4.63a1 1 0 001.2 0L20 9.6V18H4z" />
             </svg>
-            {CONTACT.email}
+            <span className="truncate">{CONTACT.email}</span>
           </a>
-          <span className="hidden sm:inline opacity-60 mx-2" aria-hidden>│</span>
+          <span className="hidden sm:inline mx-2" aria-hidden style={{ color: '#fff', fontWeight: 'bold' }}>│</span>
           <a
             href={`tel:${CONTACT.phone}`}
-            className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded px-1 inline-flex items-center gap-2 h-6"
+            className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded px-1 inline-flex items-center gap-2 h-6 whitespace-nowrap"
             aria-label={`Call: ${CONTACT.phone}`}
+            style={{ color: '#fff', fontWeight: 'bold', letterSpacing: '0.5px' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" role="img" aria-label="Phone" style={iconStyle} className="w-6 h-6">
               <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.05-.24c1.12.37 2.33.57 3.54.57.55 0 1 .45 1 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.21.2 2.42.57 3.54a1 1 0 01-.24 1.05l-2.2 2.2z" />
             </svg>
-            {CONTACT.phone}
+            <span className="truncate">{CONTACT.phone}</span>
           </a>
-        </div>
-        <div className="flex items-center gap-3">
-          {Object.entries(CONTACT.socials).map(([key, url]) => (
-            <a
-              key={key}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Open ${key} profile`}
-              className="focus:outline-none focus:ring-2 focus:ring-[var(--primary-green)] rounded"
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || textColor, borderRadius: 8 }}
-            >
-              <SocialIcon type={key} className="w-5 h-5" />
-            </a>
-          ))}
+          <span className="hidden sm:inline mx-2" aria-hidden style={{ color: '#fff', fontWeight: 'bold' }}>│</span>
+          {/* Search removed by request - contact info only */}
+          <div className="flex items-center gap-2 top-contact-socials min-w-0 ml-2">
+            {Object.entries(CONTACT.socials).map(([key, url]) => (
+              <a
+                key={key}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${key} profile`}
+                className="focus:outline-none focus:ring-2 focus:ring-[var(--primary-green)] rounded p-1"
+                style={{ background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || textColor, borderRadius: 8 }}
+              >
+                <SocialIcon type={key} className="w-5 h-5" />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 function Navbar() {
+  useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [servicesMobileOpen, setServicesMobileOpen] = useState(false);
   const [mobileDropdownsOpen, setMobileDropdownsOpen] = useState({});
@@ -466,8 +494,29 @@ function Navbar() {
   const firstFocusableRef = useRef(null);
   const lastFocusableRef = useRef(null);
   const { theme, gradients } = useContext(ThemeContext);
-  const { background, textColor } = gradients?.[theme] || gradients.default;
+  const currentTheme = gradients?.[theme] || gradients.default;
+  let { background, textColor } = currentTheme.navbar || currentTheme;
+  const navColorFallback = (textColor && textColor.replace?.("'", '')) || '#0b1220';
   const navRef = useRef(null);
+  // Split dropdowns so we can render 'more' after the primary nav links
+  const dropdownEntriesWithoutMore = Object.entries(dropdownLinks).filter(([k]) => k !== 'more');
+  const moreDropdown = dropdownLinks.more || null;
+  // Prefer CSS variable overrides when present (ThemeContext may force --navbar-color)
+  try {
+    if (typeof window !== 'undefined') {
+      const rootStyles = getComputedStyle(document.documentElement);
+      const cssNav = rootStyles.getPropertyValue('--navbar-color').trim();
+      const cssText = rootStyles.getPropertyValue('--text-color').trim();
+      if (cssNav) textColor = cssNav;
+      else if (cssText) textColor = cssText;
+    }
+  } catch (e) {
+    // ignore and continue with theme's textColor
+  }
+
+  // Mobile drawer should use black text when the app `default` theme is selected.
+  // Otherwise prefer the CSS variable so ThemeContext continues to control color.
+  const mobileDrawerTextColor = theme === 'default' ? '#0b1220' : 'var(--text-color)';
 
   // Ensure the navbar isn't see-through by adding a solid base color under the gradient.
   // We pick a light or dark surface based on the theme's text color for contrast.
@@ -538,6 +587,27 @@ function Navbar() {
       setMobileDropdownsOpen({});
     });
   };
+
+  // Build search index (label -> path) from nav structures
+  const buildIndex = () => {
+    const entries = [];
+    // navLinks
+    navLinks.forEach(l => entries.push({ label: translateWithFallback(null, l.labelKey).toLowerCase(), path: l.path }));
+    // dropdownLinks
+    Object.values(dropdownLinks).forEach(dd => {
+      entries.push({ label: translateWithFallback(null, dd.labelKey).toLowerCase(), path: '#' });
+      dd.items.forEach(it => entries.push({ label: translateWithFallback(null, it.labelKey).toLowerCase(), path: it.path }));
+    });
+    // servicesMenu
+    servicesMenu.forEach(cat => {
+      entries.push({ label: translateWithFallback(null, cat.labelKey).toLowerCase(), path: '#' });
+      cat.items.forEach(it => entries.push({ label: translateWithFallback(null, it.labelKey).toLowerCase(), path: it.path }));
+    });
+    // Also include common labels
+    entries.push({ label: translateWithFallback(null, 'navbar.home').toLowerCase(), path: '/' });
+    return entries;
+  };
+  React.useMemo(() => buildIndex(), []);
 
   const toggleMobileDropdown = (key) => {
     startTransition(() => {
@@ -661,9 +731,9 @@ function Navbar() {
       return 0;
     };
 
-    // Apply by setting a CSS variable on the root element. The navbar
-    // and mobile drawer read `--nav-offset` so the layout updates
-    // responsively (desktop and mobile) without fighting utility classes.
+  // Apply by setting CSS variables on the root element. The navbar
+  // and mobile drawer read `--nav-offset` and `--nav-height` so the
+  // layout updates responsively (desktop and mobile) without fighting utility classes.
     // Throttle layout reads (getBoundingClientRect) to once per frame
     let rafId = null;
     let pending = false;
@@ -672,12 +742,29 @@ function Navbar() {
       pending = true;
       rafId = requestAnimationFrame(() => {
         pending = false;
-        const h = getBannerHeight();
-        const docEl = document.documentElement;
-        if (h) {
-          docEl.style.setProperty('--nav-offset', `${h}px`);
-        } else {
-          docEl.style.setProperty('--nav-offset', '0px');
+          const h = getBannerHeight();
+          const docEl = document.documentElement;
+          // Preserve any existing offset (for example from a fixed top ticker).
+          // Use the larger of the currently-set --nav-offset and the banner height
+          // so we don't accidentally move the navbar under the ticker.
+          try {
+            const existingOffsetStr = getComputedStyle(docEl).getPropertyValue('--nav-offset') || '0px';
+            const existingOffset = parseInt(existingOffsetStr, 10) || 0;
+            const finalOffset = Math.max(existingOffset, h || 0);
+            docEl.style.setProperty('--nav-offset', `${finalOffset}px`);
+          } catch (e) {
+            // Fallback to banner height if computed style cannot be read
+            if (h) {
+              docEl.style.setProperty('--nav-offset', `${h}px`);
+            } else {
+              docEl.style.setProperty('--nav-offset', '0px');
+            }
+          }
+        try {
+          const navH = Math.round(navEl.getBoundingClientRect().height) || 0;
+          docEl.style.setProperty('--nav-height', `${navH}px`);
+        } catch (e) {
+          docEl.style.setProperty('--nav-height', '0px');
         }
       });
     };
@@ -690,13 +777,31 @@ function Navbar() {
     apply();
     const onResize = () => apply();
   window.addEventListener('resize', onResize, { passive: true });
+    // Track whether this effect wrote nav variables so cleanup doesn't clear
+    // offsets set by other components (e.g., the fixed ticker).
+    let didWriteNavVars = false;
+    const originalApply = apply;
+    const wrappedApply = () => {
+      originalApply();
+      didWriteNavVars = true;
+    };
+
+    // Replace listeners to use the wrapped apply
+    window.removeEventListener('resize', onResize);
+    window.addEventListener('resize', wrappedApply, { passive: true });
 
     return () => {
-  mo.disconnect();
-  window.removeEventListener('resize', onResize);
-  if (rafId) cancelAnimationFrame(rafId);
+      mo.disconnect();
+      window.removeEventListener('resize', wrappedApply);
+      if (rafId) cancelAnimationFrame(rafId);
       const docEl = document.documentElement;
-      if (docEl) docEl.style.setProperty('--nav-offset', '0px');
+      if (docEl) {
+        if (didWriteNavVars) {
+          // Only clear values if this effect wrote them
+          docEl.style.setProperty('--nav-offset', '0px');
+          docEl.style.setProperty('--nav-height', '0px');
+        }
+      }
       if (navEl) navEl.style.top = '';
     };
   }, [navRef]);
@@ -706,16 +811,21 @@ function Navbar() {
   top: 'calc(var(--nav-offset, 0px) + env(safe-area-inset-top, 0px))',
   right: 0,
   height: 'calc(100dvh - var(--nav-offset, 0px) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))',
-    width: 'max(50vw, 300px)',
-    maxWidth: '80vw',
+    width: 'min(80vw, 350px)', // Adjusted for better mobile responsiveness
+    maxWidth: '100vw',
   // Theme-aware, semi-transparent background: show current theme gradient with a translucent surface overlay
-    backgroundImage: background,
-    backgroundColor: getTranslucentSurface(textColor, 0.5),
+    backgroundImage: currentTheme.background,
+    backgroundColor: getTranslucentSurface(currentTheme.textColor, 0.5),
     backgroundBlendMode: 'overlay',
     // Avoid applying expensive blur during the initial open; apply only when open
     backdropFilter: drawerOpen ? 'blur(8px)' : 'none',
     WebkitBackdropFilter: drawerOpen ? 'blur(8px)' : 'none',
-    color: 'var(--text-color)',
+  // Ensure drawer text follows our computed mobile color. When the
+  // `default` theme is active ThemeContext forces `--text-color` to
+  // white; override it here by setting both the `color` and the CSS
+  // variable so all children using `var(--text-color)` get the value.
+  color: mobileDrawerTextColor,
+  '--text-color': mobileDrawerTextColor,
     border: '1px solid rgba(0,0,0,0.06)',
     boxShadow: '0 0 15px rgba(0,0,0,0.2)',
     zIndex: 9999,
@@ -730,49 +840,52 @@ function Navbar() {
 
   return (
     <>
-    <nav
-        role="navigation"
-        ref={navRef}
+
+      <nav
+    role="navigation"
+    ref={navRef}
   // Use gradient + an opaque base color to block underlying content
-  style={{ backgroundImage: background, backgroundColor: baseSurfaceColor, color: textColor, top: 'var(--nav-offset, 0px)' }}
-        className="fixed w-full z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-b-xl"
-      >
-  {/* Top contact/info bar */}
+  style={{
+      backgroundImage: `var(--navbar-bg, ${background})`,
+      backgroundColor: baseSurfaceColor,
+  top: `var(--nav-offset, 0px)`,
+      zIndex: 110,
+    }}
+    className="fixed w-full z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-b-xl"
+  >
+  <TradingViewTicker />
   <TopContactBar />
         <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 flex justify-between items-center">
-          <Link to="/" className="flex items-center rotate-logo">
-            <div className="rounded-full p-1 border-2 border-[var(--primary-green)] bg-white">
-              <img
-                src={wiseLogo}
-                alt="Wise Logo"
-                className="h-10 sm:h-12 md:h-14 w-auto rounded-full logo-hover"
-                loading="auto"
-                decoding="async"
-                fetchpriority="low"
-                width="56"
-                height="56"
-              />
-            </div>
-          </Link>
+            <Link to="/" className="flex items-center rotate-logo" style={{ color: `var(--navbar-color, var(--text-color, ${navColorFallback}))` }}>
+              <div className="rounded-full p-1 border-2 border-[var(--primary-green)] bg-white">
+                <img
+                  src={wiseLogo}
+                  alt="Wise Logo"
+                  className="wise-logo h-10 sm:h-12 md:h-14 w-auto rounded-full logo-hover"
+                  loading="auto"
+                  decoding="async"
+                  fetchpriority="low"
+                />
+              </div>
+            </Link>
 
           {/* Desktop Menu */}
-          <div className="desktop-menu hidden lg:block font-medium flex-grow">
-            <div className="nav-scroll w-full flex items-center justify-center gap-4 xl:gap-6">
-              <Link
-                to="/"
-                className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname==='/' ? ' active' : ''}`}
-                style={{ color: textColor }}
-              >
-                {translateWithFallback(null, 'navbar.home')}
-              </Link>
+      <div className="desktop-menu hidden lg:block font-medium flex-grow animate-fadeIn">
+        <div className="nav-scroll w-full flex items-center justify-center gap-4 xl:gap-6" style={{ color: `var(--navbar-color, var(--text-color, ${navColorFallback}))` }}>
+                <Link
+                      to="/"
+                      className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname==='/' ? ' active' : ''}`}
+                    >
+                      {translateWithFallback(null, 'navbar.home')}
+                    </Link>
 
               <MegaMenu labelKey="navbar.services.title" categories={servicesMenu} location={location} textColor={textColor} isMobile={false} closeDrawer={closeDrawer} />
 
-            {Object.entries(dropdownLinks).map(([key, dropdown]) => (
+            {dropdownEntriesWithoutMore.map(([key, dropdown]) => (
               <div className="relative group" key={key}>
                 <button
                   className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${dropdown.items.some(item => location.pathname.startsWith(item.path)) ? ' active' : ''}`}
-                  style={{ color: textColor }}
+                    style={{ color: `var(--navbar-color, var(--text-color, ${navColorFallback}))` }}
           aria-label={`Toggle ${translateWithFallback(null, dropdown.labelKey)} menu`}
           aria-haspopup="true"
                     aria-expanded={undefined}
@@ -823,42 +936,82 @@ function Navbar() {
                     </Link>
                   ))}
                 </div>
+              {/* If this is the Company dropdown, render a Search link beside it for quick access */}
+              {key === 'company' && (
+                <Link
+                  to="/search"
+                  className={`nav-item font-semibold text-xs xl:text-base px-2 py-1 ml-2`}
+                          style={{ color: `var(--navbar-color, var(--text-color, ${navColorFallback}))` }}
+                >
+                  {translateWithFallback(null, 'navbar.accessibility.search')}
+                </Link>
+              )}
               </div>
             ))}
 
       {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname===link.path ? ' active' : ''}`}
-                style={{ color: textColor }}
+                    <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname===link.path ? ' active' : ''}`}
+                    style={{ color: `var(--navbar-color, var(--text-color, ${navColorFallback}))` }}
+                  >
+      {translateWithFallback(null, link.labelKey)}
+                  </Link>
+          ))}
+
+          {/* Render 'more' dropdown last on desktop */}
+          {moreDropdown && (
+            <div className="relative group" key="more">
+              <button
+                className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${moreDropdown.items.some(item => location.pathname.startsWith(item.path)) ? ' active' : ''}`}
+                style={{ color: `var(--navbar-color, var(--text-color, ${navColorFallback}))` }}
+                aria-label={`Toggle ${translateWithFallback(null, moreDropdown.labelKey)} menu`}
+                aria-haspopup="true"
               >
-  {translateWithFallback(null, link.labelKey)}
-              </Link>
-      ))}
+                {translateWithFallback(null, moreDropdown.labelKey)}
+              </button>
+              <div className="absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-md border border-[var(--primary-green)] text-black shadow-md rounded-md z-50 group-hover:flex flex-col min-w-[180px] xl:min-w-[200px] p-2 hidden transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-hover:visible animate-slideDown" role="menu">
+                {moreDropdown.items.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`px-3 xl:px-4 py-2 hover:bg-gray-200 text-xs xl:text-sm flex items-center gap-2 transition-all duration-300 ${
+                      location.pathname === item.path ? 'text-[var(--primary-green)] font-semibold' : ''
+                    }`}
+                    role="menuitem"
+                    tabIndex={-1}
+                  >
+                    {translateWithFallback(null, item.labelKey)}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
             </div>
           </div>
-
-          {/* Mobile Hamburger */}
             <button
               className="lg:hidden z-[10000] drawer-toggle"
               onClick={() => startTransition(() => setDrawerOpen(prev => !prev))}
-              aria-label="Toggle mobile menu"
+              aria-label={drawerOpen ? 'Close mobile menu' : 'Open mobile menu'}
               aria-expanded={drawerOpen}
               aria-controls="mobile-menu"
             >
-            {drawerOpen ? (
-              <span className="mobile-close-btn" style={{ color: textColor, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>Close</span>
-            ) : (
-              <div className={`hamburger ${drawerOpen ? 'open' : ''}`} style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>
-                <div className="bar"></div>
-                <div className="bar"></div>
-                <div className="bar"></div>
-              </div>
-            )}
+                {drawerOpen ? (
+                  <span className="mobile-close-btn" style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>Close</span>
+                ) : (
+                  <div className={`hamburger ${drawerOpen ? 'open' : ''}`} style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                  </div>
+                )}
           </button>
         </div>
       </nav>
+
+  {/* Attached alert bar: sticks below the navbar when present */}
+  <AlertBar variant="attached" />
 
       {/* Mobile overlay to close on outside click */}
       {drawerOpen && (
@@ -866,15 +1019,16 @@ function Navbar() {
           onClick={closeDrawer}
           aria-hidden
           style={{
-            position: 'fixed',
-            top: 'var(--nav-offset, 0px)',
-            left: 0,
-            width: '100vw',
-            height: 'calc(100vh - var(--nav-offset, 0px))',
-            background: 'rgba(0,0,0,0.4)',
-            zIndex: 9998,
-            opacity: drawerOpen ? 1 : 0,
-            transition: 'opacity 0.25s ease'
+              position: 'fixed',
+              // start the overlay below the navbar so the navbar remains interactive
+              top: 'calc(var(--nav-offset, 0px) + var(--nav-height, 0px))',
+              left: 0,
+              width: '100vw',
+              height: 'calc(100vh - var(--nav-offset, 0px) - var(--nav-height, 0px))',
+              background: 'rgba(0,0,0,0.4)',
+              zIndex: 9998,
+              opacity: drawerOpen ? 1 : 0,
+              transition: 'opacity 0.25s ease'
           }}
         />
       )}
@@ -883,15 +1037,20 @@ function Navbar() {
   <div style={mobileDrawerStyles} ref={drawerRef} className={`mobile-menu ${drawerOpen ? 'open' : ''}`} id="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title">
         <div className={`mobile-menu-items mobile-stagger`} style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <h2 id="mobile-menu-title" className="sr-only">Main menu</h2>
+                {/* Mobile search moved to TopContactBar for better UX; leaving a small hint for keyboard users */}
+                <div className="sr-only" aria-hidden>Mobile search moved to top contact bar</div>
           {/* Primary links with icons */}
-          <Link to="/" className="nav-item font-semibold py-1" onClick={closeDrawer} tabIndex={0} style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', background: 'transparent', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}>
-            <FiHome size={18} style={{ flexShrink: 0, color: iconColors.home }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, 'navbar.home')}</span>
+          <Link to="/" className="nav-item font-semibold py-1" onClick={closeDrawer} tabIndex={0} style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', background: 'transparent', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 9, background: 'rgba(255,255,255,0.06)', flexShrink: 0 }}>
+              <FiHome size={18} style={{ color: iconColors.home }} />
+            </span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, 'navbar.home')}</span>
           </Link>
 
           <hr style={{ border: 'none', height: 1, background: 'rgba(128,128,128,0.2)', margin: '10px 0' }} />
 
           <MegaMenu 
-            labelKey="navbar.services.title" 
+                style={{ color: mobileDrawerTextColor }}
             categories={servicesMenu} 
             location={location} 
             isMobile={true} 
@@ -900,7 +1059,7 @@ function Navbar() {
             closeDrawer={closeDrawer} 
           />
 
-          {Object.entries(dropdownLinks).map(([key, dropdown]) => (
+          {dropdownEntriesWithoutMore.map(([key, dropdown]) => (
             <div key={key}>
               <button
                 className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
@@ -909,12 +1068,12 @@ function Navbar() {
                 aria-controls={`mobile-dd-${key}`}
               >
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {key === 'company' && <FiUsers size={18} style={{ color: iconColors.company }} />}
-                  {key === 'hrZone' && <FiUsers size={18} style={{ color: iconColors.hrZone }} />}
-                  {key === 'insights' && <FiBarChart2 size={18} style={{ color: iconColors.insights }} />}
-                  {key === 'accessibility' && <FiAlertCircle size={18} style={{ color: iconColors.accessibility }} />}
-                  {key === 'dashboard' && <FiGrid size={18} style={{ color: iconColors.dashboard }} />}
-                  {key === 'more' && <FiFileText size={18} style={{ color: iconColors.more }} />}
+                  {key === 'company' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiUsers size={16} style={{ color: iconColors.company || textColor }} /></span>}
+                  {key === 'hrZone' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiUsers size={16} style={{ color: iconColors.hrZone || textColor }} /></span>}
+                  {key === 'insights' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiBarChart2 size={16} style={{ color: iconColors.insights || textColor }} /></span>}
+                  {key === 'accessibility' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiAlertCircle size={16} style={{ color: iconColors.accessibility || textColor }} /></span>}
+                  {key === 'dashboard' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiGrid size={16} style={{ color: iconColors.dashboard || textColor }} /></span>}
+                  {key === 'more' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiFileText size={16} style={{ color: iconColors.more || textColor }} /></span>}
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, dropdown.labelKey)}</span>
                 </span>
                 <FiChevronRight size={18} className={`ml-2 transition-transform duration-200 ${mobileDropdownsOpen[key] ? 'rotate-90' : ''}`} />
@@ -927,16 +1086,32 @@ function Navbar() {
                         className="nav-item block py-1 pl-2"
                         onClick={closeDrawer}
                         tabIndex={drawerOpen ? 0 : -1}
-                        style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 8, padding: '10px 12px', margin: '2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
+                        style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 8, padding: '10px 12px', margin: '2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
                         onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
                         onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                       >
-      <FiChevronRight size={16} style={{ opacity: 0.6, flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, item.labelKey)}</span>
+      <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, background: 'rgba(0,0,0,0.04)', flexShrink: 0 }}><FiChevronRight size={14} style={{ opacity: 0.7 }} /></span>
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, item.labelKey)}</span>
                       </Link>
                     ))}
               </div>
             </div>
           ))}
+
+          {/* Mobile quick search link after company section */}
+          <Link
+            to="/search"
+            className="nav-item block py-1"
+            onClick={closeDrawer}
+            style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+          >
+            <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 9, background: 'rgba(255,255,255,0.04)', flexShrink: 0 }}>
+              <FiSearch size={18} style={{ color: iconColors.contact || textColor }} />
+            </span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, 'navbar.accessibility.search')}</span>
+          </Link>
 
             {navLinks.map((link) => (
             <Link
@@ -944,17 +1119,52 @@ function Navbar() {
               to={link.path}
               className={`nav-item block py-1${location.pathname===link.path ? ' active' : ''}`}
               onClick={closeDrawer}
-              style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
+              style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
               onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
-              {link.path === '/payment' && <FiCreditCard size={18} style={{ color: iconColors.payment, flexShrink: 0 }} />}
-              {link.path === '/complaint' && <FiAlertCircle size={18} style={{ color: iconColors.complaint, flexShrink: 0 }} />}
-              {link.path === '/contact' && <FiPhone size={18} style={{ color: iconColors.contact, flexShrink: 0 }} />}
-              {link.path === '/research-reports' && <FiFileText size={18} style={{ color: iconColors.reports, flexShrink: 0 }} />}
+              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 9, background: 'rgba(255,255,255,0.04)', flexShrink: 0 }}>
+                {link.path === '/payment' && <FiCreditCard size={18} style={{ color: iconColors.payment || textColor }} />}
+                {link.path === '/complaint' && <FiAlertCircle size={18} style={{ color: iconColors.complaint || textColor }} />}
+                {link.path === '/search' && <FiSearch size={18} style={{ color: iconColors.contact || textColor }} />}
+                {link.path === '/research-reports' && <FiFileText size={18} style={{ color: iconColors.reports || textColor }} />}
+              </span>
               <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, link.labelKey)}</span>
             </Link>
           ))}
+
+          {/* Render 'more' dropdown last on mobile */}
+          {moreDropdown && (
+            <div>
+              <button
+                className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
+                onClick={() => toggleMobileDropdown('more')}
+                aria-expanded={!!mobileDropdownsOpen['more']}
+                aria-controls={`mobile-dd-more`}
+              >
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiFileText size={16} style={{ color: iconColors.more || textColor }} /></span>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, moreDropdown.labelKey)}</span>
+                </span>
+                <FiChevronRight size={18} className={`ml-2 transition-transform duration-200 ${mobileDropdownsOpen['more'] ? 'rotate-90' : ''}`} />
+              </button>
+              <div id={`mobile-dd-more`} className={`overflow-hidden transition-all duration-300 ${mobileDropdownsOpen['more'] ? 'max-h-96' : 'max-h-0'}`}>
+                {moreDropdown.items.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className="nav-item block py-1 pl-2"
+                    onClick={closeDrawer}
+                    tabIndex={drawerOpen ? 0 : -1}
+                    style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 8, padding: '10px 12px', margin: '2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
+                  >
+                    <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, background: 'rgba(0,0,0,0.04)', flexShrink: 0 }}><FiChevronRight size={14} style={{ opacity: 0.7 }} /></span>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, item.labelKey)}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
             {/* Mobile back button to close drawer */}
             <button
@@ -982,7 +1192,7 @@ function Navbar() {
               Back
             </button>
             {/* Social icons row (mobile) */}
-            <div style={{ display: 'flex', gap: 8, marginTop: 8, marginLeft: 2 }} aria-hidden={false}>
+            <div className="top-contact-socials" style={{ display: 'flex', gap: 8, marginTop: 8, marginLeft: 2 }} aria-hidden={false}>
               {Object.entries(CONTACT.socials).map(([key, url]) => (
                 <a
                   key={key}
@@ -991,7 +1201,7 @@ function Navbar() {
                   rel="noopener noreferrer"
                   aria-label={`Open ${key} profile`}
                   className="focus:outline-none"
-                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || 'var(--text-color)', borderRadius: 10 }}
+                  style={{ background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || mobileDrawerTextColor, borderRadius: 8, padding: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                   <SocialIcon type={key} className="w-5 h-5" />
                 </a>

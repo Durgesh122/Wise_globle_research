@@ -57,7 +57,12 @@ export default function Breadcrumbs() {
   );
 
   return (
-    <nav aria-label="Breadcrumb" className="mt-4 mb-2 text-sm" role="navigation">
+    <nav
+      aria-label="Breadcrumb"
+      role="navigation"
+      className="mb-2 text-sm"
+          style={{ marginTop: 'calc(max(var(--nav-height, 0px), var(--nav-offset, 0px)))' }}
+    >
       <ol className="flex flex-wrap items-center gap-1 text-white/80">
         {items.map((item, idx) => (
           <li key={`${item.label}-${idx}`} className="flex items-center gap-1">

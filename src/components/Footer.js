@@ -12,15 +12,15 @@ const logoSrcSetWebp = ['/assets/images/wise3-64.webp 64w','/assets/images/wise3
 
 function Footer() {
   const { changeTheme, theme, gradients } = useContext(ThemeContext);
-  const currentTheme = gradients[theme] || gradients.default;
-  const { background, textColor, footer } = currentTheme;
+  const { background, textColor } = gradients[theme] || gradients.default;
   const [langQuery, setLangQuery] = useState('');
   const [showAllWidget, setShowAllWidget] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langDropdownRef = useRef(null);
+  const [showFooterAlert, setShowFooterAlert] = useState(false);
 
   // Indian and popular languages list (codes supported by Google Translate)
-  const indianLanguages = [
+  const indianLanguages = React.useMemo(() => [
     { code: 'as', name: 'Assamese' },
     { code: 'bn', name: 'Bengali' },
     { code: 'bho', name: 'Bhojpuri' },
@@ -42,9 +42,9 @@ function Footer() {
     { code: 'ta', name: 'Tamil' },
     { code: 'te', name: 'Telugu' },
     { code: 'ur', name: 'Urdu' },
-  ];
+  ], []);
 
-  const popularLanguages = [
+  const popularLanguages = React.useMemo(() => [
     { code: 'en', name: 'English' },
     { code: 'ar', name: 'Arabic' },
     { code: 'zh-CN', name: 'Chinese (Simplified)' },
@@ -83,10 +83,18 @@ function Footer() {
     { code: 'et', name: 'Estonian' },
     { code: 'lv', name: 'Latvian' },
     { code: 'lt', name: 'Lithuanian' },
-    { code: 'ta', name: 'Tamil' },
-    { code: 'te', name: 'Telugu' },
+    // removed duplicates of Indian languages
     { code: 'fil', name: 'Filipino' },
-  ];
+  ], []);
+
+  // Create merged lookup to prevent duplicate codes across lists (used for search)
+  const languageLookup = React.useMemo(() => {
+    const map = new Map();
+    [...indianLanguages, ...popularLanguages].forEach((l) => {
+      if (!map.has(l.code)) map.set(l.code, l);
+    });
+    return Array.from(map.values());
+  }, [indianLanguages, popularLanguages]);
 
   // Note: allQuickLanguages (merged list) is not needed because we present two grouped lists.
 
@@ -155,23 +163,51 @@ function Footer() {
     return () => document.removeEventListener('mousedown', onDocClick);
   }, []);
 
+  // Ensure the alert bar is rendered only once per page.
+  // Some pages/components may mount Footer multiple times; use a DOM id check to avoid duplicate alerts.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    // If an element with the alert id already exists, don't show another one.
+    if (document.getElementById('wise-global-alert')) {
+      setShowFooterAlert(false);
+    } else {
+      setShowFooterAlert(true);
+    }
+    // No cleanup necessary — when this specific alert unmounts the id will be removed with the node.
+  }, []);
+
   // Helper to set the Google Translate cookie and trigger translation
   const translateTo = (lang) => {
     if (typeof document === 'undefined') return;
     try {
-      // Set the googtrans cookie used by Google Translate widget: /en/{lang}
+      // First try to use the in-page widget method if available (no reload)
+      if (window.google && window.google.translate && window.google.translate.TranslateElement) {
+        try {
+          // Attempt to trigger the widget programmatically: set cookie then call function
+          const cookieValue = `/en/${lang}`;
+          document.cookie = `googtrans=${cookieValue}; path=/; max-age=31536000`;
+          document.cookie = `_googtrans=${cookieValue}; path=/; max-age=31536000`;
+          try { window.localStorage.setItem('route.lang', JSON.stringify(lang)); } catch (e) { /* ignore */ }
+          try { window.localStorage.setItem('route.langManual', JSON.stringify(true)); } catch (e) { /* ignore */ }
+          // Some versions expose a select element inside the widget we can change
+          const frame = document.querySelector('#google_translate_element iframe');
+          if (frame) {
+            // Try to set via cookie then reload only the frame
+            frame.contentWindow.location.reload();
+            return;
+          }
+        } catch (e) {
+          // Fall through to cookie+reload fallback below
+          console.warn('Widget translate attempt failed', e);
+        }
+      }
+
+      // Fallback: set the googtrans cookie and reload whole page
       const cookieValue = `/en/${lang}`;
-      // set for root path
       document.cookie = `googtrans=${cookieValue}; path=/; max-age=31536000`;
-      // Some older widgets also check _googtrans
       document.cookie = `_googtrans=${cookieValue}; path=/; max-age=31536000`;
-  // Persist the language in localStorage so other components can pick it up immediately after reload
-  try {
-    window.localStorage.setItem('route.lang', JSON.stringify(lang));
-    // mark that this was a manual selection so components don't auto-override it
-    try { window.localStorage.setItem('route.langManual', JSON.stringify(true)); } catch (e) { /* ignore */ }
-  } catch (e) { /* ignore */ }
-      // Reload to let widget pick up the cookie and translate
+      try { window.localStorage.setItem('route.lang', JSON.stringify(lang)); } catch (e) { /* ignore */ }
+      try { window.localStorage.setItem('route.langManual', JSON.stringify(true)); } catch (e) { /* ignore */ }
       window.location.reload();
     } catch (e) {
       console.warn('translateTo failed', e);
@@ -182,12 +218,8 @@ function Footer() {
 
       <footer
         role="contentinfo"
-        style={{
-          background: footer?.background || background,
-          color: footer?.textColor || textColor,
-          borderTop: '4px solid #2eed1c'
-        }}
-        className="relative z-30 transition-all duration-1000 pt-8 pb-4 px-4 mx-2 my-2 rounded-xl shadow-xl overflow-x-hidden"
+        style={{ background: `var(--footer-bg, ${background})`, color: `var(--footer-color, ${textColor})`, borderColor: '#49eb34' }}
+        className="relative z-30 transition-all duration-1000 pt-8 pb-4 px-4 mx-2 my-2 border-4 rounded-xl shadow-xl overflow-x-hidden"
       >
   {/* Language selector removed — app uses static English text */}
         <div className="custom-scrollbar px-2 sm:px-0">
@@ -203,7 +235,7 @@ function Footer() {
                   </picture>
                 </div>
               </div>
-              <p className="mt-3 text-sm md:text-base leading-relaxed break-words" style={{ color: textColor }}>
+              <p className="mt-3 text-sm md:text-base leading-relaxed break-words" style={{ color: 'var(--text-color, #ffffff)' }}>
                 Wise Global Research Services — Market research, analytics, and investment insights.
               </p>
               <div className="flex flex-wrap gap-3 sm:gap-4 justify-center md:justify-start mt-4">
@@ -218,7 +250,7 @@ function Footer() {
 
             {/* Quick Links Section */}
             <div>
-              <h3 className="text-lg font-semibold mb-3" style={{ color: textColor }}>Quick Links</h3>
+              <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color, #ffffff)' }}>Quick Links</h3>
               <ul className="space-y-2">
                 <li><Link to="/about" className="hover:text-yellow-400">→ About Us</Link></li>
                 <li><Link to="/contact" className="hover:text-yellow-400">→ Contact</Link></li>
@@ -234,7 +266,7 @@ function Footer() {
 
             {/* Useful Links Section */}
             <div>
-              <h3 className="text-lg font-semibold mb-3" style={{ color: textColor }}>Useful Links</h3>
+              <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color, #ffffff)' }}>Useful Links</h3>
               <ul className="space-y-2">
                 <li><Link to="/legal" className="hover:text-yellow-400">→ Disclaimer</Link></li>
                 <li><Link to="/disclosure" className="hover:text-yellow-400">→ Disclosure</Link></li>
@@ -250,7 +282,7 @@ function Footer() {
 
             {/* Registration Details Section */}
             <div>
-              <h3 className="text-lg font-semibold mb-3" style={{ color: textColor }}>Registration Details</h3>
+              <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color, #ffffff)' }}>Registration Details</h3>
               <ul className="space-y-1 text-sm">
                 <li className="break-words"><strong>Registered Name:</strong> WISE GLOBAL RESEARCH SERVICES PRIVATE LIMITED</li>
                 <li className="break-words"><strong>CEO / Principal Officer / Compliance Officer:</strong> Hemraj Singh Sikarwar</li>
@@ -266,7 +298,7 @@ function Footer() {
             </div>
           </div>
 
-          <div className="border-t border-gray-700 my-6" />
+          <div className="border-t my-6" style={{ borderTopColor: '#49eb34' }} />
 
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 text-sm">
             <div className="space-y-2">
@@ -281,9 +313,10 @@ function Footer() {
         <h3 id="theme-label" className="font-semibold flex items-center gap-1"><FaPalette /> Select Website Theme</h3>
               <div className="bg-white text-black rounded shadow-md overflow-hidden">
                 <select
+                  value={theme}
                   onChange={(e) => changeTheme(e.target.value)}
-          className="w-full px-4 py-2 pr-10 bg-white focus:outline-none"
-          aria-labelledby="theme-label"
+                  className="w-full px-4 py-2 pr-10 bg-white focus:outline-none"
+                  aria-labelledby="theme-label"
                 >
                   {Object.keys(gradients).map((key) => (
                     <option key={key} value={key}>
@@ -295,7 +328,7 @@ function Footer() {
 
               {/* Translate Website */}
               <div className="mt-4" ref={langDropdownRef}>
-                <h3 className="font-semibold flex items-center gap-2" style={{ color: textColor }}>
+                <h3 className="font-semibold flex items-center gap-2" style={{ color: 'var(--text-color, #ffffff)' }}>
                   <FaGlobe /> Translate Website
                 </h3>
 
@@ -327,7 +360,7 @@ function Footer() {
                     <div className="mt-3">
                       <div className="text-xs font-semibold text-gray-600 mb-1">Indian languages</div>
                       <div className="flex flex-wrap gap-2">
-                        {(langQuery ? indianLanguages.filter(l => (l.name + l.code).toLowerCase().includes(langQuery.toLowerCase())) : indianLanguages)
+                        {(langQuery ? languageLookup.filter(l => (l.name + l.code).toLowerCase().includes(langQuery.toLowerCase())).filter(l=> indianLanguages.find(i=>i.code===l.code)) : indianLanguages)
                           .map((l) => (
                             <button
                               key={`in-${l.code}`}
@@ -344,7 +377,7 @@ function Footer() {
                     <div className="mt-4">
                       <div className="text-xs font-semibold text-gray-600 mb-1">Popular worldwide</div>
                       <div className="flex flex-wrap gap-2">
-                        {(langQuery ? popularLanguages.filter(l => (l.name + l.code).toLowerCase().includes(langQuery.toLowerCase())) : popularLanguages)
+                        {(langQuery ? languageLookup.filter(l => (l.name + l.code).toLowerCase().includes(langQuery.toLowerCase())).filter(l=> popularLanguages.find(i=>i.code===l.code)) : popularLanguages)
                           .map((l) => (
                             <button
                               key={`pop-${l.code}`}
@@ -363,10 +396,10 @@ function Footer() {
                       <button
                         type="button"
                         onClick={() => setShowAllWidget((s) => !s)}
-            className="underline text-green-700 hover:text-green-800"
-            aria-controls="google_translate_element"
-            aria-expanded={showAllWidget}
-            aria-label={showAllWidget ? 'Hide full list of languages' : 'Show full list of languages'}
+                        className="underline text-green-700 hover:text-green-800"
+                        aria-controls="google_translate_element"
+                        aria-expanded={showAllWidget}
+                        aria-label={showAllWidget ? 'Hide full list of languages' : 'Show full list of languages'}
                       >
                         {showAllWidget ? 'Hide full list' : 'Show full list'}
                       </button>
@@ -385,29 +418,23 @@ function Footer() {
         </div>
       </footer>
 
-      {/* Alert Marquee */}
-      <div className="w-full h-8 border-t border-yellow-400 overflow-hidden" style={{ backgroundColor: '#2eed1c' }}>
-        <div className="whitespace-nowrap animate-scroll text-sm flex items-center h-full">
-          <p className="inline-block text-black font-medium px-4">कृपया ध्यान दें प्रिय ग्राहक, आपके भुगतान स्वीकार किए जाएंगे अगर आप Wise Global Research वेबसाइट पर दी गई खाता जानकारी का उपयोग करेंगे। हम केवल Wise Global Research के अलावा किसी अन्य खातों में कोई भुगतान स्वीकार नहीं करते। Wise Global Research केवल अपने खाते में प्राप्त होने वाली राशियों के लिए सेवाएं प्रदान करने के लिए जिम्मेदार होगा। Pay close attention—Dear Client, your payments will be accepted if you use the account information listed on the Wise Global Research website. We do not accept any payment in any other accounts besides Wise Global Research. Wise Global Research will only be liable to provide services for the amounts received in its account.</p>
+      {/* Alert Marquee (render only once) */}
+      {showFooterAlert && (
+        <div
+          id="wise-global-alert"
+          className="w-full h-8 border-t overflow-hidden notranslate"
+          style={{ backgroundColor: '#ee533fff', borderTopColor: '#e95b23ff' }}
+          translate="no"
+          aria-hidden="false"
+        >
+          <div className="whitespace-nowrap animate-scroll text-sm flex items-center h-full">
+            <p className="inline-block font-medium px-4 notranslate" translate="no" style={{ color: '#ffffff' }}>कृपया ध्यान दें प्रिय ग्राहक, आपके भुगतान स्वीकार किए जाएंगे अगर आप Wise Global Research वेबसाइट पर दी गई खाता जानकारी का उपयोग करेंगे। हम केवल Wise Global Research के अलावा किसी अन्य खातों में कोई भुगतान स्वीकार नहीं करते। Wise Global Research केवल अपने खाते में प्राप्त होने वाली राशियों के लिए सेवाएं प्रदान करने के लिए जिम्मेदार होगा। Pay close attention—Dear Client, your payments will be accepted if you use the account information listed on the Wise Global Research website. We do not accept any payment in any other accounts besides Wise Global Research. Wise Global Research will only be liable to provide services for the amounts received in its account.</p>
+          </div>
         </div>
-      </div>
+      )}
 
-      <div
-        className="text-center"
-        style={{
-          backgroundColor: '#071013',
-          color: '#ffffff',
-          padding: '0.9rem 0.75rem',
-          fontSize: '0.95rem',
-          fontWeight: 600,
-          borderTop: '4px solid #2eed1c',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)',
-          zIndex: 40,
-        }}
-      >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          Copyright 2024, Wise Global Research. All Rights Reserved &nbsp;|&nbsp; Powered by <a href="https://mrxads.com" target="_blank" rel="noopener noreferrer" style={{ color: '#FFD54A', textDecoration: 'underline', fontWeight: 700 }}>MRXADS</a>
-        </div>
+      <div className="text-center text-xs py-2 px-2 break-words" style={{ background: 'var(--footer-bottom-bg, #347deb)', color: 'var(--footer-color, #000000ff)' }}>
+        Copyright 2024, Wise Global Research. All Rights Reserved &nbsp;|&nbsp; Powered by <a href="https://mrxads.com" target="_blank" rel="noopener noreferrer" className="text-yellow-400 underline">MRXADS</a>
       </div>
 
 

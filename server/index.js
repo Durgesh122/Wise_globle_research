@@ -101,7 +101,8 @@ app.use((req, res, next) => {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: https:",
-  "connect-src 'self' https://www.googletagmanager.com https://s3.tradingview.com https://widget.myfxbook.com https://fonts.googleapis.com https://fonts.gstatic.com",
+    // Allow connections needed by Firebase Auth / RTDB and common Google APIs
+  "connect-src 'self' https://www.googletagmanager.com https://s3.tradingview.com https://widget.myfxbook.com https://fonts.googleapis.com https://fonts.gstatic.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://firebasestorage.googleapis.com wss://*.firebaseio.com wss://*.firebasedatabase.app",
     "frame-src https://www.youtube-nocookie.com https://www.tradingview.com https://s.tradingview.com https://widget.myfxbook.com",
     "frame-ancestors 'self'",
     "object-src 'none'",

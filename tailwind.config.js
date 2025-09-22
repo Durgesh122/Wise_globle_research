@@ -93,8 +93,6 @@ module.exports = {
       addUtilities({
         '.shine-hover': {
           position: 'relative',
-          transition: 'transform 0.4s ease, box-shadow 0.4s ease',
-          borderRadius: '9999px',
           boxShadow: '0 0 10px rgba(255,255,255,0.1)',
         },
         '.glow-text': {

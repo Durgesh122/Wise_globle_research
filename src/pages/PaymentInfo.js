@@ -1,172 +1,196 @@
 import React from 'react';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
-import { FaMoneyCheckAlt } from 'react-icons/fa';
-import qrImage from '../assets/images/QR.png'; 
+import { FaMoneyCheckAlt, FaUniversity } from 'react-icons/fa';
+import qrImage from '../assets/images/QR.png';
+import hdfcQrImage from '../assets/images/Hdfc1.png';
+import hdfcLogo from '../assets/images/hdfc.png';
+import idfcLogo from '../assets/images/idfc.png';
 import { Helmet } from 'react-helmet-async';
-// Ensure this image exists
 
 const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 30 },
   visible: (i = 1) => ({
     opacity: 1,
     y: 0,
     transition: {
       delay: i * 0.2,
-      duration: 0.6,
+      duration: 0.8,
+      ease: "easeOut"
     },
   }),
 };
 
 const PaymentInfo = () => {
+  const bankDetails = [
+    {
+      bankName: "HDFC BANK",
+      logo: hdfcLogo,
+      details: [
+        { label: "Account Holder", value: "Wise Global Research Services Pvt Ltd" },
+        { label: "Account Number", value: "50200098347178" },
+        { label: "IFSC Code", value: "HDFC0008125" },
+        { label: "Account Type", value: "Current" },
+        { label: "Branch", value: "AB Road, Indore" },
+      ],
+      theme: "blue"
+    },
+    {
+      bankName: "IDFC FIRST BANK",
+      logo: idfcLogo,
+      details: [
+        { label: "Account Holder", value: "Wise Global Research Services Pvt Ltd" },
+        { label: "Account Number", value: "80123123121" },
+        { label: "IFSC Code", value: "IDFB0041269" },
+        { label: "Account Type", value: "Current" },
+        { label: "Branch", value: "Vijay Nagar, Indore" },
+      ],
+      theme: "red"
+    }
+  ];
+
   return (
     <>
       <Helmet>
         <title>Payment Info - Wise Global Research</title>
-        <meta name="description" content="Payment Info page — Wise Global Research." />
+        <meta name="description" content="Payment information for Wise Global Research services. Pay via QR code, bank transfer, or payment gateways." />
         <link rel="canonical" href="https://wiseglobalresearch.com/paymentinfo" />
       </Helmet>
-<motion.div
-      className="relative min-h-screen py-20 px-4 text-white overflow-hidden bg-transparent backdrop-blur-none"
-      initial="hidden"
-      animate="visible"
-    >
       <motion.div
-        className="relative z-10 max-w-6xl mx-auto"
-        variants={fadeInUp}
-        custom={0}
+        className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 sm:py-16 px-2 sm:px-4 lg:px-8"
+        initial="hidden"
+        animate="visible"
       >
-        <motion.h2
-          className="text-4xl md:text-5xl font-extrabold text-center drop-shadow-md mb-10 underline decoration-[#64ed37] underline-offset-8"
-          variants={fadeInUp}
-          custom={1}
-        ><Trans i18nKey="pages.PaymentInfo.payment-information">Payment Information</Trans></motion.h2>
-
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10"
-        variants={fadeInUp}
-        custom={2}
-      >
-        {/* QR Payment Block - IDFC FIRST Bank */}
-        <motion.div
-          className="bg-white/30 border border-white/30 p-4 sm:p-6 rounded-xl shadow-2xl backdrop-blur-xl hover:scale-105 transition duration-300 animate-float"
-          variants={fadeInUp}
-          custom={3}
-        >
-          <div className="bg-red-600 text-white font-semibold text-base sm:text-lg py-2 px-3 sm:px-4 rounded mx-auto mb-4 shadow text-center w-fit"><Trans i18nKey="pages.PaymentInfo.idfc-first-bank">IDFC FIRST Bank</Trans></div>
-          <h3 className="font-semibold text-white mb-3 text-center text-base sm:text-lg"><Trans i18nKey="pages.PaymentInfo.scan-pay">Scan & Pay</Trans></h3>
-          <div className="w-full flex justify-center items-center mb-4">
-              <div className="w-40 h-40 sm:w-60 sm:h-60 rounded-lg border border-white shadow-inner overflow-hidden">
-              <img
-                src={qrImage}
-                alt="QR Code"
-                className="w-full h-full object-cover"
-                decoding="async"
-                loading="lazy"
-                onError={(e) => { e.currentTarget.onerror = null; }}
-              />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* QR Payment Block - HDFC BANK */}
-        <motion.div
-          className="bg-white/30 border border-white/30 p-4 sm:p-6 rounded-xl shadow-2xl backdrop-blur-xl hover:scale-105 transition duration-300 animate-float"
-          variants={fadeInUp}
-          custom={3.5}
-        >
-          <div className="bg-blue-600 text-white font-semibold text-base sm:text-lg py-2 px-3 sm:px-4 rounded mx-auto mb-4 shadow text-center w-fit"><Trans i18nKey="pages.PaymentInfo.hdfc-bank">HDFC BANK</Trans></div>
-          <h3 className="font-semibold text-white mb-3 text-center text-base sm:text-lg"><Trans i18nKey="pages.PaymentInfo.scan-pay">Scan & Pay</Trans></h3>
-            <div className="w-full flex justify-center items-center mb-4">
-            <img
-              src={require('../assets/images/Hdfc1.png')}
-              alt="HDFC QR Code"
-              className="w-40 h-40 sm:w-60 sm:h-60 rounded-lg border border-white shadow-inner object-contain"
-              decoding="async"
-              loading="lazy"
-              onError={(e) => { e.currentTarget.onerror = null; }}
-            />
-          </div>
-        </motion.div>
-
-        {/* Bank Details Inline Section */}
-        <motion.div
-          className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-stretch mt-4 md:mt-6"
-          variants={fadeInUp}
-          custom={3.8}
-        >
-          {/* HDFC BANK Details */}
-          <div className="flex-1 bg-blue-100/20 border border-blue-400/30 rounded-xl p-3 sm:p-4 text-white shadow-md mx-0 md:mx-2 mb-3 md:mb-0">
-            <div className="font-bold text-blue-400 text-base sm:text-lg mb-2 text-center"><Trans i18nKey="pages.PaymentInfo.hdfc-bank">HDFC BANK</Trans></div>
-            <div className="flex flex-wrap gap-x-2 gap-y-1 justify-center text-xs sm:text-sm">
-              <span><strong><Trans i18nKey="pages.PaymentInfo.account-holder">Account Holder:</Trans></strong><Trans i18nKey="pages.PaymentInfo.wise-global-research-services-pvt-ltd"><Trans i18nKey="pages.PaymentInfo.wise-global-research-services-pvt-ltd-2">Wise Global Research Services Pvt Ltd</Trans></Trans></span>
-              <span><strong><Trans i18nKey="pages.PaymentInfo.account-number">Account Number:</Trans></strong> 50200098347178</span>
-              <span><strong><Trans i18nKey="pages.PaymentInfo.ifsc-code">IFSC Code:</Trans></strong><Trans i18nKey="pages.PaymentInfo.hdfc0008125">HDFC0008125</Trans></span>
-              <span><strong><Trans i18nKey="pages.PaymentInfo.account-type">Account Type:</Trans></strong><Trans i18nKey="pages.PaymentInfo.current">Current</Trans></span>
-              <span><strong><Trans i18nKey="pages.PaymentInfo.branch">Branch:</Trans></strong><Trans i18nKey="pages.PaymentInfo.ab-road-indore">AB Road, Indore</Trans></span>
-            </div>
-          </div>
-          {/* IDFC FIRST BANK Details */}
-          <div className="flex-1 bg-red-100/20 border border-red-400/30 rounded-xl p-3 sm:p-4 text-white shadow-md mx-0 md:mx-2">
-            <div className="font-bold text-red-400 text-base sm:text-lg mb-2 text-center"><Trans i18nKey="pages.PaymentInfo.idfc-first-bank-1">IDFC FIRST BANK</Trans></div>
-            <div className="flex flex-wrap gap-x-2 gap-y-1 justify-center text-xs sm:text-sm">
-              <span><strong><Trans i18nKey="pages.PaymentInfo.account-holder">Account Holder:</Trans></strong><Trans i18nKey="pages.PaymentInfo.wise-global-research-services-pvt-ltd"><Trans i18nKey="pages.PaymentInfo.wise-global-research-services-pvt-ltd-1">Wise Global Research Services Pvt Ltd</Trans></Trans></span>
-              <span><strong><Trans i18nKey="pages.PaymentInfo.account-number">Account Number:</Trans></strong> 80123123121</span>
-              <span><strong><Trans i18nKey="pages.PaymentInfo.ifsc-code">IFSC Code:</Trans></strong><Trans i18nKey="pages.PaymentInfo.idfb0041269">IDFB0041269</Trans></span>
-              <span><strong><Trans i18nKey="pages.PaymentInfo.account-type">Account Type:</Trans></strong><Trans i18nKey="pages.PaymentInfo.current">Current</Trans></span>
-              <span><strong><Trans i18nKey="pages.PaymentInfo.branch">Branch:</Trans></strong><Trans i18nKey="pages.PaymentInfo.vijay-nagar-indore">Vijay Nagar, Indore</Trans></span>
-            </div>
-          </div>
-        </motion.div>
-
-          {/* ...existing code... */}
-        </motion.div>
-
-        {/* Payment Gateway Buttons */}
-        <motion.div
-          className="flex flex-col md:flex-row gap-6 justify-center mt-10"
-          variants={fadeInUp}
-          custom={5}
-        >
-          <a
-            href="https://formbuilder.ccavenue.com/live/au-small-finance-bank/wise-global-research-services-pvt-ltd"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="max-w-7xl mx-auto w-full">
+          <motion.h1
+            className="text-2xl xs:text-3xl sm:text-4xl lg:text-6xl font-extrabold text-center text-gray-900 dark:text-white mb-3 sm:mb-4"
+            variants={fadeInUp}
           >
-            <motion.button
-              whileHover={{ scale: 1.07, rotate: 1 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-3 px-6 py-3 bg-green-500/90 text-white font-semibold rounded-xl shadow-xl backdrop-blur-lg border border-white/30 hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] transition duration-300"
-            >
-              <FaMoneyCheckAlt className="text-white text-xl" /><Trans i18nKey="pages.PaymentInfo.pay-via-ccavenue">Pay via CCAvenue</Trans></motion.button>
-          </a>
-
-          <a
-            href="https://u.payu.in/hr313T3SHfRR"
-            target="_blank"
-            rel="noopener noreferrer"
+            <Trans i18nKey="pages.PaymentInfo.payment-information">Payment Information</Trans>
+          </motion.h1>
+          <motion.p
+            className="text-base xs:text-lg text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8 sm:mb-12"
+            variants={fadeInUp}
+            custom={1}
           >
-            <motion.button
-              whileHover={{ scale: 1.07, rotate: -1 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-3 px-6 py-3 bg-yellow-500/90 text-white font-semibold rounded-xl shadow-xl backdrop-blur-lg border border-white/30 hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] transition duration-300"
-            >
-              <FaMoneyCheckAlt className="text-white text-xl" /><Trans i18nKey="pages.PaymentInfo.pay-via-payu">Pay via PayU</Trans></motion.button>
-          </a>
-        </motion.div>
+            <Trans i18nKey="pages.PaymentInfo.payment-intro">Choose your preferred method to complete the payment. We accept payments via QR Code, Bank Transfer, and popular payment gateways.</Trans>
+          </motion.p>
 
-        {/* Payment Note */}
-        <motion.p
-          className="text-center text-sm text-yellow-200 font-semibold mt-12"
-          variants={fadeInUp}
-          custom={6}
-        >
-          ⚠️ <strong><Trans i18nKey="pages.PaymentInfo.note">Note:</Trans></strong><Trans i18nKey="pages.PaymentInfo.we-accept-payments-only-through-the-deta"><Trans i18nKey="pages.PaymentInfo.we-accept-payments-only-through-the-deta-1">We accept payments only through the details listed above. Do not pay to any personal account.</Trans></Trans></motion.p>
+          {/* QR Code Section */}
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-12"
+            variants={fadeInUp}
+            custom={2}
+          >
+            {bankDetails.map((bank, index) => (
+              <motion.div
+                key={index}
+                className="bg-white dark:bg-gray-800 p-4 xs:p-5 sm:p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center"
+                variants={fadeInUp}
+                custom={3 + index * 0.5}
+              >
+                <img
+                  src={bank.logo}
+                  alt={`${bank.bankName} Logo`}
+                  className="h-14 xs:h-16 sm:h-20 mb-3 sm:mb-4 object-contain"
+                  loading="lazy"
+                />
+                <h3 className="text-base xs:text-lg sm:text-xl font-semibold text-gray-800 dark:text-white mb-1 sm:mb-2"><Trans i18nKey="pages.PaymentInfo.scan-pay">Scan & Pay</Trans></h3>
+                <div className="w-36 h-36 xs:w-44 xs:h-44 sm:w-48 sm:h-48 p-1 xs:p-2 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">
+                  <img
+                    src={bank.bankName === 'HDFC BANK' ? hdfcQrImage : qrImage}
+                    alt="QR Code"
+                    className="w-full h-full object-cover rounded-md"
+                    loading="lazy"
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Bank Details Section */}
+          <motion.div
+            className="mb-8 sm:mb-12"
+            variants={fadeInUp}
+            custom={3}
+          >
+            <h2 className="text-2xl xs:text-3xl sm:text-3xl font-bold text-center text-gray-900 dark:text-white mb-5 sm:mb-8">
+              <Trans i18nKey="pages.PaymentInfo.bank-transfer-details">Bank Transfer Details</Trans>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+              {bankDetails.map((bank, index) => (
+                <motion.div
+                  key={index}
+                  className={`bg-white dark:bg-gray-800 p-4 xs:p-5 sm:p-6 rounded-2xl shadow-lg border-t-4 border-${bank.theme}-500`}
+                  variants={fadeInUp}
+                  custom={4 + index * 0.5}
+                >
+                  <div className="flex items-center mb-3 sm:mb-4">
+                    <FaUniversity className={`text-2xl xs:text-3xl text-${bank.theme}-500 mr-3 sm:mr-4`} />
+                    <h3 className="text-lg xs:text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{bank.bankName}</h3>
+                  </div>
+                  <ul className="space-y-2 xs:space-y-3">
+                    {bank.details.map((item, itemIndex) => (
+                      <li key={itemIndex} className="flex flex-col xs:flex-row justify-between xs:items-center text-xs xs:text-sm">
+                        <strong className="text-gray-600 dark:text-gray-400 mb-1 xs:mb-0"><Trans i18nKey={`pages.PaymentInfo.${item.label.toLowerCase().replace(/ /g, '-')}`}>{item.label}:</Trans></strong>
+                        <span className="text-gray-800 dark:text-gray-200 font-medium text-right">{item.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Payment Gateway Buttons */}
+          <motion.div
+            className="text-center mb-8 sm:mb-12"
+            variants={fadeInUp}
+            custom={4}
+          >
+            <h2 className="text-2xl xs:text-3xl sm:text-3xl font-bold text-center text-gray-900 dark:text-white mb-5 sm:mb-8">
+              <Trans i18nKey="pages.PaymentInfo.payment-gateways">Payment Gateways</Trans>
+            </h2>
+            <div className="flex flex-col xs:flex-row items-center justify-center gap-4 xs:gap-6">
+              <motion.a
+                href="https://formbuilder.ccavenue.com/live/au-small-finance-bank/wise-global-research-services-pvt-ltd"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center justify-center gap-2 xs:gap-3 w-full xs:w-auto px-6 xs:px-8 py-3 xs:py-4 bg-green-500 text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition-all duration-300 text-sm xs:text-base"
+              >
+                <FaMoneyCheckAlt className="text-xl xs:text-2xl" />
+                <span><Trans i18nKey="pages.PaymentInfo.pay-via-ccavenue">Pay via CCAvenue</Trans></span>
+              </motion.a>
+              <motion.a
+                href="https://u.payu.in/hr313T3SHfRR"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center justify-center gap-2 xs:gap-3 w-full xs:w-auto px-6 xs:px-8 py-3 xs:py-4 bg-yellow-500 text-white font-bold rounded-xl shadow-md hover:bg-yellow-600 transition-all duration-300 text-sm xs:text-base"
+              >
+                <FaMoneyCheckAlt className="text-xl xs:text-2xl" />
+                <span><Trans i18nKey="pages.PaymentInfo.pay-via-payu">Pay via PayU</Trans></span>
+              </motion.a>
+            </div>
+          </motion.div>
+
+          {/* Payment Note */}
+          <motion.div
+            className="max-w-3xl mx-auto bg-yellow-100 dark:bg-yellow-900/30 border-l-4 border-yellow-500 text-yellow-800 dark:text-yellow-200 p-3 xs:p-4 rounded-r-lg"
+            variants={fadeInUp}
+            custom={5}
+          >
+            <p className="font-semibold text-xs xs:text-sm">
+              <strong><Trans i18nKey="pages.PaymentInfo.note">Note:</Trans></strong> <Trans i18nKey="pages.PaymentInfo.payment-warning">We accept payments only through the details listed above. Do not transfer to any personal account to avoid fraud.</Trans>
+            </p>
+          </motion.div>
+        </div>
       </motion.div>
-    </motion.div>
     </>
   );
 };
-
 
 export default PaymentInfo;

@@ -1,19 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-// Define an extensive set of vibrant, sexy gradients (restored) + premium dark themes
 const gradients = {
   default: {
-  // Default uses a light, subtle gradient (no image)
-   background: 'linear-gradient(to right, rgba(212,227,255,1), rgba(212,227,255,0.6))',
+    // Default uses a light, subtle gradient (no image)
+    background: 'linear-gradient(to right, #fffff4d1, #fffff4d1)',
     textColor: '#0b1220',
-    transition: 'background 0.5s ease-in-out',
-  },
-  // ...removed two top colors (fire, purpleDream) per user request
-  
-
-  cosmicTrade: {
-    background: 'linear-gradient(to right, #4b0082, #00b7eb)',
-    textColor: '#ffffff',
     transition: 'background 0.5s ease-in-out',
   },
   emeraldRush: {
@@ -25,6 +16,12 @@ const gradients = {
   // User-added color palette
   mintLeaf: {
     background: 'linear-gradient(to right, #68ba7f, #5fae73)',
+    textColor: '#0b1220',
+    transition: 'background 0.5s ease-in-out',
+  },
+  White: {
+    // Use an off-white light gradient and proper hex color values
+    background: 'linear-gradient(to right, #ffffff, #f7f7f7)',
     textColor: '#0b1220',
     transition: 'background 0.5s ease-in-out',
   },
@@ -48,6 +45,33 @@ const gradients = {
     textColor: '#0b1220',
     transition: 'background 0.5s ease-in-out',
   },
+  // Updated light palette: five refreshed, accessible light gradients (replaced per request)
+  pearlRose: {
+    background: 'linear-gradient(to right, #fff7f8, #fff0f3)',
+    textColor: '#0b1220',
+    transition: 'background 0.5s ease-in-out',
+  },
+  morningMist: {
+    background: 'linear-gradient(to right, #f7fbff, #eef6fb)',
+    textColor: '#0b1220',
+    transition: 'background 0.5s ease-in-out',
+  },
+  seaGlass: {
+    background: 'linear-gradient(to right, #f2fffb, #e8fff6)',
+    textColor: '#0b1220',
+    transition: 'background 0.5s ease-in-out',
+  },
+  buttermilk: {
+    background: 'linear-gradient(to right, #fffdf2, #fff6d9)',
+    textColor: '#0b1220',
+    transition: 'background 0.5s ease-in-out',
+  },
+  orchidHaze: {
+    background: 'linear-gradient(to right, #fbf7ff, #f6f0ff)',
+    textColor: '#0b1220',
+    transition: 'background 0.5s ease-in-out',
+  },
+  // (Removed plain white/pureWhite themes to avoid white-only background)
   goldenSun: {
     background: 'linear-gradient(to right, #ffb343, #ff9f1a)',
     textColor: '#0b1220',
@@ -97,6 +121,12 @@ const gradients = {
   warmTaupe: {
     background: 'linear-gradient(to right, #80775c, #6f6752)',
     textColor: '#0b1220',
+    transition: 'background 0.5s ease-in-out',
+  },
+  // New primary theme (fresh primary color + subtle gradient)
+  primary: {
+    background: 'linear-gradient(90deg, #18529a 0%, #2b7be9 100%)',
+    textColor: '#ffffff',
     transition: 'background 0.5s ease-in-out',
   },
   // Premium dark themes (5 distinct options)
@@ -163,8 +193,10 @@ export const ThemeProvider = ({ children }) => {
       rootEl.style.backgroundPosition = 'center center';
     }
 
-    // Text color on body (components still control their own text utilities)
-    bodyEl.style.color = active.textColor;
+  // Text color on body (components still control their own text utilities)
+  // Removed direct assignment to `bodyEl.style.color` to avoid global
+  // overrides of component-level text color (hero and other components
+  // should control their own color or use the CSS variable `--text-body`).
 
     // Also set CSS variables used across the app so components relying on
     // `var(--text-body)` and `var(--bg-surface)` pick up the current theme.
@@ -172,6 +204,13 @@ export const ThemeProvider = ({ children }) => {
       // Set background and text CSS vars
       htmlEl.style.setProperty('--bg-surface', active.background);
       htmlEl.style.setProperty('--text-body', active.textColor);
+
+      // Also set explicit navbar/footer/text CSS variables so components
+      // that use `--navbar-color` or `--text-color` pick up light/dark themes.
+      // If a theme provides explicit textColor, use it for general text, navbar and footer.
+      htmlEl.style.setProperty('--text-color', active.textColor);
+      htmlEl.style.setProperty('--navbar-color', active.textColor);
+      htmlEl.style.setProperty('--footer-color', active.textColor);
 
       // Simple heuristic to decide if the theme is light or dark based on text color
       const hex = (active.textColor || '#ffffff').replace('#', '');
@@ -205,6 +244,40 @@ export const ThemeProvider = ({ children }) => {
         // mark html as light-theme so CSS fallbacks can flip white text
         htmlEl.setAttribute('data-theme-light', 'true');
       }
+      // If the active theme key is the app default, override only navbar/footer
+      try {
+        const activeKey = previewTheme || theme;
+        if (activeKey === 'default') {
+          // Apply premium-looking navbar/footer colors without changing other themes
+          htmlEl.style.setProperty('--navbar-bg', 'linear-gradient(90deg, #248affff, #248affff)');
+          // Force navbar text to white for good contrast on the premium gradient
+          htmlEl.style.setProperty('--navbar-color', '#ffffff');
+          // Ensure mobile drawer and other header text uses white as well
+          htmlEl.style.setProperty('--text-color', '#ffffff');
+          htmlEl.style.setProperty('--footer-bg', 'linear-gradient(90deg, #248affff, #248affff)');
+          htmlEl.style.setProperty('--footer-color', '#ffffff');
+
+          // Also set border overrides for navbar when default selected
+          htmlEl.style.setProperty('--navbar-border', 'rgba(255, 255, 255, 0.06)');
+        } else {
+          // Ensure other themes control navbar/footer by explicitly applying
+          // the active theme's text color and clearing only background overrides
+          // that were set when the 'default' theme was active.
+          htmlEl.style.removeProperty('--navbar-bg');
+          htmlEl.style.removeProperty('--footer-bg');
+
+          // Re-apply theme text color values for navbar/footer/text so light
+          // themes (like 'White') get dark nav/footer text as expected.
+          htmlEl.style.setProperty('--navbar-color', active.textColor);
+          htmlEl.style.setProperty('--text-color', active.textColor);
+          htmlEl.style.setProperty('--footer-color', active.textColor);
+        }
+      } catch (e) {
+        // ignore DOM/CSS var errors
+      }
+      // Keep footer element inline styles intact — footer component controls
+      // its own background and color. Removing those properties here caused
+      // the footer background to disappear when `default` theme was active.
     } catch (e) {
       // Ignore failures when running in non-browser environments
     }

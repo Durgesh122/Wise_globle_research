@@ -1,230 +1,142 @@
-// Rewritten HeroSection: runtime framer-motion loader + responsive picture srcset
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { cardVariants } from '../utils/animationVariants';
-// Use placeholder/fallback PNG only if modern formats fail; dynamic responsive sources built from naming convention
-import '../assets/images/slide1.png';
-import '../assets/images/slide2.png';
-import '../assets/images/slide4.png';
-import { pictureSources, largest, buildPlaceholder } from '../utils/imageSources';
-
-// framer-motion loaded after first hero image completes to avoid main-thread contention before LCP
-
-const sliderImages = ['slide1','slide2','slide4'];
+import { FaArrowRight } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import BannerBg from '../assets/images/banner_bg.png';
+import BannerBgMobile from '../assets/images/banner_bg_003.jpeg';
 
 const HeroSection = () => {
   const navigate = useNavigate();
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [firstLoaded, setFirstLoaded] = useState(false);
-  const [motion, setMotion] = useState(null);
-  const [isFading, setIsFading] = useState(false);
-  const [backName, setBackName] = useState(sliderImages[0]);
-  const [frontName, setFrontName] = useState(sliderImages[0]);
-  const rafRef = useRef(null);
-  const sectionRef = useRef(null);
-  const [shouldPreload, setShouldPreload] = useState(false);
 
-  // Reduced motion preference
-  const prefersReduced = useMemo(() =>
-    typeof window !== 'undefined' && window.matchMedia
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false,
-  []);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.3, delayChildren: 0.2 },
+    },
+  };
 
-  const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length);
-  }, []);
-
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
-  }, []);
-
-  useEffect(() => {
-    if (prefersReduced) return undefined;
-    const slideInterval = setInterval(nextSlide, 6000);
-    return () => clearInterval(slideInterval);
-  }, [nextSlide, prefersReduced]);
-
-  // Preload handled via Helmet tag below to avoid duplicates
-
-  // Load framer-motion after first hero image is loaded
-  useEffect(() => {
-    if (!firstLoaded) return;
-    let mounted = true;
-    import('framer-motion')
-      .then((mod) => {
-        if (!mounted) return;
-        setMotion({ MotionDiv: mod.motion.div, MotionButton: mod.motion.button });
-      })
-      .catch(() => {});
-    return () => { mounted = false; };
-  }, [firstLoaded]);
-
-  const MotionDiv = motion?.MotionDiv || 'div';
-  const MotionButton = motion?.MotionButton || 'button';
-
-  const motionAvailable = Boolean(motion);
-  const motionButtonProps = motionAvailable ? { whileHover: { scale: 1.05, rotateY: 10 }, whileTap: { scale: 0.95 } } : {};
-  const motionDivProps = motionAvailable ? { variants: cardVariants, initial: 'hidden', animate: 'visible' } : {};
-
-  // Prefetch adjacent slides to keep transitions smooth without lazy-loading intervention
-  useEffect(() => {
-    if (!sliderImages?.length) return;
-    const preload = (idx) => {
-      const name = sliderImages[idx];
-      if (!name) return;
-      const img = new Image();
-      img.decoding = 'async';
-      img.src = largest(name, 'webp');
-    };
-    const next = (currentSlide + 1) % sliderImages.length;
-    const prev = (currentSlide - 1 + sliderImages.length) % sliderImages.length;
-    preload(next);
-    preload(prev);
-  }, [currentSlide]);
-
-  // On slide change, decode next image then crossfade front->back for smoothness
-  useEffect(() => {
-    const nextIdx = currentSlide;
-  const nextName = sliderImages[nextIdx];
-  if (!nextName) return;
-
-    // If already showing, nothing to do
-  if (frontName === nextName) return;
-
-    let canceled = false;
-    const img = new Image();
-    img.decoding = 'async';
-  img.src = largest(nextName, 'webp');
-    const swap = () => {
-      if (canceled) return;
-      // Back layer becomes current
-  setBackName(frontName);
-  setFrontName(nextName);
-      // Trigger crossfade
-      setIsFading(true);
-      // Ensure fade ends even if transitionend doesn’t fire
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        setTimeout(() => setIsFading(false), 550);
-      });
-    };
-    if (img.decode) {
-      img.decode().then(swap).catch(swap);
-    } else {
-      img.onload = swap;
-      img.onerror = swap;
-    }
-    return () => {
-      canceled = true;
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [currentSlide, frontName]);
-
-  useEffect(() => {
-    if (!sectionRef.current || typeof IntersectionObserver === 'undefined') {
-      // If no IntersectionObserver (old browsers) or ref not available, enable preload by default
-      setShouldPreload(true);
-      return undefined;
-    }
-    let mounted = true;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!mounted) return;
-        if (entry.isIntersecting) {
-          setShouldPreload(true);
-          obs.disconnect();
-        }
-      });
-    }, { rootMargin: '200px' });
-    obs.observe(sectionRef.current);
-    return () => { mounted = false; obs.disconnect(); };
-  }, []);
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: 'easeOut' } },
+  };
 
   return (
-    <section ref={sectionRef} className="relative pt-0 flex items-center justify-center overflow-hidden" style={{ minHeight: '60vh' }}>
-  <div className="absolute inset-0 z-0">
-        {/* Double-buffered crossfade: back (fading out) and front (fading in) */}
-        <div className="absolute inset-0 w-full h-full will-change-transform" style={{contain:'strict'}}>
-      {/* Back layer (decorative) */}
-      <picture>
-            <source type="image/avif" srcSet={pictureSources(backName).avif} sizes="100vw" />
-            <source type="image/webp" srcSet={pictureSources(backName).webp} sizes="100vw" />
-            <img
-        src={pictureSources(backName).fallback}
-        alt=""
-              className="w-full h-full object-cover pointer-events-none select-none"
-              decoding="async"
-              width="1600"
-              height="900"
-              sizes="100vw"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                transform: 'translateZ(0)',
-                opacity: isFading && !prefersReduced ? 0 : 1,
-                transition: prefersReduced ? 'none' : 'opacity 500ms ease',
-              }}
-            />
-          </picture>
-          {/* Front layer (primary visual) */}
-          <picture>
-            <source type="image/avif" srcSet={pictureSources(frontName).avif} sizes="100vw" />
-            <source type="image/webp" srcSet={pictureSources(frontName).webp} sizes="100vw" />
-            <img
-              src={pictureSources(frontName).fallback}
-              alt="Research analytics visual"
-              className="w-full h-full object-cover"
-              decoding="async"
-              fetchpriority={shouldPreload ? 'high' : 'auto'}
-              width="1600"
-              height="900"
-              sizes="100vw"
-              importance={shouldPreload ? 'high' : 'auto'}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                transform: 'translateZ(0)',
-                opacity: 1,
-                transition: prefersReduced ? 'none' : 'opacity 500ms ease',
-              }}
-              onLoad={() => {
-                if (currentSlide === 0 && !firstLoaded) setFirstLoaded(true);
-              }}
-              onError={(e) => {
-                e.currentTarget.src = buildPlaceholder(frontName, 'webp');
-                console.warn('Failed to load slide');
-              }}
-            />
-          </picture>
-        </div>
+    <section 
+      className="relative w-full min-h-[70vh] sm:min-h-[75vh] md:min-h-[80vh] lg:min-h-screen flex items-center bg-cover bg-center text-black overflow-hidden hero-bg-responsive"
+    >
+  {/* (Overlay removed per request so background image shows normally) */}
 
-  <button onClick={prevSlide} aria-label="Previous slide" className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 text-white text-adaptive text-2xl p-2 bg-black/50 rounded-full transition-colors hover:bg-black/75 focus:outline-none focus:ring-2 focus:ring-white">
-          <FaChevronLeft />
-        </button>
-  <button onClick={nextSlide} aria-label="Next slide" className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 text-white text-adaptive text-2xl p-2 bg-black/50 rounded-full transition-colors hover:bg-black/75 focus:outline-none focus:ring-2 focus:ring-white">
-          <FaChevronRight />
-        </button>
+      {/* Animated Blobs - behind the content but above the overlay */}
+      <div className="absolute inset-0" style={{ zIndex: 5 }}>
+        <motion.div
+          className="absolute w-96 h-96 bg-blue-500 rounded-full filter blur-3xl opacity-20 animate-blob"
+          style={{ top: '-10%', left: '-10%' }}
+        ></motion.div>
+        <motion.div
+          className="absolute w-96 h-96 bg-purple-500 rounded-full filter blur-3xl opacity-20 animate-blob animation-delay-2000"
+          style={{ top: '-10%', right: '-10%' }}
+        ></motion.div>
+        <motion.div
+          className="absolute w-96 h-96 bg-pink-500 rounded-full filter blur-3xl opacity-20 animate-blob animation-delay-4000"
+          style={{ bottom: '-10%' }}
+        ></motion.div>
       </div>
 
-      <MotionDiv
-        className="text-center px-2 sm:px-4 w-full max-w-2xl z-10 rounded-xl p-3 sm:p-4"
-        style={{ background: 'var(--bg-transparent, rgba(255,255,255,0.30))', backdropFilter: firstLoaded ? 'blur(12px)' : 'none', WebkitBackdropFilter: firstLoaded ? 'blur(12px)' : 'none', border: '1px solid var(--bg-border, rgba(255,255,255,0.30))', boxShadow: 'none', transformStyle: 'preserve-3d', width: '100%', overflow: 'hidden' }}
-        {...motionDivProps}
-      >
-        <h1 className="font-bold mb-4 animate-float break-words overflow-wrap break-word min-w-0 w-full text-adaptive" style={{ fontSize: 'clamp(1.25rem, 5.5vw, 2.4rem)', wordBreak: 'break-all', overflow: 'hidden', textWrap: 'balance', width: '100%', lineHeight: 1.2, fontFamily: 'Noto Sans, Mangal, Arial, sans-serif' }}>
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">Research Analyst</span>
-        </h1>
-        <MotionButton
-          onClick={() => navigate('/services')}
-          className="shine-hover px-3 py-2 sm:px-4 sm:py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-adaptive rounded-md text-sm sm:text-base font-bold break-words overflow-wrap break-word min-w-0 whitespace-normal w-full max-w-xs"
-          style={{ wordBreak: 'break-all', overflow: 'hidden', minWidth: 0, width: '100%', maxWidth: '280px' }}
-          {...motionButtonProps}
+      <div className="relative z-10 container mx-auto px-4">
+        <motion.div
+          className="flex flex-col md:flex-row items-center justify-between"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
         >
-          Get Started <FaArrowRight className="inline ml-2" />
-        </MotionButton>
-      </MotionDiv>
+          {/* Text Content */}
+          <div className="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
+            <motion.h1
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-3 text-black hero-text-white"
+              variants={itemVariants}
+              style={{ lineHeight: 1.05 }}
+            >
+              Actionable Research, Measurable Growth
+            </motion.h1>
+            <motion.p
+              className="text-base sm:text-lg md:text-xl text-gray-800 mb-6 hero-text-white"
+              variants={itemVariants}
+            >
+              We turn data and insight into clear strategies and dashboards that lead to faster, measurable results.
+            </motion.p>
+            <motion.button
+              onClick={() => navigate('/services')}
+              className="inline-flex items-center px-6 py-3 sm:px-8 sm:py-4 bg-white text-black font-bold rounded-lg hover:bg-gray-100 transition-colors duration-300 shadow-lg"
+              variants={itemVariants}
+              whileHover={{ scale: 1.04, boxShadow: '0px 10px 30px rgba(59, 130, 246, 0.45)' }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Let's Talk Results <FaArrowRight className="ml-2 text-black" />
+            </motion.button>
+          </div>
+
+          {/* Image/Illustration Content (removed by request) */}
+          <motion.div className="md:w-1/2 flex justify-center" variants={itemVariants}>
+            {/* illustration removed */}
+          </motion.div>
+        </motion.div>
+      </div>
+      <style>{`
+        .hero-bg-responsive {
+          background-image: url(${BannerBg});
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+        @media (max-width: 640px) {
+          .hero-bg-responsive {
+            background-image: url(${BannerBgMobile});
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center 40px;
+            width: 80vw;
+            max-width: 95vw;
+            height: 50vw;
+            max-height: 60vw;
+            min-height: unset;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .hero-text-white {
+            color: #fff !important;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+          }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+        @keyframes blob {
+          0% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+        }
+      `}</style>
     </section>
   );
 };

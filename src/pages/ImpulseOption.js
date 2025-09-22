@@ -12,7 +12,7 @@ const ImpulseOption = () => (
         <meta name="description" content="Impulse Option page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/impulseoption" />
       </Helmet>
-<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+<div className="container mx-auto py-8 px-4 sm:px-6 max-w-4xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.ImpulseOption.impulse-option">Impulse Option</Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
       This pack is specially design for those who cannot invest much of their time &amp; money in the Option market and therefore only want to trade on selected liquid stocks by leveraging their position. This pack will help the client to sustain rational profit in the Options market segment. This is our value pack in which traders will get filtered research-based intraday/positional option market recommendation signals on their mobile phones. We have a team of analysts who are specialized in Tracking the F&amp;O market with keen observation and keep a complete track of all the national and international events and Major Sectors and blend it with technical analysis to predict the market moves.<br/><br/><Trans i18nKey="pages.ImpulseOption.if-you-are-looking-for-best-research-rec"><Trans i18nKey="pages.ImpulseOption.if-you-are-looking-for-best-research-rec-1">If you are looking for best research/recommendation and do not want to invest much of times, then this pack is perfect for you.</Trans></Trans></p>

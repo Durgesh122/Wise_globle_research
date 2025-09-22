@@ -30,54 +30,78 @@ const buttonVariants = {
 
 const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggle }) => (
     <motion.div
-      className="rounded-xl shadow-sm overflow-x-auto h-scroll custom-scrollbar p-2"
-      style={{ background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}
+    className="table-responsive rounded-xl shadow-sm p-2"
+    style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}
     variants={itemVariants}
   >
-    <table className="min-w-[700px] sm:min-w-full table-auto text-adaptive text-xs sm:text-sm">
-      <thead className="" style={{ background: 'transparent' }}>
-        <tr>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Name</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Email</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Phone</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Message</th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">
-            <button onClick={handleSortToggle} className="hover:text-indigo-400 transition-colors">
-              Timestamp {sortOrder === 'desc' ? '↓' : '↑'}
-            </button>
-          </th>
-          <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {submissions.map((submission) => (
-          <motion.tr
-            key={submission.id}
-            className="border-b border-gray-200/20 hover:bg-gray-700/20 transition-colors"
-            variants={itemVariants}
-          >
-            <td className="p-4 break-words">{submission.name || 'N/A'}</td>
-            <td className="p-4 break-words">{submission.email || 'N/A'}</td>
-            <td className="p-4 break-words">{submission.phone || 'N/A'}</td>
-            <td className="p-4 max-w-[10rem] sm:max-w-xs truncate break-words">{submission.message || 'N/A'}</td>
-            <td className="p-4 whitespace-nowrap">
-              {submission.timestamp ? new Date(submission.timestamp).toLocaleString('en-IN') : 'N/A'}
-            </td>
-            <td className="p-4">
-              <motion.button
-                onClick={() => handleDelete(submission.id)}
-                className="text-red-500 hover:text-red-700"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                <FiTrash2 size={16} />
-              </motion.button>
-            </td>
-          </motion.tr>
-        ))}
-      </tbody>
-    </table>
+    {/* Desktop / Tablet table */}
+      <div className="hidden sm:block">
+      <table className="w-full table-auto text-xs sm:text-sm" style={{ color: 'var(--text-body)' }}>
+        <thead className="bg-transparent">
+          <tr>
+            <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Name</th>
+            <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Email</th>
+            <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Phone</th>
+            <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Message</th>
+            <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">
+              <button onClick={handleSortToggle} className="hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
+                Timestamp {sortOrder === 'desc' ? '↓' : '↑'}
+              </button>
+            </th>
+            <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {submissions.map((submission) => (
+            <motion.tr
+              key={submission.id}
+              className="transition-colors"
+              style={{ borderBottom: '1px solid var(--bg-border)' }}
+              variants={itemVariants}
+            >
+              <td className="p-4 break-words">{submission.name || 'N/A'}</td>
+              <td className="p-4 break-words">{submission.email || 'N/A'}</td>
+              <td className="p-4 break-words">{submission.phone || 'N/A'}</td>
+              <td className="p-4 max-w-[10rem] sm:max-w-xs truncate break-words">{submission.message || 'N/A'}</td>
+              <td className="p-4 whitespace-nowrap">
+                {submission.timestamp ? new Date(submission.timestamp).toLocaleString('en-IN') : 'N/A'}
+              </td>
+              <td className="p-4">
+                <motion.button
+                  onClick={() => handleDelete(submission.id)}
+                  className="text-red-600 hover:text-red-500"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <FiTrash2 size={16} />
+                </motion.button>
+              </td>
+            </motion.tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    {/* Mobile list: show cards on small screens */}
+    <div className="sm:hidden space-y-3">
+      {submissions.map((s) => (
+        <div key={s.id} className="p-3 rounded-lg" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>
+          <div className="flex justify-between items-start gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-adaptive truncate">{s.name || 'N/A'}</p>
+              <p className="text-xs text-adaptive truncate">{s.email || 'N/A'}</p>
+              <p className="text-xs text-adaptive">{s.phone || 'N/A'}</p>
+            </div>
+            <div className="flex-shrink-0">
+              <motion.button onClick={() => handleDelete(s.id)} className="text-red-600 hover:text-red-500" variants={buttonVariants} whileHover="hover" whileTap="tap"><FiTrash2 /></motion.button>
+            </div>
+          </div>
+          <div className="mt-2 text-sm text-adaptive">{s.message || 'N/A'}</div>
+          <div className="mt-2 text-xs text-adaptive">{s.timestamp ? new Date(s.timestamp).toLocaleString('en-IN') : 'N/A'}</div>
+        </div>
+      ))}
+    </div>
   </motion.div>
 );
 
@@ -182,7 +206,7 @@ const ContactSubmissions = () => {
     link.setAttribute('download', 'contact_submissions.csv');
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+  if (link && link.parentNode) link.parentNode.removeChild(link);
     toast.success('Submissions exported to CSV.');
   };
 
@@ -192,7 +216,7 @@ const ContactSubmissions = () => {
   const totalPages = Math.ceil(filteredSubmissions.length / itemsPerPage);
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+    <motion.div className="admin-section" variants={containerVariants} initial="hidden" animate="visible">
   <h2 className="text-3xl font-bold text-adaptive mb-6"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions-1">Contact Submissions</Trans></Trans></h2>
   <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search contacts..." />

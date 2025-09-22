@@ -33,7 +33,8 @@ const ConsentTable = ({ submissions, handleDelete }) => (
     className="bg-gray-800/30 rounded-xl shadow-lg border border-gray-200/20 overflow-x-auto h-scroll custom-scrollbar p-2"
     variants={itemVariants}
   >
-    <table className="min-w-[900px] md:min-w-full table-auto text-white text-xs sm:text-sm">
+  <div className="table-responsive">
+  <table className="min-w-full md:min-w-full table-auto text-white text-xs sm:text-sm">
       <thead className="bg-gray-700/50">
         <tr>
           <th className="p-4 text-left font-semibold">Client Name</th>
@@ -99,7 +100,8 @@ const ConsentTable = ({ submissions, handleDelete }) => (
           </motion.tr>
         ))}
       </tbody>
-    </table>
+  </table>
+  </div>
   </motion.div>
 );
 

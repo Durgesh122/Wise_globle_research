@@ -47,43 +47,50 @@ const AnnualDisposalTable = () => {
 // ...existing code...
 
   return (
-    <div className="my-8">
-      <h2 className="text-xl font-bold text-white mb-4">Trend Of Annual Disposal Of Complaints</h2>
-      <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
-        <table className="w-full border-collapse text-left text-xs sm:text-sm" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(15px)' }}>
-          <caption className="sr-only">Annual disposal trend of complaints with carried, received, resolved and pending counts</caption>
-          <thead>
-            <tr className="text-white" style={{ background: 'rgba(255,255,255,0.3)' }}>
-              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
-              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Year</th>
-              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Carried forward from previous year</th>
-              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Received</th>
-              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Resolved*</th>
-              <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Pending#</th>
-              {/* Actions column removed */}
-            </tr>
-          </thead>
-          <tbody>
-            {(Array.isArray(tableData) ? tableData : Object.values(tableData || {})).map(row => (
-              <tr key={row.srNo} className="transition-colors hover:bg-opacity-25" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
-                <td className="p-2 sm:p-3 border border-gray-200/30">{row.srNo}</td>
-                <td className="p-2 sm:p-3 border border-gray-200/30">{row.year}</td>
-                <td className="p-2 sm:p-3 border border-gray-200/30">{row.carried}</td>
-                <td className="p-2 sm:p-3 border border-gray-200/30">{row.received}</td>
-                <td className="p-2 sm:p-3 border border-gray-200/30">{row.resolved}</td>
-                <td className="p-2 sm:p-3 border border-gray-200/30">{row.pending}</td>
-                {/* Actions cell removed */}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
+      <div className="container max-w-3xl mx-auto">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8" style={{ color: '#111' }}>
+          Trend Of Annual Disposal Of Complaints
+        </h2>
+        <div className="rounded-lg overflow-hidden" style={{ background: '#fff', border: '1.5px solid #cbd5e1', color: '#111' }}>
+          <div className="overflow-x-auto">
+            <table
+              className="w-full border-separate border-spacing-0 text-left text-xs sm:text-sm border border-gray-300"
+              style={{ background: 'transparent' }}
+              aria-label="Annual disposal trend of complaints with carried, received, resolved and pending counts"
+            >
+              <caption className="sr-only">Annual disposal trend of complaints with carried, received, resolved and pending counts</caption>
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-300">
+                  <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[70px]" style={{ color: '#111' }}>Sr. No.</th>
+                  <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[120px]" style={{ color: '#111' }}>Year</th>
+                  <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[180px]" style={{ color: '#111' }}>Carried forward from previous year</th>
+                  <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]" style={{ color: '#111' }}>Received</th>
+                  <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]" style={{ color: '#111' }}>Resolved*</th>
+                  <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]" style={{ color: '#111' }}>Pending#</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(Array.isArray(tableData) ? tableData : Object.values(tableData || {})).map(row => (
+                  <tr key={row.srNo} className="transition-colors hover:bg-gray-100 border-b border-gray-300" style={{ backgroundColor: '#fff' }}>
+                    <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[70px]">{row.srNo}</td>
+                    <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[120px]">{row.year}</td>
+                    <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[180px]">{row.carried}</td>
+                    <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]">{row.received}</td>
+                    <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]">{row.resolved}</td>
+                    <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]">{row.pending}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p className="mt-4 text-xs sm:text-sm" style={{ color: 'var(--text-body)' }}>
+          *Inclusive of complaints of previous years resolved in the current year.<br />
+          #Inclusive of complaints pending as on the last day of the year. (as on 31st March)
+        </p>
       </div>
-      <p className="mt-2 text-xs sm:text-sm text-gray-300">
-        *Inclusive of complaints of previous years resolved in the current year.<br />
-        #Inclusive of complaints pending as on the last day of the year. (as on 31st March)
-      </p>
-      {/* EditModal removed from this page as edit is only allowed from AdminPanel */}
-    </div>
+    </section>
   );
 };
 

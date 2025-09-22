@@ -273,7 +273,8 @@ export default function Search() {
               key={c}
               type="button"
               onClick={() => setCategory(c)}
-              className={`px-3 py-1 rounded-full border transition ${category === c ? 'bg-green-500 text-black border-green-400' : 'bg-white/20 text-white border-white/30 hover:bg-white/30'}`}
+              className={`px-3 py-1 rounded-full border transition ${category === c ? 'bg-green-500 text-black border-green-400' : 'text-black'}`}
+              style={category === c ? undefined : { background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)' }}
               aria-pressed={category === c}
             >
               {c}
@@ -295,7 +296,8 @@ export default function Search() {
             aria-controls="search-listbox"
             aria-activedescendant={activeIndex >= 0 && results[activeIndex] ? `search-option-${activeIndex}` : undefined}
             aria-autocomplete="list"
-            className="w-full bg-white/30 backdrop-blur-md border-2 border-white/20 rounded-full pr-12 pl-12 py-4 text-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+            className="w-full rounded-full pr-12 pl-12 py-4 text-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+            style={{ background: '#D4e3ff', border: '2px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(6px)' }}
             placeholder="e.g. Privacy, Careers, Smart Cash"
             value={q}
             onFocus={() => setShowRecent(true)}
@@ -330,7 +332,8 @@ export default function Search() {
                         key={s.path}
                         type="button"
                         onClick={() => setQ(s.label)}
-                        className="px-3 py-1 rounded-full bg-white/20 hover:bg-white/30 border border-white/30"
+                        className="px-3 py-1 rounded-full border"
+                        style={{ background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)', color: 'black' }}
                       >
                         {s.label}
                       </button>
@@ -353,7 +356,8 @@ export default function Search() {
                     role="option"
                     aria-selected={activeIndex === idx}
                     key={r.path}
-                    className={`bg-white/30 backdrop-blur-md rounded-lg shadow-lg border transition-all duration-300 transform ${activeIndex === idx ? 'border-green-400 shadow-green-300/40 -translate-y-1' : 'border-white/20 hover:border-white/40 hover:-translate-y-1 hover:shadow-white/30'}`}
+                    className={`rounded-lg shadow-lg border transition-all duration-300 transform ${activeIndex === idx ? 'border-green-400 shadow-green-300/40 -translate-y-1' : 'border-white/20 hover:border-white/40 hover:-translate-y-1 hover:shadow-white/30'}`}
+                    style={{ background: '#D4e3ff', backdropFilter: 'blur(4px)' }}
                     onMouseEnter={() => setActiveIndex(idx)}
                   >
                     <Link to={r.path} className="block p-6">
@@ -363,8 +367,8 @@ export default function Search() {
                           {highlightText(r.label, terms)}
                         </h3>
                       </div>
-                      <p className="text-white/80 mt-2">{highlightText(r.description, terms)}</p>
-                      <div className="text-sm text-white/60 mt-3">{highlightText(r.path, terms)}</div>
+                      <p className="text-black mt-2">{highlightText(r.description, terms)}</p>
+                      <div className="text-sm text-black/70 mt-3">{highlightText(r.path, terms)}</div>
                     </Link>
                   </li>
                 ))}
@@ -383,7 +387,8 @@ export default function Search() {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className="px-3 py-2 rounded-lg bg-white/20 hover:bg-white/30 border border-white/30 text-white transition"
+                    className="px-3 py-2 rounded-lg border transition"
+                    style={{ background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)', color: 'black' }}
                     aria-label={`${item.label} (${item.category})`}
                   >
                     {item.label}
@@ -396,10 +401,10 @@ export default function Search() {
           {/* Recent searches dropdown */}
           {showRecent && !debouncedQ.trim() && recent.length > 0 && (
             <div className="max-w-4xl mx-auto mt-2">
-              <div className="bg-white/20 backdrop-blur-md rounded-lg border border-white/30 p-4">
+              <div className="rounded-lg border p-4" style={{ background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-white/80 font-medium">Recent searches</h3>
-                  <button onClick={clearRecent} className="text-sm text-white/70 hover:text-white">Clear all</button>
+                  <h3 className="text-black/80 font-medium">Recent searches</h3>
+                  <button onClick={clearRecent} className="text-sm text-black/60 hover:text-black">Clear all</button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {recent.map((item, i) => (
@@ -408,7 +413,8 @@ export default function Search() {
                       type="button"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setQ(item)}
-                      className="px-3 py-1 rounded-full bg-white/20 hover:bg-white/30 border border-white/30 text-white"
+                      className="px-3 py-1 rounded-full border"
+                      style={{ background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)', color: 'black' }}
                     >
                       {item}
                     </button>

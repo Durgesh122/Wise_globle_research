@@ -55,9 +55,14 @@ const WhyChooseUs = () => {
             const isOpen = openIndex === i;
             const isLocked = locks[i];
             return (
-              <div key={i} className="bg-white/30 rounded-lg border border-white/10 overflow-hidden">
+              <div
+                key={i}
+                className="rounded-lg overflow-hidden"
+                style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)' }}
+              >
                 <div
-                  className={`flex items-center justify-between px-4 py-3 cursor-pointer select-none ${isLocked ? 'bg-white/30' : ''}`}
+                  className={`flex items-center justify-between px-4 py-3 cursor-pointer select-none`}
+                  style={isLocked ? { background: '#ffffffff' } : {}}
                 >
                   <button
                     onClick={() => toggle(i)}
@@ -65,19 +70,24 @@ const WhyChooseUs = () => {
                     aria-expanded={isOpen}
                     aria-controls={`faq-panel-${i}`}
                   >
-                    <span className="text-lg font-semibold">{f.q}</span>
+                    <span className="text-lg font-semibold text-black">{f.q}</span>
                   </button>
 
                   <div className="flex items-center gap-3 ml-4">
                     <button
                       aria-pressed={isLocked}
                       onClick={() => toggleLock(i)}
-                      className="text-sm text-white/80 p-2 rounded hover:bg-white/5"
+                      className="text-sm p-2 rounded hover:bg-black/5"
                       title={isLocked ? 'Unlock' : 'Lock'}
+                      style={{ color: 'rgba(0,0,0,0.7)' }}
                     >
                       {isLocked ? <FiLock /> : <FiUnlock />}
                     </button>
-                    <button onClick={() => toggle(i)} className={`p-2 rounded transform transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+                    <button
+                      onClick={() => toggle(i)}
+                      className={`p-2 rounded transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                      style={{ color: 'rgba(0,0,0,0.7)' }}
+                    >
                       <FiChevronDown />
                     </button>
                   </div>
@@ -93,7 +103,8 @@ const WhyChooseUs = () => {
                       exit="closed"
                       variants={itemVariants}
                       transition={{ duration: 0.35, ease: 'easeInOut' }}
-                      className="px-4 pt-0 pb-4 text-white/80 text-adaptive"
+                      className="px-4 pt-0 pb-4 text-adaptive"
+                      style={{ color: 'rgba(0,0,0,0.8)' }}
                     >
                       <div className="overflow-hidden">
                         <p>{f.a}</p>

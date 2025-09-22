@@ -40,23 +40,40 @@ export const computeComplaintGrandTotal = (rows) => {
       const art = Number(r.avgResolutionTime);
       if (!isNaN(art)) {
         acc._avgSum += art;
-        acc._avgCnt += 1;
+        acc._avgCount += 1;
       }
       return acc;
     },
-    { pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, _avgSum: 0, _avgCnt: 0 }
+    { pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, _avgSum: 0, _avgCount: 0 }
   );
-  const avg = totals._avgCnt > 0 ? Math.round((totals._avgSum / totals._avgCnt) * 10) / 10 : 0;
+  const avgResolutionTime = totals._avgCount > 0 ? (totals._avgSum / totals._avgCount).toFixed(2) : 0;
   return {
     pendingLastMonth: totals.pendingLastMonth,
     received: totals.received,
     resolved: totals.resolved,
     pending: totals.pending,
     pending3Months: totals.pending3Months,
-    avgResolutionTime: avg,
+    avgResolutionTime,
   };
 };
 
+// Framer-motion variants used across this component
+const buttonVariants = {
+  hover: { scale: 1.03 },
+  tap: { scale: 0.98 },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 6 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
+};
+
+// Annual totals calculation (same shape as monthly)
 export const computeAnnualGrandTotal = (rows) => {
   return rows.reduce(
     (acc, r) => {
@@ -68,22 +85,6 @@ export const computeAnnualGrandTotal = (rows) => {
     },
     { carried: 0, received: 0, resolved: 0, pending: 0 }
   );
-};
-
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const buttonVariants = {
-  hover: { scale: 1.05 },
-  tap: { scale: 0.95 },
 };
 
 const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
@@ -158,35 +159,35 @@ EditModal.propTypes = {
 };
 
 const ComplaintTable = ({ tableData, handleEdit }) => (
-  <motion.div className="overflow-x-auto h-scroll custom-scrollbar bg-gray-800 rounded-lg shadow" variants={itemVariants}>
-    <table className="min-w-[920px] sm:min-w-full text-sm text-left text-gray-300">
-      <thead className="bg-gray-700 text-xs text-gray-200 uppercase tracking-wider">
+  <motion.div className="table-responsive h-scroll custom-scrollbar rounded-lg shadow" variants={itemVariants} style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>
+    <table className="min-w-[920px] sm:min-w-full text-sm text-left" style={{ color: 'var(--text-body)' }}>
+      <thead className="text-xs uppercase tracking-wider" style={{ background: 'var(--bg-muted)', color: 'var(--text-body)' }}>
         <tr>
-          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.received-from">Received from</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month-1">Pending last month</Trans></Trans></th>
-          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.resolved">Resolved</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending">Pending</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months-1">Pending  3 Months</Trans></Trans></th>
-          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days-1">Avg. Resolution time (days)</Trans></Trans></th>
-          <th className="px-6 py-3 text-left font-semibold"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.received-from">Received from</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month-1">Pending last month</Trans></Trans></th>
+          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.resolved">Resolved</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.pending">Pending</Trans></th>
+          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months-1">Pending  3 Months</Trans></Trans></th>
+          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days-1">Avg. Resolution time (days)</Trans></Trans></th>
+          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
         </tr>
       </thead>
       <tbody>
         {(Array.isArray(tableData) ? tableData : Object.values(tableData || {})).map(row => (
-          <motion.tr key={row.srNo} className="border-b border-gray-700 hover:bg-gray-600/50" variants={itemVariants}>
-            <td data-label="Sr. No." className="px-6 py-4">{row.srNo}</td>
-            <td data-label="Received from" className="px-6 py-4">{row.source || 'N/A'}</td>
-            <td data-label="Pending last month" className="px-6 py-4">{row.pendingLastMonth || 0}</td>
-            <td data-label="Received" className="px-6 py-4">{row.received || 0}</td>
-            <td data-label="Resolved" className="px-6 py-4">{row.resolved || 0}</td>
-            <td data-label="Pending" className="px-6 py-4">{row.pending || 0}</td>
-            <td data-label="Pending > 3 Months" className="px-6 py-4">{row.pending3Months || 0}</td>
-            <td data-label="Avg. Resolution time (days)" className="px-6 py-4">{row.avgResolutionTime || 0}</td>
+          <motion.tr key={row.srNo} style={{ borderBottom: '1px solid var(--bg-border)' }} variants={itemVariants}>
+            <td data-label="Sr. No." className="px-6 py-4 text-adaptive">{row.srNo}</td>
+            <td data-label="Received from" className="px-6 py-4 text-adaptive">{row.source || 'N/A'}</td>
+            <td data-label="Pending last month" className="px-6 py-4 text-adaptive">{row.pendingLastMonth || 0}</td>
+            <td data-label="Received" className="px-6 py-4 text-adaptive">{row.received || 0}</td>
+            <td data-label="Resolved" className="px-6 py-4 text-adaptive">{row.resolved || 0}</td>
+            <td data-label="Pending" className="px-6 py-4 text-adaptive">{row.pending || 0}</td>
+            <td data-label="Pending > 3 Months" className="px-6 py-4 text-adaptive">{row.pending3Months || 0}</td>
+            <td data-label="Avg. Resolution time (days)" className="px-6 py-4 text-adaptive">{row.avgResolutionTime || 0}</td>
             <td data-label="Actions" className="px-6 py-4">
               {row.srNo !== 'Grand Total' && (
-                <motion.button onClick={() => handleEdit(row)} className="text-blue-400 hover:text-blue-300" variants={buttonVariants} whileHover="hover"><FiEdit size={16} /></motion.button>
+                <motion.button onClick={() => handleEdit(row)} style={{ color: 'var(--accent)' }} variants={buttonVariants} whileHover="hover"><FiEdit size={16} /></motion.button>
               )}
             </td>
           </motion.tr>
@@ -402,22 +403,23 @@ const ComplaintManager = () => {
   };
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible">
-      <h2 className="text-3xl font-bold text-white mb-6"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager-1">Complaint Manager</Trans></Trans></h2>
+    <motion.div className="admin-section" variants={containerVariants} initial="hidden" animate="visible">
+      <h2 className="text-3xl font-bold text-adaptive mb-6"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager-1">Complaint Manager</Trans></Trans></h2>
   {/* Complaint submissions moved to Complaint Box page */}
       {isLoading ? <LoadingSpinner /> : (
         <>
           {/* Public heading controller for ComplaintTable */}
-          <motion.div className="mb-6 bg-gray-800/60 border border-gray-200/20 rounded-lg p-4" variants={itemVariants}>
-            <h3 className="text-lg font-semibold text-white mb-3">Public Complaints Heading</h3>
+          <motion.div className="mb-6 rounded-lg p-4" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }} variants={itemVariants}>
+            <h3 className="text-lg font-semibold text-adaptive mb-3">Public Complaints Heading</h3>
             <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-              <label htmlFor="headerMonthYear" className="text-sm text-gray-300 min-w-[180px]">Month & Year (e.g., July 2025)</label>
+              <label htmlFor="headerMonthYear" className="text-sm text-adaptive min-w-[180px]">Month & Year (e.g., July 2025)</label>
               <input
                 id="headerMonthYear"
                 type="text"
                 value={headerMonthYear}
                 onChange={(e) => setHeaderMonthYear(e.target.value)}
-                className="w-full sm:max-w-md p-2 rounded-md bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="w-full sm:max-w-md p-2 rounded-md"
+                style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)', color: 'var(--text-body)' }}
                 placeholder="July 2025"
               />
               <motion.button
@@ -431,17 +433,17 @@ const ComplaintManager = () => {
                 {isSavingHeader ? 'Saving…' : 'Save'}
               </motion.button>
             </div>
-            <p className="mt-2 text-xs text-gray-400">This updates the heading shown on the public Complaints table.</p>
+            <p className="mt-2 text-xs text-adaptive">This updates the heading shown on the public Complaints table.</p>
           </motion.div>
 
           <ComplaintTable tableData={tableData} handleEdit={handleEdit} />
 
           {/* Monthly Disposal Table (admin editable) */}
           <div className="my-8">
-            <h2 className="text-xl font-bold text-white mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints-1">Trend Of Monthly Disposal Of Complaints</Trans></Trans></h2>
-            <div className="overflow-x-auto bg-gray-800 rounded-lg shadow custom-scrollbar">
-              <table className="min-w-full text-sm text-left text-gray-300">
-                <thead className="bg-gray-700 text-xs text-gray-200 uppercase tracking-wider">
+            <h2 className="text-xl font-bold text-adaptive mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints-1">Trend Of Monthly Disposal Of Complaints</Trans></Trans></h2>
+            <div className="table-responsive rounded-lg shadow custom-scrollbar" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>
+              <table className="min-w-full text-sm text-left" style={{ color: 'var(--text-body)' }}>
+                <thead className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-body)' }}>
                   <tr>
                     <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
                     <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.month">Month</Trans></th>
@@ -454,16 +456,16 @@ const ComplaintManager = () => {
                 </thead>
                 <tbody>
                   {(Array.isArray(monthlyData) ? monthlyData : Object.values(monthlyData || {})).map(row => (
-                    <tr key={row.srNo} className="border-b border-gray-700 hover:bg-gray-600/50">
-                      <td className="px-6 py-4">{row.srNo}</td>
-                      <td className="px-6 py-4">{row.month}</td>
-                      <td className="px-6 py-4">{row.carried}</td>
-                      <td className="px-6 py-4">{row.received}</td>
-                      <td className="px-6 py-4">{row.resolved}</td>
-                      <td className="px-6 py-4">{row.pending}</td>
+                    <tr key={row.srNo} style={{ borderBottom: '1px solid var(--bg-border)' }}>
+                      <td className="px-6 py-4 text-adaptive">{row.srNo}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.month}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.carried}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.received}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.resolved}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.pending}</td>
                       <td className="px-6 py-4">
                         {row.srNo !== 'Grand Total' && (
-                          <button onClick={() => handleMonthlyEdit(row)} className="text-blue-400 hover:text-blue-300"><FiEdit size={16} /></button>
+                          <button onClick={() => handleMonthlyEdit(row)} style={{ color: 'var(--accent)' }}><FiEdit size={16} /></button>
                         )}
                       </td>
                     </tr>
@@ -471,14 +473,14 @@ const ComplaintManager = () => {
                 </tbody>
               </table>
             </div>
-            <p className="mt-2 text-xs sm:text-sm text-gray-300"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-mont"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-mont-1">*Inclusive of complaints of previous months resolved in the current month.</Trans></Trans><br /><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th-2">#Inclusive of complaints pending as on the last day of the month.</Trans></Trans></p>
+            <p className="mt-2 text-xs sm:text-sm text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-mont"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-mont-1">*Inclusive of complaints of previous months resolved in the current month.</Trans></Trans><br /><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th-2">#Inclusive of complaints pending as on the last day of the month.</Trans></Trans></p>
           </div>
           {/* Annual Disposal Table (admin editable) */}
           <div className="my-8">
-            <h2 className="text-xl font-bold text-white mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints-1">Trend Of Annual Disposal Of Complaints</Trans></Trans></h2>
-            <div className="overflow-x-auto bg-gray-800 rounded-lg shadow custom-scrollbar">
-              <table className="min-w-full text-sm text-left text-gray-300">
-                <thead className="bg-gray-700 text-xs text-gray-200 uppercase tracking-wider">
+            <h2 className="text-xl font-bold text-adaptive mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints-1">Trend Of Annual Disposal Of Complaints</Trans></Trans></h2>
+            <div className="table-responsive rounded-lg shadow custom-scrollbar" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>
+              <table className="min-w-full text-sm text-left" style={{ color: 'var(--text-body)' }}>
+                <thead className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-body)' }}>
                   <tr>
                     <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
                     <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.year">Year</Trans></th>
@@ -491,16 +493,16 @@ const ComplaintManager = () => {
                 </thead>
                 <tbody>
                   {(Array.isArray(annualData) ? annualData : Object.values(annualData || {})).map(row => (
-                    <tr key={row.srNo} className="border-b border-gray-700 hover:bg-gray-600/50">
-                      <td className="px-6 py-4">{row.srNo}</td>
-                      <td className="px-6 py-4">{row.year}</td>
-                      <td className="px-6 py-4">{row.carried}</td>
-                      <td className="px-6 py-4">{row.received}</td>
-                      <td className="px-6 py-4">{row.resolved}</td>
-                      <td className="px-6 py-4">{row.pending}</td>
+                    <tr key={row.srNo} style={{ borderBottom: '1px solid var(--bg-border)' }}>
+                      <td className="px-6 py-4 text-adaptive">{row.srNo}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.year}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.carried}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.received}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.resolved}</td>
+                      <td className="px-6 py-4 text-adaptive">{row.pending}</td>
                       <td className="px-6 py-4">
                         {row.srNo !== 'Grand Total' && (
-                          <button onClick={() => handleAnnualEdit(row)} className="text-blue-400 hover:text-blue-300"><FiEdit size={16} /></button>
+                          <button onClick={() => handleAnnualEdit(row)} style={{ color: 'var(--accent)' }}><FiEdit size={16} /></button>
                         )}
                       </td>
                     </tr>
@@ -508,7 +510,7 @@ const ComplaintManager = () => {
                 </tbody>
               </table>
             </div>
-            <p className="mt-2 text-xs sm:text-sm text-gray-300"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-year"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-year-1">*Inclusive of complaints of previous years resolved in the current year.</Trans></Trans><br /><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th-3"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th-1">#Inclusive of complaints pending as on the last day of the year. (as on 31st March)</Trans></Trans></p>
+            <p className="mt-2 text-xs sm:text-sm text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-year"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-of-previous-year-1">*Inclusive of complaints of previous years resolved in the current year.</Trans></Trans><br /><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th-3"><Trans i18nKey="pages.admin_ComplaintManager.inclusive-of-complaints-pending-as-on-th-1">#Inclusive of complaints pending as on the last day of the year. (as on 31st March)</Trans></Trans></p>
           </div>
         </>
       )}

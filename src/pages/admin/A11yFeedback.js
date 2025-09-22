@@ -64,7 +64,7 @@ const A11yFeedback = () => {
   }, []);
 
   return (
-    <div className="space-y-4 p-4 rounded-lg" style={{ background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}>
+    <div className="admin-section space-y-4 p-4 rounded-lg" style={{ background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}>
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3">
         <h2 className="text-2xl font-semibold text-adaptive">A11y Feedback</h2>
         <div className="flex gap-2">

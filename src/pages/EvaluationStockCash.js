@@ -13,7 +13,7 @@ const EvaluationStockCash = () => (
         <meta name="description" content="Evaluation Stock Cash page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/evaluationstockcash" />
       </Helmet>
-<div className="container mx-auto py-12 px-4 max-w-5xl text-white">
+<div className="container mx-auto py-8 px-4 sm:px-6 max-w-4xl text-white">
     <h1 className="text-4xl font-extrabold mb-4 text-center text-white"><Trans i18nKey="pages.EvaluationStockCash.evaluation-stock-cash"><Trans i18nKey="pages.EvaluationStockCash.evaluation-stock-cash-1">Evaluation Stock Cash</Trans></Trans></h1>
     <p className="text-lg mb-6 text-center text-white">
   Wise Global Research Analyst provides equity research in the NSE cash segment by dedicated and experienced Research Analysts after in-depth technical analysis. Our equity trading recommendations are produced after proper analysis of the stock market. These technical levels are generated for recommendations that can provide good movement in the market. In a volatile market, our customers should only focus on intraday research and should not carry forward any position for the next day. A pure intraday product, where customers receive stock recommendations in the NSE cash segment. This product is designed for new customers who want to evaluate our recommendations in the cash market.

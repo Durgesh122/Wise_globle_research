@@ -134,12 +134,32 @@ const UserLogin = () => {
       }
       const code = error.code || 'unknown';
       errorMessage += ` (code: ${code})`;
+      // Always attempt to surface useful server response details in the console
+      try {
+        const raw = error?.customData?.serverResponse;
+        if (raw) {
+          // If serverResponse is a string, try to include the raw string as well as the parsed JSON
+          if (typeof raw === 'string') {
+            try {
+              const parsed = JSON.parse(raw);
+              console.error('[Auth] Login error - serverResponse parsed', parsed);
+            } catch (e) {
+              console.error('[Auth] Login error - serverResponse (raw string)', raw);
+            }
+          } else {
+            console.error('[Auth] Login error - serverResponse', raw);
+          }
+        }
+      } catch (e) {
+        // ignore any issues inspecting serverResponse
+      }
+
       if (authDebug) {
-        console.error('[AuthDebug] Login error', { code: error.code, message: error.message, serverMessage });
+        console.error('[AuthDebug] Login error', { code: error.code, message: error.message, serverMessage, fullError: error });
         setLastAuthError({ code, message: error.message, serverMessage });
       } else {
-        // Minimal console for non-debug too, to aid diagnosis if needed
-        console.error('[Auth] Login error', { code: error.code, message: error.message });
+        // Still log the full error for diagnosis in non-debug mode (helps trace 400 payloads)
+        console.error('[Auth] Login error', { code: error.code, message: error.message, serverMessage, fullError: error });
       }
       toast.error(errorMessage, { position: "top-center" });
     } finally {
@@ -215,15 +235,7 @@ const UserLogin = () => {
     });
   };
 
-  // Form animation variants
-  const formVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
+  // (formVariants removed, not used)
 
   // Input field animation variants
   const inputVariants = {
@@ -258,15 +270,18 @@ const UserLogin = () => {
         <meta name="description" content="User Login page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/userlogin" />
       </Helmet>
-<div className="min-h-screen flex items-center justify-center bg-transparent">
+<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-yellow-50 px-2 sm:px-0">
       <motion.div
-        variants={formVariants}
+        variants={{
+          hidden: { opacity: 0, y: 60, scale: 0.98 },
+          visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
+        }}
         initial="hidden"
         animate="visible"
-        className="relative p-8 rounded-2xl shadow-xl w-full max-w-md text-adaptive"
+        className="relative p-4 sm:p-6 md:p-8 rounded-3xl sm:rounded-full md:rounded-[48px] shadow-2xl border-2 border-yellow-400/40 w-full max-w-[95vw] sm:max-w-md text-adaptive bg-transparent flex flex-col items-center"
         role="region"
         aria-label="Admin login form"
-        style={{ backdropFilter: 'blur(12px)', background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}
+        style={{ backdropFilter: 'blur(18px)', minWidth: 0 }}
       >
   {/* MFA/OTP disabled: no reCAPTCHA used */}
         {authDebug && (
@@ -301,22 +316,25 @@ const UserLogin = () => {
 
         {/* Logo */}
         <motion.div
-          className="flex justify-center mb-6"
+          className="flex justify-center mb-6 md:mb-8"
           animate={logoControls}
           onHoverStart={handleLogoHover}
           onHoverEnd={handleLogoHoverEnd}
           initial={{ y: -50, opacity: 0 }}
         >
           <picture>
-            <source type="image/avif" srcSet={smallLogoSrcSetAvif} sizes="80px" />
-            <source type="image/webp" srcSet={smallLogoSrcSetWebp} sizes="80px" />
+            <source type="image/avif" srcSet={smallLogoSrcSetAvif} sizes="64px" />
+            <source type="image/webp" srcSet={smallLogoSrcSetWebp} sizes="64px" />
             <img
               src={`/assets/images/${smallLogoName}.png`}
               alt="Company Logo"
-              className="w-20 h-20 object-contain"
+              className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-xl"
               loading="eager"
-              width={80}
-              height={80}
+              decoding="async"
+              fetchpriority="high"
+              importance="high"
+              width={64}
+              height={64}
             />
           </picture>
         </motion.div>
@@ -333,13 +351,13 @@ const UserLogin = () => {
         </motion.h2>
 
         {/* Form */}
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+  <form onSubmit={handleLogin} className="flex flex-col gap-3 sm:gap-4 w-full max-w-xs sm:max-w-sm mx-auto">
           {/* Email Input */}
           <div className="relative">
             <motion.input
               type="email"
-                placeholder={"Email address"}
-                className="px-4 py-3 rounded-lg bg-white/5 text-adaptive placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
+              placeholder={"Email address"}
+              className="px-3 py-2 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-300 bg-transparent text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 w-full text-sm sm:text-base transition-all"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -350,7 +368,7 @@ const UserLogin = () => {
               autoComplete="email"
             />
             {errors.email && (
-              <p className="text-red-400 text-sm mt-1" role="alert">
+              <p className="text-red-400 text-xs sm:text-sm mt-1" role="alert">
                 {errors.email}
               </p>
             )}
@@ -360,8 +378,8 @@ const UserLogin = () => {
           <div className="relative">
             <motion.input
               type="password"
-                placeholder={"Password"}
-                className="px-4 py-3 rounded-lg bg-white/5 text-adaptive placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
+              placeholder={"Password"}
+              className="px-3 py-2 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-300 bg-transparent text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 w-full text-sm sm:text-base transition-all"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -372,7 +390,7 @@ const UserLogin = () => {
               autoComplete="current-password"
             />
             {errors.password && (
-              <p className="text-red-400 text-sm mt-1" role="alert">
+              <p className="text-red-400 text-xs sm:text-sm mt-1" role="alert">
                 {errors.password}
               </p>
             )}
@@ -382,8 +400,8 @@ const UserLogin = () => {
           <motion.button
             type="submit"
             disabled={isLoading}
-            className={`bg-yellow-500 text-black font-medium py-3 rounded-lg transition duration-300 shadow-md ${
-              isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-yellow-600"
+            className={`bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold py-2 sm:py-3 rounded-xl transition duration-300 shadow-lg border-2 border-yellow-400/60 ${
+              isLoading ? "opacity-50 cursor-not-allowed" : "hover:from-yellow-500 hover:to-yellow-400"
             }`}
             variants={buttonVariants}
             whileHover={isLoading ? {} : "hover"}

@@ -6,8 +6,8 @@ function WhatsAppButton() {
       href="https://api.whatsapp.com/send/?phone=919977909494&text=Hey+Wise+Global+Research+Service+team%2C+I+need+help+with+trading.+Please+guide+me.&type=phone_number&app_absent=0"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Chat with us on WhatsApp"
-  className="fixed bottom-7 right-6 sm:bottom-7 sm:right-6 z-50 w-14 h-14 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white text-adaptive rounded-full shadow-lg transition duration-300 ease-in-out"
+    aria-label="Chat with us on WhatsApp"
+  className="hidden md:flex fixed bottom-7 right-6 sm:bottom-7 sm:right-6 z-50 w-14 h-14 items-center justify-center bg-green-500 hover:bg-green-600 text-white text-adaptive rounded-full shadow-lg transition duration-300 ease-in-out"
       data-aos="zoom-in"
     >
       {/* Inline WhatsApp SVG icon to avoid external font/icon libraries */}

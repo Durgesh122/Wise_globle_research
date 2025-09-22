@@ -47,7 +47,7 @@ const MethodologySection = () => {
         </svg>
       </div>
 
-      <div className="container mx-auto relative z-10">
+  <div className="container max-w-3xl mx-auto relative z-10">
         <motion.h2
           className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-4 sm:mb-6 text-adaptive"
           initial={{ opacity: 0, y: 18 }}
@@ -65,17 +65,18 @@ const MethodologySection = () => {
           {steps.map((step, idx) => (
             <motion.div
               key={idx}
-              className="relative bg-white/30 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-xl border border-white/30 overflow-hidden transform-gpu"
+              className="relative rounded-lg overflow-hidden"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.08 * idx, duration: 0.5 }}
               whileHover={{ y: -6 }}
+              style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', color: '#111' }}
             >
               {/* soft circular accent behind the image */}
               <div className="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-gradient-to-br from-white/6 to-white/2 blur-3xl opacity-60 transform rotate-12"></div>
 
-              <div className="flex flex-col items-center text-center relative z-10">
-                <div className="relative w-24 h-24 rounded-full overflow-hidden bg-white/6 border border-white/20 mb-4 shadow-md">
+              <div className="flex flex-col items-center text-center relative z-10 px-4 py-6">
+                <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4 shadow-md" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(0,0,0,0.06)' }}>
                   {/* Shimmer placeholder */}
                   {!loaded[idx] && (
                     <div
@@ -97,8 +98,8 @@ const MethodologySection = () => {
                   />
                 </div>
 
-                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-adaptive">{step.title}</h3>
-                <p className="text-sm sm:text-base text-adaptive max-w-md">{step.desc}</p>
+                <h3 className="text-lg sm:text-xl font-semibold mb-2" style={{ color: '#111' }}>{step.title}</h3>
+                <p className="text-sm sm:text-base max-w-md" style={{ color: '#111' }}>{step.desc}</p>
               </div>
             </motion.div>
           ))}

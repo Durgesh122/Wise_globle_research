@@ -58,9 +58,9 @@ const ComplaintTable = () => {
 
   return (
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
-      <div className="container">
+  <div className="container max-w-3xl mx-auto">
         <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8"
           variants={itemVariants}
         >
           {`Complaint Data for ${headingMonthYear}`}
@@ -70,56 +70,54 @@ const ComplaintTable = () => {
             <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : errorTable ? (
-          <div className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center text-white text-adaptive">
+          <div className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center" style={{ color: '#111' }}>
             {errorTable}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200/20 custom-scrollbar">
-            <table
-              className="w-full border-collapse text-left text-xs sm:text-sm"
-              style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-                backdropFilter: 'blur(15px)',
-                WebkitBackdropFilter: 'blur(15px)',
-              }}
-        aria-label={`Complaint Data for ${headingMonthYear}`}
-            >
-        <caption className="sr-only">Monthly complaint receipt and resolution statistics by source</caption>
-              <thead>
-                <tr className="text-white text-adaptive" style={{ background: 'rgba(255, 255, 255, 0.3)' }}>
-          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Sr. No.</th>
-          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Received from</th>
-          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Pending at the end of last month</th>
-          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Received</th>
-          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Resolved</th>
-          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Pending</th>
-          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Pending Complaints 3 Months</th>
-          <th scope="col" className="p-2 sm:p-3 border border-gray-200/30">Average Resolution time (in days)^</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(tableData) &&
-                  tableData.map((row) => (
-                    <tr
-                      key={row.srNo}
-                      className="transition-colors hover:bg-opacity-25"
-                      style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
-                    >
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.srNo}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.source}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.pendingLastMonth || 0}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.received || 0}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.resolved || 0}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.pending || 0}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.pending3Months || 0}</td>
-                      <td className="p-2 sm:p-3 border border-gray-200/30">{row.avgResolutionTime || 0}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+          <div className="rounded-lg overflow-hidden" style={{ background: '#fff', border: '1.5px solid #cbd5e1', color: '#111' }}>
+            <div className="overflow-x-auto">
+              <table
+                className="w-full border-separate border-spacing-0 text-left text-xs sm:text-sm border border-gray-300"
+                style={{ background: 'transparent' }}
+                aria-label={`Complaint Data for ${headingMonthYear}`}
+              >
+                <caption className="sr-only">Monthly complaint receipt and resolution statistics by source</caption>
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-300">
+                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[70px]" style={{ color: '#111' }}>Sr. No.</th>
+                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[160px]" style={{ color: '#111' }}>Received from</th>
+                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[180px]" style={{ color: '#111' }}>Pending at the end of last month</th>
+                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]" style={{ color: '#111' }}>Received</th>
+                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]" style={{ color: '#111' }}>Resolved</th>
+                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]" style={{ color: '#111' }}>Pending</th>
+                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[170px]" style={{ color: '#111' }}>Pending Complaints 3 Months</th>
+                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[210px]" style={{ color: '#111' }}>Average Resolution time (in days)^</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.isArray(tableData) &&
+                    tableData.map((row) => (
+                      <tr
+                        key={row.srNo}
+                        className="transition-colors hover:bg-gray-100 border-b border-gray-300"
+                        style={{ backgroundColor: '#fff' }}
+                      >
+                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[70px]">{row.srNo}</td>
+                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[160px]">{row.source}</td>
+                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[180px]">{row.pendingLastMonth || 0}</td>
+                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]">{row.received || 0}</td>
+                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]">{row.resolved || 0}</td>
+                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]">{row.pending || 0}</td>
+                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[170px]">{row.pending3Months || 0}</td>
+                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[210px]">{row.avgResolutionTime || 0}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
-        <p className="mt-4 text-xs sm:text-sm text-adaptive">
+  <p className="mt-4 text-xs sm:text-sm" style={{ color: 'var(--text-body)' }}>
           ^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.
         </p>
       </div>
