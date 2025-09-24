@@ -31,3 +31,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 firebase-debug.log
+
+# IDEs
+.vscode/
+.idea/
+
+# logs
+logs
+*.log
+
+# package-lock tracked (ignored earlier) - keep local lock files from being committed by mistake
+package-lock.json
