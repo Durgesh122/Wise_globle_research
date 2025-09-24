@@ -6,6 +6,7 @@ import {
 } from 'react-icons/fa';
 import { SiX } from 'react-icons/si';
 import { ThemeContext } from '../context/ThemeContext';
+import { ALERT_BILINGUAL } from '../constants/alertMessage';
 const logoName = 'wise3';
 const logoSrcSetAvif = ['/assets/images/wise3-64.avif 64w','/assets/images/wise3-96.avif 96w','/assets/images/wise3-112.avif 112w','/assets/images/wise3-128.avif 128w','/assets/images/wise3-256.avif 256w'].join(', ');
 const logoSrcSetWebp = ['/assets/images/wise3-64.webp 64w','/assets/images/wise3-96.webp 96w','/assets/images/wise3-112.webp 112w','/assets/images/wise3-128.webp 128w','/assets/images/wise3-256.webp 256w'].join(', ');
@@ -256,7 +257,7 @@ function Footer() {
                 <li><Link to="/contact" className="hover:text-yellow-400">→ Contact</Link></li>
                 <li><Link to="/payment" className="hover:text-yellow-400">→ Payment</Link></li>
                 <li><Link to="/search" className="hover:text-yellow-400">→ Search</Link></li>
-                <li><a href="/sitemap.xml" className="hover:text-yellow-400">→ Sitemap</a></li>
+                <li><Link to="/sitemap" className="hover:text-yellow-400">→ Sitemap</Link></li>
                 <li><Link to="/investor-charter" className="hover:text-yellow-400">→ Investor Charter</Link></li>
                 <li><Link to="/career" className="hover:text-yellow-400">→ Careers</Link></li>
                 <li><Link to="/guide" className="hover:text-yellow-400">→ Guide for Investing</Link></li>
@@ -423,12 +424,12 @@ function Footer() {
         <div
           id="wise-global-alert"
           className="w-full h-8 border-t overflow-hidden notranslate"
-          style={{ backgroundColor: '#ee533fff', borderTopColor: '#e95b23ff' }}
+          style={{ backgroundColor: '#ff6551f6', borderTopColor: '#ffffffff' }}
           translate="no"
           aria-hidden="false"
         >
           <div className="whitespace-nowrap animate-scroll text-sm flex items-center h-full">
-            <p className="inline-block font-medium px-4 notranslate" translate="no" style={{ color: '#ffffff' }}>कृपया ध्यान दें प्रिय ग्राहक, आपके भुगतान स्वीकार किए जाएंगे अगर आप Wise Global Research वेबसाइट पर दी गई खाता जानकारी का उपयोग करेंगे। हम केवल Wise Global Research के अलावा किसी अन्य खातों में कोई भुगतान स्वीकार नहीं करते। Wise Global Research केवल अपने खाते में प्राप्त होने वाली राशियों के लिए सेवाएं प्रदान करने के लिए जिम्मेदार होगा। Pay close attention—Dear Client, your payments will be accepted if you use the account information listed on the Wise Global Research website. We do not accept any payment in any other accounts besides Wise Global Research. Wise Global Research will only be liable to provide services for the amounts received in its account.</p>
+            <p className="inline-block font-medium px-4 notranslate" translate="no" style={{ color: '#ffffffff' }}>{ALERT_BILINGUAL}</p>
           </div>
         </div>
       )}

@@ -67,14 +67,12 @@ const Services = lazy(() => import('./pages/Services'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Legal = lazy(() => import('./pages/Legal'));
 const Disclosure = lazy(() => import('./pages/Disclosure'));
-const LiveChart = lazy(() => import('./pages/LiveChart'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Complaint = lazy(() => import('./pages/Complaint'));
 const PaymentInfo = lazy(() => import('./pages/PaymentInfo'));
 const Vision = lazy(() => import('./pages/Vision'));
 const Equity = lazy(() => import('./pages/Equity'));
-const Intraday = lazy(() => import('./pages/Intraday'));
 const Career = lazy(() => import('./pages/Career'));
 const Blogs = lazy(() => import('./pages/Blogs'));
 const MarketNews = lazy(() => import('./pages/MarketNews'));
@@ -98,7 +96,7 @@ const UniversalCash = lazy(() => import('./pages/UniversalCash'));
 const InfinityClub = lazy(() => import('./pages/InfinityClub'));
 const MCXSupreme = lazy(() => import('./pages/MCXSupreme'));
 const GalaxyMCX = lazy(() => import('./pages/GalaxyMCX'));
-const Currency = lazy(() => import('./pages/Currency'));
+
 // The following pages were removed from the project; keep routes cleaned up to avoid import errors:
 // Demo, Team, Mcx, Training, Delivery, BTST, Cash, Bullions, Energy, Metal, NCDEX, Forex, Comex
 const Terms = lazy(() => import('./pages/Terms'));
@@ -110,6 +108,7 @@ const InvestorChart = lazy(() => import('./pages/InvestorChart'));
 const AntiMoneyLaundering = lazy(() => import('./pages/AntiMoneyLaundering'));
 const DailyRecommendation = lazy(() => import('./pages/DailyRecommendation'));
 const Media = lazy(() => import('./pages/Media'));
+const Sitemap = lazy(() => import('./pages/Sitemap'));
 
 // Lazy Loaded Admin Pages
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -236,11 +235,10 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/legal" element={<Legal />} />
                 <Route path="/disclosure" element={<Disclosure />} />
-                <Route path="/livechart" element={<LiveChart />} />
+                
                 
                 <Route path="/vision" element={<Vision />} />
                 <Route path="/equity" element={<Equity />} />
-                <Route path="/intraday" element={<Intraday />} />
                 <Route path="/career" element={<Career />} />
                 <Route path="/blogs" element={<Blogs />} />
                 <Route path="/market-news" element={<MarketNews />} />
@@ -263,7 +261,7 @@ function App() {
                 <Route path="/services/equity/future" element={<Future />} />
                 <Route path="/services/equity/stock-index-option" element={<StockIndexOption />} />
                 <Route path="/services/mcx/mcx-option" element={<MCXOption />} />
-                <Route path="/services/currency" element={<Currency />} />
+                
                 {/* Removed pages and their routes: demo, team, mcx, training, delivery, BTST, cash,
                   bullions, energy, metal, NCDEX, forex, comex. */}
                 <Route 
@@ -292,6 +290,7 @@ function App() {
                 <Route path="/daily" element={<DailyRecommendation />} />
                 <Route path="/media" element={<Media />} />
                 <Route path="/guide" element={<GuideForInvesting />} />
+                <Route path="/sitemap" element={<Sitemap />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
