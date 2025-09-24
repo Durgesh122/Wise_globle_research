@@ -581,14 +581,14 @@ export default function RouteAnnouncer() {
     width: '44px',
   };
 
-  // One-time-per-session: auto-open briefly, then collapse to 'peek' after 4s
+  // One-time-per-session: briefly highlight the button (pulse) and then collapse to 'peek'
+  // Note: do NOT auto-open the full menu on page load/refresh — this caused the menu to appear unexpectedly.
   useEffect(() => {
     try {
       const seen = sessionStorage.getItem('routeAnnouncerSeen');
       if (!seen) {
         try { sessionStorage.setItem('routeAnnouncerSeen', '1'); } catch(_) {}
-        // open fully for attention
-        setMenuOpen(true);
+        // Pulse for attention but keep menu closed
         setPulse(true);
         const el = document.querySelector('[aria-label="Route Announcer"]');
         if (el) {
@@ -596,13 +596,12 @@ export default function RouteAnnouncer() {
         }
         const t = setTimeout(() => {
           // after 4s, collapse but leave a small peek visible and show icon
+          // ensure menu remains closed
           setMenuOpen(false);
-          // leave the button half-hidden by default
           setPeek(true);
           setPulse(false);
           try {
             if (el) {
-              // make the peek a bit more visible
               el.style.width = '56px';
               el.style.right = '-8px';
               el.style.transform = 'translateY(-50%) scale(1)';
