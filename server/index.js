@@ -136,6 +136,31 @@ if (resolvedBuildPath) {
 } else {
   // Fallback: when no build exists in the deployed app, return a helpful
   // message at root rather than an opaque 404 so the deploy logs make sense.
+  // Diagnostic helper: produce a short directory listing for logs
+  function shortDirListing(p, maxEntries = 20) {
+    try {
+      if (!fs.existsSync(p)) return `${p} - not found`;
+      const items = fs.readdirSync(p).slice(0, maxEntries);
+      return `${p}: ${items.join(', ')}${items.length === maxEntries ? ', ...' : ''}`;
+    } catch (e) {
+      return `${p}: error reading (${e.message})`;
+    }
+  }
+
+  // Log diagnostic information immediately so Render's deploy logs contain it
+  try {
+    console.warn('STATIC BUILD NOT FOUND - diagnostic info:');
+    console.warn('Candidate build paths:', candidateBuildPaths.join(' | '));
+    console.warn('process.cwd():', process.cwd());
+    console.warn('__dirname:', __dirname);
+    console.warn('Root listing:', shortDirListing(path.join(__dirname, '..')));
+    console.warn('Working dir listing:', shortDirListing(process.cwd()));
+    console.warn('public/:', shortDirListing(path.join(__dirname, '..', 'public')));
+    console.warn('build/:', shortDirListing(path.join(__dirname, '..', 'build')));
+  } catch (e) {
+    console.warn('Error while logging build diagnostic info:', e && e.message);
+  }
+
   app.get('/', (req, res) => {
     res.status(200).send('Server is running, but static frontend (build/) is missing. Please run `npm run build` or configure the deploy to build the frontend.');
   });

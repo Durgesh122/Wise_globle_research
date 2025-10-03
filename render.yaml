@@ -1,16 +1,13 @@
 service: web
 env: node
-# Install root deps, build frontend, then install server deps so server can run with its own package.json.
-buildCommand: "npm ci && npm run build && npm --prefix server ci"
-# Use the server's start script so the server's dependencies and start lifecycle are respected
+# Build root (frontend) then install server deps and start the server. Use npm install if no lockfile is committed.
+# If you have a package-lock.json or yarn.lock, prefer `npm ci` for reproducible builds. Adjust as needed in Render settings.
+buildCommand: "if [ -f package-lock.json ]; then npm ci --legacy-peer-deps; else npm install --legacy-peer-deps; fi && npm run build && npm --prefix server install --legacy-peer-deps"
+# Start the server using the server package.json start script
 startCommand: "npm --prefix server start"
 envVars:
-	- key: NODE_VERSION
-		value: 18.20.4
-# Optionally specify the region and plan
-# plan: free
-# region: oregon
-
+  - key: NODE_VERSION
+    value: 18.20.4
 # Health check path that Render will use to verify the service
 healthCheckPath: "/health"
 
