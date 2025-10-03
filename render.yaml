@@ -1,0 +1,18 @@
+service: web
+env: node
+# Install root deps, build frontend, then install server deps so server can run with its own package.json.
+buildCommand: "npm ci && npm run build && npm --prefix server ci"
+# Use the server's start script so the server's dependencies and start lifecycle are respected
+startCommand: "npm --prefix server start"
+envVars:
+	- key: NODE_VERSION
+		value: 18.20.4
+# Optionally specify the region and plan
+# plan: free
+# region: oregon
+
+# Health check path that Render will use to verify the service
+healthCheckPath: "/health"
+
+# When deploying, set environment variables in the Render dashboard instead of committing secrets
+# See server/.env.example for a list of variables this service expects.

@@ -24,6 +24,7 @@ build.zip
 src/.env
 
 # common env files
+**/.env
 .env
 .env.*
 
@@ -40,5 +41,3 @@ firebase-debug.log
 logs
 *.log
 
-# package-lock tracked (ignored earlier) - keep local lock files from being committed by mistake
-package-lock.json
