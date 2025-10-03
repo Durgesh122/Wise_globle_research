@@ -52,27 +52,27 @@ const SmartFuture = () => (
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartFuture.sample-calls">Sample Calls</Trans></h2>
-  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.SmartFuture.buy-lauruslabs-above-758-tgt-761-764-sl-"><Trans i18nKey="pages.SmartFuture.buy-lauruslabs-above-758-tgt-761-764-sl--1">BUY LAURUSLABS ABOVE 758 TGT 761 764 SL 754.50</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.SmartFuture.buy-centuryply-above-512-target-518-524-"><Trans i18nKey="pages.SmartFuture.buy-centuryply-above-512-target-518-524--1">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</Trans></Trans></div>
     </div>
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartFuture.pricing-plan-for-smart-future"><Trans i18nKey="pages.SmartFuture.pricing-plan-for-smart-future-1">Pricing Plan For Smart Future</Trans></Trans></h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
-  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#ffffffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
+  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartFuture.smart-future">Smart Future</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹12,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartFuture.monthly">/ Monthly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartFuture.2-to-3-calls-in-a-day">2 to 3 Calls in a Day</Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartFuture.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartFuture.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartFuture.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartFuture.note-pricing-are-excluding-gst-18-2">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
-  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#fcfdffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartFuture.smart-future">Smart Future</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹35,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartFuture.quarterly">/ Quarterly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartFuture.2-to-3-calls-in-a-day">2 to 3 Calls in a Day</Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartFuture.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartFuture.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartFuture.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartFuture.note-pricing-are-excluding-gst-18-1">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
@@ -85,17 +85,17 @@ const SmartFuture = () => (
     <div className="my-12">
       <h2 className="text-2xl font-bold mb-4 text-center text-white"><Trans i18nKey="pages.SmartFuture.why-choose-smart-future">Why Choose Smart Future?</Trans></h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+      <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLightbulb className="text-4xl mb-2 text-yellow-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartFuture.expert-research">Expert Research</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartFuture.our-team-combines-technical-and-fundamen"><Trans i18nKey="pages.SmartFuture.our-team-combines-technical-and-fundamen-1">Our team combines technical and fundamental analysis for the most reliable recommendations.</Trans></Trans></p>
         </div>
-  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaBolt className="text-4xl mb-2 text-blue-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartFuture.real-time-support">Real-Time Support</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartFuture.get-instant-help-and-trade-updates-from-"><Trans i18nKey="pages.SmartFuture.get-instant-help-and-trade-updates-from--1">Get instant help and trade updates during Indian market hours.</Trans></Trans></p>
         </div>
-  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLock className="text-4xl mb-2 text-green-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartFuture.trusted-by-traders">Trusted by Traders</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartFuture.hundreds-of-f-amp-o-traders-rely-on-our-"><Trans i18nKey="pages.SmartFuture.hundreds-of-f-amp-o-traders-rely-on-our--1">Hundreds of F&amp;O traders rely on our signals for consistent results.</Trans></Trans></p>
@@ -109,7 +109,7 @@ const SmartFuture = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.SmartFuture.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.SmartFuture.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white">A: Recommendations are delivered via your registered contact channel.</p>
+          <p className="text-white">A: Recommendations are delivered via SMS on your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.SmartFuture.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.SmartFuture.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
@@ -122,7 +122,7 @@ const SmartFuture = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
+          <button type="button" className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

@@ -13,7 +13,7 @@ const faqs = [
   },
   {
     q: 'How can I join Wise Global Research services?',
-    a: `You can join our services by selecting appropriate package from our website, Selection of package depends upon number of research recommendations you need in a week or month. You can select package as per your capital availability and requirements. Our team is always ready to provide all kind of support in all services. Firstly you need to sign Client Service Concerned Form before subscribing to any of our services from website, you can inform us via an email, call or what's-app, we will complete your onboarding process and start your services..`,
+    a: `You can join our services by selecting appropriate package from our website, Selection of package depends upon number of research recommendations you need in a week or month. You can select package as per your capital availability and requirements. Our team is always ready to provide all kind of support in all services. Firstly you need to sign Client Service Consent Form before subscribing to any of our services from website, you can inform us via an email, call or what's-app, we will complete your onboarding process and start your services..`,
   },
   {
     q: 'Do you provide sureshot calls, operator calls or jackpot calls?',
@@ -65,6 +65,7 @@ const WhyChooseUs = () => {
                   style={isLocked ? { background: '#ffffffff' } : {}}
                 >
                   <button
+                    type="button"
                     onClick={() => toggle(i)}
                     className="flex-1 text-left flex items-center gap-3"
                     aria-expanded={isOpen}
@@ -75,20 +76,27 @@ const WhyChooseUs = () => {
 
                   <div className="flex items-center gap-3 ml-4">
                     <button
+                      type="button"
                       aria-pressed={isLocked}
                       onClick={() => toggleLock(i)}
                       className="text-sm p-2 rounded hover:bg-black/5"
-                      title={isLocked ? 'Unlock' : 'Lock'}
+                      title={isLocked ? 'Unlock answer' : 'Lock answer'}
+                      aria-label={isLocked ? 'Unlock answer' : 'Lock answer'}
                       style={{ color: 'rgba(0,0,0,0.7)' }}
                     >
-                      {isLocked ? <FiLock /> : <FiUnlock />}
+                      {isLocked ? <FiLock aria-hidden="true" /> : <FiUnlock aria-hidden="true" />}
                     </button>
                     <button
+                      type="button"
                       onClick={() => toggle(i)}
                       className={`p-2 rounded transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
                       style={{ color: 'rgba(0,0,0,0.7)' }}
+                      title={isOpen ? 'Collapse answer' : 'Expand answer'}
+                      aria-label={isOpen ? 'Collapse answer' : 'Expand answer'}
+                      aria-controls={`faq-panel-${i}`}
+                      aria-expanded={isOpen}
                     >
-                      <FiChevronDown />
+                      <FiChevronDown aria-hidden="true" />
                     </button>
                   </div>
                 </div>

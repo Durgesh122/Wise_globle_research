@@ -1,5 +1,6 @@
 // src/pages/Contact.js
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Trans } from '../i18nShim';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -47,8 +48,9 @@ function Contact() {
       setFormData({ name: '', email: '', phone: '', message: '' });
       (async () => {
         try {
-          const apiBase = 'https://wise-global-contact-systems.onrender.com';
-          const endpoint = `${apiBase.replace(/\$/, '')}/send-email`;
+          // Always use local server for development testing
+          const apiBase = 'http://localhost:3002';
+          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
           await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -135,8 +137,18 @@ function Contact() {
   const title = "Let's Talk";
 
   return (
-    <div className="relative min-h-screen py-20 px-4 bg-white text-gray-800 overflow-hidden">
+    <div className="relative min-h-screen py-12 px-4 overflow-hidden bg-transparent">
+      {/* Transparent (page-controlled) background + very subtle accents */}
+      <div className="absolute inset-0 -z-10" aria-hidden="true" />
+      {/* softer decorative blurred blobs (subtle, translucent) */}
+      <div className="absolute -left-12 -top-12 w-72 h-72 bg-white/6 rounded-full filter blur-3xl opacity-20 animate-[float_12s_ease-in-out_infinite]" />
+      <div className="absolute -right-8 bottom-6 w-56 h-56 bg-white/5 rounded-full filter blur-2xl opacity-16 animate-[float_10s_ease-in-out_infinite]" />
+      <Helmet>
+        <title>Contact — Wise Global Research Services</title>
+        <meta name="description" content="Contact Wise Global Research Services for enquiries, research subscriptions and support." />
+      </Helmet>
       <div className="relative z-10 max-w-3xl mx-auto">
+        <h1 className="sr-only">Contact Wise Global Research Services</h1>
         <AnimatePresence>
           {success ? (
             <motion.div
@@ -171,8 +183,9 @@ function Contact() {
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0 }}
+              className="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-xl mx-auto"
             >
-              <motion.h2 className="text-5xl font-extrabold text-center mb-12 text-gray-900" variants={itemVariants}>
+              <motion.h2 id="contact-title" className="text-4xl sm:text-5xl font-extrabold text-center mb-8 text-gray-800 drop-shadow-lg" variants={itemVariants}>
                 {title.split("").map((char, index) => (
                   <motion.span key={index} custom={index} variants={letterVariants}>
                     {char}
@@ -182,88 +195,129 @@ function Contact() {
 
               <motion.form
                 onSubmit={handleSubmit}
-                className="bg-gray-50 p-8 rounded-2xl shadow-xl border border-gray-200"
                 variants={itemVariants}
+                aria-labelledby="contact-title"
               >
+                {/* Honeypot field - keep hidden visually and from AT */}
                 <input
                   type="text"
                   name="website"
                   value={honeypot}
                   onChange={(e) => setHoneypot(e.target.value)}
-                  tabIndex="-1"
+                  tabIndex={-1}
                   autoComplete="off"
+                  aria-hidden="true"
                   className="hidden"
                 />
                 
-                <motion.div className="relative mb-6" variants={itemVariants}>
-                  <FaUser className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400" />
-                  <motion.input
-                    type="text" name="name" placeholder="Full Name" required
-                    onChange={handleChange} value={formData.name}
-                    className="w-full p-3 pl-10 bg-white border-b-2 border-gray-300 text-gray-800 outline-none placeholder-gray-400 focus:border-blue-500 transition-colors"
-                    whileFocus={{ scale: 1.02 }}
-                  />
+                <motion.div className="relative mb-4 sm:mb-6" variants={itemVariants}>
+                  <label htmlFor="contact-name" className="sr-only">Full Name</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <FaUser className="text-gray-400" aria-hidden="true" />
+                    </div>
+                    <motion.input
+                      id="contact-name"
+                      type="text" name="name" placeholder="Full Name" required
+                      onChange={handleChange} value={formData.name}
+                      aria-describedby="help-name"
+                      autoComplete="name"
+                      className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      whileFocus={{ scale: 1.02 }}
+                    />
+                  </div>
+                  <p id="help-name" className="mt-2 text-xs text-gray-500">Write your full name as on documents so we can address you properly.</p>
                 </motion.div>
 
-                <motion.div className="relative mb-6" variants={itemVariants}>
-                  <FaEnvelope className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400" />
-                  <motion.input
-                    type="email" name="email" placeholder="Email Address" required
-                    onChange={handleChange} value={formData.email}
-                    className="w-full p-3 pl-10 bg-white border-b-2 border-gray-300 text-gray-800 outline-none placeholder-gray-400 focus:border-blue-500 transition-colors"
-                    whileFocus={{ scale: 1.02 }}
-                  />
+                <motion.div className="relative mb-4 sm:mb-6" variants={itemVariants}>
+                  <label htmlFor="contact-email" className="sr-only">Email Address</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <FaEnvelope className="text-gray-400" aria-hidden="true" />
+                    </div>
+                    <motion.input
+                      id="contact-email"
+                      type="email" name="email" placeholder="Email Address" required
+                      onChange={handleChange} value={formData.email}
+                      aria-describedby="help-email"
+                      autoComplete="email"
+                      className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      whileFocus={{ scale: 1.02 }}
+                    />
+                  </div>
+                  <p id="help-email" className="mt-2 text-xs text-gray-500">Enter a valid email so we can respond — e.g., name@example.com</p>
                 </motion.div>
 
-                <motion.div className="relative mb-6" variants={itemVariants}>
-                  <FaPhone className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400" />
-                  <motion.input
-                    type="tel" name="phone" placeholder="Phone Number" required
-                    onChange={handleChange} value={formData.phone}
-                    className="w-full p-3 pl-10 bg-white border-b-2 border-gray-300 text-gray-800 outline-none placeholder-gray-400 focus:border-blue-500 transition-colors"
-                    whileFocus={{ scale: 1.02 }}
-                  />
+                <motion.div className="relative mb-4 sm:mb-6" variants={itemVariants}>
+                  <label htmlFor="contact-phone" className="sr-only">Phone Number</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <FaPhone className="text-gray-400" aria-hidden="true" />
+                    </div>
+                    <motion.input
+                      id="contact-phone"
+                      type="tel" name="phone" placeholder="Phone Number" required
+                      onChange={handleChange} value={formData.phone}
+                      aria-describedby="help-phone"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      pattern="[0-9+()\\-\\s]{7,20}"
+                      className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      whileFocus={{ scale: 1.02 }}
+                    />
+                  </div>
+                  <p id="help-phone" className="mt-2 text-xs text-gray-500">Provide a phone number including country code if outside your country — e.g., +91 98765 43210</p>
                 </motion.div>
 
-                <motion.div className="relative mb-6" variants={itemVariants}>
-                  <FaCommentDots className="absolute top-5 left-3 text-gray-400" />
-                  <motion.textarea
-                    name="message" placeholder="Your Message..." rows="4" required
-                    onChange={handleChange} value={formData.message}
-                    className="w-full p-3 pl-10 bg-white border-2 border-gray-300 text-gray-800 outline-none rounded-lg placeholder-gray-400 focus:border-blue-500 transition-colors"
-                    whileFocus={{ scale: 1.02 }}
-                  />
+                <motion.div className="relative mb-4 sm:mb-6" variants={itemVariants}>
+                  <label htmlFor="contact-message" className="sr-only">Your Message</label>
+                  <div className="relative">
+                    <div className="absolute top-3.5 left-0 pl-3 flex items-start pointer-events-none">
+                      <FaCommentDots className="text-gray-400" aria-hidden="true" />
+                    </div>
+                    <motion.textarea
+                      id="contact-message"
+                      name="message" placeholder="Your Message..." rows="4" required
+                      onChange={handleChange} value={formData.message}
+                      aria-describedby="help-message"
+                      className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      whileFocus={{ scale: 1.02 }}
+                    />
+                  </div>
+                  <p id="help-message" className="mt-2 text-xs text-gray-500">Tell us briefly what you need — we'll respond with options and pricing.</p>
                 </motion.div>
 
                 <motion.button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="w-full py-3 sm:py-4 bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500 text-gray-900 font-bold rounded-lg shadow-xl hover:brightness-105 transition-all duration-300 text-sm sm:text-base"
+                  whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.98, y: 0 }}
                 >
                   {loading ? 'Sending...' : 'Send Message'}
                 </motion.button>
 
-                <motion.div className="flex justify-center gap-6 mt-10" variants={itemVariants}>
+                <motion.div className="flex justify-center gap-4 mt-10" variants={itemVariants}>
                   {[ 
-                    { icon: FaFacebookF, color: 'hover:text-blue-600', link: 'https://facebook.com' },
-                    { icon: FaInstagram, color: 'hover:text-pink-500', link: 'https://instagram.com' },
-                    { icon: FaTwitter, color: 'hover:text-sky-500', link: 'https://twitter.com' },
-                    { icon: FaLinkedinIn, color: 'hover:text-blue-800', link: 'https://linkedin.com' },
-                    { icon: FaYoutube, color: 'hover:text-red-600', link: 'https://youtube.com' },
-                  ].map(({ icon: Icon, color, link }, i) => (
-                    <motion.a
-                      key={i}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`text-xl text-gray-400 ${color} transition-colors duration-300`}
-                      variants={iconVariants}
-                      whileHover="hover"
-                    >
-                      <Icon />
-                    </motion.a>
+                    { icon: FaFacebookF, bg: 'bg-blue-600', link: 'https://facebook.com', label: 'Facebook' },
+                    { icon: FaInstagram, bg: 'bg-pink-500', link: 'https://instagram.com', label: 'Instagram' },
+                    { icon: FaTwitter, bg: 'bg-sky-500', link: 'https://twitter.com', label: 'Twitter' },
+                    { icon: FaLinkedinIn, bg: 'bg-blue-800', link: 'https://linkedin.com', label: 'LinkedIn' },
+                    { icon: FaYoutube, bg: 'bg-red-600', link: 'https://youtube.com', label: 'YouTube' },
+                  ].map(({ icon: Icon, bg, link, label }, i) => (
+                      <motion.a
+                        key={i}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-11 h-11 inline-flex items-center justify-center rounded-full text-white ${bg} shadow-lg hover:scale-105 transition-transform duration-200`}
+                        variants={iconVariants}
+                        whileHover="hover"
+                        aria-label={label}
+                      >
+                        <Icon aria-hidden="true" />
+                        <span className="sr-only">{label}</span>
+                      </motion.a>
                   ))}
                 </motion.div>
               </motion.form>

@@ -21,12 +21,14 @@ import CertificationsSection from '../components/CertificationsSection';
 import ContactFormSection from '../components/ContactFormSection';
 import ComplaintTable from '../components/ComplaintTable';
 import PopupForm from '../components/PopupForm';
+import PopupDisclaimer from '../components/PopupDisclaimer';
 import WhatsAppButton from '../components/WhatsAppButton';
 
 const Home = () => {
   const contactFormRef = useRef(null);
   const [showScroll, setShowScroll] = useState(false);
-  const [showPopup, setShowPopup] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
   const scrollToContactForm = () => {
     contactFormRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -47,6 +49,13 @@ const Home = () => {
     window.addEventListener('scroll', checkScrollTop);
     return () => window.removeEventListener('scroll', checkScrollTop);
   }, [checkScrollTop]); // checkScrollTop is now stable
+
+  // Show the popupForm only after the disclaimer is accepted in this session.
+  const handleDisclaimerAccepted = () => {
+    setDisclaimerAccepted(true);
+    // show the image popup immediately after disclaimer accepted
+    setShowPopup(true);
+  };
 
 
   return (
@@ -104,7 +113,9 @@ const Home = () => {
         initial="hidden"
         animate="visible"
       >
-  {showPopup && <PopupForm onClose={() => setShowPopup(false)} />}
+  {/* Disclaimer should appear first; only after accepted do we show the image popup */}
+  <PopupDisclaimer onAccept={handleDisclaimerAccepted} />
+  {disclaimerAccepted && showPopup && <PopupForm onClose={() => setShowPopup(false)} forceShow={true} />}
    {/* <TradingViewTicker suppressHelmet={true} /> */}
         <ErrorBoundary>
           {/* Inline (non-sticky) alert shown at top of hero */}
@@ -113,7 +124,7 @@ const Home = () => {
         </ErrorBoundary>
         <WhyChooseUs />
         <MarketOverview />
-  <EconomicCalendar embedUrl="https://widget.myfxbook.com/widget/calendar.html" />
+  <EconomicCalendar embedUrl="https://widget.myfxbook.com/widget/calendar.html" requireClickToLoad={true} />
   {/* <ServicesSection /> */}
         <MarketInsights />
         <MethodologySection />

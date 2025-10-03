@@ -42,9 +42,10 @@ function ensureA11yRuntimeStyle() {
   const existing = document.getElementById(STYLE_ID);
   const baseCSS = `
 /* Global a11y utility styles injected at runtime */
-html[data-reduce-motion="true"] * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+html[data-reduce-motion="true"] * { animation: none !important; animation-play-state: paused !important; transition: none !important; transition-duration: 0s !important; scroll-behavior: auto !important; }
 html[data-highlight-links="true"] a { outline: 2px dashed #22c55e !important; outline-offset: 2px; text-decoration: underline !important; }
 html[data-a11y-align-left="true"] * { text-align: left !important; }
+html[data-a11y-align-right="true"] * { text-align: right !important; }
 /* Dyslexic font when enabled */
 html[data-a11y-dyslexic="true"] body { font-family: 'OpenDyslexic3','OpenDyslexic','OpenDyslexic Alta', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important; }
 /* Big cursor (PNG generated via canvas; see applySettingsToDocument) */
@@ -170,15 +171,19 @@ const defaultSettings = {
   lineHeightLevel: 0, // 0..3 => normal, 1.5, 1.75, 2
   fontWeightLevel: 0, // 0..3 => 400, 500, 600, 700
   alignLeft: false,
+  alignRight: false,
   contrastMode: 'default', // 'default' | 'dark' | 'light'
   saturation: 'normal', // 'normal' | 'high' | 'low'
   monochrome: false,
   bigCursor: false,
   readingGuide: false,
+  // Text to speech: speaks hovered or focused content when enabled
+  tts: false,
 };
 
 function clampFontScale(value) {
-  return Math.max(0.9, Math.min(1.8, parseFloat(value.toFixed(2))));
+  // Allow between 10% and 500% (0.1 - 5.0), keep two decimals for UI
+  return Math.max(0.1, Math.min(5.0, parseFloat(value.toFixed(2))));
 }
 
 function applySettingsToDocument(settings) {
@@ -200,8 +205,11 @@ function applySettingsToDocument(settings) {
   setBoolAttr('data-highlight-links', !!settings.highlightLinks);
   setBoolAttr('data-a11y-dyslexic', !!settings.dyslexic);
   setBoolAttr('data-a11y-align-left', !!settings.alignLeft);
+  setBoolAttr('data-a11y-align-right', !!settings.alignRight);
   setBoolAttr('data-a11y-big-cursor', !!settings.bigCursor);
   setBoolAttr('data-a11y-reading-guide', !!settings.readingGuide);
+  // Expose TTS enabled state for CSS/other scripts
+  setBoolAttr('data-a11y-tts', !!settings.tts);
 
   // Load dyslexic font dynamically
   if (settings.dyslexic) ensureDyslexicFont();
@@ -248,6 +256,31 @@ function applySettingsToDocument(settings) {
   root.style.filter = filterStr;
 }
 
+// Lightweight speech controller to speak text content with debouncing
+const Speech = (() => {
+  let synth = typeof window !== 'undefined' && window.speechSynthesis ? window.speechSynthesis : null;
+  let utter = null;
+  let lastSpoken = 0;
+  const minInterval = 600; // ms between utterances
+  function speak(text) {
+    if (!synth || !text) return;
+    const now = Date.now();
+    if (now - lastSpoken < minInterval) return; // debounce
+    try {
+      synth.cancel();
+      utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1.0;
+      utter.pitch = 1.0;
+      synth.speak(utter);
+      lastSpoken = now;
+    } catch (e) {
+      // ignore speech errors
+    }
+  }
+  function stop() { if (synth) try { synth.cancel(); } catch(e){} }
+  return { speak, stop };
+})();
+
 export default function AccessibilityMenu() {
   const [open, setOpen] = useState(false);
   // We toggle a body attribute for CSS on resize instead of storing
@@ -279,6 +312,49 @@ export default function AccessibilityMenu() {
       // ignore persistence errors
     }
   }, [settings]);
+
+  // Wire TTS listeners when tts setting changes
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return undefined;
+    let lastTarget = null;
+    // speak the element's accessible text: aria-label, alt, textContent trimmed
+    const getTextForEl = (el) => {
+      if (!el) return '';
+      if (el.getAttribute && el.getAttribute('aria-label')) return el.getAttribute('aria-label');
+      if (el.alt) return el.alt;
+      // prefer visible text
+      const txt = (el.innerText || el.textContent || '').trim();
+      return txt.split('\n').join(' ').trim();
+    };
+
+    const onHover = (e) => {
+      const t = e.target;
+      if (!t || t === lastTarget) return;
+      lastTarget = t;
+      const txt = getTextForEl(t);
+      if (txt && txt.length < 300) Speech.speak(txt);
+    };
+
+    const onFocus = (e) => {
+      const t = e.target;
+      const txt = getTextForEl(t);
+      if (txt && txt.length < 800) Speech.speak(txt);
+    };
+
+    if (settings.tts) {
+      window.addEventListener('mouseover', onHover, { passive: true });
+      window.addEventListener('focusin', onFocus);
+      // also speak when user hovers via keyboard by capturing mousemove for small moves
+    } else {
+      Speech.stop();
+    }
+
+    return () => {
+      window.removeEventListener('mouseover', onHover);
+      window.removeEventListener('focusin', onFocus);
+      Speech.stop();
+    };
+  }, [settings.tts]);
 
   // Keep a simple responsive flag to help force layout changes when viewport resizes.
   useEffect(() => {
@@ -394,6 +470,13 @@ export default function AccessibilityMenu() {
   const resetFont = () => setSettings((s) => ({ ...s, fontScale: 1.0 }));
 
   const toggle = (key) => setSettings((s) => ({ ...s, [key]: !s[key] }));
+
+  // Enhanced toggle for mutually exclusive alignment choices
+  const toggleAlign = (dir) => setSettings((s) => {
+    if (dir === 'left') return { ...s, alignLeft: !s.alignLeft, alignRight: false };
+    if (dir === 'right') return { ...s, alignRight: !s.alignRight, alignLeft: false };
+    return s;
+  });
   const setContrast = (val) => setSettings((s) => ({ ...s, contrastMode: val }));
   const setSaturation = (val) => setSettings((s) => ({ ...s, saturation: val }));
   const inc = (key, min, max, by = 1) => setSettings((s) => ({ ...s, [key]: Math.max(min, Math.min(max, (s[key] || 0) + by)) }));
@@ -525,8 +608,12 @@ export default function AccessibilityMenu() {
                 <span className="flex items-center gap-2 whitespace-normal"><FiDroplet className="opacity-90 flex-shrink-0" /> <span>Monochrome</span></span>
               </button>
               {/* Align Left */}
-              <button onClick={() => toggle('alignLeft')} className={`${switchCls(settings.alignLeft)} min-h-[2.75rem]`} aria-pressed={settings.alignLeft}>
+              <button onClick={() => toggleAlign('left')} className={`${switchCls(settings.alignLeft)} min-h-[2.75rem]`} aria-pressed={settings.alignLeft}>
                 <span className="flex items-center gap-2 whitespace-normal"><span className="flex-shrink-0">↤</span> <span>Align left</span></span>
+              </button>
+              {/* Align Right */}
+              <button onClick={() => toggleAlign('right')} className={`${switchCls(settings.alignRight)} min-h-[2.75rem]`} aria-pressed={settings.alignRight}>
+                <span className="flex items-center gap-2 whitespace-normal"><span className="flex-shrink-0">↦</span> <span>Align right</span></span>
               </button>
               {/* Reading guide */}
               <button onClick={() => toggle('readingGuide')} className={`${switchCls(settings.readingGuide)} min-h-[2.75rem]`} aria-pressed={settings.readingGuide} aria-label="Toggle reading guide (horizontal reading ruler)">
@@ -547,6 +634,10 @@ export default function AccessibilityMenu() {
               {/* Optional: Highlight links retained */}
               <button onClick={() => toggle('highlightLinks')} className={`${switchCls(settings.highlightLinks)} min-h-[2.75rem]`} aria-pressed={settings.highlightLinks}>
                 <span className="flex items-center gap-2 whitespace-normal"><FiLink className="opacity-90 flex-shrink-0" /> <span>Highlight links</span></span>
+              </button>
+              {/* Text-to-speech */}
+              <button onClick={() => toggle('tts')} className={`${switchCls(settings.tts)} min-h-[2.75rem]`} aria-pressed={settings.tts} aria-label="Toggle text to speech">
+                <span className="flex items-center gap-2 whitespace-normal"><span className="flex-shrink-0">🔊</span> <span>Text to speech</span></span>
               </button>
             </div>
           </div>

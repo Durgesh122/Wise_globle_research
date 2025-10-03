@@ -26,6 +26,7 @@ import WhatsAppButton from './components/WhatsAppButton';
 import MobileActionTray from './components/MobileActionTray';
 import ScrollToTop from './components/ScrollToTop';
 import RouteAnnouncer from './components/RouteAnnouncer';
+import SeoHelmet from './components/SeoHelmet';
 // Removed SeoHelmet and A11yControls (not present in repo)
 import JobsManager from './pages/admin/JobsManager'; // Added JobsManager import
 import AccessibilityMenu from './components/AccessibilityMenu';
@@ -65,24 +66,18 @@ const Home = lazyWithRetry(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Services = lazy(() => import('./pages/Services'));
 const Contact = lazy(() => import('./pages/Contact'));
-const Legal = lazy(() => import('./pages/Legal'));
+const Disclaimer = lazy(() => import('./pages/Disclaimer'));
 const Disclosure = lazy(() => import('./pages/Disclosure'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Complaint = lazy(() => import('./pages/Complaint'));
 const PaymentInfo = lazy(() => import('./pages/PaymentInfo'));
 const Vision = lazy(() => import('./pages/Vision'));
-const Equity = lazy(() => import('./pages/Equity'));
 const Career = lazy(() => import('./pages/Career'));
 const Blogs = lazy(() => import('./pages/Blogs'));
 const MarketNews = lazy(() => import('./pages/MarketNews'));
-const UserLogin = lazyWithRetry(() => import('./pages/UserLogin'));
+const AdminLogin = lazyWithRetry(() => import('./pages/AdminLogin'));
 const ClientPanel = lazy(() => import('./pages/ClientPanel'));
-const StockOption = lazy(() => import('./pages/StockOption'));
-const Index = lazy(() => import('./pages/Index'));
-const Future = lazy(() => import('./pages/Future'));
-const StockIndexOption = lazy(() => import('./pages/StockIndexOption'));
-const MCXOption = lazy(() => import('./pages/MCXOption'));
 const SmartCash = lazy(() => import('./pages/SmartCash'));
 const EvaluationStockCash = lazy(() => import('./pages/EvaluationStockCash'));
 const SmartOptions = lazy(() => import('./pages/SmartOptions'));
@@ -96,9 +91,6 @@ const UniversalCash = lazy(() => import('./pages/UniversalCash'));
 const InfinityClub = lazy(() => import('./pages/InfinityClub'));
 const MCXSupreme = lazy(() => import('./pages/MCXSupreme'));
 const GalaxyMCX = lazy(() => import('./pages/GalaxyMCX'));
-
-// The following pages were removed from the project; keep routes cleaned up to avoid import errors:
-// Demo, Team, Mcx, Training, Delivery, BTST, Cash, Bullions, Energy, Metal, NCDEX, Forex, Comex
 const Terms = lazy(() => import('./pages/Terms'));
 const Refund = lazy(() => import('./pages/Refund'));
 const Privacy = lazy(() => import('./pages/Privacy'));
@@ -106,7 +98,7 @@ const Recommendation = lazy(() => import('./pages/Recommendation'));
 const ClientServiceConsent = lazy(() => import('./pages/ClientServiceConsent'));
 const InvestorChart = lazy(() => import('./pages/InvestorChart'));
 const AntiMoneyLaundering = lazy(() => import('./pages/AntiMoneyLaundering'));
-const DailyRecommendation = lazy(() => import('./pages/DailyRecommendation'));
+// Removed: DailyRecommendation (page not present)
 const Media = lazy(() => import('./pages/Media'));
 const Sitemap = lazy(() => import('./pages/Sitemap'));
 
@@ -159,7 +151,7 @@ function App() {
 
       <TimeBasedThemeWrapper>
         <ScrollToTop />
-        {/* <SeoHelmet /> */}
+  <SeoHelmet />
 
         {/* Toast Notifications */}
         <ToastContainer
@@ -233,16 +225,18 @@ function App() {
                 <Route path="/services/universal-cash" element={<UniversalCash />} />
                 <Route path="/services/infinity-club" element={<InfinityClub />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/legal" element={<Legal />} />
+                <Route path="/disclaimer" element={<Disclaimer />} />
+                <Route path="/legal" element={<Navigate to="/disclaimer" replace />} />
                 <Route path="/disclosure" element={<Disclosure />} />
                 
                 
                 <Route path="/vision" element={<Vision />} />
-                <Route path="/equity" element={<Equity />} />
+                {/* Equity page removed */}
                 <Route path="/career" element={<Career />} />
                 <Route path="/blogs" element={<Blogs />} />
                 <Route path="/market-news" element={<MarketNews />} />
-                <Route path="/user-login" element={<UserLogin />} />
+                <Route path="/admin-login" element={<AdminLogin />} />
+                <Route path="/user-login" element={<Navigate to="/admin-login" replace />} />
                 <Route path="/client-panel" element={<ClientPanel />} />
                 <Route path="/complaint" element={<Complaint />} />
                 <Route path="/research-reports" element={<Reports />} />
@@ -256,11 +250,7 @@ function App() {
                 <Route path="/accessibility-statement" element={<AccessibilityStatement />} />
                 <Route path="/accessibility-feedback" element={<AccessibilityFeedback />} />
                 <Route path="/search" element={<Search />} />
-                <Route path="/services/equity/stock-option" element={<StockOption />} />
-                <Route path="/services/equity/index" element={<Index />} />
-                <Route path="/services/equity/future" element={<Future />} />
-                <Route path="/services/equity/stock-index-option" element={<StockIndexOption />} />
-                <Route path="/services/mcx/mcx-option" element={<MCXOption />} />
+                {/* Removed equity/mcx subpages (components not present in repo) */}
                 
                 {/* Removed pages and their routes: demo, team, mcx, training, delivery, BTST, cash,
                   bullions, energy, metal, NCDEX, forex, comex. */}
@@ -287,7 +277,7 @@ function App() {
                 {/* Alias route to match Footer link */}
                 <Route path="/investor-charter" element={<InvestorChart />} />
                 <Route path="/anti-money-laundering" element={<AntiMoneyLaundering />} />
-                <Route path="/daily" element={<DailyRecommendation />} />
+                {/* Removed /daily route (DailyRecommendation component not present) */}
                 <Route path="/media" element={<Media />} />
                 <Route path="/guide" element={<GuideForInvesting />} />
                 <Route path="/sitemap" element={<Sitemap />} />
@@ -319,160 +309,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

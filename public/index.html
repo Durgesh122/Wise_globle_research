@@ -2,15 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Wise Global Research Services</title>
 
     <!-- ✅ Favicon -->
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
 
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.webmanifest" />
 
     <!-- ✅ Theme Colors -->
     <meta name="theme-color" content="#000000" />
@@ -119,6 +118,12 @@
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-KMZN36W7');</script>
   <!-- End Google Tag Manager -->
+  <!--
+    Note: GA4 / Google Analytics is managed via Google Tag Manager (GTM-KMZN36W7) for this project.
+    Avoid adding a separate gtag.js snippet to prevent duplicate pageviews. If you prefer to use
+    gtag directly, remove/disable the GTM container or update deployment to include your
+    GA4 Measurement ID (G-XXXXXXX) and ensure only one analytics loader is active.
+  -->
     <!-- Note: AW-specific duplicate gtag removed to avoid double-loading. If you prefer managing GA4/AW via GTM, I can move configs into GTM next. -->
     <!-- ✅ SEO Meta Tags -->
   <meta name="description" content="Wise Global Research Services — SEBI registered research analyst providing stock market research, live market news, Nifty & Sensex analysis, intraday tips, and long-term investment insights for Indian investors." />
@@ -177,10 +182,125 @@
   </head>
 
   <body class="bg-black text-white">
+    <!-- Ensure early document language & per-route titles/descriptions for scanners before React mounts -->
+    <script>
+      (function(){
+        try{
+          if(!document.documentElement.lang) document.documentElement.lang = 'en';
+          var path = location && location.pathname ? location.pathname.replace(/\/+$/,'') : '/';
+
+          // Per-path metadata mapping. Keep this in sync with src/components/seo-config.js for best results.
+          var metaMap = {
+            '/': {
+              title: 'Wise Global Research — Nifty & Sensex analysis, Stock Recommendations',
+              description: 'SEBI-registered stock market research: live Nifty & Sensex updates, intraday tips, stock recommendations, and futures/options analysis for Indian traders.'
+            },
+            '/contact': {
+              title: 'Contact — Wise Global Research Services',
+              description: 'Contact Wise Global Research Services for enquiries, research subscriptions and support.'
+            },
+            '/services': {
+              title: 'Our Services | Equity, MCX, Options, Research',
+              description: "Explore Wise Global Research's SEBI registered research services: equity, derivatives, MCX, Nifty, Sensex, and more."
+            },
+            '/market-news': {
+              title: 'Market News | Wise Global Research',
+              description: 'Latest market updates, events, and macro developments impacting equity and commodities.'
+            },
+            '/research-reports': {
+              title: 'Research Reports | Equity & MCX',
+              description: 'In-depth equity and commodity research reports to support informed decisions.'
+            },
+            '/vision': {
+              title: 'Vision & Values | Wise Global Research',
+              description: 'Our vision is to empower traders with transparent, data-driven research and robust risk management.'
+            },
+            '/contact': {
+              title: 'Contact — Wise Global Research Services',
+              description: 'Contact Wise Global Research Services for enquiries, research subscriptions and support.'
+            },
+            '/accessibility-statement': {
+              title: 'Accessibility Statement — Wise Global Research Services',
+              description: 'Accessibility statement for Wise Global Research Services, targeting WCAG 2.1 Level AA.'
+            },
+            '/sitemap': {
+              title: 'Sitemap — Wise Global Research',
+              description: 'Sitemap of Wise Global Research website.'
+            },
+            '/privacy': {
+              title: 'Privacy Policy | Wise Global Research',
+              description: 'How we collect, process, and protect your data, aligned with compliance and security standards.'
+            },
+            '/terms': {
+              title: 'Terms & Conditions | Wise Global Research',
+              description: 'Terms of service governing the use of Wise Global Research services and content.'
+            },
+            '/refund': {
+              title: 'Refund & Cancellation Policy',
+              description: 'Refund terms and cancellation policy for subscriptions and advisory services.'
+            },
+            '/client-panel': {
+              title: 'Client Panel — Wise Global',
+              description: 'Manage your subscriptions, research feed, and preferences from the client panel.'
+            },
+            '/SmartCash': { title: 'SmartCash – Premium Equity Cash Service', description: 'Premium cash-segment service for disciplined equity investing and trading.' },
+            '/SmartOptions': { title: 'SmartOptions – Options Strategies', description: 'Premium options strategies for consistent performance and drawdown control.' },
+            '/SmartFuture': { title: 'SmartFuture – Futures Strategies', description: 'Premium futures service with risk-managed directional and hedged trades.' },
+            '/MCXSupreme': { title: 'MCXSupreme – Premium MCX Service', description: 'Premium MCX strategies across bullion, energy, and metals with tight risk.' },
+            '/GalaxyMCX': { title: 'GalaxyMCX – Comprehensive Commodity Service', description: 'Full-spectrum MCX strategies with diversification and risk discipline.' },
+            '/UniversalCash': { title: 'UniversalCash – Multi-Sector Cash Ideas', description: 'Broad-based cash segment ideas across sectors with clear risk levels.' },
+            '/InfinityClub': { title: 'InfinityClub – Exclusive Advisory', description: 'Exclusive advisory program with personalized research and reviews.' }
+          };
+
+          var info = metaMap[path] || metaMap[path.toLowerCase()];
+          if(info){
+            if(info.title) document.title = info.title;
+            try{
+              var desc = document.querySelector('meta[name="description"]');
+              if(desc){ desc.setAttribute('content', info.description || ''); }
+              else{
+                desc = document.createElement('meta');
+                desc.setAttribute('name','description');
+                desc.setAttribute('content', info.description || '');
+                document.head.appendChild(desc);
+              }
+            }catch(e){}
+          }
+        }catch(e){}
+      })();
+    </script>
     <!-- Google Tag Manager (noscript) -->
   <noscript><iframe title="Google Tag Manager (noscript)" src="https://www.googletagmanager.com/ns.html?id=GTM-KMZN36W7"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <!-- Ensure third-party injected hidden iframes have an accessible title for scanners -->
+    <script>
+      (function(){
+        try{
+          // After third-party scripts run, some iframes are injected without titles.
+          // Give any hidden iframe a descriptive title so automated scanners (pa11y)
+          // and assistive tech can identify them.
+          function labelHiddenIframes(){
+            var iframes = document.querySelectorAll('iframe');
+            for(var i=0;i<iframes.length;i++){
+              var f = iframes[i];
+              try{
+                var style = window.getComputedStyle(f);
+                var isHidden = (f.getAttribute('aria-hidden') === 'true') || f.hasAttribute('inert') || style.display === 'none' || style.visibility === 'hidden' || f.width == '0' || f.height == '0';
+                if(isHidden){
+                  if(!f.getAttribute('title')) f.setAttribute('title','auxiliary third-party frame');
+                  if(!f.hasAttribute('aria-hidden')) f.setAttribute('aria-hidden','true');
+                }
+              }catch(e){}
+            }
+          }
+          // Run once on DOMContentLoaded and again after a short delay to catch async injections
+          if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', labelHiddenIframes);
+          else labelHiddenIframes();
+          setTimeout(labelHiddenIframes, 2500);
+        }catch(e){}
+      })();
+    </script>
     <script>
       // Early apply of saved accessibility settings before React mounts to avoid flashes
       (function(){

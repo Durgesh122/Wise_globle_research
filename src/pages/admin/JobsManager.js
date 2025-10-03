@@ -153,23 +153,23 @@ export default function JobsManager() {
       {/* Create / Edit Form */}
       <form onSubmit={saveJob} className="admin-section grid grid-cols-1 md:grid-cols-2 gap-4 rounded">
         <div>
-          <label className="block text-sm mb-1">Title</label>
-          <input className="w-full p-2 rounded text-adaptive" style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)' }} value={form.title} onChange={e=>setForm({...form,title:e.target.value})} required />
+          <label htmlFor="job-title" className="block text-sm mb-1">Title</label>
+          <input id="job-title" name="job-title" className="w-full p-2 rounded text-adaptive" style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)' }} value={form.title} onChange={e=>setForm({...form,title:e.target.value})} required />
         </div>
         <div>
-          <label className="block text-sm mb-1">Location</label>
-          <input className="w-full p-2 rounded text-adaptive" style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)' }} value={form.location} onChange={e=>setForm({...form,location:e.target.value})} required />
+          <label htmlFor="job-location" className="block text-sm mb-1">Location</label>
+          <input id="job-location" name="job-location" className="w-full p-2 rounded text-adaptive" style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)' }} value={form.location} onChange={e=>setForm({...form,location:e.target.value})} required />
         </div>
         <div className="md:col-span-2">
-          <label className="block text-sm mb-1">Description</label>
-          <textarea className="w-full p-2 rounded text-adaptive" rows={3} value={form.description} onChange={e=>setForm({...form,description:e.target.value})} />
+          <label htmlFor="job-description" className="block text-sm mb-1">Description</label>
+          <textarea id="job-description" name="job-description" className="w-full p-2 rounded text-adaptive" rows={3} value={form.description} onChange={e=>setForm({...form,description:e.target.value})} />
         </div>
         <div className="md:col-span-2">
-          <label className="block text-sm mb-1">Requirements (one per line)</label>
-          <textarea className="w-full p-2 rounded text-adaptive" style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)' }} rows={4} value={form.requirements} onChange={e=>setForm({...form,requirements:e.target.value})} />
+          <label htmlFor="job-requirements" className="block text-sm mb-1">Requirements (one per line)</label>
+          <textarea id="job-requirements" name="job-requirements" className="w-full p-2 rounded text-adaptive" style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)' }} rows={4} value={form.requirements} onChange={e=>setForm({...form,requirements:e.target.value})} />
         </div>
-        <label className="inline-flex items-center gap-2">
-          <input type="checkbox" checked={form.active} onChange={e=>setForm({...form,active:e.target.checked})} />
+        <label htmlFor="job-active" className="inline-flex items-center gap-2">
+          <input id="job-active" name="job-active" type="checkbox" checked={form.active} onChange={e=>setForm({...form,active:e.target.checked})} />
           <span>Active</span>
         </label>
         <div className="md:col-span-2 flex gap-2 admin-actions">
@@ -208,9 +208,9 @@ export default function JobsManager() {
                   <div className="text-adaptive text-sm line-clamp-2">{job.description}</div>
                 </div>
                 <div className="flex gap-2 admin-actions">
-                  <button className="px-3 py-2 rounded flex items-center gap-2 btn" style={{ background: 'var(--accent)' }} onClick={()=>editJob(job)}><FaEdit/> Edit</button>
-                  <button className="px-3 py-2 rounded flex items-center gap-2 btn" style={{ background: 'rgba(255,0,0,0.6)' }} onClick={()=>deleteJob(job.id)}><FaTrash/> Delete</button>
-                  <button className="px-3 py-2 rounded flex items-center gap-2 btn" style={{ background: 'var(--accent)' }} onClick={()=>loadApplications(job.id)}><FaList/> Applications</button>
+                  <button type="button" className="px-3 py-2 rounded flex items-center gap-2 btn" style={{ background: 'var(--accent)' }} onClick={()=>editJob(job)}><FaEdit/> Edit</button>
+                  <button type="button" className="px-3 py-2 rounded flex items-center gap-2 btn" style={{ background: 'rgba(255,0,0,0.6)' }} onClick={()=>deleteJob(job.id)}><FaTrash/> Delete</button>
+                  <button type="button" className="px-3 py-2 rounded flex items-center gap-2 btn" style={{ background: 'var(--accent)' }} onClick={()=>loadApplications(job.id)}><FaList/> Applications</button>
                 </div>
               </li>
             ))}
@@ -256,7 +256,7 @@ export default function JobsManager() {
                       <div className="text-white/80 text-sm mb-2">{new Date(a.timestamp||0).toLocaleString()}</div>
                     </div>
                     <div className="ml-4 flex-shrink-0">
-                      <button className="px-3 py-1 bg-red-600 rounded text-sm" onClick={()=>deleteApplication(a.id)}>Delete</button>
+                      <button type="button" className="px-3 py-1 bg-red-600 rounded text-sm" onClick={()=>deleteApplication(a.id)}>Delete</button>
                     </div>
                   </div>
                   {a.resumeData && a.resumeMeta && (

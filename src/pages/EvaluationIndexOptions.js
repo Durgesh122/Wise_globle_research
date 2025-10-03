@@ -58,9 +58,7 @@ const EvaluationIndexOptions = () => (
     {/* Sample Calls (moved below Trading Rules as requested) */}
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.EvaluationIndexOptions.sample-calls">Sample Calls</Trans></h2>
-      <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono">
-        <Trans i18nKey="pages.EvaluationIndexOptions.buy-banknifty-02-mar-40400-pe-above-460-"><Trans i18nKey="pages.EvaluationIndexOptions.buy-banknifty-02-mar-40400-pe-above-460--1">BUY BANKNIFTY 02 MAR 40400 PE ABOVE 460 TARGET 540 620 STOPLOSS 370</Trans></Trans>
-      </div>
+        <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</div>
     </div>
 
   {/* Removed explicit SMS/support-hours footer per policy */}
@@ -74,7 +72,7 @@ const EvaluationIndexOptions = () => (
           <div className="text-3xl font-extrabold text-white mb-2">₹5,100 <span className="text-base font-normal"><Trans i18nKey="pages.EvaluationIndexOptions.10-days">/ weekly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.EvaluationIndexOptions.1-to-2-calls-in-a-day"><Trans i18nKey="pages.EvaluationIndexOptions.1-to-2-calls-in-a-day-1">1 to 2 Calls in a Day</Trans></Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.EvaluationIndexOptions.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.EvaluationIndexOptions.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.EvaluationIndexOptions.note-prices-are-excluding-gst-18"><Trans i18nKey="pages.EvaluationIndexOptions.note-prices-are-excluding-gst-18-1">Note: Prices are excluding GST (18%)</Trans></Trans></div>
         </div>
@@ -109,7 +107,7 @@ const EvaluationIndexOptions = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.EvaluationIndexOptions.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.EvaluationIndexOptions.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white">A: Recommendations are delivered via your registered contact channel.</p>
+          <p className="text-white">A: Recommendations are delivered via SMS on your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.EvaluationIndexOptions.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.EvaluationIndexOptions.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
@@ -122,7 +120,7 @@ const EvaluationIndexOptions = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
+          <button type="button" className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

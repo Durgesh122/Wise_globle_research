@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 import { FaTimes, FaUser, FaCity, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { db } from '../firebase';
@@ -8,6 +8,7 @@ import { services } from '../pages/Services';
 // Chat badge icon (uses FaRobot) — replaces the earlier SVG robot with a simpler badge
 const ChatLogo = ({ className = 'w-6 h-6', animated = false }) => {
   const reduceMotion = useReducedMotion();
+  const id = useId();
   const groupAnimate = !reduceMotion && animated ? { y: [0, -3, 0], scale: [1, 1.06, 1] } : undefined;
   return (
     <motion.div
@@ -23,15 +24,15 @@ const ChatLogo = ({ className = 'w-6 h-6', animated = false }) => {
           <motion.span
             className="absolute inset-0 rounded-[10px]"
             aria-hidden="true"
-            animate={!useReducedMotion ? { scale: [1, 1.06, 1], rotate: [0, 2, -1, 0] } : undefined}
+            animate={!reduceMotion ? { scale: [1, 1.06, 1], rotate: [0, 2, -1, 0] } : undefined}
             transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
             style={{ background: 'linear-gradient(90deg, rgba(201, 157, 36, 0.98), rgba(103, 140, 18, 0.88))' }}
           />
           <motion.svg viewBox="0 0 40 9.684" xmlns="http://www.w3.org/2000/svg" fill="none" className="w-3/4 h-3/4 relative z-10" aria-hidden="true">
             <defs>
-              <clipPath id="chatlogoClip"><path fill="#fff" d="M0 0h40v9.684H0z" /></clipPath>
+              <clipPath id={`chatlogoClip-${id}`}><path fill="#fff" d="M0 0h40v9.684H0z" /></clipPath>
             </defs>
-            <motion.g clipPath="url(#chatlogoClip)" fill="#000" animate={groupAnimate} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
+            <motion.g clipPath={`url(#chatlogoClip-${id})`} fill="#000" animate={groupAnimate} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
               <path d="M.361 4.842C.361 2.316 2.409.268 4.935.268s4.574 2.048 4.574 4.574-2.048 4.574-4.574 4.574S.361 7.368.361 4.842zm30.377 0c0-2.526 2.048-4.574 4.574-4.574s4.574 2.048 4.574 4.574-2.048 4.574-4.574 4.574-4.574-2.048-4.574-4.574zm-5.868 0a4.57 4.57 0 0 1-.348 1.75 4.59 4.59 0 0 1-.991 1.484c-.424.425-.929.762-1.484.992a4.57 4.57 0 0 1-3.5 0c-.555-.23-1.059-.567-1.484-.992s-.762-.929-.991-1.484a4.59 4.59 0 0 1-.348-1.75h9.147z" />
             </motion.g>
           </motion.svg>
@@ -118,7 +119,7 @@ const ChatWidget = () => {
       if (document.getElementById(ID)) return;
       const style = document.createElement('style');
       style.id = ID;
-      style.textContent = `
+    style.textContent = `
   /* damru-tilt: small alternating rotations resembling a damru drum shake */
   @keyframes damru-tilt { 0% { transform: rotate(0deg);} 10% { transform: rotate(-12deg);} 20% { transform: rotate(10deg);} 30% { transform: rotate(-8deg);} 40% { transform: rotate(6deg);} 50% { transform: rotate(-4deg);} 60% { transform: rotate(4deg);} 70% { transform: rotate(-2deg);} 80% { transform: rotate(2deg);} 100% { transform: rotate(0deg);} } 
   @keyframes chat-shake { 0% { transform: translateX(0) rotate(0deg);} 20% { transform: translateX(-2px) rotate(-2deg);} 40% { transform: translateX(2px) rotate(2deg);} 60% { transform: translateX(-1px) rotate(-1deg);} 80% { transform: translateX(1px) rotate(1deg);} 100% { transform: translateX(0) rotate(0deg);} } 
@@ -150,6 +151,7 @@ const ChatWidget = () => {
     background-size: 200% 200%;
     transform-origin: center;
     animation: zigzag-move 3.2s linear infinite;
+    -webkit-mask-image: radial-gradient(closest-side at 50% 100%, black 40%, transparent 100%);
     mask-image: radial-gradient(closest-side at 50% 100%, black 40%, transparent 100%);
   }
 
@@ -661,54 +663,54 @@ const ChatWidget = () => {
 
     // Save a partial submission so we can update later when service is selected
     (async () => {
-      try {
-        const submissionsRef = dbRef(db, 'chatbot-submissions');
-        const newRef = push(submissionsRef);
-        const payload = {
-          name: formData.name || '',
-          city: formData.city || '',
-          address: formData.address || '',
-          mobile: normalized || '',
-          service: formData.service || '',
-          // partial save marker
-          partial: true,
-          // include a minimal message so unauthenticated writes match DB rules
-          message: 'Partial submission (mobile received)',
-          timestamp: Date.now(),
-          status: 'New',
-        };
-        await set(newRef, payload);
-        setPendingSubmissionKey(newRef.key);
+      const payload = {
+        name: formData.name || '',
+        city: formData.city || '',
+        address: formData.address || '',
+        mobile: normalized || '',
+        service: formData.service || '',
+        // partial save marker
+        partial: true,
+        // include a minimal message so server record is informative
+        message: 'Partial submission (mobile received)',
+        timestamp: Date.now(),
+        status: 'New',
+      };
 
-        // After partial save completes, prompt user to select topic/services
-        const doneId = `${Date.now()}-asktopic2`;
-        setMessages((prev) => [...prev, { fromUser: false, text: `Now, let's find the right service for you. Which of these topics are you interested in?`, id: doneId }]);
-        setShowTopicOptions(true);
-        setStep('selectingTopic');
-      } catch (e) {
-        console.error('Failed to save partial submission', e);
-        // even if save failed, still show options so user can continue; admin may not receive record
-        const failId = `${Date.now()}-asktopicfail`;
-        setMessages((prev) => [...prev, { fromUser: false, text: `Couldn't save your contact right now — please try again or continue to choose a service.`, id: failId }]);
-        setShowTopicOptions(true);
-        setStep('selectingTopic');
+      // POST to server's submit-popup endpoint which uses Admin SDK to persist
+      try {
+        const resp = await fetch('http://localhost:3002/submit-popup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const json = await resp.json().catch(() => ({}));
+        if (resp.ok && json && json.success) {
+          setPendingSubmissionKey(json.key || null);
+        } else {
+          console.error('submit-popup returned error', json);
+        }
+      } catch (fetchErr) {
+        console.error('Failed to POST partial submission to server', fetchErr);
+      }
+
+      // After partial save completes (or attempted), prompt user to select topic/services
+      const doneId = `${Date.now()}-asktopic2`;
+      setMessages((prev) => [...prev, { fromUser: false, text: `Now, let's find the right service for you. Which of these topics are you interested in?`, id: doneId }]);
+      setShowTopicOptions(true);
+      setStep('selectingTopic');
+
+      // Send final submission to server which will persist it using Admin SDK
+      try {
+        const resp = await fetch('http://localhost:3002/submit-popup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const json = await resp.json().catch(() => ({}));
+        if (resp.ok && json && json.success) {
+          // successful server-side save; clear pending key if any
+          setPendingSubmissionKey(null);
+        } else {
+          console.error('/submit-popup returned error', json);
+        }
+      } catch (fetchErr) {
+        console.error('Failed to POST final submission to server', fetchErr);
       }
     })();
-  };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') handleSend();
-  };
-
-  // Input placeholder based on step
-  const getInputPlaceholder = () => {
-    switch(step) {
-  case 'askName': return 'Your full name';
-  case 'askCity': return 'Your city';
-  case 'askAddress': return 'Your full address with pincode';
-  case 'askMobile': return 'Your mobile number';
-      default: return 'Type a message...';
-    }
   };
 
   // Input type based on step
@@ -716,6 +718,48 @@ const ChatWidget = () => {
     switch(step) {
       case 'askMobile': return 'tel';
       default: return 'text';
+    }
+  };
+
+  // Placeholder text depending on the current step
+  const getInputPlaceholder = () => {
+    switch (step) {
+      case 'askName': return 'Your full name';
+      case 'askCity': return 'City (e.g., Indore)';
+      case 'askAddress': return "Full address or 'skip'";
+      case 'askMobile': return 'Mobile number (10 digits)';
+      default: return 'Type a message...';
+    }
+  };
+
+  // Handle Enter key and adapt behavior by step
+  const handleKeyPress = (e) => {
+    if (!e) return;
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const val = (input || '').trim();
+      if (!val) return;
+      switch (step) {
+        case 'askName':
+          submitName(val);
+          setInput('');
+          break;
+        case 'askCity':
+          submitCity(val);
+          setInput('');
+          break;
+        case 'askAddress':
+          submitAddress(val);
+          setInput('');
+          break;
+        case 'askMobile':
+          submitMobile(val);
+          setInput('');
+          break;
+        default:
+          handleSend();
+          break;
+      }
     }
   };
 
@@ -796,6 +840,7 @@ const ChatWidget = () => {
               </div>
               <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={() =>
                     closeWithFade(300, () => {
                       setMessages([]);
@@ -805,10 +850,38 @@ const ChatWidget = () => {
                     })
                   }
                   className="text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30 transition-colors"
+                  aria-label="End chat and clear messages"
                 >
                   End Chat
                 </button>
-                <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition-colors">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      const transcript = messages.map(m => `${m.fromUser ? 'User' : 'Bot'}: ${m.text}`).join('\n');
+                      const notify = {
+                        name: formData.name || 'Chat user',
+                        email: formData.email || '',
+                        mobile: formData.mobile || '',
+                        interest: 'Chat Transcript',
+                        message: transcript || '(no messages)',
+                        source: 'ChatWidget',
+                        to: 'hemraj8087@gmail.com,wiseglobalresearchservice@gmail.com'
+                      };
+                      await fetch('http://localhost:3002/send-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notify) });
+                      // eslint-disable-next-line no-console
+                      console.debug('Chat transcript sent to server');
+                    } catch (err) {
+                      // eslint-disable-next-line no-console
+                      console.warn('Failed to send chat transcript', err);
+                    }
+                  }}
+                  className="text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30 transition-colors"
+                  aria-label="Email chat transcript to support"
+                >
+                  Email Transcript
+                </button>
+                <button type="button" onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition-colors" aria-label="Close chat">
                   <FaTimes />
                 </button>
               </div>
@@ -869,7 +942,7 @@ const ChatWidget = () => {
                       <div className="text-sm font-medium text-black">Which topic are you interested in?</div>
                       <div className="grid grid-cols-1 gap-2">
                         {topicOptions.map((t) => (
-                          <button key={t} onClick={() => handleSelectTopic(t)} className="text-left p-2 bg-white border border-gray-200 rounded-lg hover:shadow transition text-black">
+                          <button key={t} type="button" onClick={() => handleSelectTopic(t)} className="text-left p-2 bg-white border border-gray-200 rounded-lg hover:shadow transition text-black" aria-label={`Select topic ${t}`}>
                             {t}
                           </button>
                         ))}
@@ -889,7 +962,7 @@ const ChatWidget = () => {
                                 <div className="text-xs text-gray-700">{s.desc}</div>
                               </div>
                               <div>
-                                <button onClick={() => handleSelectService(s)} className="text-sm text-indigo-600 px-3 py-1 rounded hover:bg-indigo-50">Select</button>
+                                <button type="button" onClick={() => handleSelectService(s)} className="text-sm text-indigo-600 px-3 py-1 rounded hover:bg-indigo-50" aria-label={`Select service ${s.title}`}>Select</button>
                               </div>
                             </div>
                           </div>
@@ -909,12 +982,12 @@ const ChatWidget = () => {
                       placeholder={getInputPlaceholder()}
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
-                      onKeyPress={handleKeyPress}
+                      onKeyDown={handleKeyPress}
                       ref={inputRef}
                       className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent transition-all bg-white/90 backdrop-blur"
                       disabled={false}
                     />
-                    <motion.button onClick={handleSend} disabled={input.trim() === ''} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-2.5 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                    <motion.button type="button" onClick={handleSend} disabled={input.trim() === ''} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-2.5 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all" aria-label="Send message">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                       </svg>
@@ -925,28 +998,28 @@ const ChatWidget = () => {
                 {step === 'askName' && (
                   <div className="flex gap-2 w-full">
                     <input type="text" ref={inputRef} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500" placeholder="Your full name" onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => { if (e.key === 'Enter') { submitName(input.trim()); setInput(''); } }} />
-                    <button onClick={() => { submitName(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full">Send</button>
+                    <button type="button" onClick={() => { submitName(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full" aria-label="Send name">Send</button>
                   </div>
                 )}
 
                 {step === 'askCity' && (
                   <div className="flex gap-2 w-full">
                     <input type="text" ref={inputRef} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500" placeholder="Your city" onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => { if (e.key === 'Enter') { submitCity(input.trim()); setInput(''); } }} />
-                    <button onClick={() => { submitCity(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full">Send</button>
+                    <button type="button" onClick={() => { submitCity(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full" aria-label="Send city">Send</button>
                   </div>
                 )}
 
                 {step === 'askAddress' && (
                   <div className="flex gap-2 w-full">
                     <input type="text" ref={inputRef} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500" placeholder="Full address or 'skip'" onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => { if (e.key === 'Enter') { submitAddress(input.trim()); setInput(''); } }} />
-                    <button onClick={() => { submitAddress(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full">Send</button>
+                    <button type="button" onClick={() => { submitAddress(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full" aria-label="Send address">Send</button>
                   </div>
                 )}
 
                 {step === 'askMobile' && (
                   <div className="flex gap-2 w-full">
                     <input type="tel" ref={inputRef} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-gray-500" placeholder="Mobile number" onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => { if (e.key === 'Enter') { submitMobile(input.trim()); setInput(''); } }} />
-                    <button onClick={() => { submitMobile(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full">Send</button>
+                    <button type="button" onClick={() => { submitMobile(input.trim()); setInput(''); }} disabled={input.trim() === ''} className="px-3 py-2 bg-emerald-500 text-white rounded-full" aria-label="Send mobile number">Send</button>
                   </div>
                 )}
               </motion.div>

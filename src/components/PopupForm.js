@@ -2,28 +2,107 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import HeroImg from '../assets/images/wiseglobalresearch_4.png';
+import { ref as dbRef, onValue } from 'firebase/database';
+import { db } from '../firebase';
 
 // Simplified image-only popup. Shows image and a close button.
-const PopupForm = ({ onClose, forceShow = false }) => {
+// Accepts optional `imageUrl` prop. If not provided, reads localStorage key `popupImage`.
+const PopupForm = ({ onClose, forceShow = false, imageUrl: propImageUrl }) => {
   const [visible, setVisible] = useState(false);
+  const [imageUrl, setImageUrl] = useState(propImageUrl || '');
+  const [mediaType, setMediaType] = useState('image'); // 'image' | 'video' | 'embed'
+  // natural image dimensions and computed scaled size to fit viewport
+  const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
+  const [scaledSize, setScaledSize] = useState({ width: 0, height: 0 });
   const location = useLocation();
 
   useEffect(() => {
     let timer;
+    // If explicitly forced, always show immediately (useful for debugging/tests)
     if (forceShow) {
       setVisible(true);
       return () => clearTimeout(timer);
     }
 
-    if (location.pathname === '/') {
-      setVisible(false);
-      timer = setTimeout(() => setVisible(true), 1000);
-    } else {
-      setVisible(false);
-    }
+    const showIfAllowed = async () => {
+      // Check disclaimer acceptance in localStorage; if not accepted, don't show.
+      let allowed = true;
+      try {
+        allowed = localStorage.getItem('disclaimerAccepted') === 'true';
+      } catch (e) {
+        // If access to localStorage fails, default to allowing popup so user still sees it
+        allowed = true;
+      }
+
+      // Only show the popup when we're on the homepage, the disclaimer is accepted,
+      // AND there is an image to display (either from prop or admin DB).
+      const hasImage = Boolean(propImageUrl || imageUrl);
+      if (location.pathname === '/' && allowed && hasImage) {
+        // Reset visibility then show after a small delay for nicer UX
+        setVisible(false);
+        timer = setTimeout(() => setVisible(true), 1000);
+      } else {
+        setVisible(false);
+      }
+    };
+
+    showIfAllowed();
     return () => clearTimeout(timer);
-  }, [location.pathname, forceShow]);
+  }, [location.pathname, forceShow, imageUrl, propImageUrl]);
+
+  // recompute scaled size when naturalSize changes or window resizes
+  useEffect(() => {
+    const compute = () => {
+      const vw = typeof window !== 'undefined' ? window.innerWidth : 1200;
+      const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
+      const maxW = Math.min(800, vw * 0.92);
+      const maxH = vh * 0.8;
+      const nw = naturalSize.width || 0;
+      const nh = naturalSize.height || 0;
+      if (!nw || !nh) {
+        setScaledSize({ width: maxW, height: Math.min(maxH, 600) });
+        return;
+      }
+      const scale = Math.min(1, maxW / nw, maxH / nh);
+      setScaledSize({ width: Math.round(nw * scale), height: Math.round(nh * scale) });
+    };
+
+    compute();
+    window.addEventListener('resize', compute);
+    return () => window.removeEventListener('resize', compute);
+  }, [naturalSize]);
+
+  // Subscribe to Realtime DB value for admin popup media (if prop not provided)
+  useEffect(() => {
+    if (propImageUrl) return; // prop takes precedence
+    try {
+      const r = dbRef(db, 'admin/popupMedia');
+      const off = onValue(r, (snapshot) => {
+        if (snapshot.exists()) {
+          const val = snapshot.val();
+          if (val && typeof val === 'object' && val.url) {
+            setImageUrl(val.url);
+            setMediaType(val.type === 'video' ? 'video' : (val.type === 'embed' ? 'embed' : 'image'));
+          } else if (typeof val === 'string') {
+            setImageUrl(val);
+            setMediaType(val.startsWith('data:video') ? 'video' : (val.includes('canva.com') ? 'embed' : 'image'));
+          } else {
+            setImageUrl('');
+            setMediaType('image');
+          }
+        } else {
+          setImageUrl('');
+          setMediaType('image');
+        }
+      }, (err) => {
+        console.warn('Failed to subscribe to popupMedia DB value', err);
+      });
+      return () => off();
+    } catch (e) {
+      // If Firebase not configured in this environment, ignore
+      console.warn('Could not subscribe to popupMedia', e);
+    }
+  }, [propImageUrl]);
 
   // Close on Escape for accessibility. Use a ref to avoid effect dependency on `onClose`.
   const onCloseRef = React.useRef(onClose);
@@ -64,10 +143,9 @@ const PopupForm = ({ onClose, forceShow = false }) => {
           exit={{ scale: 0.975, y: 12, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 260, damping: 25 }}
           style={{
-            width: '100%',
-            /* Reduce maxWidth so popup appears smaller on desktop */
+            width: scaledSize.width ? scaledSize.width + 'px' : '100%',
+            height: scaledSize.height ? scaledSize.height + 'px' : 'auto',
             maxWidth: 'min(800px, 92vw)',
-            /* Limit height more strictly to keep image clear and not too large */
             maxHeight: '80vh',
             padding: 0,
             margin: '0 auto'
@@ -75,24 +153,57 @@ const PopupForm = ({ onClose, forceShow = false }) => {
           role="dialog"
           aria-modal="true"
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-            <img
-              src={HeroImg}
-              alt="wiseglobalresearch"
-              decoding="async"
-              loading="lazy"
-              /* Improve clarity: cap height, use cover to fill framed area, and enable crisp rendering */
-              style={{
-                width: '100%',
-                height: 'auto',
-                maxHeight: 'calc(80vh - 48px)',
-                objectFit: 'contain',
-                display: 'block',
-                imageRendering: 'auto',
-                WebkitFontSmoothing: 'antialiased'
-              }}
-              onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'https://via.placeholder.com/1100x700?text=wiseglobalresearch_4.png'; }}
-            />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+            {mediaType === 'video' ? (
+              <video
+                src={imageUrl || ''}
+                muted
+                autoPlay
+                loop
+                playsInline
+                style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+                onLoadedMetadata={(e) => {
+                  try {
+                    const v = e.currentTarget;
+                    setNaturalSize({ width: v.videoWidth, height: v.videoHeight });
+                  } catch (err) {}
+                }}
+              />
+            ) : mediaType === 'embed' ? (
+              <iframe
+                src={imageUrl || ''}
+                title="popup-embed"
+                style={{ width: '100%', height: '100%', border: 0 }}
+                onLoad={() => { /* nothing */ }}
+              />
+            ) : (
+              <img
+                // Use the admin-provided imageUrl when present. If not present, leave src undefined
+                // so we don't load or display a placeholder image.
+                src={imageUrl || undefined}
+                alt="wiseglobalresearch"
+                decoding="async"
+                loading="lazy"
+                /* Improve clarity: cap height, use contain to preserve aspect ratio and let container size match */
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  display: 'block',
+                  imageRendering: 'auto',
+                  WebkitFontSmoothing: 'antialiased'
+                }}
+                onLoad={(e) => {
+                  try {
+                    const img = e.currentTarget;
+                    setNaturalSize({ width: img.naturalWidth, height: img.naturalHeight });
+                  } catch (err) {
+                    // ignore
+                  }
+                }}
+                onError={(e) => { try { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; } catch (err) {} }}
+              />
+            )}
           </div>
 
           <button

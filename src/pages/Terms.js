@@ -45,7 +45,7 @@ function Terms() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
           >
-            Dear Client, Welcome to “Wise Global Research Services Pvt Ltd.”…!!! By accessing this website and any of its pages, you are agreeing to these Terms and Conditions. You also agree that Wise Global Research Services Pvt Ltd. can modify or alter the Terms and Conditions of the use of this service without any liability and prior notice.
+            Dear Client, Welcome to Wise Global Research Services Pvt Ltd. By accessing this website and any of its pages, you are agreeing to these Terms and Conditions. You also agree that Wise Global Research Services Pvt Ltd. can modify or alter the Terms and Conditions of the use of this service without any liability and prior notice.
           </motion.p>
           <motion.p
             initial={{ opacity: 0, x: -20 }}
@@ -92,7 +92,7 @@ function Terms() {
         </section>
 
         <section className="mb-8">
-          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.0, duration: 0.5 }} className="" style={{ color: textColor }}><Trans i18nKey="pages.Terms.investment-in-nse-bse-mcx-stock-market-i"><Trans i18nKey="pages.Terms.investment-in-nse-bse-mcx-stock-market-i-1">Investment in NSE/BSE/MCX/Stock Market is subject to market risk. Client need to follow all the given technical levels & instructions in a strict manner.</Trans></Trans></motion.p>
+          <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.0, duration: 0.5 }} className="" style={{ color: textColor }}><Trans i18nKey="pages.Terms.investment-in-nse-bse-mcx-stock-market-i"><Trans i18nKey="pages.Terms.investment-in-nse-bse-mcx-stock-market-i-1">Investment in NSE/BSE/MCX/Stock Market is subject to market risk. Clients need to follow all the given technical levels & instructions in a strict manner.</Trans></Trans></motion.p>
         </section>
 
         <section className="mb-8">
@@ -115,7 +115,7 @@ function Terms() {
 
         <section className="mb-8">
           <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.5, duration: 0.5 }} className="" style={{ color: textColor }}>
-            Payment of Fee: Subscription Fee is paid in advance followed by KYC process. It is assumed that client has made payment with his free consent. Profit and loss which is the result of the trading and investment will be totally borne by the client. Subscription fees once paid is Non-Refundable. However, if a client is having any kind of issue, they may raise their complaints regarding refund which may be considered as per the terms & condition of Wise Global Research Services Pvt Ltd. Exceptional cases exclude Profit & Loss incurred on recommendations rendered, Availability of client for placing trades or other market associated reasons affecting capital & same in nature.
+            <strong>Payment of Fee:</strong> Subscription Fee is paid in advance followed by KYC process. It is assumed that client has made payment with his free consent. Profit and loss which is the result of the trading and investment will be totally borne by the client. Subscription fees once paid is Non-Refundable. However, if a client is having any kind of issue, they may raise their complaints regarding refund which may be considered as per the terms & condition of Wise Global Research Services Pvt Ltd. Exceptional cases exclude Profit & Loss incurred on recommendations rendered, Availability of client for placing trades or other market associated reasons affecting capital & same in nature.
           </motion.p>
         </section>
 
@@ -179,7 +179,7 @@ function Terms() {
               <Trans i18nKey="pages.Terms.for-all-terms-conditions-please-refer-ou-1">For all Terms & Conditions please refer our Webpage</Trans>
             </Trans>
             <a href="https://wiseglobalresearch.com" className="text-blue-600 hover:underline" style={{ color: textColor }}>
-              <Trans i18nKey="pages.Terms.https-wiseglobalresearch-com">https://wiseglobalresearch.com</Trans>
+              <Trans i18nKey="pages.Terms.https-wiseglobalresearch-com"> https://wiseglobalresearch.com </Trans>
             </a>
           </motion.p>
         </section>

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { ThemeContext } from '../context/ThemeContext';
 
 // Map route segments to human-friendly labels
 const LABELS = {
@@ -43,6 +44,7 @@ function segmentLabel(seg) {
 
 export default function Breadcrumbs() {
   const location = useLocation();
+  const { textColor } = useContext(ThemeContext);
   const parts = location.pathname.replace(/^\/+|\/+$/g, '').split('/');
   const isRoot = location.pathname === '/' || parts[0] === '';
 
@@ -60,20 +62,27 @@ export default function Breadcrumbs() {
     <nav
       aria-label="Breadcrumb"
       role="navigation"
-      className="mb-2 text-sm"
-          style={{ marginTop: 'calc(max(var(--nav-height, 0px), var(--nav-offset, 0px)))' }}
+      className="mb-1 text-sm"
+      // reduce the gap from the nav/alert; keep it tied to nav vars but start closer
+      style={{ marginTop: 'max(var(--nav-height, 0px), var(--nav-offset, 0px))' }}
     >
-      <ol className="flex flex-wrap items-center gap-1 text-white/80">
+      <ol className="flex flex-wrap items-center gap-1" style={{ color: textColor }}>
         {items.map((item, idx) => (
           <li key={`${item.label}-${idx}`} className="flex items-center gap-1">
             {item.to ? (
-              <Link to={item.to} className="underline hover:text-green-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400">
+              <Link
+                to={item.to}
+                className="underline focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+                style={{ color: textColor }}
+              >
                 {item.label}
               </Link>
             ) : (
-              <span aria-current="page" className="text-white">{item.label}</span>
+              <span aria-current="page" style={{ color: textColor }}>{item.label}</span>
             )}
-            {idx < items.length - 1 && <span className="opacity-60" aria-hidden="true">/</span>}
+            {idx < items.length - 1 && (
+              <span aria-hidden="true" style={{ color: textColor, opacity: 0.6 }}>/</span>
+            )}
           </li>
         ))}
       </ol>

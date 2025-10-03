@@ -231,6 +231,10 @@ export default function AccessibilityStatement() {
                 <li>External chat or survey widgets</li>
               </ul>
             </div>
+            <div className="mt-4">
+              <h3 className="text-xl font-semibold">Third-party widget mitigation</h3>
+              <p className="mt-2 text-adaptive">Some third-party widgets (for example, language translation tools) inject iframes and auxiliary forms into the DOM which can produce false-positive findings in automated scans. To reduce scanner noise we apply a defensive sanitation routine in the site footer that marks clearly decorative or auxiliary third-party frames/forms as inert, adds ARIA hints, and sets descriptive titles. For technical details see <a href="/Documentation/third-party-mitigation.md" className="underline">Documentation/third-party-mitigation.md</a>.</p>
+            </div>
           </div>
 
           <div>
@@ -254,6 +258,20 @@ export default function AccessibilityStatement() {
               />
             </div>
           </div>
+
+            {/* Additional media accessibility commitments: transcripts, ISL, captions */}
+            <div className="mt-6">
+              <h3 className="text-xl font-semibold">Transcripts, Captions & ISL</h3>
+              <p className="mt-2 text-adaptive">
+                A detailed, time‑aligned transcript of the media will appear here when available. Transcripts include speaker labels, descriptions of important visuals, and links to any referenced resources.
+              </p>
+              <p className="mt-2 text-adaptive">
+                Captions and transcripts will be provided for all media. When available, a separate video with Indian Sign Language (ISL) interpretation will be provided alongside the media. ISL interpretation is optional and will be indicated on the media player and in the transcript metadata.
+              </p>
+              <p className="mt-2 text-adaptive">
+                If you need the transcript or ISL interpretation in a different format or have difficulty accessing any media, please contact us at <a href="mailto:support@wiseglobalresearch.com">support@wiseglobalresearch.com</a> and we will provide the content in an accessible alternative.
+              </p>
+            </div>
 
           <div>
             <h2 className="text-2xl font-semibold text-adaptive">Controls for you</h2>
@@ -299,8 +317,8 @@ export default function AccessibilityStatement() {
               <Link to="/accessibility-feedback" className="px-4 py-2 rounded-full border text-adaptive underline-offset-2" style={{ background: 'var(--bg-muted, rgba(255,255,255,0.06))', borderColor: 'var(--navbar-border, rgba(255,255,255,0.08))' }}>
                 Open Accessibility Feedback form
               </Link>
-              <a href="mailto:support@wiseglobal.example" className="px-4 py-2 rounded-full border text-adaptive" style={{ background: 'var(--bg-muted, rgba(255,255,255,0.06))', borderColor: 'var(--navbar-border, rgba(255,255,255,0.08))' }}>
-                support@wiseglobal.example
+              <a href="mailto:support@wiseglobalresearch.com" className="px-4 py-2 rounded-full border text-adaptive" style={{ background: 'var(--bg-muted, rgba(255,255,255,0.06))', borderColor: 'var(--navbar-border, rgba(255,255,255,0.08))' }}>
+                support@wiseglobalresearch.com
               </a>
             </div>
             <p className="mt-3 text-adaptive text-sm">

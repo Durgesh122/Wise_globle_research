@@ -48,7 +48,7 @@ const ImpulseOption = () => (
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.ImpulseOption.sample-calls">Sample Calls</Trans></h2>
-  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.ImpulseOption.buy-dixon-14500-ce-above-720-tgt-800-900"><Trans i18nKey="pages.ImpulseOption.buy-dixon-14500-ce-above-720-tgt-800-900-1">BUY DIXON 14500 CE ABOVE 720 TGT 800 900 SL 620</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</div>
     </div>
 
     <div className="mb-8">
@@ -59,7 +59,7 @@ const ImpulseOption = () => (
           <div className="text-3xl font-extrabold text-white mb-2">₹49,000 <span className="text-base font-normal"><Trans i18nKey="pages.ImpulseOption.monthly">/ Monthly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.ImpulseOption.1-to-2-calls-in-a-day">1 to 2 Calls in a day</Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.ImpulseOption.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.ImpulseOption.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.ImpulseOption.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.ImpulseOption.note-pricing-are-excluding-gst-18-1">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
@@ -96,7 +96,7 @@ const ImpulseOption = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.ImpulseOption.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.ImpulseOption.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white">A: Recommendations are delivered via your registered contact channel.</p>
+          <p className="text-white">A: Recommendations are delivered via SMS on your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.ImpulseOption.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.ImpulseOption.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
@@ -109,7 +109,7 @@ const ImpulseOption = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
+          <button type="button" className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

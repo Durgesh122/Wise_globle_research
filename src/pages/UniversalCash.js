@@ -63,7 +63,7 @@ const UniversalCash = () => (
 
     <div className="mb-8">
   <h2 className="text-2xl font-bold mb-2 text-white">Sample Calls</h2>
-  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono">BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50</div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</div>
     </div>
 
     <div className="mb-8">
@@ -74,7 +74,7 @@ const UniversalCash = () => (
           <div className="text-3xl font-extrabold text-white mb-2">₹1,51,000 <span className="text-base font-normal">/ Quarterly</span></div>
           <div className="mb-2 text-white">2 to 3 Calls in a Day</div>
           <Link to="/payment" className="w-full">
-            <button className="w-full bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2">Payment</button>
+            <button type="button" className="w-full bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2">Payment</button>
           </Link>
           <div className="text-xs text-white mt-2">Note: Pricing excludes GST (18%)</div>
         </div>
@@ -111,7 +111,7 @@ const UniversalCash = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white">Q: How will I receive the recommendations?</h3>
-          <p className="text-white">A: Recommendations are shared via your registered contact channel.</p>
+          <p className="text-white">A: Recommendations are delivered via SMS on your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white">Q: Can I get support if I have questions?</h3>
@@ -124,7 +124,7 @@ const UniversalCash = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
+          <button type="button" className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

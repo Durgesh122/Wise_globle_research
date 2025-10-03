@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useContext, startTransition } from 'react';
-import { FiHome, FiGrid, FiUsers, FiBarChart2, FiCreditCard, FiAlertCircle, FiFileText, FiChevronRight, FiSearch } from 'react-icons/fi';
 // useTranslation removed from this file to rely on translateWithFallback helper
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 // Removed react-icons usage per requirement to have no icons in the navbar
@@ -8,6 +7,10 @@ import './Navbar.css';
 import { ThemeContext } from '../context/ThemeContext';
 import TradingViewTicker from './TradingViewTicker';
 import AlertBar from './AlertBar';
+// Prefer react-icons when available for crisp, scalable icons in the mobile drawer.
+// Keep existing inline SVG fallbacks (IconHome, IconClose, etc.) in case react-icons
+// cannot be resolved by the bundler for any reason.
+import { MdClose, MdHome, MdChevronRight, MdSearch, MdCreditCard, MdMiscellaneousServices, MdBusiness, MdGroup, MdArticle, MdAccessibility, MdDashboard, MdMoreHoriz, MdReport, MdContactMail, MdLibraryBooks } from 'react-icons/md';
 
 // Contact info for top header bar (update with real company details)
 const CONTACT = {
@@ -70,6 +73,80 @@ function SocialIcon({ type, className = 'w-6 h-6' }) {
     default:
       return null;
   }
+}
+
+// Minimal inline SVG icons used by the redesigned mobile drawer.
+function IconHome(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.width || 20} height={props.height || 20} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8.5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function IconClose(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.width || 20} height={props.height || 20} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function IconChevron(props) {
+  const rotate = props.rotate ? 'rotate(90 12 12)' : undefined;
+  return (
+    <svg viewBox="0 0 24 24" width={props.width || 18} height={props.height || 18} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <g transform={rotate}>
+        <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </g>
+    </svg>
+  );
+}
+function IconSearch(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.width || 18} height={props.height || 18} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M11 19a8 8 0 100-16 8 8 0 000 16z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function IconCard(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.width || 18} height={props.height || 18} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M2 10h20" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+// Small helper to render a top-nav item: label above icon (desktop)
+
+// Minimal icon map for the top nav: maps logical nav keys to Md icons
+const topNavIconMap = {
+  home: MdHome,
+  services: MdMiscellaneousServices,
+  company: MdBusiness,
+  hrZone: MdGroup,
+  insights: MdArticle,
+  accessibility: MdAccessibility,
+  dashboard: MdDashboard,
+  more: MdMoreHoriz,
+  payment: MdCreditCard,
+  complaint: MdReport,
+  contact: MdContactMail,
+  reports: MdLibraryBooks,
+  search: MdSearch,
+};
+
+// Helper used by desktop nav buttons/links: renders an icon centered above a label
+function TopIconLabel({ Icon, label, color }) {
+  const iconColor = color || 'currentColor';
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+      <span aria-hidden style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: iconColor }}>
+        {Icon ? <Icon size={18} /> : null}
+      </span>
+      <span style={{ fontSize: 12, fontWeight: 600, lineHeight: 1 }}>{label}</span>
+    </div>
+  );
 }
 
 // Removed older TopContactBar variant and inline icon components; using a single theme-aware TopContactBar below.
@@ -268,6 +345,17 @@ const navLinks = [
   { path: '/research-reports', labelKey: 'navbar.researchReports' },
 ];
 
+// Helper to map labelKey to topNavIconMap key for standalone navLinks
+function navLinkToIconKey(labelKey) {
+  if (!labelKey) return null;
+  if (labelKey.includes('payment')) return 'payment';
+  if (labelKey.includes('complaint')) return 'complaint';
+  if (labelKey.includes('research') || labelKey.includes('reports')) return 'reports';
+  // fallback: use last segment
+  const parts = labelKey.split('.');
+  return parts[parts.length - 1];
+}
+
 const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobile, mobileOpen, setMobileOpen, closeDrawer, categoryIcon: CategoryIcon, categoryIconColor }) => {
   const [isOpen, setIsOpen] = useState(false);
   const timeoutId = useRef(null);
@@ -321,7 +409,7 @@ const MegaMenu = React.memo(({ labelKey, categories, location, textColor, isMobi
           aria-label={`Toggle ${translateWithFallback(null, labelKey)} menu`}
           onClick={handleClick}
         >
-          {translateWithFallback(null, labelKey)}
+          <TopIconLabel Icon={topNavIconMap.services} label={translateWithFallback(null, labelKey)} />
         </button>
           <div
           className={`absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-lg border border-[var(--primary-green)] text-black shadow-lg rounded-xl z-50 flex flex-row p-4 w-[90vw] lg:w-[84vw] max-w-[1000px] transition-opacity duration-300 ${
@@ -426,6 +514,10 @@ function TopContactBar() {
   } catch (e) {
     // ignore and fall back to theme value
   }
+  // Normalize a CSS-friendly fallback color that prefers CSS vars first
+  const linkColor = (typeof window !== 'undefined')
+    ? (getComputedStyle(document.documentElement).getPropertyValue('--navbar-color').trim() || textColor || 'var(--text-color, #0b1220)')
+    : (textColor || 'var(--text-color, #0b1220)');
   // Ensure icons aren't visually clipped by aligning to middle and nudging slightly down
   const iconStyle = { display: 'block', verticalAlign: 'middle', position: 'relative', top: 0, marginRight: 6, overflow: 'visible' };
 
@@ -443,26 +535,26 @@ function TopContactBar() {
             href={`mailto:${CONTACT.email}`}
             className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded px-1 inline-flex items-center gap-2 h-6 whitespace-nowrap"
             aria-label={`Email: ${CONTACT.email}`}
-            style={{ color: '#fff', fontWeight: 'bold', letterSpacing: '0.5px' }}
+            style={{ color: linkColor, fontWeight: 'bold', letterSpacing: '0.5px' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" role="img" aria-label="Email" style={iconStyle} className="w-6 h-6">
               <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 3.2l-8 5-8-5V6h16v1.2zM4 18V9.6l7.4 4.63a1 1 0 001.2 0L20 9.6V18H4z" />
             </svg>
             <span className="truncate">{CONTACT.email}</span>
           </a>
-          <span className="hidden sm:inline mx-2" aria-hidden style={{ color: '#fff', fontWeight: 'bold' }}>│</span>
+          <span className="hidden sm:inline mx-2" aria-hidden style={{ color: linkColor, fontWeight: 'bold' }}>│</span>
           <a
             href={`tel:${CONTACT.phone}`}
             className="hover:text-[var(--primary-green)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-green)] rounded px-1 inline-flex items-center gap-2 h-6 whitespace-nowrap"
             aria-label={`Call: ${CONTACT.phone}`}
-            style={{ color: '#fff', fontWeight: 'bold', letterSpacing: '0.5px' }}
+            style={{ color: linkColor, fontWeight: 'bold', letterSpacing: '0.5px' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" role="img" aria-label="Phone" style={iconStyle} className="w-6 h-6">
               <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.05-.24c1.12.37 2.33.57 3.54.57.55 0 1 .45 1 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.21.2 2.42.57 3.54a1 1 0 01-.24 1.05l-2.2 2.2z" />
             </svg>
             <span className="truncate">{CONTACT.phone}</span>
           </a>
-          <span className="hidden sm:inline mx-2" aria-hidden style={{ color: '#fff', fontWeight: 'bold' }}>│</span>
+          <span className="hidden sm:inline mx-2" aria-hidden style={{ color: linkColor, fontWeight: 'bold' }}>│</span>
           {/* Search removed by request - contact info only */}
           <div className="flex items-center gap-2 top-contact-socials min-w-0 ml-2">
             {Object.entries(CONTACT.socials).map(([key, url]) => (
@@ -473,7 +565,7 @@ function TopContactBar() {
                 rel="noopener noreferrer"
                 aria-label={`Open ${key} profile`}
                 className="focus:outline-none focus:ring-2 focus:ring-[var(--primary-green)] rounded p-1"
-                style={{ background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || textColor, borderRadius: 8 }}
+                style={{ background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || linkColor, borderRadius: 8 }}
               >
                 <SocialIcon type={key} className="w-5 h-5" />
               </a>
@@ -485,10 +577,10 @@ function TopContactBar() {
   );
 }
 function Navbar() {
-  useNavigate();
+  const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [servicesMobileOpen, setServicesMobileOpen] = useState(false);
-  const [mobileDropdownsOpen, setMobileDropdownsOpen] = useState({});
+  // mobileDropdownsOpen removed — redesigned drawer uses native details/summary and grouped lists
   const location = useLocation();
   const drawerRef = useRef();
   const firstFocusableRef = useRef(null);
@@ -537,18 +629,6 @@ function Navbar() {
     }
   };
   const baseSurfaceColor = getBaseSurface(textColor);
-  const hoverTint = (() => {
-    try {
-      let hex = (textColor || '').trim().replace('#', '');
-      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-      const r = parseInt(hex.slice(0,2), 16), g = parseInt(hex.slice(2,4), 16), b = parseInt(hex.slice(4,6), 16);
-      const luminance = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
-      // If text is dark => light background; use subtle dark hover, else use subtle light hover
-      return luminance < 0.5 ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.08)';
-    } catch {
-      return 'rgba(255,255,255,0.08)';
-    }
-  })();
 
   // Semi-transparent surface based on theme text color luminance
   const getTranslucentSurface = (tc, alpha = 0.5) => {
@@ -584,7 +664,7 @@ function Navbar() {
     startTransition(() => {
       setDrawerOpen(false);
       setServicesMobileOpen(false);
-      setMobileDropdownsOpen({});
+      // mobileDropdownsOpen state removed in refactor
     });
   };
 
@@ -609,11 +689,7 @@ function Navbar() {
   };
   React.useMemo(() => buildIndex(), []);
 
-  const toggleMobileDropdown = (key) => {
-    startTransition(() => {
-      setMobileDropdownsOpen(prev => ({ ...prev, [key]: !prev[key] }));
-    });
-  };
+  // toggleMobileDropdown removed (no longer used)
 
   useEffect(() => {
     const handleResize = () => {
@@ -809,7 +885,7 @@ function Navbar() {
   const mobileDrawerStyles = {
   position: 'fixed',
   top: 'calc(var(--nav-offset, 0px) + env(safe-area-inset-top, 0px))',
-  right: 0,
+  left: 0,
   height: 'calc(100dvh - var(--nav-offset, 0px) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))',
     width: 'min(80vw, 350px)', // Adjusted for better mobile responsiveness
     maxWidth: '100vw',
@@ -829,7 +905,8 @@ function Navbar() {
     border: '1px solid rgba(0,0,0,0.06)',
     boxShadow: '0 0 15px rgba(0,0,0,0.2)',
     zIndex: 9999,
-    transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
+  // Slide in from the left: when closed translateX(-100%) moves it off-canvas to the left
+  transform: drawerOpen ? 'translateX(0)' : 'translateX(-100%)',
     transition: 'transform 0.3s ease-in-out',
     overflowY: 'auto',
     display: 'block',
@@ -851,7 +928,7 @@ function Navbar() {
   top: `var(--nav-offset, 0px)`,
       zIndex: 110,
     }}
-    className="fixed w-full z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-b-xl"
+    className="fixed w-full z-50 shadow-md border-b-4 border-[var(--primary-green)] rounded-none"
   >
   <TradingViewTicker />
   <TopContactBar />
@@ -876,7 +953,7 @@ function Navbar() {
                       to="/"
                       className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname==='/' ? ' active' : ''}`}
                     >
-                      {translateWithFallback(null, 'navbar.home')}
+                      <TopIconLabel Icon={topNavIconMap.home} label={translateWithFallback(null, 'navbar.home')} />
                     </Link>
 
               <MegaMenu labelKey="navbar.services.title" categories={servicesMenu} location={location} textColor={textColor} isMobile={false} closeDrawer={closeDrawer} />
@@ -899,9 +976,9 @@ function Navbar() {
                       }
                     }}
                 >
-                    {translateWithFallback(null, dropdown.labelKey)}
+                  <TopIconLabel Icon={topNavIconMap[key]} label={translateWithFallback(null, dropdown.labelKey)} />
                 </button>
-                <div className="absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-md border border-[var(--primary-green)] text-black shadow-md rounded-md z-50 group-hover:flex flex-col min-w-[180px] xl:min-w-[200px] p-2 hidden transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-hover:visible animate-slideDown" role="menu" onKeyDown={(e) => {
+                <div className="absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-md border border-[var(--primary-green)] text-black shadow-md z-50 group-hover:flex flex-col min-w-[180px] xl:min-w-[200px] p-2 hidden transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-hover:visible animate-slideDown" role="menu" onKeyDown={(e) => {
                   const links = e.currentTarget.querySelectorAll('a');
                   const first = links[0];
                   const last = links[links.length - 1];
@@ -943,7 +1020,7 @@ function Navbar() {
                   className={`nav-item font-semibold text-xs xl:text-base px-2 py-1 ml-2`}
                           style={{ color: `var(--navbar-color, var(--text-color, ${navColorFallback}))` }}
                 >
-                  {translateWithFallback(null, 'navbar.accessibility.search')}
+                  <TopIconLabel Icon={topNavIconMap.search} label={translateWithFallback(null, 'navbar.accessibility.search')} />
                 </Link>
               )}
               </div>
@@ -956,12 +1033,12 @@ function Navbar() {
                     className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${location.pathname===link.path ? ' active' : ''}`}
                     style={{ color: `var(--navbar-color, var(--text-color, ${navColorFallback}))` }}
                   >
-      {translateWithFallback(null, link.labelKey)}
+      <TopIconLabel Icon={topNavIconMap[navLinkToIconKey(link.labelKey)]} label={translateWithFallback(null, link.labelKey)} />
                   </Link>
           ))}
 
           {/* Render 'more' dropdown last on desktop */}
-          {moreDropdown && (
+            {moreDropdown && (
             <div className="relative group" key="more">
               <button
                 className={`nav-item font-semibold text-xs xl:text-base px-2 py-1${moreDropdown.items.some(item => location.pathname.startsWith(item.path)) ? ' active' : ''}`}
@@ -969,9 +1046,9 @@ function Navbar() {
                 aria-label={`Toggle ${translateWithFallback(null, moreDropdown.labelKey)} menu`}
                 aria-haspopup="true"
               >
-                {translateWithFallback(null, moreDropdown.labelKey)}
+                <TopIconLabel Icon={topNavIconMap.more} label={translateWithFallback(null, moreDropdown.labelKey)} />
               </button>
-              <div className="absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-md border border-[var(--primary-green)] text-black shadow-md rounded-md z-50 group-hover:flex flex-col min-w-[180px] xl:min-w-[200px] p-2 hidden transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-hover:visible animate-slideDown" role="menu">
+              <div className="absolute top-full left-0 mt-0 bg-white/90 backdrop-blur-md border border-[var(--primary-green)] text-black shadow-md z-50 group-hover:flex flex-col min-w-[180px] xl:min-w-[200px] p-2 hidden transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-hover:visible animate-slideDown" role="menu">
                 {moreDropdown.items.map((item) => (
                   <Link
                     key={item.path}
@@ -997,15 +1074,20 @@ function Navbar() {
               aria-expanded={drawerOpen}
               aria-controls="mobile-menu"
             >
-                {drawerOpen ? (
-                  <span className="mobile-close-btn" style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>Close</span>
-                ) : (
-                  <div className={`hamburger ${drawerOpen ? 'open' : ''}`} style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                  </div>
-                )}
+                <div className={`drawer-toggle ${drawerOpen ? 'open' : ''}`} aria-hidden>
+                  {/* When closed show hamburger, when open show close icon (animated via CSS) */}
+                  {!drawerOpen ? (
+                    <div className={`hamburger ${drawerOpen ? 'open' : ''}`} style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>
+                      <div className="bar" />
+                      <div className="bar" />
+                      <div className="bar" />
+                    </div>
+                  ) : (
+                    <span className="toggle-icon" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                      {typeof MdClose === 'function' ? <MdClose size={20} /> : <IconClose width={20} height={20} />}
+                    </span>
+                  )}
+                </div>
           </button>
         </div>
       </nav>
@@ -1033,182 +1115,99 @@ function Navbar() {
         />
       )}
 
-      {/* Mobile Menu with Inline Styles */}
+      {/* Redesigned Mobile Menu */}
   <div style={mobileDrawerStyles} ref={drawerRef} className={`mobile-menu ${drawerOpen ? 'open' : ''}`} id="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title">
-        <div className={`mobile-menu-items mobile-stagger`} style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <h2 id="mobile-menu-title" className="sr-only">Main menu</h2>
-                {/* Mobile search moved to TopContactBar for better UX; leaving a small hint for keyboard users */}
-                <div className="sr-only" aria-hidden>Mobile search moved to top contact bar</div>
-          {/* Primary links with icons */}
-          <Link to="/" className="nav-item font-semibold py-1" onClick={closeDrawer} tabIndex={0} style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', background: 'transparent', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 9, background: 'rgba(255,255,255,0.06)', flexShrink: 0 }}>
-              <FiHome size={18} style={{ color: iconColors.home }} />
-            </span>
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, 'navbar.home')}</span>
-          </Link>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* Header: logo + title + close */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 10, overflow: 'hidden', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src={wiseLogo} alt="Wise" style={{ width: 36, height: 36, objectFit: 'cover' }} />
+          </div>
+          <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-color)' }}>Menu</div>
+        </div>
+        <button aria-label="Close menu" onClick={closeDrawer} style={{ background: 'transparent', border: 'none', padding: 8, color: 'var(--text-color)' }}>
+          {/* Use react-icons where possible; fall back to inline IconClose when necessary */}
+          {typeof MdClose === 'function' ? <MdClose size={20} /> : <IconClose width={20} height={20} />}
+        </button>
+      </div>
 
-          <hr style={{ border: 'none', height: 1, background: 'rgba(128,128,128,0.2)', margin: '10px 0' }} />
+      {/* Content: scrollable lists */}
+      <div style={{ padding: 12, overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {/* Home */}
+        <button onClick={() => { closeDrawer(); navigate('/'); }} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '10px 12px', borderRadius: 10, background: 'transparent', border: 'none', color: 'var(--text-color)' }}>
+            <div style={{ width: 40, height: 40, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.04)' }}>
+            {typeof MdHome === 'function' ? <MdHome size={18} style={{ color: iconColors.home }} /> : <IconHome width={18} height={18} style={{ color: iconColors.home }} />}
+          </div>
+          <div style={{ fontWeight: 600 }}>{translateWithFallback(null, 'navbar.home')}</div>
+        </button>
 
-          <MegaMenu 
-                style={{ color: mobileDrawerTextColor }}
-            categories={servicesMenu} 
-            location={location} 
-            isMobile={true} 
-            mobileOpen={servicesMobileOpen} 
-            setMobileOpen={setServicesMobileOpen} 
-            closeDrawer={closeDrawer} 
-          />
+        <div style={{ height: 1, background: 'rgba(128,128,128,0.12)', borderRadius: 2 }} />
 
-          {dropdownEntriesWithoutMore.map(([key, dropdown]) => (
-            <div key={key}>
-              <button
-                className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
-                onClick={() => toggleMobileDropdown(key)}
-                aria-expanded={!!mobileDropdownsOpen[key]}
-                aria-controls={`mobile-dd-${key}`}
-              >
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {key === 'company' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiUsers size={16} style={{ color: iconColors.company || textColor }} /></span>}
-                  {key === 'hrZone' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiUsers size={16} style={{ color: iconColors.hrZone || textColor }} /></span>}
-                  {key === 'insights' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiBarChart2 size={16} style={{ color: iconColors.insights || textColor }} /></span>}
-                  {key === 'accessibility' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiAlertCircle size={16} style={{ color: iconColors.accessibility || textColor }} /></span>}
-                  {key === 'dashboard' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiGrid size={16} style={{ color: iconColors.dashboard || textColor }} /></span>}
-                  {key === 'more' && <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiFileText size={16} style={{ color: iconColors.more || textColor }} /></span>}
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, dropdown.labelKey)}</span>
-                </span>
-                <FiChevronRight size={18} className={`ml-2 transition-transform duration-200 ${mobileDropdownsOpen[key] ? 'rotate-90' : ''}`} />
-              </button>
-              <div id={`mobile-dd-${key}`} className={`overflow-hidden transition-all duration-300 ${mobileDropdownsOpen[key] ? 'max-h-96' : 'max-h-0'}`}>
-                {dropdown.items.map((item) => (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        className="nav-item block py-1 pl-2"
-                        onClick={closeDrawer}
-                        tabIndex={drawerOpen ? 0 : -1}
-                        style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 8, padding: '10px 12px', margin: '2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                      >
-      <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, background: 'rgba(0,0,0,0.04)', flexShrink: 0 }}><FiChevronRight size={14} style={{ opacity: 0.7 }} /></span>
-      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, item.labelKey)}</span>
-                      </Link>
+        {/* Services collapsible */}
+        <div>
+          <details open={servicesMobileOpen} onToggle={(e) => setServicesMobileOpen(e.target.open)}>
+              <summary style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', borderRadius: 10, cursor: 'pointer', listStyle: 'none', color: 'var(--primary-green)' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.04)' }}>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zM13 21h8v-10h-8v10zm0-18v6h8V3h-8z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </div>
+              <div style={{ fontWeight: 700 }}>Services</div>
+              <span style={{ marginLeft: 'auto' }}>{typeof MdChevronRight === 'function' ? <MdChevronRight size={18} style={{ transform: servicesMobileOpen ? 'rotate(90deg)' : 'none', transition: 'transform .18s' }} /> : <IconChevron rotate={servicesMobileOpen} />}</span>
+            </summary>
+            <div style={{ paddingLeft: 8, paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {servicesMenu.map((cat) => (
+                <div key={cat.labelKey}>
+                  <div style={{ fontWeight: 700, color: 'var(--primary-green)', padding: '6px 8px', fontSize: 13 }}>{translateWithFallback(null, cat.labelKey)}</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    {cat.items.map(item => (
+                      <Link key={item.path} to={item.path} onClick={closeDrawer} style={{ padding: '8px 10px', borderRadius: 8, color: 'var(--text-color)', textDecoration: 'none', display: 'block' }}>{translateWithFallback(null, item.labelKey)}</Link>
                     ))}
-              </div>
-            </div>
-          ))}
-
-          {/* Mobile quick search link after company section */}
-          <Link
-            to="/search"
-            className="nav-item block py-1"
-            onClick={closeDrawer}
-            style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-          >
-            <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 9, background: 'rgba(255,255,255,0.04)', flexShrink: 0 }}>
-              <FiSearch size={18} style={{ color: iconColors.contact || textColor }} />
-            </span>
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, 'navbar.accessibility.search')}</span>
-          </Link>
-
-            {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`nav-item block py-1${location.pathname===link.path ? ' active' : ''}`}
-              onClick={closeDrawer}
-              style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 10, padding: '12px 14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = hoverTint)}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-            >
-              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 9, background: 'rgba(255,255,255,0.04)', flexShrink: 0 }}>
-                {link.path === '/payment' && <FiCreditCard size={18} style={{ color: iconColors.payment || textColor }} />}
-                {link.path === '/complaint' && <FiAlertCircle size={18} style={{ color: iconColors.complaint || textColor }} />}
-                {link.path === '/search' && <FiSearch size={18} style={{ color: iconColors.contact || textColor }} />}
-                {link.path === '/research-reports' && <FiFileText size={18} style={{ color: iconColors.reports || textColor }} />}
-              </span>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, link.labelKey)}</span>
-            </Link>
-          ))}
-
-          {/* Render 'more' dropdown last on mobile */}
-          {moreDropdown && (
-            <div>
-              <button
-                className="w-full flex justify-between items-center font-bold text-base py-2 text-[var(--primary-green)] focus:outline-none"
-                onClick={() => toggleMobileDropdown('more')}
-                aria-expanded={!!mobileDropdownsOpen['more']}
-                aria-controls={`mobile-dd-more`}
-              >
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}><FiFileText size={16} style={{ color: iconColors.more || textColor }} /></span>
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, moreDropdown.labelKey)}</span>
-                </span>
-                <FiChevronRight size={18} className={`ml-2 transition-transform duration-200 ${mobileDropdownsOpen['more'] ? 'rotate-90' : ''}`} />
-              </button>
-              <div id={`mobile-dd-more`} className={`overflow-hidden transition-all duration-300 ${mobileDropdownsOpen['more'] ? 'max-h-96' : 'max-h-0'}`}>
-                {moreDropdown.items.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="nav-item block py-1 pl-2"
-                    onClick={closeDrawer}
-                    tabIndex={drawerOpen ? 0 : -1}
-                    style={{ color: mobileDrawerTextColor, display: 'flex', alignItems: 'center', gap: 10, borderRadius: 8, padding: '10px 12px', margin: '2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 44 }}
-                  >
-                    <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, background: 'rgba(0,0,0,0.04)', flexShrink: 0 }}><FiChevronRight size={14} style={{ opacity: 0.7 }} /></span>
-                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateWithFallback(null, item.labelKey)}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-            {/* Mobile back button to close drawer */}
-            <button
-              type="button"
-              className="nav-item mobile-back-btn"
-              onClick={closeDrawer}
-              aria-label="Close mobile menu"
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') closeDrawer();
-                if (e.key === 'Tab') {
-                  const focusables = drawerRef.current?.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
-                  if (!focusables || !focusables.length) return;
-                  const first = focusables[0];
-                  const last = focusables[focusables.length - 1];
-                  if (e.shiftKey && document.activeElement === first) {
-                    e.preventDefault();
-                    last.focus();
-                  } else if (!e.shiftKey && document.activeElement === last) {
-                    e.preventDefault();
-                    first.focus();
-                  }
-                }
-              }}
-            >
-              Back
-            </button>
-            {/* Social icons row (mobile) */}
-            <div className="top-contact-socials" style={{ display: 'flex', gap: 8, marginTop: 8, marginLeft: 2 }} aria-hidden={false}>
-              {Object.entries(CONTACT.socials).map(([key, url]) => (
-                <a
-                  key={key}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open ${key} profile`}
-                  className="focus:outline-none"
-                  style={{ background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || mobileDrawerTextColor, borderRadius: 8, padding: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                  <SocialIcon type={key} className="w-5 h-5" />
-                </a>
+                  </div>
+                </div>
               ))}
             </div>
+          </details>
+        </div>
+
+        {/* Other dropdowns rendered as grouped links */}
+        {dropdownEntriesWithoutMore.map(([key, dropdown]) => (
+          <div key={key} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div style={{ fontWeight: 700, padding: '6px 8px', color: 'var(--primary-green)' }}>{translateWithFallback(null, dropdown.labelKey)}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {dropdown.items.map(item => (
+                <Link key={item.path} to={item.path} onClick={closeDrawer} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, color: 'var(--text-color)', textDecoration: 'none' }}>{translateWithFallback(null, item.labelKey)}</Link>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {/* Quick actions: search + contact + navLinks */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 6 }}>
+          <Link to="/search" onClick={closeDrawer} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, color: 'var(--text-color)', textDecoration: 'none' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.04)' }}>
+              {typeof MdSearch === 'function' ? <MdSearch size={18} /> : <IconSearch />}
+            </div>
+            <div>{translateWithFallback(null, 'navbar.accessibility.search')}</div>
+          </Link>
+          {navLinks.map(link => (
+            <Link key={link.path} to={link.path} onClick={closeDrawer} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, color: 'var(--text-color)', textDecoration: 'none' }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.04)' }}>{link.path === '/payment' ? (typeof MdCreditCard === 'function' ? <MdCreditCard size={18} /> : <IconCard />) : (typeof MdChevronRight === 'function' ? <MdChevronRight size={18} /> : <IconChevron />)}</div>
+              <div>{translateWithFallback(null, link.labelKey)}</div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Social row */}
+        <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+          {Object.entries(CONTACT.socials).map(([key, url]) => (
+            <a key={key} href={url} target="_blank" rel="noreferrer" style={{ background: SOCIAL_ICON_BG, color: SOCIAL_ICON_COLORS[key] || mobileDrawerTextColor, borderRadius: 8, padding: 8, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SocialIcon type={key} className="w-5 h-5" />
+            </a>
+          ))}
         </div>
       </div>
+    </div>
+  </div>
     </>
   );
 }

@@ -165,7 +165,7 @@ const Blogs = () => {
             </div>
           </motion.div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4"><Trans i18nKey="pages.Blogs.investment-insights-market-trends"><Trans i18nKey="pages.Blogs.investment-insights-market-trends-1">Investment Insights & Market Trends</Trans></Trans></h1>
-          <p className="text-lg text-white max-w-2xl mx-auto"><Trans i18nKey="pages.Blogs.stay-informed-with-sebi-compliant-resear"><Trans i18nKey="pages.Blogs.stay-informed-with-sebi-compliant-resear-1">Stay informed with SEBI-compliant research articles curated by</Trans></Trans><span className="font-semibold text-blue-300"><Trans i18nKey="pages.Blogs.wise-global-research">Wise Global Research</Trans></span><Trans i18nKey="pages.Blogs.for-indian-traders">for Indian traders.</Trans></p>
+          <p className="text-lg text-white max-w-2xl mx-auto"><Trans i18nKey="pages.Blogs.stay-informed-with-sebi-compliant-resear"><Trans i18nKey="pages.Blogs.stay-informed-with-sebi-compliant-resear-1">Stay informed with SEBI-compliant research articles curated by </Trans></Trans><span className="font-semibold text-blue-300"><Trans i18nKey="pages.Blogs.wise-global-research">Wise Global Research </Trans></span><Trans i18nKey="pages.Blogs.for-indian-traders">for Indian traders.</Trans></p>
         </motion.div>
 
         {/* Featured Post Section */}

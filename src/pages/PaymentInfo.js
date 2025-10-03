@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import { FaMoneyCheckAlt, FaUniversity } from 'react-icons/fa';
@@ -7,6 +7,7 @@ import hdfcQrImage from '../assets/images/Hdfc1.png';
 import hdfcLogo from '../assets/images/hdfc.png';
 import idfcLogo from '../assets/images/idfc.png';
 import { Helmet } from 'react-helmet-async';
+import { ThemeContext } from '../context/ThemeContext';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -22,6 +23,7 @@ const fadeInUp = {
 };
 
 const PaymentInfo = () => {
+  const { textColor } = useContext(ThemeContext);
   const bankDetails = [
     {
       bankName: "HDFC BANK",
@@ -57,7 +59,7 @@ const PaymentInfo = () => {
         <link rel="canonical" href="https://wiseglobalresearch.com/paymentinfo" />
       </Helmet>
       <motion.div
-        className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 sm:py-16 px-2 sm:px-4 lg:px-8"
+        className="min-h-screen bg-white rounded-lg shadow-sm py-8 sm:py-16 px-2 sm:px-4 lg:px-8"
         initial="hidden"
         animate="visible"
       >
@@ -85,7 +87,7 @@ const PaymentInfo = () => {
             {bankDetails.map((bank, index) => (
               <motion.div
                 key={index}
-                className="bg-white dark:bg-gray-800 p-4 xs:p-5 sm:p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center"
+                className="bg-white p-4 xs:p-5 sm:p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-center"
                 variants={fadeInUp}
                 custom={3 + index * 0.5}
               >
@@ -96,13 +98,22 @@ const PaymentInfo = () => {
                   loading="lazy"
                 />
                 <h3 className="text-base xs:text-lg sm:text-xl font-semibold text-gray-800 dark:text-white mb-1 sm:mb-2"><Trans i18nKey="pages.PaymentInfo.scan-pay">Scan & Pay</Trans></h3>
-                <div className="w-36 h-36 xs:w-44 xs:h-44 sm:w-48 sm:h-48 p-1 xs:p-2 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner">
-                  <img
-                    src={bank.bankName === 'HDFC BANK' ? hdfcQrImage : qrImage}
-                    alt="QR Code"
-                    className="w-full h-full object-cover rounded-md"
-                    loading="lazy"
-                  />
+                <div className="w-48 h-48 xs:w-56 xs:h-56 sm:w-64 sm:h-64 p-2 rounded-lg">
+                  {/* QR panel: use solid white for maximum scan contrast, use theme textColor for subtle border */}
+                  <div
+                    className="rounded-md p-2 w-full h-full flex items-center justify-center shadow-inner"
+                    style={{ backgroundColor: '#ffffff', border: `1px solid ${textColor || '#e6eef8'}` }}
+                  >
+                    <a href={bank.bankName === 'HDFC BANK' ? hdfcQrImage : qrImage} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src={bank.bankName === 'HDFC BANK' ? hdfcQrImage : qrImage}
+                        alt="QR Code"
+                        className="max-w-full max-h-full object-contain filter contrast-125"
+                        style={{ imageRendering: 'auto' }}
+                        loading="lazy"
+                      />
+                    </a>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -121,7 +132,7 @@ const PaymentInfo = () => {
               {bankDetails.map((bank, index) => (
                 <motion.div
                   key={index}
-                  className={`bg-white dark:bg-gray-800 p-4 xs:p-5 sm:p-6 rounded-2xl shadow-lg border-t-4 border-${bank.theme}-500`}
+                  className={`bg-white p-4 xs:p-5 sm:p-6 rounded-2xl shadow-sm border-t-4 border-${bank.theme}-500`}
                   variants={fadeInUp}
                   custom={4 + index * 0.5}
                 >

@@ -62,11 +62,12 @@ const MarketOverview = () => {
                 <div className="px-4 py-3">
                   <div className="flex items-center justify-between">
                     <h3 className="font-bold text-base sm:text-lg" style={{ color: '#111' }}>{item.name}</h3>
-                    <FaChartLine className={`text-xl sm:text-2xl ${item.isUp ? 'text-green-500' : 'text-red-500'}`} />
+                    <span aria-hidden="false" className="sr-only">{item.isUp ? 'Rising' : 'Falling'}</span>
+                    <FaChartLine className={`text-xl sm:text-2xl`} aria-hidden="true" style={{ color: item.isUp ? '#00692d' : '#a30000' }} />
                   </div>
                   <div className="mt-4">
                     <p className="text-xl sm:text-2xl font-bold" style={{ color: '#111' }}>{item.value}</p>
-                    <p className={`text-xs sm:text-sm ${item.isUp ? 'text-green-500' : 'text-red-500'}`}>{item.change}</p>
+                    <p className={`text-base font-semibold`} style={{ color: item.isUp ? '#00692d' : '#a30000' }}>{item.change}</p>
                   </div>
                 </div>
               </motion.div>

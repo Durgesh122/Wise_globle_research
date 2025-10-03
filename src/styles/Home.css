@@ -66,7 +66,12 @@
 
 .home-hero {
   position: relative;
-  height: 100vh;
+  /* Use dynamic viewport height where supported (svh) with a fallback to 100vh.
+     Use min-height instead of forcing exact height so mobile browser chrome won't
+     cause unwanted layout/zoom during address-bar show/hide. */
+  min-height: 100svh;
+  min-height: 100vh; /* fallback for browsers that don't support svh */
+  height: auto; /* allow content to expand beyond the viewport when necessary */
   display: flex;
   align-items: center;
   justify-content: center;

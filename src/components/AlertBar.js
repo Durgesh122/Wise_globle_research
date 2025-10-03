@@ -5,11 +5,54 @@ import { ALERT_BILINGUAL } from '../constants/alertMessage';
 const AlertBar = ({ variant = 'attached' }) => {
   const message = ALERT_BILINGUAL;
 
-  const prefersReduced = React.useMemo(() =>
-    typeof window !== 'undefined' && window.matchMedia
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false
-  , []);
+  // Respect both OS preference and app-level `data-reduce-motion` toggle.
+  const [prefersReduced, setPrefersReduced] = React.useState(() => {
+    if (typeof window === 'undefined') return false;
+    const media = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+    const app = document.documentElement && document.documentElement.getAttribute('data-reduce-motion') === 'true';
+    return !!(media || app);
+  });
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const mql = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    const update = () => {
+      const mediaVal = mql ? mql.matches : false;
+      const appVal = document.documentElement && document.documentElement.getAttribute('data-reduce-motion') === 'true';
+      setPrefersReduced(!!(mediaVal || appVal));
+    };
+
+    if (mql) {
+      if (mql.addEventListener) mql.addEventListener('change', update);
+      else if (mql.addListener) mql.addListener(update);
+    }
+
+    // Observe app-level attribute changes on <html>
+    const obs = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.type === 'attributes' && m.attributeName === 'data-reduce-motion') {
+          update();
+          break;
+        }
+      }
+    });
+    try {
+      obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduce-motion'] });
+    } catch (e) {
+      // fall back silently
+    }
+
+    // initial read
+    update();
+
+    return () => {
+      if (mql) {
+        if (mql.removeEventListener) mql.removeEventListener('change', update);
+        else if (mql.removeListener) mql.removeListener(update);
+      }
+      obs.disconnect();
+    };
+  }, []);
 
   // Animate the container by 50% of its own width. Since the container holds the message twice,
   // this creates a perfect, seamless loop.
@@ -79,7 +122,8 @@ const AlertBar = ({ variant = 'attached' }) => {
       translate="no"
       style={{
         position: isAttached ? 'sticky' : 'static',
-        top: isAttached ? `calc(var(--nav-offset, 0px) + ${navHeight}px)` : 'auto',
+        // Include any space reserved for the fixed ticker via CSS variable
+        top: isAttached ? `calc(var(--nav-offset, 0px) + ${navHeight}px + var(--ticker-height, 0px))` : 'auto',
         zIndex: 49,
         backgroundColor: alertBackground,
         borderTop: `4px solid ${alertBorderTop}`,
@@ -90,7 +134,8 @@ const AlertBar = ({ variant = 'attached' }) => {
       aria-live="polite"
     >
       <motion.div
-        className="inline-flex whitespace-nowrap items-center text-sm md:text-base will-change-transform transform-gpu py-2"
+        className="inline-flex whitespace-nowrap items-center text-sm md:text-base will-change-transform transform-gpu py-2 lg:py-2"
+        style={{ paddingLeft: '1rem', paddingRight: '1rem' }}
         animate={marqueeAnimate}
         transition={marqueeTransition}
       >

@@ -377,6 +377,47 @@ export default function RouteAnnouncer() {
   // Ensure the floating menu is closed on navigation.
   }, [pathname]);
 
+  // Helper to mark that a user gesture occurred and flush any pending audio actions.
+  // We keep a stable function via ref so effects can safely reference it without
+  // triggering redeclaration/use-before-define issues.
+  const markUserGestureAndFlushRef = useRef(null);
+  if (!markUserGestureAndFlushRef.current) {
+    markUserGestureAndFlushRef.current = () => {
+      userGestureRef.current = true;
+      try {
+        const ctx = beepCtxRef.current;
+        if (ctx && ctx.state === 'suspended') try { ctx.resume(); } catch(_) {}
+        if (beepPendingRef.current) {
+          try { playBeep(); } catch(_) {}
+          beepPendingRef.current = false;
+        }
+      } catch(_) {}
+    };
+  }
+  const markUserGestureAndFlush = markUserGestureAndFlushRef.current;
+
+  // Listen for external 'open-speaker-panel' events (dispatched by other controls)
+  // so the panel opens when mobile/floating buttons dispatch the event.
+  const panelRef = useRef(null);
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+    const onOpen = (e) => {
+      try {
+        markUserGestureAndFlush();
+      } catch (_) {}
+      setMenuOpen(true);
+      // focus the panel for keyboard users (if available)
+      try { if (panelRef.current && typeof panelRef.current.focus === 'function') panelRef.current.focus(); } catch(_) {}
+    };
+
+    document.addEventListener('open-speaker-panel', onOpen);
+    if (window && window.addEventListener) window.addEventListener('open-speaker-panel', onOpen);
+    return () => {
+      try { document.removeEventListener('open-speaker-panel', onOpen); } catch(_) {}
+      try { if (window && window.removeEventListener) window.removeEventListener('open-speaker-panel', onOpen); } catch(_) {}
+    };
+  }, [markUserGestureAndFlush]);
+
   // Observe accessibility open flag so we don't render floating controls when AccessibilityMenu is active
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;
@@ -405,29 +446,13 @@ export default function RouteAnnouncer() {
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  // Move markUserGestureAndFlush above useEffect to avoid use-before-define
-  const markUserGestureAndFlush = useCallback(() => {
-    userGestureRef.current = true;
-    try {
-      const ctx = beepCtxRef.current;
-      if (ctx && ctx.state === 'suspended') try { ctx.resume(); } catch(_) {}
-      if (beepPendingRef.current) {
-        try { playBeep(); } catch(_) {}
-        beepPendingRef.current = false;
-      }
-    } catch(_) {}
-  }, [playBeep]);
-
   // Mobile tray opener for speaker panel
   useEffect(() => {
-    const h = () => setMenuOpen(true);
-    document.addEventListener('open-speaker-panel', h);
-
     // Mobile/first-touch: add listeners so we can mark a user gesture and resume audio contexts.
+    // Note: we intentionally DO NOT auto-open the panel via custom events. The panel must open
+    // only when the user clicks/taps the button.
     const onFirstTouch = (e) => {
-      try {
-        markUserGestureAndFlush();
-      } catch (_) {}
+      try { markUserGestureAndFlush(); } catch (_) {}
       // remove after first use
       document.removeEventListener('touchstart', onFirstTouch);
       document.removeEventListener('click', onFirstTouch);
@@ -436,7 +461,6 @@ export default function RouteAnnouncer() {
     document.addEventListener('click', onFirstTouch, { passive: true });
 
     return () => {
-      document.removeEventListener('open-speaker-panel', h);
       document.removeEventListener('touchstart', onFirstTouch);
       document.removeEventListener('click', onFirstTouch);
     };
@@ -541,19 +565,7 @@ export default function RouteAnnouncer() {
   // Peek state: when true, the button remains partially visible (small peek) and icon is shown
   const [peek, setPeek] = useState(false);
 
-  // Responsive: hide the route announcer on small/mobile viewports
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return false;
-    return window.matchMedia('(max-width: 640px)').matches;
-  });
 
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
-    const mq = window.matchMedia('(max-width: 640px)');
-    const onChange = (e) => setIsMobile(e.matches);
-    try { mq.addEventListener('change', onChange); } catch (_) { mq.addListener(onChange); }
-    return () => { try { mq.removeEventListener('change', onChange); } catch (_) { mq.removeListener(onChange); } };
-  }, []);
 
   // Small floating button style for the Route Announcer toggle
   const routeAnnouncerButtonStyle = {
@@ -633,6 +645,8 @@ export default function RouteAnnouncer() {
       <div aria-live="polite" aria-atomic="true" style={visuallyHiddenStyle}>{message}</div>
       {menuOpen && (
         <div
+          ref={panelRef}
+          tabIndex={-1}
           className="route-announcer-panel"
           role="dialog"
           aria-label={lang==='hi' ? 'स्पीकर आइकन पैनल' : 'Speaker icon panel'}
@@ -647,14 +661,15 @@ export default function RouteAnnouncer() {
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',
-            padding: '0.5rem',
+            padding: '0.25rem',
             borderRadius: '12px',
             boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
             alignItems: 'center',
             background: '#fff',
             border: '2px solid #22741aff',
             backdropFilter: 'blur(6px)',
-            minWidth: '220px',
+            minWidth: '160px',
+            maxWidth: '260px',
           }}
         >
           <button
@@ -695,7 +710,8 @@ export default function RouteAnnouncer() {
               }
             }}
             title={lang==='hi' ? (voiceEnabled ? 'आवाज़ बंद करें' : 'आवाज़ चालू करें') : (voiceEnabled ? 'Voice Off' : 'Voice On')}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            aria-label={lang==='hi' ? (voiceEnabled ? 'आवाज़ बंद करें' : 'आवाज़ चालू करें') : (voiceEnabled ? 'Voice Off' : 'Voice On')}
+            style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
             onMouseEnter={(e)=> { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#e6e9ee'; }}
             onMouseLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#f3f4f6'; }}
           >
@@ -716,7 +732,8 @@ export default function RouteAnnouncer() {
               }
             }}
             title={lang==='hi' ? (beepEnabled ? 'बीप बंद करें' : 'बीप चालू करें') : (beepEnabled ? 'Beep Off' : 'Beep On')}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            aria-label={lang==='hi' ? (beepEnabled ? 'बीप बंद करें' : 'बीप चालू करें') : (beepEnabled ? 'Beep Off' : 'Beep On')}
+            style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
             onMouseEnter={(e)=> { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#e6e9ee'; }}
             onMouseLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#f3f4f6'; }}
           >
@@ -727,11 +744,12 @@ export default function RouteAnnouncer() {
             type="button"
             onClick={()=> isReadingAll ? stopReading() : startReading()}
             title={lang==='hi' ? (isReadingAll ? 'रोकें' : 'पूरा पढ़ें') : (isReadingAll ? 'Stop' : 'Read All')}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            aria-label={lang==='hi' ? (isReadingAll ? 'रोकें' : 'पूरा पढ़ें') : (isReadingAll ? 'Stop' : 'Read All')}
+            style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
             onMouseEnter={(e)=> { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#e6e9ee'; }}
             onMouseLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#f3f4f6'; }}
           >
-            {isReadingAll ? <FaStop /> : <FaPlay />}
+            {isReadingAll ? <FaStop aria-hidden="true" /> : <FaPlay aria-hidden="true" />}
           </button>
 
           <button
@@ -739,9 +757,10 @@ export default function RouteAnnouncer() {
             onClick={() => { markUserGestureAndFlush(); pause(); }}
             disabled={!isSpeaking || isPaused}
             title={lang==='hi' ? 'ठहरें' : 'Pause'}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            aria-label={lang==='hi' ? 'ठहरें' : 'Pause'}
+            style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
           >
-            <FaPause />
+            <FaPause aria-hidden="true" />
           </button>
 
           <button
@@ -749,12 +768,13 @@ export default function RouteAnnouncer() {
             onClick={() => { markUserGestureAndFlush(); resume(); }}
             disabled={!isSpeaking || !isPaused}
             title={lang==='hi' ? 'जारी रखें' : 'Resume'}
-            style={{...baseButtonStyle, width: '44px', height: '44px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            aria-label={lang==='hi' ? 'जारी रखें' : 'Resume'}
+            style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
           >
-            <FaPlay />
+            <FaPlay aria-hidden="true" />
           </button>
 
-          <div style={{width: '100%', padding: '0 0.5rem', boxSizing: 'border-box'}}>
+          <div style={{width: '160px', padding: '0 0.25rem', boxSizing: 'border-box'}}>
             <label htmlFor="voice-select" style={{fontSize: '12px', display: 'block', marginBottom: '4px', textAlign: 'center'}}>{lang === 'hi' ? 'आवाज़' : 'Voice'}</label>
             <select
               id="voice-select"
@@ -776,9 +796,10 @@ export default function RouteAnnouncer() {
               style={{
                   ...baseButtonStyle,
                   width: '100%',
-                  padding: '0.5rem',
+                  padding: '0.35rem',
                   color: '#0f172a',
-                  backgroundColor: '#fff'
+                  backgroundColor: '#fff',
+                  fontSize: '13px'
                 }}
             >
               <option value="">{lang === 'hi' ? 'डिफ़ॉल्ट' : 'Default'}</option>
@@ -792,7 +813,7 @@ export default function RouteAnnouncer() {
             </select>
           </div>
 
-          <div style={{width: '100%', padding: '0.5rem', boxSizing: 'border-box'}}>
+          <div style={{width: '160px', padding: '0.25rem', boxSizing: 'border-box'}}>
               <label htmlFor="rate-slider" style={{fontSize: '12px', display: 'block', marginBottom: '4px', textAlign: 'center'}}>{lang === 'hi' ? 'गति' : 'Rate'}: {rate.toFixed(1)}</label>
               <input
                 type="range"
@@ -806,7 +827,7 @@ export default function RouteAnnouncer() {
               />
           </div>
 
-          <div style={{width: '100%', padding: '0.5rem', boxSizing: 'border-box'}}>
+          <div style={{width: '160px', padding: '0.25rem', boxSizing: 'border-box'}}>
               <label htmlFor="pitch-slider" style={{fontSize: '12px', display: 'block', marginBottom: '4px', textAlign: 'center'}}>{lang === 'hi' ? 'पिच' : 'Pitch'}: {pitch.toFixed(1)}</label>
               <input
                 type="range"
@@ -837,6 +858,7 @@ export default function RouteAnnouncer() {
               }
             }}
             title={lang==='hi' ? 'Switch to English' : 'हिंदी में बदलें'}
+            aria-label={lang==='hi' ? 'Switch to English' : 'हिंदी में बदलें'}
             style={{...baseButtonStyle, padding: '0.4rem 0.6rem', borderRadius: '8px'}}
           >
             {lang === 'hi' ? 'EN' : 'हिंदी'}
@@ -846,7 +868,7 @@ export default function RouteAnnouncer() {
       )}
 
   {/* Small Route Announcer toggle button (right side) */}
-  {!isAdminPath && !accessibilityOpen && !isMobile && (
+  {!isAdminPath && !accessibilityOpen && (
           <button
             type="button"
             onClick={handleRouteAnnouncerToggle}
@@ -896,7 +918,8 @@ export default function RouteAnnouncer() {
               {/* small attention badge */}
               <span aria-hidden="true" style={{width: '10px', height: '10px', borderRadius: '99px', background: '#ff4757', boxShadow: '0 0 8px rgba(255,71,87,0.6)', marginLeft: '-10px', marginRight: '6px'}} />
               {/* label is visually clipped by default; reveal on hover/focus by expanding button width; force English text */}
-              <span ref={labelRef} className="ra-label" style={{fontSize: '15px', opacity: 0, transform: 'translateX(-6px)', transition: 'opacity 160ms ease, transform 160ms ease'}}>Route Announcer</span>
+              {/* visually-hidden label for screen readers; keep aria-label/title on button */}
+              <span ref={labelRef} className="sr-only" style={{fontSize: '15px'}}>Route Announcer</span>
               {/* speaker icon using FaVolumeUp; wrap in span so we can attach a ref to a DOM node */}
               <span ref={iconRef} aria-hidden="true" style={{display: 'inline-flex', width: '20px', height: '20px', transition: 'opacity 220ms ease, transform 200ms ease', opacity: (peek ? 1 : 0)}}>
                 <FaVolumeUp />

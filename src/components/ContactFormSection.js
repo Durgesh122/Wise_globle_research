@@ -38,25 +38,51 @@ const ContactForm = ({ contactFormRef }) => {
   toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
       reset();
       // Send an email copy to server (best-effort, non-blocking)
-    (async () => {
+      (async () => {
         try {
-      const apiBase = 'https://wise-global-contact-systems.onrender.com';
-      const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
-      await fetch(endpoint, {
+          // Always use local server for sending email in this workspace (server runs on port 3002)
+          const apiBase = 'http://localhost:3002';
+          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+          const payload = {
+            name: formData.name,
+            email: formData.email || '',
+            mobile: formData.phone || '',
+            city: '',
+            interest: formData.interest || 'Contact Form',
+            message: formData.message || '',
+            source: 'ContactFormSection'
+          };
+
+          // Log diagnostics to help debug CORS / server errors in browser devtools
+          console.debug('ContactForm: sending email-copy to', endpoint, { payload });
+
+          const resp = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: formData.name,
-              email: formData.email || '',
-              mobile: formData.phone || '',
-              city: '',
-              interest: formData.interest || 'Contact Form',
-              message: formData.message || '',
-              source: 'ContactFormSection'
-            })
+            body: JSON.stringify(payload),
           });
+
+          // Try to parse response body for more helpful diagnostics
+          let respBody = null;
+          try {
+            respBody = await resp.json();
+          } catch (parseErr) {
+            // not JSON — read as text
+            try { respBody = await resp.text(); } catch (_) { respBody = null; }
+          }
+
+          if (!resp.ok) {
+            console.warn('Failed to send email copy for contact form. Response:', resp.status, resp.statusText, respBody);
+            const serverMsg = (respBody && (respBody.error?.message || respBody.message)) || resp.statusText || 'Unknown error';
+            toast.error(`Email copy not sent: ${serverMsg}`, { position: 'top-center' });
+          } else {
+            console.debug('Email copy sent (server response):', respBody);
+          }
         } catch (e) {
-      console.warn('Failed to send email copy for contact form:', e);
+          // Network-level or CORS failure will end up here
+          console.warn('Failed to send email copy for contact form (network/CORS?):', e);
+          const msg = e && e.message ? e.message : String(e);
+          toast.error(`Email copy failed: ${msg}`, { position: 'top-center' });
         }
       })();
     } catch (error) {

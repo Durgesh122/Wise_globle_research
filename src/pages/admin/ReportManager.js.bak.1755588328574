@@ -71,7 +71,7 @@ const ReportUploadCard = ({ day, reports, onUpload, onDelete, onPreview }) => {
         <input type="text" placeholder="Report Title" className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400" value={newReport.title} onChange={(e) => setNewReport({ ...newReport, title: e.target.value })} />
         <textarea placeholder="Report Description" className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400" rows="3" value={newReport.description} onChange={(e) => setNewReport({ ...newReport, description: e.target.value })} />
         <select className="w-full p-3 rounded-lg bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400" value={newReport.category} onChange={(e) => setNewReport({ ...newReport, category: e.target.value })}>
-          {REPORT_CATEGORIES.map((cat) => <option key={cat} value={cat} className="bg-gray-800">{cat}</option>)}
+          {REPORT_CATEGORIES.map((cat) => <option key={cat} value={cat} className="text-black">{cat}</option>)}
         </select>
         <input id={`file-input-${day}`} type="file" accept=".pdf" className="w-full p-3 text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:bg-indigo-600 file:text-white file:border-0 file:hover:bg-indigo-700" onChange={(e) => setNewReport({ ...newReport, file: e.target.files[0] })} />
         <motion.button onClick={handleUpload} disabled={uploading} className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg flex items-center justify-center gap-2 disabled:opacity-50" variants={buttonVariants} whileHover="hover">

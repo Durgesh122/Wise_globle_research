@@ -58,21 +58,21 @@ const SmartCash = () => (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.pricing-plan-for-smart-cash">Pricing Plan For Smart Cash</Trans></h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
-  <div className="w-full border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#ffffffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+      <div className="w-full border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.smart-cash">Smart Cash</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹12,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartCash.monthly">/ Monthly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartCash.2-to-3-calls-in-a-day">2 to 3 Calls in a Day</Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartCash.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartCash.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartCash.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartCash.note-pricing-are-excluding-gst-18-2">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
-  <div className="w-full border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#ffffffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+  <div className="w-full border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartCash.smart-cash">Smart Cash</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹35,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartCash.quarterly">/ Quarterly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartCash.2-to-3-calls-in-a-day">2 to 3 Calls in a Day</Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartCash.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartCash.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartCash.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartCash.note-pricing-are-excluding-gst-18-1">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
@@ -85,17 +85,17 @@ const SmartCash = () => (
     <div className="my-12 px-2 sm:px-0">
       <h2 className="text-2xl font-bold mb-4 text-center text-white"><Trans i18nKey="pages.SmartCash.why-choose-smart-cash">Why Choose Smart Cash?</Trans></h2>
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-6">
-  <div className="rounded-lg p-6 flex flex-col items-center w-full" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+      <div className="rounded-lg p-6 flex flex-col items-center w-full" style={{ background: 'rgba(255,255,255,0.3)', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLightbulb className="text-4xl mb-2 text-yellow-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartCash.expert-research">Expert Research</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartCash.our-team-combines-technical-and-fundamen"><Trans i18nKey="pages.SmartCash.our-team-combines-technical-and-fundamen-1">Our team combines technical and fundamental analysis for the most reliable recommendations.</Trans></Trans></p>
         </div>
-  <div className="rounded-lg p-6 flex flex-col items-center w-full" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+  <div className="rounded-lg p-6 flex flex-col items-center w-full" style={{ background: 'rgba(255,255,255,0.3)', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaBolt className="text-4xl mb-2 text-blue-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartCash.real-time-support">Real-Time Support</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartCash.get-instant-help-and-trade-updates-from-"><Trans i18nKey="pages.SmartCash.get-instant-help-and-trade-updates-from--1">Get instant help and trade updates during Indian market hours.</Trans></Trans></p>
         </div>
-  <div className="rounded-lg p-6 flex flex-col items-center w-full" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+  <div className="rounded-lg p-6 flex flex-col items-center w-full" style={{ background: 'rgba(255,255,255,0.3)', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLock className="text-4xl mb-2 text-green-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartCash.trusted-by-traders">Trusted by Traders</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartCash.hundreds-of-cash-segment-traders-rely-on"><Trans i18nKey="pages.SmartCash.hundreds-of-cash-segment-traders-rely-on-1">Hundreds of cash segment traders rely on our signals for consistent results.</Trans></Trans></p>
@@ -109,7 +109,7 @@ const SmartCash = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.SmartCash.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.SmartCash.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white">A: Recommendations are delivered via your registered contact channel.</p>
+          <p className="text-white">A: Recommendations are delivered via SMS on your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.SmartCash.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.SmartCash.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
@@ -122,7 +122,7 @@ const SmartCash = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
+          <button type="button" className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

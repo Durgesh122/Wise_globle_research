@@ -39,7 +39,7 @@ export default function AccessibilityFeedback() {
     if (!validate()) return;
     setSubmitting(true);
     try {
-      const payload = {
+      const submission = {
         name: form.name.trim(),
         email: form.email.trim(),
         subject: form.subject.trim() || null,
@@ -53,7 +53,7 @@ export default function AccessibilityFeedback() {
         consent: !!form.consent,
         timestamp: Date.now(),
       };
-      const result = await push(ref(db, 'accessibilityFeedback'), payload);
+      const result = await push(ref(db, 'accessibilityFeedback'), submission);
       setSubmissionId(result.key);
       setSubmitted(true);
       // optional: reset form
@@ -75,6 +75,29 @@ export default function AccessibilityFeedback() {
           window.analyticsPush('accessibility_feedback', { submissionId: result.key });
         }
       }catch(e){}
+      // Best-effort: notify server to send an email copy to the team (non-blocking)
+      (async () => {
+        try {
+          const notifyPayload = {
+            name: submission.name || form.name,
+            email: submission.email || form.email,
+            mobile: '',
+            city: '',
+            interest: 'Accessibility Feedback',
+            message: `Type: ${form.type}\nSeverity: ${form.severity}\nDevice: ${form.device}\nPage: ${form.pageUrl || (typeof window !== 'undefined' ? window.location.href : '')}\n\n${form.message}`,
+            source: 'AccessibilityFeedback',
+            to: 'support@wiseglobalresearch.com'
+          };
+          await fetch('http://localhost:3002/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(notifyPayload)
+          });
+        } catch (err) {
+          // don't surface to user; log for debugging
+          console.warn('Accessibility feedback: failed to notify server', err);
+        }
+      })();
     } catch (err) {
       setErrors({ submit: 'Failed to submit. Please try again.' });
     } finally {
@@ -97,7 +120,7 @@ export default function AccessibilityFeedback() {
             {submissionId && (
               <p className="text-sm text-gray-700 mt-2">Submission ID: <span className="font-mono">{submissionId}</span></p>
             )}
-            <a href="/" className="inline-block mt-4 px-4 py-2 rounded bg-gray-900 text-white hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400">Go home</a>
+              <a href="/" className="inline-block mt-4 px-4 py-2 rounded bg-green-700 text-white hover:bg-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400" aria-label="Go home">Go home</a>
           </div>
         </section>
       </>
@@ -188,7 +211,7 @@ export default function AccessibilityFeedback() {
           <button type="submit" disabled={submitting} className="px-4 py-2 rounded bg-green-600 hover:bg-green-500 disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 text-white">
             {submitting ? 'Submitting…' : 'Submit'}
           </button>
-          <a href="/" className="px-4 py-2 rounded bg-gray-900 text-white hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400">Cancel</a>
+            <a href="/" className="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400" aria-label="Cancel and return to home">Cancel</a>
         </div>
       </form>
     </section>

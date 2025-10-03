@@ -126,8 +126,10 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
               {Object.keys(editedRow).map(key => (
                 key !== 'srNo' && (
                   <div key={key}>
-                    <label className="capitalize text-sm text-adaptive/70">{key.replace(/([A-Z])/g, ' $1')}</label>
+                    <label htmlFor={`edit-${key}`} className="capitalize text-sm text-adaptive/70">{key.replace(/([A-Z])/g, ' $1')}</label>
                     <input
+                      id={`edit-${key}`}
+                      name={`edit-${key}`}
                       type={typeof editedRow[key] === 'number' ? 'number' : 'text'}
                       value={editedRow[key] || ''}
                       onChange={(e) => setEditedRow({ ...editedRow, [key]: e.target.value })}
@@ -187,7 +189,9 @@ const ComplaintTable = ({ tableData, handleEdit }) => (
             <td data-label="Avg. Resolution time (days)" className="px-6 py-4 text-adaptive">{row.avgResolutionTime || 0}</td>
             <td data-label="Actions" className="px-6 py-4">
               {row.srNo !== 'Grand Total' && (
-                <motion.button onClick={() => handleEdit(row)} style={{ color: 'var(--accent)' }} variants={buttonVariants} whileHover="hover"><FiEdit size={16} /></motion.button>
+                <motion.button type="button" onClick={() => handleEdit(row)} style={{ color: 'var(--accent)' }} variants={buttonVariants} whileHover="hover" title="Edit row" aria-label={`Edit row ${row.srNo}`}>
+                  <FiEdit aria-hidden="true" size={16} />
+                </motion.button>
               )}
             </td>
           </motion.tr>
@@ -465,7 +469,9 @@ const ComplaintManager = () => {
                       <td className="px-6 py-4 text-adaptive">{row.pending}</td>
                       <td className="px-6 py-4">
                         {row.srNo !== 'Grand Total' && (
-                          <button onClick={() => handleMonthlyEdit(row)} style={{ color: 'var(--accent)' }}><FiEdit size={16} /></button>
+                          <button type="button" onClick={() => handleMonthlyEdit(row)} style={{ color: 'var(--accent)' }} title="Edit row" aria-label={`Edit row ${row.srNo}`}>
+                            <FiEdit aria-hidden="true" size={16} />
+                          </button>
                         )}
                       </td>
                     </tr>
@@ -502,7 +508,9 @@ const ComplaintManager = () => {
                       <td className="px-6 py-4 text-adaptive">{row.pending}</td>
                       <td className="px-6 py-4">
                         {row.srNo !== 'Grand Total' && (
-                          <button onClick={() => handleAnnualEdit(row)} style={{ color: 'var(--accent)' }}><FiEdit size={16} /></button>
+                          <button type="button" onClick={() => handleAnnualEdit(row)} style={{ color: 'var(--accent)' }} title="Edit row" aria-label={`Edit row ${row.srNo}`}>
+                            <FiEdit aria-hidden="true" size={16} />
+                          </button>
                         )}
                       </td>
                     </tr>

@@ -54,7 +54,7 @@ const SmartOptions = () => (
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartOptions.sample-calls">Sample Calls</Trans></h2>
-  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.SmartOptions.buy-hal-mar-2600-ce-above-131-target-145"><Trans i18nKey="pages.SmartOptions.buy-hal-mar-2600-ce-above-131-target-145-1">BUY HAL MAR 2600 CE ABOVE 131 TARGET 145 160 STOPLOSS 112</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.SmartOptions.buy-centuryply-above-512-target-518-524-"><Trans i18nKey="pages.SmartOptions.buy-centuryply-above-512-target-518-524--1">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</Trans></Trans></div>
     </div>
 
     <div className="mb-8">
@@ -65,7 +65,7 @@ const SmartOptions = () => (
           <div className="text-3xl font-extrabold text-white mb-2">₹12,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartOptions.monthly">/ Monthly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartOptions.2-to-3-calls-in-a-day">2 to 3 Calls in a Day</Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartOptions.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartOptions.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartOptions.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartOptions.note-pricing-are-excluding-gst-18-2">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
@@ -74,7 +74,7 @@ const SmartOptions = () => (
           <div className="text-3xl font-extrabold text-white mb-2">₹35,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartOptions.quarterly">/ Quarterly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartOptions.2-to-3-calls-in-a-day">2 to 3 Calls in a Day</Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartOptions.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartOptions.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartOptions.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartOptions.note-pricing-are-excluding-gst-18-1">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
@@ -111,7 +111,7 @@ const SmartOptions = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.SmartOptions.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.SmartOptions.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white">A: Recommendations are delivered via your registered contact channel.</p>
+          <p className="text-white">A: Recommendations are delivered via SMS on your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.SmartOptions.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.SmartOptions.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
@@ -124,7 +124,7 @@ const SmartOptions = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
+          <button type="button" className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

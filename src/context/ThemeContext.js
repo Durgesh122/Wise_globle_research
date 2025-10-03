@@ -193,6 +193,21 @@ export const ThemeProvider = ({ children }) => {
       rootEl.style.backgroundPosition = 'center center';
     }
 
+    // Apply the theme's text color to the document and root so components
+    // that inherit color (and pages with white backgrounds) show the correct
+    // contrast color automatically. This is intentional: the ThemeContext
+    // exposes CSS variables but also sets the element color so legacy
+    // components that rely on inheritance get the right color.
+    try {
+      if (active.textColor) {
+        htmlEl.style.color = active.textColor;
+        bodyEl.style.color = active.textColor;
+        if (rootEl) rootEl.style.color = active.textColor;
+      }
+    } catch (e) {
+      // ignore DOM errors
+    }
+
   // Text color on body (components still control their own text utilities)
   // Removed direct assignment to `bodyEl.style.color` to avoid global
   // overrides of component-level text color (hero and other components
@@ -250,15 +265,17 @@ export const ThemeProvider = ({ children }) => {
         if (activeKey === 'default') {
           // Apply premium-looking navbar/footer colors without changing other themes
           htmlEl.style.setProperty('--navbar-bg', 'linear-gradient(90deg, #248affff, #248affff)');
-          // Force navbar text to white for good contrast on the premium gradient
-          htmlEl.style.setProperty('--navbar-color', '#ffffff');
-          // Ensure mobile drawer and other header text uses white as well
-          htmlEl.style.setProperty('--text-color', '#ffffff');
+          // Use a dark navbar text color by default so nav items contrast on the
+          // bright gradient in server-rendered snapshots. This avoids pa11y
+          // reporting low-contrast for nav controls that rely on CSS variables.
+          htmlEl.style.setProperty('--navbar-color', '#0b1220');
+          // Ensure mobile drawer and other header text uses the dark fallback as well
+          htmlEl.style.setProperty('--text-color', '#0b1220');
           htmlEl.style.setProperty('--footer-bg', 'linear-gradient(90deg, #248affff, #248affff)');
-          htmlEl.style.setProperty('--footer-color', '#ffffff');
+          htmlEl.style.setProperty('--footer-color', '#0b1220');
 
           // Also set border overrides for navbar when default selected
-          htmlEl.style.setProperty('--navbar-border', 'rgba(255, 255, 255, 0.06)');
+          htmlEl.style.setProperty('--navbar-border', 'rgba(11, 18, 32, 0.06)');
         } else {
           // Ensure other themes control navbar/footer by explicitly applying
           // the active theme's text color and clearing only background overrides
@@ -280,6 +297,80 @@ export const ThemeProvider = ({ children }) => {
       // the footer background to disappear when `default` theme was active.
     } catch (e) {
       // Ignore failures when running in non-browser environments
+    }
+  }, [theme, previewTheme]);
+
+  // Run a small sanitation pass to correct contrast issues that occur when
+  // the page background is light but some components still have light/white
+  // text (for example older card components or third-party widgets).
+  // This attempts to be conservative: it only adjusts elements that appear
+  // to have a light background (near-white) and currently have a light text
+  // color; it skips elements marked with `data-theme-ignore` and known
+  // third-party iframes (heuristic selectors).
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const isNearWhite = (bg) => {
+        if (!bg) return false;
+        // handle gradients and color keywords by checking for white-ish hex
+        if (bg.indexOf('#') === -1) {
+          return /white|fff|f7f|f2f/i.test(bg);
+        }
+        const m = bg.match(/#([0-9a-fA-F]{6})/);
+        if (!m) return false;
+        const hex = m[1];
+        const r = parseInt(hex.substring(0,2),16);
+        const g = parseInt(hex.substring(2,4),16);
+        const b = parseInt(hex.substring(4,6),16);
+        const brightness = (r*299 + g*587 + b*114)/1000;
+        return brightness > 230; // very light backgrounds
+      };
+
+      const isLightColor = (color) => {
+        if (!color) return false;
+        if (color.indexOf('#') === -1) return /white|fff/i.test(color);
+        const m = color.match(/#([0-9a-fA-F]{6})/);
+        if (!m) return false;
+        const hex = m[1];
+        const r = parseInt(hex.substring(0,2),16);
+        const g = parseInt(hex.substring(2,4),16);
+        const b = parseInt(hex.substring(4,6),16);
+        const brightness = (r*299 + g*587 + b*114)/1000;
+        return brightness > 200; // treat as light-colored text
+      };
+
+      const nodes = Array.from(document.querySelectorAll('body *:not(script):not(style)'));
+      const getEffectiveBackground = (el) => {
+        let node = el;
+        while (node && node !== document.documentElement) {
+          try {
+            const cs = window.getComputedStyle(node);
+            const bg = cs.backgroundColor || cs.background || cs.backgroundImage;
+            if (bg && isNearWhite(bg)) return bg;
+          } catch (e) { /* ignore */ }
+          node = node.parentElement;
+        }
+        return null;
+      };
+
+      nodes.forEach((el) => {
+        try {
+          if (el.hasAttribute('data-theme-ignore')) return;
+          // Skip likely third-party frames or known widgets
+          if (el.closest && el.closest('iframe, .third-party, .tr-widget')) return;
+
+          const cs = window.getComputedStyle(el);
+          const color = cs.color;
+          const effectiveBg = getEffectiveBackground(el);
+
+          if (effectiveBg && isLightColor(color)) {
+            // Apply a dark readable color while preserving existing inline styles
+            el.style.color = gradients[previewTheme || theme].textColor || '#0b1220';
+          }
+        } catch (e) { /* ignore per-element failures */ }
+      });
+    } catch (e) {
+      // ignore global errors (non-critical)
     }
   }, [theme, previewTheme]);
 

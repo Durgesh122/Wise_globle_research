@@ -29,6 +29,7 @@ html {
   overscroll-behavior-y: none; /* prevent rubber-band revealing UA background */
   /* Add cross-browser text size adjust to satisfy audit */
   -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 body {
@@ -262,6 +263,21 @@ html, body, #root { min-height: 100%; }
   }
 }
 
+/* Toastify color overrides to ensure sufficient contrast for success toasts */
+:root {
+  --toastify-color-success: #0b8a05; /* slightly darker green for contrast */
+}
+
+/* Ensure Toastify success toasts have a solid, high-contrast background and white text */
+.Toastify__toast--success {
+  background: #0b8a05 !important;
+  color: #ffffff !important;
+}
+.Toastify__toast--success .Toastify__toast-body,
+.Toastify__toast--success .Toastify__close-button {
+  color: #ffffff !important;
+}
+
 /* ✅ Responsive Fixes for Landscape & Portrait */
 @media screen and (orientation: landscape) {
   body {
@@ -383,6 +399,16 @@ html[data-line-height="relaxed"] body, html[data-line-height="relaxed"] * { line
 html[data-theme-light="true"] .text-white { color: #0b1220 !important; }
 html[data-theme-light="true"] .bg-white { background-color: #ffffff !important; }
 
+/* Ensure native select/option elements remain readable across themes.
+   Some browsers allow limited styling of option elements; provide a
+   high-contrast fallback so automated tools and UA styles report good
+   contrast for commonly used combos. This rule increases contrast for
+   option elements inside selects used site-wide. */
+select, select option {
+  background-color: #ffffff !important;
+  color: #0b1220 !important;
+}
+
 /* On small screens the floating controls/panel can overlap the navbar logo.
    Only hide the navbar logo and the speaker controls on narrow viewports so
    desktop users keep the visible logo when opening these panels. */
@@ -472,6 +498,15 @@ pre, code, table {
   button, a.button {
     padding: 12px 14px;
     font-size: 1rem;
+  }
+}
+
+/* Prevent auto-zoom on input focus for older mobile browsers by ensuring
+   inputs/selects/textareas have at least 16px font-size on small screens. */
+@media (max-width: 480px) {
+  input, textarea, select {
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100%;
   }
 }
 

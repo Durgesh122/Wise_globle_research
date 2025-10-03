@@ -53,27 +53,27 @@ const SmartIndexOption = () => (
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.sample-calls">Sample Calls</Trans></h2>
-  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.SmartIndexOption.buy-banknifty-40700-ce-above-360-target-"><Trans i18nKey="pages.SmartIndexOption.buy-banknifty-40700-ce-above-360-target--1">BUY BANKNIFTY 40700 CE ABOVE 360 TARGET 420 480 STOPLOSS 285</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-base text-white font-mono"><Trans i18nKey="pages.SmartIndexOption.buy-centuryply-above-512-target-518-524-"><Trans i18nKey="pages.SmartIndexOption.buy-centuryply-above-512-target-518-524--1">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</Trans></Trans></div>
     </div>
 
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.pricing-plan-for-smart-index-option"><Trans i18nKey="pages.SmartIndexOption.pricing-plan-for-smart-index-option-1">Pricing Plan For Smart Index Option</Trans></Trans></h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
-  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#ffffffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
+  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.smart-index-option">Smart Index Option</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹12,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartIndexOption.monthly">/ Monthly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.1-to-2-calls-in-a-day"><Trans i18nKey="pages.SmartIndexOption.1-to-2-calls-in-a-day-2">1 to 2 Calls in a Day</Trans></Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartIndexOption.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartIndexOption.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartIndexOption.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartIndexOption.note-pricing-are-excluding-gst-18-2">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
-  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: '#ffffffff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+  <div className="border rounded-xl p-6 shadow-md flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <h3 className="text-xl font-bold mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.smart-index-option">Smart Index Option</Trans></h3>
           <div className="text-3xl font-extrabold text-white mb-2">₹35,500 <span className="text-base font-normal"><Trans i18nKey="pages.SmartIndexOption.quarterly">/ Quarterly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.SmartIndexOption.1-to-2-calls-in-a-day"><Trans i18nKey="pages.SmartIndexOption.1-to-2-calls-in-a-day-1">1 to 2 Calls in a Day</Trans></Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartIndexOption.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.SmartIndexOption.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.SmartIndexOption.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.SmartIndexOption.note-pricing-are-excluding-gst-18-1">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
@@ -86,17 +86,17 @@ const SmartIndexOption = () => (
     <div className="my-12">
       <h2 className="text-2xl font-bold mb-4 text-center text-white"><Trans i18nKey="pages.SmartIndexOption.why-choose-smart-index-option"><Trans i18nKey="pages.SmartIndexOption.why-choose-smart-index-option-1">Why Choose Smart Index Option?</Trans></Trans></h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+      <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLightbulb className="text-4xl mb-2 text-yellow-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartIndexOption.expert-research">Expert Research</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartIndexOption.our-analysts-specialize-in-f-o-market-an"><Trans i18nKey="pages.SmartIndexOption.our-analysts-specialize-in-f-o-market-an-1">Our analysts specialize in F&O market and combine technical & fundamental analysis for precise index option recommendations.</Trans></Trans></p>
         </div>
-  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaBolt className="text-4xl mb-2 text-blue-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartIndexOption.timely-calls">Timely Calls</Trans></h3>
           <p className="text-white text-center"><Trans i18nKey="pages.SmartIndexOption.receive-1-2-intraday-positional-calls-pe"><Trans i18nKey="pages.SmartIndexOption.receive-1-2-intraday-positional-calls-pe-1">Receive 1-2 intraday/positional calls per day with clear entry, targets and stop loss.</Trans></Trans></p>
         </div>
-  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+  <div className="rounded-lg p-6 flex flex-col items-center" style={{ background: 'rgba(255,255,255,0.3)', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
           <FaLock className="text-4xl mb-2 text-green-300" />
           <h3 className="font-bold text-lg mb-1 text-white"><Trans i18nKey="pages.SmartIndexOption.trusted-support">Trusted Support</Trans></h3>
           <p className="text-white text-center">Real-time customer support during Indian market hours.</p>
@@ -114,7 +114,7 @@ const SmartIndexOption = () => (
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.SmartIndexOption.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.SmartIndexOption.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white">A: Recommendations are delivered via your registered contact channel.</p>
+          <p className="text-white">A: Recommendations are delivered via SMS on your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.SmartIndexOption.q-is-there-a-refund-policy"><Trans i18nKey="pages.SmartIndexOption.q-is-there-a-refund-policy-1">Q: Is there a refund policy?</Trans></Trans></h3>
@@ -123,7 +123,7 @@ const SmartIndexOption = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
+          <button type="button" className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

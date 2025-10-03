@@ -51,26 +51,34 @@ function Refund() {
         >
           <motion.section variants={fadeIn}>
             <p className="text-base leading-relaxed mb-4">
-              <span className="font-semibold"><Trans i18nKey="pages.Refund.wise-global-research-services-pvt-ltd"><Trans i18nKey="pages.Refund.wise-global-research-services-pvt-ltd-1">Wise Global Research Services Pvt Ltd.</Trans></Trans></span> we value our clients and are perpetrated to providing unsurpassed services. While we take our accuracy seriously, our clients also need to realize that we do not offer a 100% covenant on our recommendation. Once a service has been subscribed to and payment has been made for the same, the client will start receiving the Recommendation that they asked for. If for some unforeseen reason, the client is not satisfied with our services, they may contact us to seek oversight on future Recommendations.
+            We at Wise Global Research Services Pvt Ltd. value our clients and are committed to providing unsurpassed services. While we take our accuracy seriously, our clients also need to realize that we do not offer a 100% guarantee on our recommendation. Once a service has been subscribed to and payment has been made for the same, the client will start receiving the Recommendation that they asked for. If for some unforeseen reason, the client is not satisfied with our services, they may contact us to seek oversight on future Recommendations.
             </p>
             <p className="text-base leading-relaxed mb-4">
               We at Wise Global Research Services Pvt Ltd. will put our best effort to increase the satisfaction levels in such cases. However, in the unlikely event that the client is not able to receive communications on the contact details provided (for example, due to DND or account settings), and our service provider logs indicate that communications were sent to those details, it will be deemed as delivery of service from our end and will not entitle the client to a refund for non-delivery. We advise clients to ensure their registered contact channel can receive service communications before or as soon as the service is started.
             </p>
-            <p className="text-base leading-relaxed mb-4"><Trans i18nKey="pages.Refund.all-sales-are-final-and-we-do-not-offer-"><Trans i18nKey="pages.Refund.all-sales-are-final-and-we-do-not-offer--1">All sales are final, and we do not offer refunds for the paid period of services already availed by the client. Complaints or dissatisfaction regarding the quality of services during the paid period shall not entitle the client to any refund or compensation.</Trans></Trans></p>
+            <p className="text-base leading-relaxed mb-4">
+              All sales are final, and we do not offer refunds for the paid period of services already availed by the client. Complaints or dissatisfaction regarding the quality of services during the paid period shall not entitle the client to any refund or compensation.
+            </p>
             <div className="flex items-center mb-2 mt-8">
               <FaGavel className="mr-3 text-xl" />
-              <h2 className="text-2xl font-semibold"><Trans i18nKey="pages.Refund.sebi-guidelines-for-cancellation"><Trans i18nKey="pages.Refund.sebi-guidelines-for-cancellation-1">SEBI Guidelines for Cancellation</Trans></Trans></h2>
+              <h2 className="text-2xl font-semibold">SEBI Guidelines for Cancellation</h2>
             </div>
             <p className="text-base leading-relaxed mb-2">
               As per SEBI guidelines, if a client requests to cancel the subscription, a refund shall only be issued for the unused portion of the subscription period. The refund will be calculated on a pro-rata basis, deducting the charges for the services already availed, including applicable taxes and administrative fees.
             </p>
-            <p className="text-base leading-relaxed mb-4"><Trans i18nKey="pages.Refund.refunds-will-not-be-provided-for-the-per"><Trans i18nKey="pages.Refund.refunds-will-not-be-provided-for-the-per-1">Refunds will not be provided for the period of services already availed, irrespective of the client’s satisfaction with the recommendations or the outcome of trades.</Trans></Trans></p>
+            <p className="text-base leading-relaxed mb-4">
+              Refunds will not be provided for the period of services already availed, irrespective of the client’s satisfaction with the recommendations or the outcome of trades.
+            </p>
             <div className="flex items-center mb-2 mt-8">
               <FaInfoCircle className="text-blue-600 mr-3 text-xl" />
-              <h2 className="text-2xl font-semibold"><Trans i18nKey="pages.Refund.market-risks-user-acknowledgement"><Trans i18nKey="pages.Refund.market-risks-user-acknowledgement-1">Market Risks & User Acknowledgement</Trans></Trans></h2>
+              <h2 className="text-2xl font-semibold">Market Risks & User Acknowledgement</h2>
             </div>
-            <p className="text-base leading-relaxed mb-2"><Trans i18nKey="pages.Refund.investment-in-securities-markets-are-sub"><Trans i18nKey="pages.Refund.investment-in-securities-markets-are-sub-1">Investment in securities markets are subject to market risks. Profits and losses incurred due to the use of our recommendations are solely the responsibility of the client.</Trans></Trans></p>
-            <p className="text-base leading-relaxed mb-4"><Trans i18nKey="pages.Refund.by-subscribing-to-our-services-and-makin"><Trans i18nKey="pages.Refund.by-subscribing-to-our-services-and-makin-1">By subscribing to our services and making payment, the client acknowledges that they have read, understood, and agreed to the refund policy, as well as the disclaimer, disclosure, and other terms mentioned on our website.</Trans></Trans></p>
+            <p className="text-base leading-relaxed mb-2">
+              Investment in securities markets are subject to market risks. Profits and losses incurred due to the use of our recommendations are solely the responsibility of the client.
+            </p>
+            <p className="text-base leading-relaxed mb-4">
+              By subscribing to our services and making payment, the client acknowledges that they have read, understood, and agreed to the refund policy, as well as the disclaimer, disclosure, and other terms mentioned on our website.
+            </p>
           </motion.section>
           <motion.section variants={fadeIn} className="mt-12 text-center">
             <h2 className="text-2xl font-semibold mb-4"><Trans i18nKey="pages.Refund.contact-for-assistance">Contact for Assistance</Trans></h2>

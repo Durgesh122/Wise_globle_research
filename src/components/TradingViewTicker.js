@@ -18,12 +18,62 @@ const TradingViewTicker = ({ fixed = true }) => {
   };
 
   const [widgetHeight, setWidgetHeight] = useState(DEFAULT_WIDGET_HEIGHT);
+  const [prefersReduced, setPrefersReduced] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const app = document.documentElement && document.documentElement.getAttribute('data-reduce-motion') === 'true';
+    const media = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+    return !!(app || media);
+  });
+  // Hide ticker on small/mobile screens (<= 480px)
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 480;
+  });
 
   useEffect(() => {
-    const update = () => setWidgetHeight(getHeightForWidth(window.innerWidth));
+    const update = () => {
+      const w = window.innerWidth;
+      setWidgetHeight(getHeightForWidth(w));
+      setIsMobile(w <= 480);
+    };
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
+  }, []);
+
+  // Watch for app-level reduce-motion toggles and media preference changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const mql = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    const update = () => {
+      const mediaVal = mql ? mql.matches : false;
+      const appVal = document.documentElement && document.documentElement.getAttribute('data-reduce-motion') === 'true';
+      setPrefersReduced(!!(mediaVal || appVal));
+    };
+
+    if (mql) {
+      if (mql.addEventListener) mql.addEventListener('change', update);
+      else if (mql.addListener) mql.addListener(update);
+    }
+
+    const obs = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.type === 'attributes' && m.attributeName === 'data-reduce-motion') {
+          update();
+          break;
+        }
+      }
+    });
+    try { obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduce-motion'] }); } catch (e) {}
+
+    update();
+    return () => {
+      if (mql) {
+        if (mql.removeEventListener) mql.removeEventListener('change', update);
+        else if (mql.removeListener) mql.removeListener(update);
+      }
+      obs.disconnect();
+    };
   }, []);
 
   // Build the TradingView widget config dynamically so the embedded JSON height
@@ -72,6 +122,9 @@ const TradingViewTicker = ({ fixed = true }) => {
     JSON.stringify(widgetConfig),
   )}`;
 
+  // Don't render the ticker on small/mobile screens
+  if (isMobile) return null;
+
   // Now that `widgetHeight` is initialized, build the container style.
   const containerStyle = {
     position: 'relative',
@@ -87,7 +140,7 @@ const TradingViewTicker = ({ fixed = true }) => {
     minWidth: 0,
     boxSizing: 'border-box',
     overflow: 'visible',
-    transition: 'min-height 180ms ease',
+    transition: prefersReduced ? 'none' : 'min-height 180ms ease',
   };
 
   return (
@@ -100,10 +153,12 @@ const TradingViewTicker = ({ fixed = true }) => {
       <iframe
         title="TradingView Ticker Tape"
         src={iframeSrc}
-        className="w-full"
-        style={{ width: '100%', height: `${widgetHeight}px`, border: 'none', display: 'block', minWidth: 0 }}
+          className="w-full"
+          style={{ width: '100%', height: `${widgetHeight}px`, border: 'none', display: 'block', minWidth: 0, transition: prefersReduced ? 'none' : 'height 180ms ease' }}
         loading="lazy"
-        aria-hidden={false}
+          aria-hidden={false}
+          // When reduced-motion is requested, avoid iframe lazy-loading tricks that may animate; keep behavior simple
+          referrerPolicy={prefersReduced ? 'no-referrer' : undefined}
       />
     </div>
   );

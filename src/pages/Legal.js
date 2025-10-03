@@ -12,18 +12,18 @@ const staggerContainer = {
   },
 };
 
-function Legal() {
+function Disclaimer() {
   const { t } = useTranslation();
 
   return (
     <>
       <Helmet>
-        <title>{t('pages.Legal.disclaimer-wise-global-research', 'Disclaimer | Wise Global Research')}</title>
+        <title>{t('pages.Disclaimer.disclaimer-wise-global-research', 'Disclaimer | Wise Global Research')}</title>
         <meta name="description" content="Read the disclaimer and important information for Wise Global Research Services Pvt. Ltd." />
         <meta property="og:title" content="Disclaimer | Wise Global Research" />
         <meta property="og:description" content="Read the disclaimer and important information for Wise Global Research Services Pvt. Ltd." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://wiseglobalresearch.com/legal" />
+        <meta property="og:url" content="https://wiseglobalresearch.com/disclaimer" />
         <meta name="twitter:title" content="Disclaimer | Wise Global Research" />
         <meta name="twitter:description" content="Read the disclaimer and important information for Wise Global Research Services Pvt. Ltd." />
       </Helmet>
@@ -34,12 +34,12 @@ function Legal() {
         variants={staggerContainer}
       >
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8 text-center"><Trans i18nKey="pages.Legal.disclaimer">Disclaimer</Trans></h1>
+          <h1 className="text-3xl font-bold mb-8 text-center"><Trans i18nKey="pages.Disclaimer.disclaimer">Disclaimer</Trans></h1>
           <div className="space-y-6 text-base leading-relaxed">
             <p>
               Wise Global Research Services Pvt Ltd. provide are believed to be reliable, but we do not represent or warrant the accuracy, completeness, or reliability of the information contained in our Research Information, investors and clients are advised to independently evaluate the market conditions/ risks involved, before making any trading/investment decisions. The Research Information is not intended to be an exhaustive statement on the financial instruments, issuers, markets, or developments referred to therein. Reasonable care has been taken to ensure that the Research Information is not misleading or untrue at the time of publication. Any opinions expressed in the Research Information are subject to change without notice. The analysis contained in the Research Information is based on numerous assumptions. Different assumptions could result in materially different results. Information in the specific research reports is for the private use of the person to whom it has been provided without any liability whatsoever on the part of the company, its partners, employees, and associated entities. The research material published on this website does not constitute an offer or solicitation to buy or sell any securities referred to therein. It should not be so construed, nor should it or any part of it form the basis of, or be relied on in connection with, any contract or commitment whatsoever.
             </p>
-            <p><Trans i18nKey="pages.Legal.the-information-and-views-on-this-websit"><Trans i18nKey="pages.Legal.the-information-and-views-on-this-websit-1">The information and views on this website Wise Global Research & all the services and reports that we provide are believed to be reliable, but we do not accept any responsibility (or liability) for errors of fact or opinion. Users have the right to choose the product/s that suit them/ their profile.</Trans></Trans></p>
+            <p><Trans i18nKey="pages.Disclaimer.the-information-and-views-on-this-websit"><Trans i18nKey="pages.Disclaimer.the-information-and-views-on-this-websit-1">The information and views on this website Wise Global Research & all the services and reports that we provide are believed to be reliable, but we do not accept any responsibility (or liability) for errors of fact or opinion. Users have the right to choose the product/s that suit them/ their profile.</Trans></Trans></p>
             <p>
               Investment/Trading in Securities markets has its own risks. Sincere efforts have been made to present the right investment perspective. The information contained here in is based on analysis and on sources that we consider reliable. We, however, do not vouch for the accuracy or the completeness there of. This material is for personal information and we are not responsible for any loss incurred due to it & take no responsibility whatsoever for any financial profits or loss which may arise from the recommendations above.
             </p>
@@ -82,4 +82,4 @@ function Legal() {
   );
 }
 
-export default Legal;
+export default Disclaimer;

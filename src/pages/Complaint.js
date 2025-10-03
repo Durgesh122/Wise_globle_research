@@ -54,8 +54,9 @@ const Complaint = () => {
       // Best-effort: also notify server to send an email copy to support
       (async () => {
         try {
-          const apiBase = 'https://wise-global-contact-systems.onrender.com';
-          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+            // Use local API during development/testing
+            const apiBase = 'http://localhost:3002';
+            const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
           await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -306,8 +307,8 @@ const Complaint = () => {
                     </div>
                   </div>
                   <div className="mt-6 flex items-start text-xs sm:text-sm" style={{ color: activeTheme.textColor, opacity: 0.8 }}>
-                    <input type="checkbox" required className="mr-2 mt-1" />
-                    <label><Trans i18nKey="pages.Complaint.i-confirm-this-complaint-is-genuine-and-"><Trans i18nKey="pages.Complaint.i-confirm-this-complaint-is-genuine-and--1">I confirm this complaint is genuine and understand it will be registered as per SEBI compliance.</Trans></Trans></label>
+                    <input id="complaint-confirm" name="complaintConfirm" type="checkbox" required className="mr-2 mt-1" />
+                    <label htmlFor="complaint-confirm"><Trans i18nKey="pages.Complaint.i-confirm-this-complaint-is-genuine-and-"><Trans i18nKey="pages.Complaint.i-confirm-this-complaint-is-genuine-and--1">I confirm this complaint is genuine and understand it will be registered as per SEBI compliance.</Trans></Trans></label>
                   </div>
                   <div className="mt-6 flex flex-col sm:flex-row gap-2 sm:gap-0 justify-between">
                     <button

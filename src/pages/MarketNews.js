@@ -165,8 +165,12 @@ function MarketNews() {
                     </div>
                     <div className="flex justify-between items-center pt-2 mt-4" style={{ borderColor: colors.border, borderTopWidth: '1px' }}>
                       <div className="flex space-x-2">
-                        <motion.button onClick={() => toggleBookmark(item.id)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="p-2 rounded-full" style={{ color: bookmarked.includes(item.id) ? colors.secondary : colors.textSecondary }}><FiBookmark className={bookmarked.includes(item.id) ? 'fill-current' : ''} /></motion.button>
-                        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="p-2 rounded-full" style={{ color: colors.textSecondary }}><FiShare2 /></motion.button>
+                        <motion.button type="button" onClick={() => toggleBookmark(item.id)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="p-2 rounded-full" style={{ color: bookmarked.includes(item.id) ? colors.secondary : colors.textSecondary }} title={bookmarked.includes(item.id) ? 'Remove bookmark' : 'Add bookmark'} aria-label={bookmarked.includes(item.id) ? 'Remove bookmark' : 'Add bookmark'}>
+                          <FiBookmark aria-hidden="true" className={bookmarked.includes(item.id) ? 'fill-current' : ''} />
+                        </motion.button>
+                        <motion.button type="button" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="p-2 rounded-full" style={{ color: colors.textSecondary }} title="Share news" aria-label="Share news">
+                          <FiShare2 aria-hidden="true" />
+                        </motion.button>
                       </div>
                       <motion.a href={item.url || '#'} target="_blank" rel="noopener noreferrer" whileHover={{ x: 5 }} className="flex items-center text-sm font-medium" style={{ color: colors.primary }}><Trans i18nKey="pages.MarketNews.read-full-story">Read full story</Trans><BsArrowUpRight className="ml-1" /></motion.a>
                     </div>

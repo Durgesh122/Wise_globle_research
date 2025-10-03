@@ -1,15 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Line } from 'react-chartjs-2';
+import registerChartOnce from '../utils/registerChart';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { generateChartData } from '../utils/chartUtils';
 import { cardVariants } from '../utils/animationVariants';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+// Ensure Chart.js is registered once when this module is imported (module-eval of this lazy chunk)
+registerChartOnce();
 
 const AnimatedChart = ({ symbol }) => {
   const chartRef = useRef(null);
   const [chartData, setChartData] = useState(generateChartData(symbol));
+
+  React.useEffect(() => {
+    try {
+      ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+    } catch (e) {
+      // ignore if already registered
+    }
+  }, []);
 
   const prefersReduced = typeof window !== 'undefined' && window.matchMedia
     ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -113,7 +123,7 @@ const AnimatedChart = ({ symbol }) => {
       style={{ transformStyle: 'preserve-3d', width: '100%', height: '100%' }}
     >
       <div className="relative w-full h-full">
-        <Line ref={chartRef} data={data} options={options} />
+  <Line ref={chartRef} data={data} options={options} aria-label={`${symbol} chart`} role="img" />
       </div>
     </motion.div>
   );

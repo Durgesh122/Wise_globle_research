@@ -60,11 +60,11 @@ const ConsentTable = ({ submissions, handleDelete }) => (
             <td data-label="PAN Card" className="hidden md:table-cell p-2 sm:p-4">
               {submission.panCard ? (
                 <div className="flex items-center gap-2">
-                  <a href={submission.panCard} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                    <FiEye size={14} />
+                  <a href={submission.panCard} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline" title="Preview PAN card" aria-label={`Preview PAN card for ${submission.clientName || 'client'}`}>
+                    <FiEye aria-hidden="true" size={14} />
                   </a>
-                  <a href={submission.panCard} download className="text-green-400 hover:underline">
-                    <FiDownload size={14} />
+                  <a href={submission.panCard} download className="text-green-400 hover:underline" title="Download PAN card" aria-label={`Download PAN card for ${submission.clientName || 'client'}`}>
+                    <FiDownload aria-hidden="true" size={14} />
                   </a>
                 </div>
               ) : 'N/A'}
@@ -72,11 +72,11 @@ const ConsentTable = ({ submissions, handleDelete }) => (
             <td data-label="Aadhaar Card" className="hidden md:table-cell p-2 sm:p-4">
               {submission.aadhaarCard ? (
                 <div className="flex items-center gap-2">
-                  <a href={submission.aadhaarCard} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                    <FiEye size={14} />
+                  <a href={submission.aadhaarCard} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline" title="Preview Aadhaar card" aria-label={`Preview Aadhaar card for ${submission.clientName || 'client'}`}>
+                    <FiEye aria-hidden="true" size={14} />
                   </a>
-                  <a href={submission.aadhaarCard} download className="text-green-400 hover:underline">
-                    <FiDownload size={14} />
+                  <a href={submission.aadhaarCard} download className="text-green-400 hover:underline" title="Download Aadhaar card" aria-label={`Download Aadhaar card for ${submission.clientName || 'client'}`}>
+                    <FiDownload aria-hidden="true" size={14} />
                   </a>
                 </div>
               ) : 'N/A'}
@@ -84,18 +84,20 @@ const ConsentTable = ({ submissions, handleDelete }) => (
             <td data-label="Signature" className="hidden lg:table-cell p-2 sm:p-4">
               {submission.signature ? (
                 <div className="flex items-center gap-2">
-                  <a href={submission.signature} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                    <FiEye size={14} />
+                  <a href={submission.signature} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline" title="Preview signature" aria-label={`Preview signature for ${submission.clientName || 'client'}`}>
+                    <FiEye aria-hidden="true" size={14} />
                   </a>
-                  <a href={submission.signature} download className="text-green-400 hover:underline">
-                    <FiDownload size={14} />
+                  <a href={submission.signature} download className="text-green-400 hover:underline" title="Download signature" aria-label={`Download signature for ${submission.clientName || 'client'}`}>
+                    <FiDownload aria-hidden="true" size={14} />
                   </a>
                 </div>
               ) : 'N/A'}
             </td>
             <td data-label="Timestamp" className="p-2 sm:p-4 whitespace-nowrap">{submission.timestamp ? new Date(submission.timestamp).toLocaleString('en-IN') : 'N/A'}</td>
             <td data-label="Actions" className="p-2 sm:p-4">
-              <motion.button onClick={() => handleDelete(submission)} className="text-red-500 hover:text-red-700" variants={buttonVariants} whileHover="hover"><FiTrash2 size={16} /></motion.button>
+              <motion.button type="button" onClick={() => handleDelete(submission)} className="text-red-500 hover:text-red-700" variants={buttonVariants} whileHover="hover" title="Delete submission" aria-label={`Delete submission from ${submission.clientName || 'unknown'}`}>
+                <FiTrash2 aria-hidden="true" size={16} />
+              </motion.button>
             </td>
           </motion.tr>
         ))}

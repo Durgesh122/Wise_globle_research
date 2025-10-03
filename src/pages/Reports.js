@@ -136,6 +136,7 @@ const ReportPreviewModal = ({ isOpen, onClose, report = null, onDownload = null 
                   </a>
                 )}
                 <motion.button
+                  type="button"
                   onClick={onClose}
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
                   variants={buttonVariants}
@@ -175,6 +176,7 @@ const ReportPreviewModal = ({ isOpen, onClose, report = null, onDownload = null 
               <div className="p-3 border-t border-gray-200/10 bg-gray-50/5 flex justify-end gap-3">
                 {onDownload && (
                   <motion.button
+                    type="button"
                     onClick={() => onDownload(report)}
                     className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
                     variants={buttonVariants}
@@ -185,6 +187,7 @@ const ReportPreviewModal = ({ isOpen, onClose, report = null, onDownload = null 
                   </motion.button>
                 )}
                 <motion.button
+                  type="button"
                   onClick={onClose}
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg"
                   variants={buttonVariants}
@@ -278,14 +281,14 @@ const SearchFilter = ({ searchTerm, setSearchTerm, selectedCategory, setSelected
       />
     </div>
     <select
-      className="px-4 py-3 rounded-lg bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
+      className="px-4 py-3 rounded-lg bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
       value={selectedCategory}
       onChange={(e) => setSelectedCategory(e.target.value)}
       aria-label="Select report category"
     >
-      <option value="All"><Trans i18nKey="pages.Reports.all-categories">All Categories</Trans></option>
+      <option value="All" className="text-black"><Trans i18nKey="pages.Reports.all-categories">All Categories</Trans></option>
       {CATEGORIES.map((cat) => (
-        <option key={cat} value={cat} className="bg-gray-800">
+        <option key={cat} value={cat} className="text-black">
           {cat}
         </option>
       ))}
@@ -662,23 +665,23 @@ function Reports() {
             </div>
 
             {/* PDF Preview */}
-            <div className="w-full md:w-2/3 bg-gray-900/50">
+            <div className="w-full md:w-2/3 bg-transparent">
               <div className="p-6 h-full">
                 {pdfPreview ? (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-white/10 backdrop-blur-lg shadow-sm rounded-lg overflow-hidden h-full flex flex-col"
+                    className="bg-white text-black shadow-sm rounded-lg overflow-hidden h-full flex flex-col"
                     data-aos="fade-up"
                   >
-                    <div className="px-6 py-4 border-b border-gray-200/20">
-                      <h3 className="text-lg font-medium text-white">{pdfPreview.title}</h3>
-                      <p className="text-sm text-gray-300 mt-1">{pdfPreview.description}</p>
+                    <div className="px-6 py-4 border-b border-gray-200">
+                      <h3 className="text-lg font-medium text-black">{pdfPreview.title}</h3>
+                      <p className="text-sm text-gray-700 mt-1">{pdfPreview.description}</p>
                     </div>
-                    <div className="flex-grow p-6 flex items-center justify-center bg-gray-800/50">
+                    <div className="flex-grow p-6 flex items-center justify-center bg-white">
                       <div className="text-center">
-                        <div className="mb-4 p-4 bg-white/10 rounded-lg shadow-inner">
+                        <div className="mb-4 p-4 bg-white rounded-lg shadow-inner border">
                           <img
                             src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
                             alt="PDF Thumbnail"
@@ -694,12 +697,12 @@ function Reports() {
                           aria-label="View report"
                         >
                           <FiEye /><Trans i18nKey="pages.Reports.view-report">View Report</Trans></motion.button>
-                        <p className="mt-2 text-sm text-gray-300">
+                        <p className="mt-2 text-sm text-gray-700">
                           {pdfPreview.title} ({pdfPreview.size})
                         </p>
                       </div>
                     </div>
-                    <div className="px-6 py-4 border-t border-gray-200/20 bg-gray-900/50 text-right">
+                    <div className="px-6 py-4 border-t border-gray-200 bg-white text-right">
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"><Trans i18nKey="pages.Reports.available-for-download-only">Available for download only</Trans></span>
                     </div>
                   </motion.div>
@@ -720,8 +723,8 @@ function Reports() {
                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                         />
                       </svg>
-                      <h3 className="mt-2 text-sm font-medium text-white"><Trans i18nKey="pages.Reports.no-report-selected">No report selected</Trans></h3>
-                      <p className="mt-1 text-sm text-gray-300">Click on a report to preview it.</p>
+                      <h3 className="mt-2 text-sm font-medium text-black"><Trans i18nKey="pages.Reports.no-report-selected">No report selected</Trans></h3>
+                      <p className="mt-1 text-sm text-gray-700">Click on a report to preview it.</p>
                     </div>
                   </div>
                 )}
@@ -752,7 +755,7 @@ function Reports() {
                   inputMode="numeric"
                   maxLength={6}
                   autoFocus
-                  className="w-full px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4 tracking-widest text-center"
+                  className="w-full px-4 py-3 rounded-lg bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4 tracking-widest text-center"
                   placeholder="••••••"
                   value={otpInput}
                   onChange={(e) => setOtpInput(e.target.value.replace(/[^0-9]/g, ''))}

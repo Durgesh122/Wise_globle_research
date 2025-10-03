@@ -187,6 +187,8 @@ const SearchBar = ({ searchQuery, setSearchQuery }) => (
   >
     <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
     <input
+      id="contactdata-search"
+      name="contactdata-search"
       type="text"
       placeholder="Search submissions..."
       className="w-full pl-10 pr-4 py-3 rounded-xl text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
@@ -257,14 +259,16 @@ const SubmissionTable = ({ submissions, handleDeleteSubmission, handleSortToggle
             </td>
             <td className="p-4">
               <motion.button
+                type="button"
                 onClick={() => handleDeleteSubmission(submission.id)}
                 className="text-red-500 hover:text-red-700"
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
+                title={`Delete submission ${submission.name || 'N/A'}`}
                 aria-label={`Delete submission ${submission.name || 'N/A'}`}
               >
-                <FiTrash2 size={16} />
+                <FiTrash2 aria-hidden="true" size={16} />
               </motion.button>
             </td>
           </motion.tr>
@@ -356,14 +360,16 @@ const ConsentSubmissionTable = ({ submissions, handleDelete }) => (
             </td>
             <td className="p-4">
               <motion.button
+                type="button"
                 onClick={() => handleDelete(submission.id)}
                 className="text-red-500 hover:text-red-700"
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
+                title={`Delete submission for ${submission.clientName || 'N/A'}`}
                 aria-label={`Delete submission for ${submission.clientName || 'N/A'}`}
               >
-                <FiTrash2 size={16} />
+                <FiTrash2 aria-hidden="true" size={16} />
               </motion.button>
             </td>
           </motion.tr>
@@ -439,25 +445,29 @@ const ComplaintTable = ({ tableData, setTableData, handleEditTableRow, handleDel
               <td className="p-4">{row.avgResolutionTime || 0}</td>
               <td className="p-4 flex gap-2">
                 <motion.button
+                  type="button"
                   onClick={() => handleEditTableRow(row)}
                   className="text-blue-500 hover:text-blue-700"
                   variants={buttonVariants}
                   whileHover="hover"
                   whileTap="tap"
+                  title={`Edit row ${row.srNo}`}
                   aria-label={`Edit row ${row.srNo}`}
                 >
-                  <FiEdit size={16} />
+                  <FiEdit aria-hidden="true" size={16} />
                 </motion.button>
                 {row.srNo !== 'Grand Total' && (
                   <motion.button
+                    type="button"
                     onClick={() => handleDeleteTableRow(row.srNo)}
                     className="text-red-500 hover:text-red-700"
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
+                    title={`Delete row ${row.srNo}`}
                     aria-label={`Delete row ${row.srNo}`}
                   >
-                    <FiTrash2 size={16} />
+                    <FiTrash2 aria-hidden="true" size={16} />
                   </motion.button>
                 )}
               </td>
@@ -528,8 +538,9 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
             <h3 className="text-lg font-semibold text-white mb-4">
               Edit Row {rowData?.srNo || 'Unknown'}
             </h3>
-            <div className="space-y-4">
+              <div className="space-y-4">
               <input
+                id="edit-source"
                 type="text"
                 value={editedRow.source || ''}
                 onChange={(e) => setEditedRow({ ...editedRow, source: e.target.value })}
@@ -539,6 +550,7 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 disabled={rowData?.srNo === 'Grand Total'}
               />
               <input
+                id="edit-pending-last-month"
                 type="number"
                 value={editedRow.pendingLastMonth || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, pendingLastMonth: Number(e.target.value) || 0 })}
@@ -547,6 +559,7 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 placeholder="Pending last month"
               />
               <input
+                id="edit-received"
                 type="number"
                 value={editedRow.received || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, received: Number(e.target.value) || 0 })}
@@ -555,6 +568,7 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 placeholder="Received"
               />
               <input
+                id="edit-resolved"
                 type="number"
                 value={editedRow.resolved || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, resolved: Number(e.target.value) || 0 })}
@@ -563,6 +577,7 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 placeholder="Resolved"
               />
               <input
+                id="edit-pending"
                 type="number"
                 value={editedRow.pending || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, pending: Number(e.target.value) || 0 })}
@@ -571,6 +586,7 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 placeholder="Pending"
               />
               <input
+                id="edit-pending-3months"
                 type="number"
                 value={editedRow.pending3Months || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, pending3Months: Number(e.target.value) || 0 })}
@@ -579,6 +595,7 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 placeholder="Pending > 3 Months"
               />
               <input
+                id="edit-avg-resolution-time"
                 type="number"
                 value={editedRow.avgResolutionTime || 0}
                 onChange={(e) => setEditedRow({ ...editedRow, avgResolutionTime: Number(e.target.value) || 0 })}
@@ -589,6 +606,7 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
             </div>
             <div className="flex justify-end gap-4 mt-6">
               <motion.button
+                type="button"
                 onClick={onClose}
                 className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
                 variants={buttonVariants}
@@ -596,6 +614,7 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 whileTap="tap"
               ><Trans i18nKey="pages.ContactData.cancel">Cancel</Trans></motion.button>
               <motion.button
+                type="button"
                 onClick={handleSave}
                 className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                 variants={buttonVariants}
@@ -664,7 +683,7 @@ const ReportUploadCard = ({
         aria-label={`Report category for ${day}`}
       >
         {REPORT_CATEGORIES.map((cat) => (
-          <option key={cat} value={cat} className="bg-gray-800">
+          <option key={cat} value={cat}>
             {cat}
           </option>
         ))}
@@ -677,17 +696,19 @@ const ReportUploadCard = ({
         onChange={(e) => setNewReport({ ...newReport, file: e.target.files[0], day })}
         aria-label={`Upload report file for ${day}`}
       />
-      <motion.button
-        onClick={() => handleUploadReport(day)}
-        disabled={uploading[day]}
-        className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
-        variants={buttonVariants}
-        whileHover="hover"
-        whileTap="tap"
-        aria-label={`Upload report for ${day}`}
-      >
-        <FiUpload /> {uploading[day] ? 'Uploading...' : 'Upload'}
-      </motion.button>
+              <motion.button
+                type="button"
+                onClick={() => handleUploadReport(day)}
+                disabled={uploading[day]}
+                className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+                title={`Upload report for ${day}`}
+                aria-label={`Upload report for ${day}`}
+              >
+                <FiUpload aria-hidden="true" /> {uploading[day] ? 'Uploading...' : 'Upload'}
+              </motion.button>
       {passwords[day] && (
         <p className="mt-2 text-sm text-gray-300">
           Password for {day}'s report: <strong>{passwords[day]}</strong>
@@ -711,24 +732,28 @@ const ReportUploadCard = ({
               </div>
               <div className="flex gap-2">
                 <motion.button
+                  type="button"
                   onClick={() => handlePreviewReport(report)}
                   className="text-indigo-500 hover:text-indigo-700"
                   variants={buttonVariants}
                   whileHover="hover"
                   whileTap="tap"
+                  title={`Preview report ${report.title}`}
                   aria-label={`Preview report ${report.title}`}
                 >
-                  <FiEye size={16} />
+                  <FiEye aria-hidden="true" size={16} />
                 </motion.button>
                 <motion.button
+                  type="button"
                   onClick={() => handleDeleteReport(report.id)}
                   className="text-red-500 hover:text-red-700"
                   variants={buttonVariants}
                   whileHover="hover"
                   whileTap="tap"
+                  title={`Delete report ${report.title}`}
                   aria-label={`Delete report ${report.title}`}
                 >
-                  <FiTrash2 size={16} />
+                  <FiTrash2 aria-hidden="true" size={16} />
                 </motion.button>
               </div>
             </motion.li>

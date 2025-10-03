@@ -1,10 +1,19 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import registerChartOnce from '../utils/registerChart';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+// Ensure Chart.js is registered once when this module is imported (module-eval of this lazy chunk)
+registerChartOnce();
 
 const PerformanceChart = () => {
+  React.useEffect(() => {
+    try {
+      ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+    } catch (e) {
+      // ignore if already registered
+    }
+  }, []);
   const data = {
     labels: ['2018', '2019', '2020', '2021', '2022', '2023'],
     datasets: [
@@ -72,7 +81,7 @@ const PerformanceChart = () => {
 
   return (
     <div className="relative w-full h-full">
-      <Line data={data} options={options} />
+      <Line data={data} options={options} aria-label={`Performance chart`} role="img" />
     </div>
   );
 };

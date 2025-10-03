@@ -14,13 +14,10 @@ import {
   FaExclamationTriangle,
   FaPhoneAlt,
   FaDatabase,
-  FaCalendarDay,
   FaEye,
-  FaChartLine,
   FaBalanceScale,
   FaChartPie,
   FaChartBar,
-  FaForward,
   FaStar,
   FaGavel,
   FaBookOpen,
@@ -30,7 +27,6 @@ import {
   FaChartArea,
   FaLandmark,
   FaNewspaper,
-  FaGem,
   FaCrown,
   FaVideo,
   FaCreditCard,
@@ -44,13 +40,10 @@ import {
   FaRocket,
   FaLayerGroup,
   FaCube,
-  FaBoxes,
-  FaChartPie as FaChartPie2,
   FaUserLock,
   FaEye as FaEye2
 } from 'react-icons/fa';
 
-// List of all page files in src/pages (auto-generated, update if new pages are added)
 const pageFiles = [
   { path: '/', name: 'Home', icon: <FaHome style={{ color: '#007bff' }} /> },
   { path: '/about', name: 'About', icon: <FaInfoCircle style={{ color: '#6f42c1' }} /> },
@@ -64,24 +57,19 @@ const pageFiles = [
   { path: '/complaint', name: 'Complaint', icon: <FaExclamationTriangle style={{ color: '#dc3545' }} /> },
   { path: '/complaint-data', name: 'Complaint Data', icon: <FaDatabase style={{ color: '#17a2b8' }} /> },
   { path: '/contact', name: 'Contact', icon: <FaPhoneAlt style={{ color: '#007bff' }} /> },
-  { path: '/recommendation', name: 'Daily Recommendation', icon: <FaCalendarDay style={{ color: '#fd7e14' }} /> },
   { path: '/disclosure', name: 'Disclosure', icon: <FaEye style={{ color: '#e83e8c' }} /> },
-  { path: '/equity', name: 'Equity', icon: <FaChartLine style={{ color: '#007bff' }} /> },
   { path: '/EvaluationIndexOptions', name: 'Evaluation Index Options', icon: <FaBalanceScale style={{ color: '#6f42c1' }} /> },
   { path: '/EvaluationStockCash', name: 'Evaluation Stock Cash', icon: <FaChartPie style={{ color: '#20c997' }} /> },
   { path: '/EvaluationStockOption', name: 'Evaluation Stock Option', icon: <FaChartBar style={{ color: '#fd7e14' }} /> },
-  { path: '/services/equity/future', name: 'Future', icon: <FaForward style={{ color: '#28a745' }} /> },
   { path: '/GalaxyMCX', name: 'Galaxy MCX', icon: <FaStar style={{ color: '#e83e8c' }} /> },
   { path: '/grievance-redressal-process', name: 'Grievance Redressal Process', icon: <FaGavel style={{ color: '#343a40' }} /> },
   { path: '/guide', name: 'Guide For Investing', icon: <FaBookOpen style={{ color: '#6610f2' }} /> },
   { path: '/ImpulseIndexOptions', name: 'Impulse Index Options', icon: <FaBolt style={{ color: '#fdc107' }} /> },
   { path: '/ImpulseOption', name: 'Impulse Option', icon: <FaLightbulb style={{ color: '#dc3545' }} /> },
-  { path: '/services/equity/index', name: 'Index', icon: <FaFileAlt style={{ color: '#007bff' }} /> },
   { path: '/InfinityClub', name: 'Infinity Club', icon: <FaInfinity style={{ color: '#17a2b8' }} /> },
   { path: '/investor-chart', name: 'Investor Chart', icon: <FaChartArea style={{ color: '#007bff' }} /> },
-  { path: '/legal', name: 'Legal', icon: <FaLandmark style={{ color: '#6f42c1' }} /> },
+  { path: '/disclaimer', name: 'Disclaimer', icon: <FaLandmark style={{ color: '#6f42c1' }} /> },
   { path: '/market-news', name: 'Market News', icon: <FaNewspaper style={{ color: '#20c997' }} /> },
-  { path: '/services/mcx/mcx-option', name: 'MCX Option', icon: <FaGem style={{ color: '#e83e8c' }} /> },
   { path: '/MCXSupreme', name: 'MCX Supreme', icon: <FaCrown style={{ color: '#fdc107' }} /> },
   { path: '/media', name: 'Media', icon: <FaVideo style={{ color: '#dc3545' }} /> },
   { path: '/notfound', name: 'Not Found', icon: <FaFileAlt style={{ color: '#dc3545' }} /> },
@@ -96,11 +84,9 @@ const pageFiles = [
   { path: '/SmartFuture', name: 'Smart Future', icon: <FaRocket style={{ color: '#dc3545' }} /> },
   { path: '/services/smart-index-option', name: 'Smart Index Option', icon: <FaLayerGroup style={{ color: '#007bff' }} /> },
   { path: '/SmartOptions', name: 'Smart Options', icon: <FaCube style={{ color: '#6f42c1' }} /> },
-  { path: '/services/equity/stock-index-option', name: 'Stock Index Option', icon: <FaBoxes style={{ color: '#20c997' }} /> },
-  { path: '/services/equity/stock-option', name: 'Stock Option', icon: <FaChartPie2 style={{ color: '#fd7e14' }} /> },
   { path: '/terms', name: 'Terms', icon: <FaUserLock style={{ color: '#28a745' }} /> },
   { path: '/UniversalCash', name: 'Universal Cash', icon: <FaMoneyBillWave style={{ color: '#e83e8c' }} /> },
-  { path: '/user-login', name: 'User Login', icon: <FaUserSecret style={{ color: '#343a40' }} /> },
+  { path: '/admin-login', name: 'Admin Login', icon: <FaUserSecret style={{ color: '#343a40' }} /> },
   { path: '/vision', name: 'Vision', icon: <FaEye2 style={{ color: '#007bff' }} /> }
 ];
 
@@ -114,13 +100,16 @@ function Sitemap() {
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 py-6 sm:py-10">
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-center bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text drop-shadow-lg">Sitemap</h1>
-      <div className="flex justify-center mb-6 sm:mb-8 w-full">
+        <div className="flex justify-center mb-6 sm:mb-8 w-full">
         <input
+          id="sitemap-search"
+          name="sitemap-search"
           type="text"
           placeholder="Search pages..."
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="w-full max-w-xs sm:max-w-md md:max-w-lg px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 text-base sm:text-lg"
+          aria-label="Search sitemap"
         />
       </div>
       <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">

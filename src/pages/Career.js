@@ -175,8 +175,8 @@ const Career = () => {
         form.append('source', 'Career');
         if (formData.resume) form.append('resume', formData.resume, formData.resume.name);
 
-  // Use live backend URL for email notifications
-  const backendUrl = 'https://wise-global-contact-systems.onrender.com/send-email';
+  // Use local backend during development/testing
+  const backendUrl = 'http://localhost:3002/send-email';
   const resp = await fetch(backendUrl, {
           method: 'POST',
           body: form,
@@ -414,7 +414,7 @@ const Career = () => {
     href="/contact"
     className="inline-block bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition"
     style={{ color: '#111' }}
-  ><Trans i18nKey="pages.Career.contact-us">Enquiry Now</Trans></a>
+  ><Trans i18nKey="pages.Career.contact-us">Enquiry</Trans></a>
       </motion.div>
 
     </motion.div>

@@ -8,6 +8,18 @@
   --nav-offset: 0px;
 }
 
+/* Accessibility override: when the page uses a light theme (text is dark on light bg)
+   ensure navbar interactive items are sufficiently dark to meet 4.5:1 contrast
+   against the navbar background which in the default theme is a bright gradient. */
+html[data-theme-light="true"] nav, html[data-theme-light="true"] nav .nav-item,
+html[data-theme-light="true"] .nav-scroll > * > a,
+html[data-theme-light="true"] .nav-scroll > * > button,
+html[data-theme-light="true"] .nav-scroll > * > .nav-item,
+html[data-theme-light="true"] .mobile-menu .nav-item {
+  /* use a reliably dark color that contrasts against bright navbar gradients */
+  color: #0b1220 !important;
+}
+
 /* Ensure the main navbar content uses the navbar color variable so ThemeContext
    overrides (like --navbar-color) reliably apply across links and buttons. We
    avoid touching absolute dropdown panels which explicitly set their own text
@@ -65,6 +77,36 @@ nav {
   to { transform: translateX(0); }
 }
 
+@keyframes swingIn {
+  0% {
+    transform: translateX(100%) rotateY(-30deg);
+    opacity: 0;
+  }
+  70% {
+    transform: translateX(-10%) rotateY(10deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes swingOut {
+  0% {
+    transform: translateX(0) rotateY(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: translateX(-10%) rotateY(10deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) rotateY(-30deg);
+    opacity: 0;
+  }
+}
+
 .animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
 .animate-slideDown { animation: slideDown 0.3s ease-in-out; will-change: transform, opacity; }
 .animate-slideIn { animation: slideIn 0.4s ease-in-out; will-change: transform; }
@@ -120,17 +162,19 @@ nav.fixed, nav {
 .nav-item {
   position: relative;
   padding: 8px 12px;
+  margin: 0 6px;
   cursor: pointer;
   transition: none;
   font-weight: 500;
   box-sizing: border-box; /* ensure borders don't change layout/size */
-  /* Responsive logo image: fill the circular container while remaining crisp and responsive */
-  .wise-logo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
+}
+
+/* Responsive logo image: fill the circular container while remaining crisp and responsive */
+.wise-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* Thicker, rounded, gradient underline for nav items. Uses transform for smoother animation. */
@@ -190,6 +234,45 @@ svg {
   width: 20px;
   height: 20px;
 }
+
+/* TopNavItem helper: show label above icon on desktop */
+.desktop-menu .nav-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 64px; /* keep a minimum for icon visibility */
+  white-space: nowrap; /* prevent label wrapping */
+}
+
+
+
+.desktop-menu .nav-item span { display: block; }
+
+/* Force icon above label for top-nav items */
+.desktop-menu .nav-item .topnav-icon { order: 0; margin-bottom: 4px; }
+.desktop-menu .nav-item .topnav-label { order: 1; font-size: 12px; }
+
+/* Prevent the top-level nav from wrapping on medium screens; allow horizontal scroll */
+.nav-scroll {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.12) transparent;
+}
+
+/* Hide default scrollbar but provide a thin visible track on hover for desktop */
+.nav-scroll::-webkit-scrollbar { height: 8px; }
+.nav-scroll::-webkit-scrollbar-track { background: transparent; }
+.nav-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 8px; }
+.nav-scroll:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); }
+
+/* Ensure nav items don't shrink inside flex container so icons remain visible */
+.nav-item { flex: 0 0 auto; }
 
 /* Mobile Styles */
 @media (max-width: 768px) {
@@ -478,6 +561,54 @@ svg {
   opacity: 1;
 }
 
+/* Mobile drawer container animation helpers */
+.mobile-menu {
+  /* The inline styles in JS control transform, but add opacity + will-change hints for smoother anim */
+  opacity: 0;
+  transition: opacity 260ms ease, transform 300ms cubic-bezier(.2,.9,.2,1);
+  will-change: transform, opacity;
+}
+.mobile-menu.open {
+  opacity: 1;
+  /* small entrance reveal for children handled with .mobile-stagger */
+}
+
+/* Make the drawer content slightly swing in for a premium feel on open */
+.mobile-menu.open .mobile-stagger > * {
+  animation-name: mobileStaggerIn;
+  animation-duration: 380ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(.2,.9,.2,1);
+}
+
+/* Animated toggle icon (close icon rotates subtly when opening) */
+.drawer-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  padding: 6px;
+}
+.drawer-toggle .toggle-icon {
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 180ms ease;
+  color: var(--navbar-color, var(--text-color));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.drawer-toggle.open .toggle-icon {
+  transform: rotate(90deg) scale(1.03);
+}
+
+/* Make the hamburger to close morph smoother (slightly slower easing) */
+.hamburger .bar {
+  transition: transform 300ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease, background-color 180ms ease;
+}
+.hamburger.open .bar:nth-child(1) { transform-origin: center; }
+.hamburger.open .bar:nth-child(3) { transform-origin: center; }
+
+
 .mobile-drawer {
   position: fixed;
   top: calc(var(--nav-offset, 0px) + env(safe-area-inset-top, 0px));
@@ -489,15 +620,33 @@ svg {
   border: 1px solid rgba(0,0,0,0.06);
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
   z-index: 9999;
-  transform: translateX(100%);
-  transition: transform 0.3s ease-in-out;
   overflow-y: auto;
   display: block;
-  will-change: transform;
+  will-change: transform, opacity;
   contain: content;
   overscroll-behavior: contain;
+  /* Animations will be applied via inline style in JS */
 }
 
-.mobile-drawer.open {
-  transform: translateX(0);
+/* The animation for .mobile-drawer.open will be handled via inline style in JS */
+
+.plus-icon {
+  transition: transform 0.3s ease;
+}
+
+@keyframes spin-bounce {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(225deg);
+  }
+  100% {
+    transform: scale(1) rotate(405deg);
+  }
+}
+
+.plus-icon.open {
+  animation: spin-bounce 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  transform: rotate(405deg); /* End state of the animation */
 }

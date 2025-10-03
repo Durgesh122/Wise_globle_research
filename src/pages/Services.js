@@ -1,9 +1,13 @@
 // src/pages/Services.js
-import React, { useState } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { Trans, useTranslation } from '../i18nShim';
 import { Link } from 'react-router-dom';
 import { FaPlus, FaMinus, FaChartLine, FaRegLightbulb, FaStar, FaShieldAlt } from 'react-icons/fa';
 import { Helmet } from 'react-helmet-async';
+import { ThemeContext } from '../context/ThemeContext';
+// Local images (from src/assets/images)
+// Replaced local images with hosted image URLs to reduce bundle size and use CDN images
+// Local image imports removed as requested. Use the imagesMap / localImagesUrls below instead.
 
 // Services data reflecting a SEBI Registered Research Analyst firm
 export const services = [
@@ -87,6 +91,8 @@ export const services = [
   },
 ];
 
+// No external images: use gradient header blocks with centered icons instead of images
+
 // Helper to map service names to specific routes
 const getServicePath = (name) => {
   const routeName = name.toLowerCase().replace(/\s+/g, '-');
@@ -94,7 +100,7 @@ const getServicePath = (name) => {
     case 'MCX Supreme':
   return '/MCXSupreme';
     case 'Galaxy MCX':
-      return '/galaxymcx';
+      return '/GalaxyMCX';
     default:
       return `/services/${routeName}`;
   }
@@ -103,10 +109,17 @@ const getServicePath = (name) => {
 // Main Services Page Component
 const ServicesPage = () => {
   const { t } = useTranslation();
+  const { textColor } = useContext(ThemeContext);
   const [expandedService, setExpandedService] = useState(null);
+  const expandedRefs = useRef({});
 
   const toggleService = (index) => {
     setExpandedService(expandedService === index ? null : index);
+    // focus the expanded panel for keyboard users
+    setTimeout(() => {
+      const el = expandedRefs.current[index];
+      if (el) el.focus();
+    }, 120);
   };
 
   return (
@@ -123,54 +136,251 @@ const ServicesPage = () => {
         <meta name="twitter:image" content="https://wiseglobalresearch.com/og-image.jpg" />
       </Helmet>
       <div className="min-h-screen bg-transparent">
-        <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+          {/* Small hero CTA to drive conversions */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 mb-8 shadow-lg text-white">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold">{t('pages.Services.get-started-with-our-research','Get started with Wise Global Research')}</h2>
+                <p className="mt-1 text-sm opacity-90">{t('pages.Services.try-free-trial','Try our Free Trial on selected plans and experience our research quality.')}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <a href="#plans" className="inline-flex items-center px-5 py-2 bg-white text-blue-700 font-semibold rounded-lg shadow hover:opacity-95 transition">{t('pages.Services.view-plans','View Plans')}</a>
+                <Link to="/contact" className="inline-flex items-center px-4 py-2 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition">{t('pages.Services.contact-us','Contact Us')}</Link>
+              </div>
+            </div>
+          </div>
+        
+          <div className="py-2">
+            {/* anchor for CTA */}
+            <div id="plans"></div>
+          </div>
+
+          <div className="py-2">
           {/* Header Section */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight max-w-4xl mx-auto"><Trans i18nKey="pages.Services.our-research-services">Our Research Services</Trans></h1>
-            <p className="mt-4 text-base sm:text-lg text-white max-w-3xl mx-auto px-2 sm:px-0"><Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi-"><Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi--1">Wise Global Research Services is a SEBI Registered Research Analyst firm, committed to providing unbiased, data-driven insights to empower your financial decisions.</Trans></Trans></p>
+          <div className="text-center mb-8" style={{ color: textColor }}>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight max-w-4xl mx-auto" style={{ color: textColor }}>
+              <Trans i18nKey="pages.Services.our-research-services">Our Research Services</Trans>
+            </h1>
+            <p className="mt-4 text-base sm:text-lg max-w-3xl mx-auto px-2 sm:px-0" style={{ color: textColor, opacity: 0.95 }}>
+              <Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi-"><Trans i18nKey="pages.Services.wise-global-research-services-is-a-sebi--1">Wise Global Research Services is a SEBI Registered Research Analyst firm, committed to providing unbiased, data-driven insights to empower your financial decisions.</Trans></Trans>
+            </p>
+          </div>
+
           </div>
 
           {/* Services Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {services.map((service, index) => (
-              <div 
-                key={index} 
-                className="rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out text-white w-full"
-                style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}
-              >
-                <div className="p-6 flex flex-col h-full">
-                  <div className="flex items-center mb-4">
-                    <div className="text-2xl sm:text-3xl mr-3">{service.icon}</div>
-                    <h2 className="text-xl sm:text-2xl md:text-2xl font-bold text-gray-800">{service.name}</h2>
-                  </div>
-                  <p className="text-white mb-6 flex-grow text-sm sm:text-base">{service.description}</p>
-                  <div className="flex items-center justify-between mt-auto">
-                    <Link
-                      to={getServicePath(service.name)}
-                      className="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all duration-300"
-                    ><Trans i18nKey="pages.Services.view-plan">View Plan</Trans></Link>
-                    <button
-                      onClick={() => toggleService(index)}
-                      className="flex items-center text-white hover:text-gray-200 font-semibold transition-colors duration-300 text-sm"
-                    >
-                      {expandedService === index ? <FaMinus className="mr-2" /> : <FaPlus className="mr-2" />}
-                      Details
-                    </button>
-                  </div>
-                  {expandedService === index && (
-                    <div className="mt-6 border-t border-white/50 pt-4">
-                      <p className="text-sm text-white"><Trans i18nKey="pages.Services.this-research-service-falls-under-the"><Trans i18nKey="pages.Services.this-research-service-falls-under-the-1">This research service falls under the</Trans></Trans> <span className="font-semibold">{service.category}</span> <Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro"><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro-1">category. Our analysis is based on rigorous methodologies and market data.</Trans></Trans></p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12" id="plans-grid">
+            {services.map((service, index) => {
+              // Simple category -> image mapping using Unsplash search queries as placeholders
+              // Use the source.unsplash.com featured endpoint with size + keywords so it reliably returns an image
+              // Map local images cyclically so every card has a local, reliable image
+              // Allow specific overrides for certain services
+              if (service.name === 'Smart Cash') return (
+                <article
+                  key={index}
+                  className="relative rounded-2xl overflow-hidden transform hover:-translate-y-2 focus-within:-translate-y-2 transition-all duration-300 ease-in-out w-full bg-white/5"
+                  style={{ border: `1px solid var(--bg-border)`, backdropFilter: 'blur(6px)', background: 'var(--bg-surface)', boxShadow: '0 6px 18px rgba(2,6,23,0.12)' }}
+                >
+                  {/* Free Trial ribbon removed as requested */}
+                  
+                  
+                  <div className="flex flex-col h-full">
+                    <div className="w-full h-44 sm:h-48 md:h-52 overflow-hidden flex items-center justify-center"
+                      style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.12), rgba(99,102,241,0.12))' }}>
+                      <div className="text-5xl sm:text-6xl text-white/90" aria-hidden>{service.icon}</div>
                     </div>
-                  )}
-                </div>
-              </div>
-            ))}
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="flex items-center mb-3">
+                        <div className="text-2xl sm:text-3xl mr-3" style={{ color: 'var(--accent)' }}>{service.icon}</div>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: textColor }}>{service.name}</h2>
+                      </div>
+                      <p className="mb-4 flex-grow text-sm sm:text-base leading-relaxed" style={{ color: textColor, opacity: 0.95 }}>{service.description}</p>
+                      <div className="flex items-center justify-between mt-auto">
+                        <Link
+                          to={getServicePath(service.name)}
+                          className="inline-flex items-center px-5 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        ><Trans i18nKey="pages.Services.view-plan">View Plan</Trans></Link>
+                        <button
+                          onClick={() => toggleService(index)}
+                          aria-expanded={expandedService === index}
+                          aria-controls={`service-details-${index}`}
+                          className="flex items-center font-semibold transition-colors duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 rounded"
+                          style={{ color: textColor }}
+                        >
+                          {expandedService === index ? <FaMinus className="mr-2" /> : <FaPlus className="mr-2" />}
+                          <span>Details</span>
+                        </button>
+                      </div>
+                      <div
+                        id={`service-details-${index}`}
+                        ref={(el) => (expandedRefs.current[index] = el)}
+                        tabIndex={-1}
+                        className={`mt-4 overflow-hidden transition-all duration-300 ${expandedService === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
+                        style={{ borderTop: `1px solid var(--bg-border)`, paddingTop: expandedService === index ? '1rem' : '0' }}
+                        aria-hidden={expandedService === index ? 'false' : 'true'}
+                      >
+                        <p className="text-sm" style={{ color: textColor }}><Trans i18nKey="pages.Services.this-research-service-falls-under-the"><Trans i18nKey="pages.Services.this-research-service-falls-under-the-1">This research service falls under the</Trans></Trans> <span className="font-semibold">{service.category}</span> <Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro"><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro-1">category. Our analysis is based on rigorous methodologies and market data.</Trans></Trans></p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+
+              if (service.name === 'MCX Supreme') return (
+                <article
+                  key={index}
+                  className="relative rounded-2xl overflow-hidden transform hover:-translate-y-2 focus-within:-translate-y-2 transition-all duration-300 ease-in-out w-full bg-white/5"
+                  style={{ border: `1px solid var(--bg-border)`, backdropFilter: 'blur(6px)', background: 'var(--bg-surface)', boxShadow: '0 6px 18px rgba(2,6,23,0.08)' }}
+                >
+                  <div className="absolute top-3 left-3 bg-indigo-500 text-xs font-semibold text-white uppercase px-2 py-1 rounded">Premium</div>
+                  <div className="flex flex-col h-full">
+                    <div className="w-full h-44 sm:h-48 md:h-52 overflow-hidden flex items-center justify-center"
+                      style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.12))' }}>
+                      <div className="text-5xl sm:text-6xl text-white/90" aria-hidden>{service.icon}</div>
+                    </div>
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="flex items-center mb-3">
+                        <div className="text-2xl sm:text-3xl mr-3" style={{ color: 'var(--accent)' }}>{service.icon}</div>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: textColor }}>{service.name}</h2>
+                      </div>
+                      <p className="mb-4 flex-grow text-sm sm:text-base leading-relaxed" style={{ color: textColor, opacity: 0.95 }}>{service.description}</p>
+                      <div className="flex items-center justify-between mt-auto">
+                        <Link
+                          to={getServicePath(service.name)}
+                          className="inline-flex items-center px-5 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        ><Trans i18nKey="pages.Services.view-plan">View Plan</Trans></Link>
+                        <button
+                          onClick={() => toggleService(index)}
+                          aria-expanded={expandedService === index}
+                          aria-controls={`service-details-${index}`}
+                          className="flex items-center font-semibold transition-colors duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 rounded"
+                          style={{ color: textColor }}
+                        >
+                          {expandedService === index ? <FaMinus className="mr-2" /> : <FaPlus className="mr-2" />}
+                          <span>Details</span>
+                        </button>
+                      </div>
+                      <div
+                        id={`service-details-${index}`}
+                        ref={(el) => (expandedRefs.current[index] = el)}
+                        tabIndex={-1}
+                        className={`mt-4 overflow-hidden transition-all duration-300 ${expandedService === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
+                        style={{ borderTop: `1px solid var(--bg-border)`, paddingTop: expandedService === index ? '1rem' : '0' }}
+                        aria-hidden={expandedService === index ? 'false' : 'true'}
+                      >
+                        <p className="text-sm" style={{ color: textColor }}><Trans i18nKey="pages.Services.this-research-service-falls-under-the"><Trans i18nKey="pages.Services.this-research-service-falls-under-the-1">This research service falls under the</Trans></Trans> <span className="font-semibold">{service.category}</span> <Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro"><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro-1">category. Our analysis is based on rigorous methodologies and market data.</Trans></Trans></p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+
+              if (service.name === 'Galaxy MCX') return (
+                <article
+                  key={index}
+                  className="relative rounded-2xl overflow-hidden transform hover:-translate-y-2 focus-within:-translate-y-2 transition-all duration-300 ease-in-out w-full bg-white/5"
+                  style={{ border: `1px solid var(--bg-border)`, backdropFilter: 'blur(6px)', background: 'var(--bg-surface)', boxShadow: '0 6px 18px rgba(2,6,23,0.06)' }}
+                >
+                  <div className="absolute top-3 left-3 bg-indigo-400 text-xs font-semibold text-white uppercase px-2 py-1 rounded">Popular</div>
+                  <div className="flex flex-col h-full">
+                    <div className="w-full h-44 sm:h-48 md:h-52 overflow-hidden flex items-center justify-center"
+                      style={{ background: 'linear-gradient(135deg, rgba(79,70,229,0.10), rgba(236,72,153,0.08))' }}>
+                      <div className="text-5xl sm:text-6xl text-white/90" aria-hidden>{service.icon}</div>
+                    </div>
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="flex items-center mb-3">
+                        <div className="text-2xl sm:text-3xl mr-3" style={{ color: 'var(--accent)' }}>{service.icon}</div>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: textColor }}>{service.name}</h2>
+                      </div>
+                      <p className="mb-4 flex-grow text-sm sm:text-base leading-relaxed" style={{ color: textColor, opacity: 0.95 }}>{service.description}</p>
+                      <div className="flex items-center justify-between mt-auto">
+                        <Link
+                          to={getServicePath(service.name)}
+                          className="inline-flex items-center px-5 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        ><Trans i18nKey="pages.Services.view-plan">View Plan</Trans></Link>
+                        <button
+                          onClick={() => toggleService(index)}
+                          aria-expanded={expandedService === index}
+                          aria-controls={`service-details-${index}`}
+                          className="flex items-center font-semibold transition-colors duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 rounded"
+                          style={{ color: textColor }}
+                        >
+                          {expandedService === index ? <FaMinus className="mr-2" /> : <FaPlus className="mr-2" />}
+                          <span>Details</span>
+                        </button>
+                      </div>
+                      <div
+                        id={`service-details-${index}`}
+                        ref={(el) => (expandedRefs.current[index] = el)}
+                        tabIndex={-1}
+                        className={`mt-4 overflow-hidden transition-all duration-300 ${expandedService === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
+                        style={{ borderTop: `1px solid var(--bg-border)`, paddingTop: expandedService === index ? '1rem' : '0' }}
+                        aria-hidden={expandedService === index ? 'false' : 'true'}
+                      >
+                        <p className="text-sm" style={{ color: textColor }}><Trans i18nKey="pages.Services.this-research-service-falls-under-the"><Trans i18nKey="pages.Services.this-research-service-falls-under-the-1">This research service falls under the</Trans></Trans> <span className="font-semibold">{service.category}</span> <Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro"><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro-1">category. Our analysis is based on rigorous methodologies and market data.</Trans></Trans></p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+
+              // header is replaced with a gradient + icon block
+              return (
+                <article
+                  key={index}
+                  className="relative rounded-2xl overflow-hidden transform hover:-translate-y-2 focus-within:-translate-y-2 transition-all duration-300 ease-in-out w-full bg-white/5"
+                  style={{ border: `1px solid var(--bg-border)`, backdropFilter: 'blur(6px)', background: 'var(--bg-surface)', boxShadow: '0 6px 14px rgba(2,6,23,0.06)' }}
+                >
+                  {/* 'Free' badge removed as requested */}
+                  <div className="flex flex-col h-full">
+                    <div className="w-full h-40 sm:h-44 md:h-48 overflow-hidden flex items-center justify-center"
+                      style={{ background: 'linear-gradient(135deg, rgba(79,70,229,0.06), rgba(59,130,246,0.06))' }}>
+                      <div className="text-4xl sm:text-5xl text-white/90" aria-hidden>{service.icon}</div>
+                    </div>
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="flex items-center mb-3">
+                        <div className="text-2xl sm:text-3xl mr-3" style={{ color: 'var(--accent)' }}>{service.icon}</div>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: textColor }}>{service.name}</h2>
+                      </div>
+                      <p className="mb-4 flex-grow text-sm sm:text-base leading-relaxed" style={{ color: textColor, opacity: 0.95 }}>{service.description}</p>
+                      <div className="flex items-center justify-between mt-auto">
+                        <Link
+                          to={getServicePath(service.name)}
+                          className="inline-flex items-center px-5 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        ><Trans i18nKey="pages.Services.view-plan">View Plan</Trans></Link>
+                        <button
+                          onClick={() => toggleService(index)}
+                          aria-expanded={expandedService === index}
+                          aria-controls={`service-details-${index}`}
+                          className="flex items-center font-semibold transition-colors duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 rounded"
+                          style={{ color: textColor }}
+                        >
+                          {expandedService === index ? <FaMinus className="mr-2" /> : <FaPlus className="mr-2" />}
+                          <span>Details</span>
+                        </button>
+                      </div>
+                      <div
+                        id={`service-details-${index}`}
+                        ref={(el) => (expandedRefs.current[index] = el)}
+                        tabIndex={-1}
+                        className={`mt-4 overflow-hidden transition-all duration-300 ${expandedService === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
+                        style={{ borderTop: `1px solid var(--bg-border)`, paddingTop: expandedService === index ? '1rem' : '0' }}
+                        aria-hidden={expandedService === index ? 'false' : 'true'}
+                      >
+                        <p className="text-sm" style={{ color: textColor }}><Trans i18nKey="pages.Services.this-research-service-falls-under-the"><Trans i18nKey="pages.Services.this-research-service-falls-under-the-1">This research service falls under the</Trans></Trans> <span className="font-semibold">{service.category}</span> <Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro"><Trans i18nKey="pages.Services.category-our-analysis-is-based-on-rigoro-1">category. Our analysis is based on rigorous methodologies and market data.</Trans></Trans></p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
 
           {/* SEBI Disclaimer Section */}
-          <div className="text-center p-6 sm:p-8 text-white rounded-2xl shadow-inner" style={{ background: '#D4e3ff', border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
-            <h3 className="text-xl sm:text-2xl font-bold mb-4"><Trans i18nKey="pages.Services.important-disclosures">Important Disclosures</Trans></h3>
-            <div className="max-w-4xl mx-auto text-sm sm:text-base space-y-2 px-2 sm:px-0">
+          <div className="text-center p-6 sm:p-8 rounded-2xl shadow-inner" style={{ background: 'rgba(255,255,255,0.30)', border: '1px solid var(--bg-border)', backdropFilter: 'blur(6px)', color: textColor }}>
+            <h3 className="text-xl sm:text-2xl font-bold mb-4" style={{ color: textColor }}><Trans i18nKey="pages.Services.important-disclosures">Important Disclosures</Trans></h3>
+            <div className="max-w-4xl mx-auto text-sm sm:text-base space-y-2 px-2 sm:px-0" style={{ color: textColor }}>
               <p>
                 <span className="font-semibold"><Trans i18nKey="pages.Services.wise-global-research-services"><Trans i18nKey="pages.Services.wise-global-research-services-1">Wise Global Research Services</Trans></Trans></span><Trans i18nKey="pages.Services.is-a-sebi-registered-research-analyst"><Trans i18nKey="pages.Services.is-a-sebi-registered-research-analyst-1">is a SEBI Registered Research Analyst.</Trans></Trans><strong className="block mt-1"><Trans i18nKey="pages.Services.sebi-registration-no-inh000016719"><Trans i18nKey="pages.Services.sebi-registration-no-inh000016719-1">SEBI Registration No:INH000016719</Trans></Trans></strong>
               </p>

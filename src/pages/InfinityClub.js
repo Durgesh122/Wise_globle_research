@@ -53,7 +53,7 @@ const InfinityClub = () => (
 
     <div className="mb-8 px-2 sm:px-0">
       <h2 className="text-xl sm:text-2xl font-bold mb-2 text-white"><Trans i18nKey="pages.InfinityClub.sample-calls">Sample Calls</Trans></h2>
-  <div className="bg-white/10 rounded-lg p-4 text-left text-sm sm:text-base text-white font-mono"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75-"><Trans i18nKey="pages.InfinityClub.buy-angelone-2300-ce-above-65-target-75--1">BUY ANGELONE 2300 CE ABOVE 65 TARGET 75 90 STOPLOSS 50</Trans></Trans></div>
+  <div className="bg-white/10 rounded-lg p-4 text-left text-sm sm:text-base text-white font-mono"><Trans i18nKey="pages.InfinityClub.buy-centuryply-above-512-target-518-524-"><Trans i18nKey="pages.InfinityClub.buy-centuryply-above-512-target-518-524--1">BUY CENTURYPLY ABOVE 512 TARGET 518 524 STOPLOSS 505</Trans></Trans></div>
     </div>
 
     <div className="mb-8 px-2 sm:px-0">
@@ -64,7 +64,7 @@ const InfinityClub = () => (
           <div className="text-3xl font-extrabold text-white mb-2">₹1,51,000 <span className="text-base font-normal"><Trans i18nKey="pages.InfinityClub.quarterly">/ Quarterly</Trans></span></div>
           <div className="mb-2 text-white"><Trans i18nKey="pages.InfinityClub.2-to-3-calls-in-a-day">2 to 3 Calls in a Day</Trans></div>
           <Link to="/payment">
-            <button className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.InfinityClub.payment">Payment</Trans></button>
+            <button type="button" className="bg-[var(--primary-green)] text-white px-6 py-2 rounded-lg font-semibold mt-2"><Trans i18nKey="pages.InfinityClub.payment">Payment</Trans></button>
           </Link>
           <div className="text-xs text-white mt-2"><Trans i18nKey="pages.InfinityClub.note-pricing-are-excluding-gst-18"><Trans i18nKey="pages.InfinityClub.note-pricing-are-excluding-gst-18-1">Note: Pricing are excluding GST (18%)</Trans></Trans></div>
         </div>
@@ -101,7 +101,7 @@ const InfinityClub = () => (
       <div className="max-w-3xl mx-auto">
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.InfinityClub.q-how-will-i-receive-the-recommendations"><Trans i18nKey="pages.InfinityClub.q-how-will-i-receive-the-recommendations-1">Q: How will I receive the recommendations?</Trans></Trans></h3>
-          <p className="text-white">A: Recommendations are shared via your registered contact channel.</p>
+          <p className="text-white">A: Recommendations are delivered via SMS on your registered contact channel.</p>
         </div>
         <div className="mb-4">
           <h3 className="font-semibold text-white"><Trans i18nKey="pages.InfinityClub.q-can-i-get-support-if-i-have-questions"><Trans i18nKey="pages.InfinityClub.q-can-i-get-support-if-i-have-questions-1">Q: Can I get support if I have questions?</Trans></Trans></h3>
@@ -114,7 +114,7 @@ const InfinityClub = () => (
       </div>
       <div className="flex justify-center mt-8">
         <Link to="/contact">
-          <button className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
+          <button type="button" className="bg-[var(--primary-green)] text-white px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition">Enquiry Now</button>
         </Link>
       </div>
     </div>

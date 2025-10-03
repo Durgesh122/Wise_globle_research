@@ -68,13 +68,16 @@ const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggl
               </td>
               <td className="p-4">
                 <motion.button
+                  type="button"
                   onClick={() => handleDelete(submission.id)}
                   className="text-red-600 hover:text-red-500"
                   variants={buttonVariants}
                   whileHover="hover"
                   whileTap="tap"
+                  title="Delete submission"
+                  aria-label={`Delete submission from ${submission.name || 'unknown'}`}
                 >
-                  <FiTrash2 size={16} />
+                  <FiTrash2 aria-hidden="true" size={16} />
                 </motion.button>
               </td>
             </motion.tr>
@@ -94,7 +97,9 @@ const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggl
               <p className="text-xs text-adaptive">{s.phone || 'N/A'}</p>
             </div>
             <div className="flex-shrink-0">
-              <motion.button onClick={() => handleDelete(s.id)} className="text-red-600 hover:text-red-500" variants={buttonVariants} whileHover="hover" whileTap="tap"><FiTrash2 /></motion.button>
+              <motion.button type="button" onClick={() => handleDelete(s.id)} className="text-red-600 hover:text-red-500" variants={buttonVariants} whileHover="hover" whileTap="tap" title="Delete submission" aria-label={`Delete submission from ${s.name || 'unknown'}`}>
+                <FiTrash2 aria-hidden="true" />
+              </motion.button>
             </div>
           </div>
           <div className="mt-2 text-sm text-adaptive">{s.message || 'N/A'}</div>

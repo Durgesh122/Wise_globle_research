@@ -23,7 +23,7 @@ const visionPillars = [
   {
     id: 3,
     title: 'Education and Insights',
-    description: 'We provide regular blogs, webinars, and demos to educate investors on market trends, helping them navigate NIFTY and BANKNIFTY with confidence.',
+    description: 'We provide regular blogs, and demos to educate investors on market trends, helping them navigate NIFTY and BANKNIFTY with confidence.',
     icon: <FaBookOpen className="text-blue-300 text-4xl mb-4" />,
   },
   {
@@ -53,7 +53,7 @@ const coreValues = [
   {
     id: 4,
     title: 'Education',
-    description: 'We empower clients with knowledge through workshops, blogs, and market updates, fostering informed decision-making.',
+    description: 'We empower clients with knowledge through, blogs, and market updates, fostering informed decision-making.',
   },
   {
     id: 5,

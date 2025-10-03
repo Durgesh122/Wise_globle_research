@@ -111,9 +111,10 @@ const AdminLayout = () => {
       className="absolute top-0 left-0 h-full p-4 flex flex-col z-20 md:relative md:translate-x-0 admin-sidebar-wrapper"
       style={{ background: 'var(--bg-transparent, rgba(255,255,255,0.06))', backdropFilter: 'blur(8px)', borderRight: '1px solid var(--bg-border, rgba(255,255,255,0.08))' }}
     >
-      <h2 className="text-2xl font-bold mb-8 text-center text-adaptive">
+      <h2 className="text-2xl font-bold mb-4 text-center text-adaptive">
         <Trans i18nKey="pages.admin_AdminLayout.admin-panel">Admin Panel</Trans>
       </h2>
+      {/* admin popup launcher removed from sidebar; use dashboard placement instead */}
   <nav className="flex flex-col space-y-2 flex-grow" aria-label="Admin navigation">
         {navItems.map((item) => (
           <NavLink

@@ -61,19 +61,19 @@
       {
         "source": "**/*.html",
         "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+          { "key": "Cache-Control", "value": "public, max-age=0, stale-while-revalidate=60" }
         ]
       },
       {
         "source": "/manifest.json",
         "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+          { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=60" }
         ]
       },
       {
         "source": "/asset-manifest.json",
         "headers": [
-          { "key": "Cache-Control", "value": "no-cache" }
+          { "key": "Cache-Control", "value": "public, max-age=0, stale-while-revalidate=60" }
         ]
       },
       {
@@ -97,8 +97,7 @@
       {
         "source": "/index.html",
         "headers": [
-          { "key": "Cache-Control", "value": "no-store, max-age=0, must-revalidate" },
-          { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://*.firebaseio.com https://*.firebasedatabase.app wss://*.firebaseio.com wss://*.firebasedatabase.app https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.gstatic.com https://firebasestorage.googleapis.com; object-src 'self' blob: data:; frame-src 'self' blob: data:; worker-src 'self' blob:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'" }
+          { "key": "Cache-Control", "value": "public, max-age=0, stale-while-revalidate=60" }
         ]
       }
     ]

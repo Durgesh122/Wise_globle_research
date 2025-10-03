@@ -55,14 +55,14 @@ function Privacy() {
 
       <motion.section variants={fadeIn} className="mb-8">
         <h2 className="text-2xl font-semibold mb-4"><Trans i18nKey="pages.Privacy.website-visits">Website Visits</Trans></h2>
-  <p className="text-base leading-relaxed"><Trans i18nKey="pages.Privacy.generally-you-may-visit">Generally, you may visit</Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com">https://wiseglobalresearch.com/</Trans></a><Trans i18nKey="pages.Privacy.anonymously-and-obtain-information-about"><Trans i18nKey="pages.Privacy.anonymously-and-obtain-information-about-1">anonymously and obtain information about our organization and products and services without providing any personal information, such as your phone number or postal or e-mail address.</Trans></Trans></p>
+  <p className="text-base leading-relaxed"><Trans i18nKey="pages.Privacy.generally-you-may-visit">Generally, you may visit </Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com"> https://wiseglobalresearch.com/ </Trans></a><Trans i18nKey="pages.Privacy.anonymously-and-obtain-information-about"><Trans i18nKey="pages.Privacy.anonymously-and-obtain-information-about-1">anonymously and obtain information about our organization and products and services without providing any personal information, such as your phone number or postal or e-mail address.</Trans></Trans></p>
       </motion.section>
 
       <motion.section variants={fadeIn} className="mb-8">
         <h2 className="text-2xl font-semibold mb-4"><Trans i18nKey="pages.Privacy.personal-information">Personal Information</Trans></h2>
         <p className="text-base leading-relaxed"><Trans i18nKey="pages.Privacy.in-few-sections-of-our-website-we-ask-yo"><Trans i18nKey="pages.Privacy.in-few-sections-of-our-website-we-ask-yo-1">In few sections of our Website, we ask you to provide information that will enable us to enhance your site visit or to follow up with you after your visit. It is completely optional for you to participate. For example, we request information from you when you:</Trans></Trans></p>
         <motion.ul className="list-disc pl-5 mt-4" variants={listVariants}>
-          <li><Trans i18nKey="pages.Privacy.register-with">Register with</Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com">https://wiseglobalresearch.com/</Trans></a><Trans i18nKey="pages.Privacy.for-filling-online-registration-forms"><Trans i18nKey="pages.Privacy.for-filling-online-registration-forms-1">for filling online registration forms</Trans></Trans></li>
+          <li><Trans i18nKey="pages.Privacy.register-with">Register with </Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com"> https://wiseglobalresearch.com/ </Trans></a><Trans i18nKey="pages.Privacy.for-filling-online-registration-forms"><Trans i18nKey="pages.Privacy.for-filling-online-registration-forms-1">for filling online registration forms</Trans></Trans></li>
           <li><Trans i18nKey="pages.Privacy.transact-on-the-site">Transact on the Site</Trans></li>
         </motion.ul>
         <p className="text-base leading-relaxed mt-4"><Trans i18nKey="pages.Privacy.in-each-of-the-above-instances-we-may-as"><Trans i18nKey="pages.Privacy.in-each-of-the-above-instances-we-may-as-1">In each of the above instances, we may ask for your name, e-mail address, telephone number, address and other personal information that is needed to register or subscribe you to services or offers.</Trans></Trans></p>
@@ -75,7 +75,7 @@ function Privacy() {
 
       <motion.section variants={fadeIn} className="mb-8">
         <h2 className="text-2xl font-semibold mb-4"><Trans i18nKey="pages.Privacy.changes-to-this-policy">Changes to this Policy</Trans></h2>
-  <p className="text-base leading-relaxed"><Trans i18nKey="pages.Privacy.we-may-from-time-to-time-update-this-pol"><Trans i18nKey="pages.Privacy.we-may-from-time-to-time-update-this-pol-1">We may from time to time update this Policy. When we do so, we will post notice of any revisions on this site. We encourage you to review our Privacy Policy whenever you visit our Web Site</Trans></Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com-1"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com-2">https://wiseglobalresearch.com/.</Trans></Trans></a>
+  <p className="text-base leading-relaxed"><Trans i18nKey="pages.Privacy.we-may-from-time-to-time-update-this-pol"><Trans i18nKey="pages.Privacy.we-may-from-time-to-time-update-this-pol-1">We may from time to time update this Policy. When we do so, we will post notice of any revisions on this site. We encourage you to review our Privacy Policy whenever you visit our Web Site</Trans></Trans><a href="https://wiseglobalresearch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com-1"><Trans i18nKey="pages.Privacy.https-wiseglobalresearch-com-2"> https://wiseglobalresearch.com/ </Trans></Trans></a>
         </p>
       </motion.section>
 
@@ -86,7 +86,7 @@ function Privacy() {
         <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6">
           <div className="flex items-center">
             <FaEnvelope className="mr-2" />
-            <a href="mailto:support@wiseglobalresearch.com" className="hover:underline"><Trans i18nKey="pages.Privacy.support-wiseglobalresearch-com"><Trans i18nKey="pages.Privacy.support-wiseglobalresearch-com-1">support@wiseglobalresearch.com</Trans></Trans></a>
+            <a href="mailto:support@wiseglobalresearch.com" className="hover:underline"><Trans i18nKey="pages.Privacy.support-wiseglobalresearch-com"><Trans i18nKey="pages.Privacy.support-wiseglobalresearch-com-1"> support@wiseglobalresearch.com </Trans></Trans></a>
           </div>
         </div>
       </motion.section>
