@@ -172,7 +172,15 @@ if (resolvedBuildPath) {
 
   app.get('*', (req, res, next) => {
     // Let API and special endpoints be handled by existing routes
-    if (req.path.startsWith('/api') || req.path === '/health' || req.path.startsWith('/send-email') || req.path.startsWith('/submit-popup')) {
+    // Ensure our debug endpoints are not swallowed by the SPA index fallback
+    if (
+      req.path.startsWith('/api') ||
+      req.path === '/health' ||
+      req.path.startsWith('/send-email') ||
+      req.path.startsWith('/submit-popup') ||
+      req.path === '/smtp-check' ||
+      req.path === '/send-email-debug'
+    ) {
       return next();
     }
     res.sendFile(path.join(resolvedBuildPath, 'index.html'));
