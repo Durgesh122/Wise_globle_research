@@ -42,7 +42,8 @@ const ContactForm = ({ contactFormRef }) => {
         try {
           // Use production server URL in production, otherwise use local server
           const isProduction = process.env.NODE_ENV === 'production';
-          const apiBase = isProduction ? 'https://mrxads-2.onrender.com' : 'http://localhost:3002';
+          // Prefer the page's origin when in production so deploy hostname (Render, Netlify, etc.) is used
+          const apiBase = isProduction ? window.location.origin : 'http://localhost:3002';
           const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
           const payload = {
             name: formData.name,
@@ -51,17 +52,22 @@ const ContactForm = ({ contactFormRef }) => {
             city: '',
             interest: formData.interest || 'Contact Form',
             message: formData.message || '',
-            source: 'ContactFormSection'
+            source: 'ContactFormSection',
+            pageUrl: window.location.href
           };
 
           // Log diagnostics to help debug CORS / server errors in browser devtools
           console.debug('ContactForm: sending email-copy to', endpoint, { payload });
 
+          // Use AbortController to avoid indefinite hangs in the browser when network/CORS issues happen
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 10000); // 10s
           const resp = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-          });
+            signal: controller.signal,
+          }).finally(() => clearTimeout(timeout));
 
           // Try to parse response body for more helpful diagnostics
           let respBody = null;

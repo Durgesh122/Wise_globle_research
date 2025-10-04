@@ -31,20 +31,63 @@ const allowedOrigins = [
   'https://mrxads-2.onrender.com',
 ];
 
+// More forgiving CORS checker with diagnostics. We intentionally allow
+// requests with no Origin (curl, mobile-native) while validating common
+// browser origins. We also broaden allowed headers to include typical
+// fetch/XHR headers used by browsers and third-party analytics.
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl) or from allowed list
-    if (!origin || allowedOrigins.includes(origin) || /onrender\.com$/.test(new URL(origin).hostname)) {
-      callback(null, true);
-    } else {
+    try {
+      // If no origin (server-to-server, curl, some mobile clients), allow
+      if (!origin) {
+        console.debug('CORS: no origin provided - allowing');
+        return callback(null, true);
+      }
+
+      // Normalize origin by stripping trailing slash
+      const normalized = origin.replace(/\/$/, '');
+
+      // Quick allow-list check
+      if (allowedOrigins.includes(normalized)) {
+        console.debug(`CORS: origin allowed by exact match: ${normalized}`);
+        return callback(null, true);
+      }
+
+      // Accept any subdomain on render.com (e.g., mrxads-2.onrender.com)
+      try {
+        const hostname = new URL(normalized).hostname;
+        if (/onrender\.com$/.test(hostname)) {
+          console.debug(`CORS: origin allowed by onrender rule: ${normalized}`);
+          return callback(null, true);
+        }
+      } catch (err) {
+        // If URL parsing fails, fall through to rejection
+      }
+
+      console.warn(`CORS: rejecting origin ${normalized}`);
       callback(new Error('Not allowed by CORS'));
+    } catch (e) {
+      console.error('CORS origin check error:', e && e.message);
+      // Fail open for safety in environments where origin parsing unexpectedly fails
+      callback(null, true);
     }
   },
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
+  // Browser will often send these headers; include common ones to avoid
+  // preflight rejections.
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Server-Timing'],
   credentials: false,
-  optionsSuccessStatus: 204,
+  // Some browsers expect 200 for preflight; use 200 for better compatibility
+  optionsSuccessStatus: 200,
 };
+
+app.use((req, res, next) => {
+  // Ensure CORS middleware runs early and log origin for diagnostics
+  const origin = req.header('Origin') || 'no-origin';
+  console.debug(`Incoming request origin: ${origin} ${req.method} ${req.path}`);
+  next();
+});
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
