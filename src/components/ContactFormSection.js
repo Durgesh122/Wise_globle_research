@@ -40,8 +40,9 @@ const ContactForm = ({ contactFormRef }) => {
       // Send an email copy to server (best-effort, non-blocking)
       (async () => {
         try {
-          // Always use local server for sending email in this workspace (server runs on port 3002)
-          const apiBase = 'http://localhost:3002';
+          // Use production server URL in production, otherwise use local server
+          const isProduction = process.env.NODE_ENV === 'production';
+          const apiBase = isProduction ? 'https://mrxads-2.onrender.com' : 'http://localhost:3002';
           const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
           const payload = {
             name: formData.name,
