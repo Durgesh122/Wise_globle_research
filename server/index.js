@@ -468,11 +468,22 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
     const smtpPass = process.env.SMTP_PASS;
 
     if (smtpHost && smtpUser && smtpPass) {
+      // Add pragmatic timeouts and debug logging to help diagnose ETIMEDOUT
       transporter = nodemailer.createTransport({
         host: smtpHost,
         port: smtpPort,
         secure: String(process.env.SMTP_PORT || '587') === '465',
         auth: { user: smtpUser, pass: smtpPass },
+        logger: true,
+        debug: !!process.env.SMTP_DEBUG,
+        // Increase timeouts (ms) to avoid premature ETIMEDOUT on slow providers
+        connectionTimeout: parseInt(process.env.SMTP_CONNECTION_TIMEOUT || '20000', 10),
+        greetingTimeout: parseInt(process.env.SMTP_GREETING_TIMEOUT || '15000', 10),
+        socketTimeout: parseInt(process.env.SMTP_SOCKET_TIMEOUT || '20000', 10),
+        tls: {
+          // Allow opting out of strict TLS verification for debugging only
+          rejectUnauthorized: process.env.SMTP_STRICT_TLS !== 'false'
+        }
       });
     } else if (process.env.NODE_ENV !== 'production') {
       // Local dev: create an Ethereal test account to avoid ECONNREFUSED when real SMTP not configured
@@ -483,6 +494,11 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
         port: 587,
         secure: false,
         auth: { user: testAccount.user, pass: testAccount.pass },
+        logger: true,
+        debug: true,
+        connectionTimeout: 20000,
+        greetingTimeout: 15000,
+        socketTimeout: 20000,
       });
       usedEthereal = true;
     } else {
@@ -583,8 +599,8 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
 
     const info = await transporter.sendMail(mailOptions);
 
-    // Helpful debug logging so we can see transport results during local testing
-    console.debug('Email sent:', { messageId: info.messageId, envelope: info.envelope || null });
+  // Helpful debug logging so we can see transport results during local testing
+  console.debug('Email sent:', { messageId: info.messageId, envelope: info.envelope || null });
 
     const response = { success: true, messageId: info.messageId };
     if (usedEthereal) {
@@ -761,6 +777,12 @@ app.post('/submit-popup', async (req, res) => {
           port: smtpPort,
           secure: String(process.env.SMTP_PORT || '587') === '465',
           auth: { user: smtpUser, pass: smtpPass },
+          logger: true,
+          debug: !!process.env.SMTP_DEBUG,
+          connectionTimeout: parseInt(process.env.SMTP_CONNECTION_TIMEOUT || '20000', 10),
+          greetingTimeout: parseInt(process.env.SMTP_GREETING_TIMEOUT || '15000', 10),
+          socketTimeout: parseInt(process.env.SMTP_SOCKET_TIMEOUT || '20000', 10),
+          tls: { rejectUnauthorized: process.env.SMTP_STRICT_TLS !== 'false' }
         });
       } else if (process.env.NODE_ENV !== 'production') {
         const testAccount = await nodemailer.createTestAccount();

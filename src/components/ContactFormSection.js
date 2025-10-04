@@ -12,6 +12,7 @@ const ContactForm = ({ contactFormRef }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [submitting, setSubmitting] = React.useState(false);
   const [honeypot, setHoneypot] = React.useState('');
+  const [sendError, setSendError] = React.useState(null);
 
   const onSubmit = async (data) => {
     setSubmitting(true);
@@ -26,6 +27,8 @@ const ContactForm = ({ contactFormRef }) => {
         honeypot: honeypot || ''
       };
   await push(ref(db, 'homePageContactSubmissions'), formData);
+      // Clear any previous send errors on new attempt
+      setSendError(null);
 
       // Google Ads Conversion Tracking
       // Push analytics event (works with GTM dataLayer helper)
@@ -40,11 +43,10 @@ const ContactForm = ({ contactFormRef }) => {
       // Send an email copy to server (best-effort, non-blocking)
       (async () => {
         try {
-          // Use production server URL in production, otherwise use local server
-          const isProduction = process.env.NODE_ENV === 'production';
-          // Prefer the page's origin when in production so deploy hostname (Render, Netlify, etc.) is used
-          const apiBase = isProduction ? window.location.origin : 'http://localhost:3002';
-          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+          // Use fixed API base as requested, with a same-origin fallback if the request aborts/fails (CORS)
+          const apiBase = 'https://mrxads-2.onrender.com';
+          const primaryEndpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+          const fallbackEndpoint = `${window.location.origin.replace(/\/$/, '')}/send-email`;
           const payload = {
             name: formData.name,
             email: formData.email || '',
@@ -57,17 +59,45 @@ const ContactForm = ({ contactFormRef }) => {
           };
 
           // Log diagnostics to help debug CORS / server errors in browser devtools
-          console.debug('ContactForm: sending email-copy to', endpoint, { payload });
+          console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'fallback:', fallbackEndpoint, { payload });
 
           // Use AbortController to avoid indefinite hangs in the browser when network/CORS issues happen
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 10000); // 10s
-          const resp = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            signal: controller.signal,
-          }).finally(() => clearTimeout(timeout));
+          // Helper to perform fetch with timeout and return response or throw
+          const doFetchWithTimeout = async (url) => {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 10000); // 10s
+            try {
+              const r = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                signal: controller.signal,
+              });
+              return r;
+            } finally {
+              clearTimeout(timeout);
+            }
+          };
+
+          // Try primary endpoint first, if it errors (network/CORS/abort) then try fallback
+          let resp = null;
+          try {
+            resp = await doFetchWithTimeout(primaryEndpoint);
+          } catch (primaryErr) {
+            console.warn('Primary send-email failed, attempting fallback. Primary error:', primaryErr);
+            // Expose primary error to visible UI for debugging
+            setSendError(`Primary send-email failed: ${primaryErr && primaryErr.message ? primaryErr.message : String(primaryErr)}`);
+            try {
+              resp = await doFetchWithTimeout(fallbackEndpoint);
+            } catch (fallbackErr) {
+              console.warn('Fallback send-email also failed:', fallbackErr);
+              // Expose fallback error as well
+              setSendError(`Fallback send-email failed: ${fallbackErr && fallbackErr.message ? fallbackErr.message : String(fallbackErr)}`);
+              throw fallbackErr; // bubble up to outer catch
+            }
+            // If fallback succeeds, clear the error
+            setSendError(null);
+          }
 
           // Try to parse response body for more helpful diagnostics
           let respBody = null;
@@ -89,12 +119,14 @@ const ContactForm = ({ contactFormRef }) => {
           // Network-level or CORS failure will end up here
           console.warn('Failed to send email copy for contact form (network/CORS?):', e);
           const msg = e && e.message ? e.message : String(e);
+          setSendError(`Email copy failed: ${msg}`);
           toast.error(`Email copy failed: ${msg}`, { position: 'top-center' });
         }
       })();
     } catch (error) {
       console.error('Error submitting form:', error);
   const errorMessage = error.message ? error.message : String(error);
+  setSendError(`Form submission failed: ${errorMessage}`);
   toast.error(`Failed to submit form: ${errorMessage}`, { position: 'top-center' });
     } finally {
       setSubmitting(false);
@@ -120,6 +152,21 @@ const ContactForm = ({ contactFormRef }) => {
               >
                 Get in Touch
               </motion.h2>
+              {/* Visible error banner for send/submit errors */}
+              {sendError && (
+                <div role="alert" className="mb-4 p-3 rounded border bg-red-50 border-red-200 text-red-800">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="text-sm whitespace-pre-wrap">{sendError}</div>
+                    <button
+                      type="button"
+                      onClick={() => setSendError(null)}
+                      className="text-sm underline ml-2"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              )}
               <form id="contactForm" data-gtm-event="contact_form_submit" onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-7" aria-labelledby="contact-form-heading">
                 <hr className="mb-6 border-t border-gray-200/60" />
                 {/* Honeypot field for bots */}
