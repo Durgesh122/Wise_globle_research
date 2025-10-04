@@ -683,6 +683,44 @@ app.post('/send-email-debug', async (req, res) => {
   }
 });
 
+// Debug endpoint to test raw TCP connectivity to the configured SMTP server.
+// Protected by DEBUG_EMAIL_TOKEN env var. Call as:
+// GET /smtp-check?token=xxxx
+app.get('/smtp-check', async (req, res) => {
+  const debugToken = process.env.DEBUG_EMAIL_TOKEN;
+  const provided = req.query && req.query.token ? String(req.query.token) : null;
+  if (!debugToken || !provided || provided !== debugToken) {
+    return res.status(404).json({ success: false, error: { message: 'Debug endpoint disabled or invalid token' } });
+  }
+
+  const net = require('net');
+  const host = process.env.SMTP_SERVER || 'smtp.example.com';
+  const port = parseInt(process.env.SMTP_PORT || '587', 10);
+  const timeoutMs = parseInt(process.env.SMTP_CHECK_TIMEOUT || '10000', 10);
+
+  let done = false;
+  const socket = net.createConnection({ host, port }, () => {
+    if (done) return;
+    done = true;
+    socket.end();
+    return res.json({ success: true, host, port, message: 'Connected' });
+  });
+
+  socket.setTimeout(timeoutMs, () => {
+    if (done) return;
+    done = true;
+    socket.destroy();
+    return res.status(504).json({ success: false, error: { message: 'Connection timeout' , code: 'ETIMEDOUT' } });
+  });
+
+  socket.on('error', (err) => {
+    if (done) return;
+    done = true;
+    try { socket.destroy(); } catch (_) {}
+    return res.status(502).json({ success: false, error: { message: err.message || String(err), code: err.code || 'ERR' } });
+  });
+});
+
 // Basic economic events endpoint (mock data or pass-through when url is provided and whitelisted server-side)
 app.get('/api/economic', async (req, res) => {
   try {
