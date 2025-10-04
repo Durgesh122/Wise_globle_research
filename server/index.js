@@ -28,6 +28,7 @@ const allowedOrigins = [
   'http://192.168.1.138:3001',
   'https://wiseglobalresearch-services.web.app',
   'https://wiseglobalresearch.com',
+  'https://mrxads-2.onrender.com',
 ];
 
 const corsOptions = {
