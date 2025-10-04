@@ -43,6 +43,7 @@ const ContactForm = ({ contactFormRef }) => {
       // Send an email copy to server (best-effort, non-blocking)
       (async () => {
         try {
+<<<<<<< HEAD
           // Use fixed API base as requested, with a same-origin fallback if the request aborts/fails (CORS)
           const apiBase = 'https://mrxads-2.onrender.com';
           const primaryEndpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
@@ -62,6 +63,13 @@ const ContactForm = ({ contactFormRef }) => {
             }
             return `${window.location.origin.replace(/\/$/, '')}/send-email`;
           })();
+=======
+          // Use production server URL in production, otherwise use local server
+          const isProduction = process.env.NODE_ENV === 'production';
+          // Prefer the page's origin when in production so deploy hostname (Render, Netlify, etc.) is used
+          const apiBase = isProduction ? window.location.origin : 'http://localhost:3002';
+          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+>>>>>>> fd352401d3ff588f2b7060d32e8ad3c60fa902f0
           const payload = {
             name: formData.name,
             email: formData.email || '',
@@ -77,6 +85,7 @@ const ContactForm = ({ contactFormRef }) => {
           console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'fallback:', fallbackEndpoint, { payload });
 
           // Use AbortController to avoid indefinite hangs in the browser when network/CORS issues happen
+<<<<<<< HEAD
           // Helper to perform fetch with timeout and return response or throw
           const doFetchWithTimeout = async (url) => {
             const controller = new AbortController();
@@ -113,6 +122,16 @@ const ContactForm = ({ contactFormRef }) => {
             // If fallback succeeds, clear the error
             setSendError(null);
           }
+=======
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 10000); // 10s
+          const resp = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal,
+          }).finally(() => clearTimeout(timeout));
+>>>>>>> fd352401d3ff588f2b7060d32e8ad3c60fa902f0
 
           // Try to parse response body for more helpful diagnostics
           let respBody = null;
