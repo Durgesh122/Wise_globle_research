@@ -49,7 +49,7 @@ function Contact() {
       (async () => {
         try {
           // Always use local server for development testing
-          const apiBase = 'http://localhost:3002';
+          const apiBase = 'https://wise-globle-research-1.onrender.com/';
           const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
           await fetch(endpoint, {
             method: 'POST',

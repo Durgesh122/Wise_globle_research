@@ -10,7 +10,7 @@ const FloatingContactButton = () => {
       className="floating-contact-btn floating-contact-rotated font-bold hover:opacity-95 whitespace-nowrap py-2 px-3 text-sm sm:py-3 sm:px-4 sm:text-base lg:py-4 lg:px-5 lg:text-lg"
       aria-label="Open Contact Page"
     >
-      <span className="px-1">Get in Touch</span>
+      <span className="px-1">Contact Us</span>
     </Link>
   );
 };
