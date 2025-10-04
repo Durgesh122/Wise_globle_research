@@ -46,7 +46,22 @@ const ContactForm = ({ contactFormRef }) => {
           // Use fixed API base as requested, with a same-origin fallback if the request aborts/fails (CORS)
           const apiBase = 'https://mrxads-2.onrender.com';
           const primaryEndpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
-          const fallbackEndpoint = `${window.location.origin.replace(/\/$/, '')}/send-email`;
+          // Prefer the backend dev port when running locally (CRA runs on 3000, server uses 3002)
+          const fallbackEndpoint = (() => {
+            try {
+              const loc = window.location || {};
+              const hostname = loc.hostname || '';
+              const port = loc.port || '';
+              if (hostname === 'localhost') {
+                // If frontend is on 3000 (CRA), prefer backend on 3002
+                const backendPort = port === '3000' ? '3002' : (port || '3002');
+                return `http://${hostname}:${backendPort}/send-email`;
+              }
+            } catch (e) {
+              // fallback to origin if anything unexpected
+            }
+            return `${window.location.origin.replace(/\/$/, '')}/send-email`;
+          })();
           const payload = {
             name: formData.name,
             email: formData.email || '',
