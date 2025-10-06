@@ -176,10 +176,17 @@ const ContactForm = ({ contactFormRef }) => {
   try {
     const hostname = (typeof window !== 'undefined' && window.location.hostname) || '';
     const isDevLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
-    if (!isDevLocalhost) {
+    if (isDevLocalhost) {
+      // In local development, still run the email-copy fallback but avoid using
+      // a relative '/send-email' endpoint (which hits CRA :3000 and causes 500).
+      // sendEmailCopy already only adds the relative endpoint when the page is
+      // actually served from port 3001. So calling it here will attempt the
+      // Render/production absolute endpoints and allow local testing without
+      // noisy relative errors.
+      console.debug('ContactForm: running sendEmailCopy in localhost dev (using absolute endpoints)');
       sendEmailCopy();
     } else {
-      console.debug('ContactForm: skipping sendEmailCopy in localhost dev to avoid noisy failures');
+      sendEmailCopy();
     }
   } catch (e) {
     // If anything unexpectedly fails deciding environment, skip the send to avoid blocking the UX
