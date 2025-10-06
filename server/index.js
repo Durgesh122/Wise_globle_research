@@ -6,6 +6,18 @@ const rateLimit = require('express-rate-limit');
 const admin = require('firebase-admin');
 const { z } = require('zod');
 const nodemailer = require('nodemailer');
+// AWS SES v3 client - used as a fallback when SMTP repeatedly times out from some hosting providers
+let SESClient;
+let SendEmailCommand;
+try {
+  const awsSes = require('@aws-sdk/client-ses');
+  SESClient = awsSes.SESClient;
+  SendEmailCommand = awsSes.SendEmailCommand;
+} catch (e) {
+  // Dependency may not be installed in some environments; we'll only attempt SES fallback when available
+  SESClient = null;
+  SendEmailCommand = null;
+}
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 // NOTE: We intentionally avoid X-Frame-Options (deprecated in favour of CSP frame-ancestors)
@@ -317,7 +329,21 @@ async function sendMailWithRetry(transporter, mailOptions, attempts = 3) {
       const isTransient = code === 'ETIMEDOUT' || code === 'ECONNRESET' || code === 'EPIPE' || code === 'ECONNREFUSED' || /timeout/i.test(msg);
       console.warn(`sendMail attempt ${attempt} failed (code=${code}): ${msg}`);
       if (attempt === attempts || !isTransient) {
-        // No more retries or non-transient error - rethrow
+        // No more retries or non-transient error - consider SES API fallback when available and configured
+        // Only attempt SES fallback when this is a transient network failure and AWS creds are present
+        const canAttemptSes = isTransient && process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && SESClient && SendEmailCommand;
+        if (canAttemptSes) {
+          try {
+            console.warn('Attempting SES API fallback after SMTP failure');
+            const sesResult = await sendViaSesFallback(mailOptions);
+            return sesResult;
+          } catch (sesErr) {
+            console.error('SES fallback failed:', sesErr && sesErr.message ? sesErr.message : sesErr);
+            // If SES fallback fails, rethrow original SMTP error to preserve context
+            throw err;
+          }
+        }
+        // No SES fallback available - rethrow
         throw err;
       }
       // Exponential backoff with cap
@@ -326,6 +352,36 @@ async function sendMailWithRetry(transporter, mailOptions, attempts = 3) {
       await new Promise((resolve) => setTimeout(resolve, backoff));
     }
   }
+}
+
+// SES API fallback: constructs a SendEmailCommand input and sends via AWS SES API
+async function sendViaSesFallback(mailOptions) {
+  if (!SESClient || !SendEmailCommand) throw new Error('SES client not available');
+  // Build destinations: ToAddresses, CcAddresses, BccAddresses (we only use To here)
+  const toAddrs = (mailOptions.to || '').split(',').map(s => s.trim()).filter(Boolean);
+  const fromAddr = mailOptions.from || process.env.EMAIL_FROM || (process.env.AWS_SES_DEFAULT_FROM || null);
+  if (!fromAddr) throw new Error('SES fallback requires a from address (EMAIL_FROM or AWS_SES_DEFAULT_FROM)');
+
+  const sesClient = new SESClient({ region: process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || 'ap-south-1' });
+
+  const params = {
+    Destination: {
+      ToAddresses: toAddrs,
+    },
+    Message: {
+      Body: {
+        Html: { Data: mailOptions.html || mailOptions.text || '' },
+        Text: { Data: mailOptions.text || mailOptions.html || '' },
+      },
+      Subject: { Data: mailOptions.subject || 'Website submission' },
+    },
+    Source: fromAddr,
+  };
+
+  const cmd = new SendEmailCommand(params);
+  const resp = await sesClient.send(cmd);
+  // Normalize a minimal response shape similar to nodemailer send info
+  return { messageId: resp.MessageId || null, sesResponse: resp };
 }
 
 // Digio API Configuration
@@ -628,6 +684,21 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
           contentType: req.file.mimetype || 'application/octet-stream',
         },
       ];
+    }
+
+    // If AWS credentials are present and SES client is available, prefer SES API when there are no attachments.
+    // SES SendEmail (used here) does not support attachments. For submissions with attachments, continue using SMTP.
+    const hasAwsCreds = process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && SESClient && SendEmailCommand;
+    if (hasAwsCreds && !(mailOptions.attachments && mailOptions.attachments.length)) {
+      try {
+        console.debug('AWS creds detected; sending email via SES API (preferred path)');
+        const sesInfo = await sendViaSesFallback(mailOptions);
+        // Return a normalized success response similar to SMTP path
+        return res.json({ success: true, messageId: sesInfo.messageId, provider: 'ses-api' });
+      } catch (sesErr) {
+        console.error('SES API send failed, falling back to SMTP retry path:', sesErr && sesErr.message ? sesErr.message : sesErr);
+        // Fall through to SMTP + retry path below
+      }
     }
 
   const info = await sendMailWithRetry(transporter, mailOptions, parseInt(process.env.SMTP_SEND_RETRIES || '3', 10));

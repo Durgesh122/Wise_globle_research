@@ -21,6 +21,7 @@
     "firebase-admin": "^12.6.0",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.6",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@aws-sdk/client-ses": "^3.482.0"
   }
 }
