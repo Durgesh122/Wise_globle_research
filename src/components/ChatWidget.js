@@ -868,7 +868,9 @@ const ChatWidget = () => {
                         source: 'ChatWidget',
                         to: 'hemraj8087@gmail.com,wiseglobalresearchservice@gmail.com'
                       };
-                      await fetch('http://localhost:3002/send-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notify) });
+                      const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+                      const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+                      await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notify) });
                       // eslint-disable-next-line no-console
                       console.debug('Chat transcript sent to server');
                     } catch (err) {

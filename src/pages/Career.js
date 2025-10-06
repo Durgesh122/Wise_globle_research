@@ -175,8 +175,9 @@ const Career = () => {
         form.append('source', 'Career');
         if (formData.resume) form.append('resume', formData.resume, formData.resume.name);
 
-  // Use local backend during development/testing
-  const backendUrl = 'http://localhost:3002/send-email';
+              // Use relative endpoint during development (CRA proxy). In production fall back to canonical host.
+              const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+              const backendUrl = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
   const resp = await fetch(backendUrl, {
           method: 'POST',
           body: form,

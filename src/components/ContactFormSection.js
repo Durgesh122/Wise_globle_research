@@ -50,8 +50,11 @@ try {
     'https://wise-globle-research-2.onrender.com',
     'https://wiseglobalresearch.com'
   ];
+  // Prefer a relative endpoint so Create React App dev server proxy (or the browser's same-origin rules)
+  // allow local development to forward to the backend without hitting CORS on production hosts.
   const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-  const primaryEndpoint = isLocalhost ? '/send-email' : `${canonicalApis[0].replace(/\/$/, '')}/send-email`;
+  const localRelativeEndpoint = '/send-email';
+  const primaryEndpoint = isLocalhost ? localRelativeEndpoint : `${canonicalApis[0].replace(/\/$/, '')}/send-email`;
   const fallbackEndpoint = `${canonicalApis[1].replace(/\/$/, '')}/send-email`;
 
 const payload = {
@@ -82,6 +85,7 @@ console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'f
     };
       let resp = null;
       try {
+        // Always try the relative endpoint first in dev to avoid CORS against production host.
         resp = await doFetchWithTimeout(primaryEndpoint);
       } catch (primaryErr) {
         console.warn('Primary send-email failed, attempting fallback. Primary error:', primaryErr);
@@ -91,7 +95,15 @@ console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'f
         } catch (fallbackErr) {
           console.warn('Fallback send-email also failed:', fallbackErr);
           setSendError(`Fallback send-email failed: ${fallbackErr && fallbackErr.message ? fallbackErr.message : String(fallbackErr)}`);
-          throw fallbackErr;
+          // As a last resort, attempt a direct fetch to the canonical primary host without CORS expectations
+          // to help diagnostics (will likely fail in browser due to CORS, but logs are helpful).
+          try {
+            console.debug('Attempting last-resort direct fetch to canonical primary host for diagnostics...');
+            resp = await doFetchWithTimeout(`${canonicalApis[0].replace(/\/$/, '')}/send-email`);
+          } catch (lastErr) {
+            console.warn('Last-resort direct fetch failed as well:', lastErr);
+            throw fallbackErr;
+          }
         }
         setSendError(null);
       }

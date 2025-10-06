@@ -48,9 +48,8 @@ function Contact() {
       setFormData({ name: '', email: '', phone: '', message: '' });
       (async () => {
         try {
-          // Always use local server for development testing
-          const apiBase = 'https://wise-globle-research-1.onrender.com/';
-          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+          const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+          const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
           await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

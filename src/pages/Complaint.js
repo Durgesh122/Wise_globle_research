@@ -53,10 +53,10 @@ const Complaint = () => {
       setSubmitted(true);
       // Best-effort: also notify server to send an email copy to support
       (async () => {
-        try {
-            // Use local API during development/testing
-            const apiBase = 'http://localhost:3002';
-            const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+            try {
+            // Use relative endpoint in development (CRA proxy) or production host otherwise
+            const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+            const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
           await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
