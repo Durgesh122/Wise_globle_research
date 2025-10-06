@@ -124,6 +124,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "http://localhost:3002",
   "devDependencies": {
     "ajv": "^6.12.6",
     "concurrently": "^8.2.0",
