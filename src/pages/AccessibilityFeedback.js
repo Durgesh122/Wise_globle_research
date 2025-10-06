@@ -53,9 +53,11 @@ export default function AccessibilityFeedback() {
         consent: !!form.consent,
         timestamp: Date.now(),
       };
+      let submissionKey = null;
       try {
         const result = await push(ref(db, 'accessibilityFeedback'), submission);
-        setSubmissionId(result.key);
+        submissionKey = result && result.key ? result.key : null;
+        setSubmissionId(submissionKey);
         setSubmitted(true);
       } catch (dbErr) {
         console.warn('AccessibilityFeedback: RTDB push failed', dbErr);
@@ -100,7 +102,7 @@ export default function AccessibilityFeedback() {
       });
       try{
         if (window.analyticsPush) {
-          window.analyticsPush('accessibility_feedback', { submissionId: result.key });
+          window.analyticsPush('accessibility_feedback', { submissionId: submissionKey });
         }
       }catch(e){}
       // Best-effort: notify server to send an email copy to the team (non-blocking)
