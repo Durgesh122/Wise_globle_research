@@ -686,31 +686,44 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
       ];
     }
 
-    // If AWS credentials are present and SES client is available, prefer SES API when there are no attachments.
-    // SES SendEmail (used here) does not support attachments. For submissions with attachments, continue using SMTP.
-    const hasAwsCreds = process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && SESClient && SendEmailCommand;
-    if (hasAwsCreds && !(mailOptions.attachments && mailOptions.attachments.length)) {
+    // Make email sending asynchronous to avoid blocking the HTTP response.
+    // Respond 202 Accepted immediately and perform send in background.
+    (async function doSendInBackground() {
       try {
-        console.debug('AWS creds detected; sending email via SES API (preferred path)');
-        const sesInfo = await sendViaSesFallback(mailOptions);
-        // Return a normalized success response similar to SMTP path
-        return res.json({ success: true, messageId: sesInfo.messageId, provider: 'ses-api' });
-      } catch (sesErr) {
-        console.error('SES API send failed, falling back to SMTP retry path:', sesErr && sesErr.message ? sesErr.message : sesErr);
-        // Fall through to SMTP + retry path below
+        // If AWS credentials are present and SES client is available, prefer SES API when there are no attachments.
+        // SES SendEmail (used here) does not support attachments. For submissions with attachments, continue using SMTP.
+        const hasAwsCreds = process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && SESClient && SendEmailCommand;
+        if (hasAwsCreds && !(mailOptions.attachments && mailOptions.attachments.length)) {
+          try {
+            console.debug('AWS creds detected; sending email via SES API (preferred path)');
+            const sesInfo = await sendViaSesFallback(mailOptions);
+            console.debug('SES API send succeeded (background):', sesInfo && sesInfo.messageId ? sesInfo.messageId : sesInfo);
+            return;
+          } catch (sesErr) {
+            console.error('SES API send failed (background), falling back to SMTP retry path:', sesErr && sesErr.message ? sesErr.message : sesErr);
+            // Fall through to SMTP + retry path below
+          }
+        }
+
+        const info = await sendMailWithRetry(transporter, mailOptions, parseInt(process.env.SMTP_SEND_RETRIES || '3', 10));
+        console.debug('Email sent (background):', { messageId: info.messageId, envelope: info.envelope || null });
+        if (usedEthereal) {
+          console.debug('Ethereal preview URL (background):', nodemailer.getTestMessageUrl(info) || null);
+        }
+      } catch (error) {
+        try {
+          const code = error && error.code ? error.code : null;
+          const message = error && error.message ? error.message : String(error);
+          const shortStack = error && error.stack ? error.stack.split('\n').slice(0, 6).join('\n') : null;
+          console.error('Background email send error:', { code, message, shortStack });
+        } catch (inner) {
+          console.error('Error while logging background email error:', inner && inner.stack ? inner.stack : inner);
+        }
       }
-    }
+    })().catch((e) => console.error('doSendInBackground unexpected error:', e));
 
-  const info = await sendMailWithRetry(transporter, mailOptions, parseInt(process.env.SMTP_SEND_RETRIES || '3', 10));
-
-  // Helpful debug logging so we can see transport results during local testing
-  console.debug('Email sent:', { messageId: info.messageId, envelope: info.envelope || null });
-
-    const response = { success: true, messageId: info.messageId };
-    if (usedEthereal) {
-      response.previewUrl = nodemailer.getTestMessageUrl(info) || null;
-    }
-    res.json(response);
+    // Respond immediately so frontend is not blocked waiting for email delivery
+    return res.status(202).json({ success: true, accepted: true, message: 'Email send queued' });
   } catch (error) {
     // Better diagnostics: log code + short stack (first lines) to server logs, return structured error JSON
     try {
