@@ -304,6 +304,30 @@ const requireAdminAuth = async (req, res, next) => {
   }
 };
 
+// Robust send helper: attempts to send mail and retries on transient network errors
+async function sendMailWithRetry(transporter, mailOptions, attempts = 3) {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      console.debug(`Attempt ${attempt} to send mail to ${mailOptions.to || mailOptions.to}`);
+      const info = await transporter.sendMail(mailOptions);
+      return info;
+    } catch (err) {
+      const code = err && err.code ? err.code : null;
+      const msg = err && err.message ? err.message : String(err);
+      const isTransient = code === 'ETIMEDOUT' || code === 'ECONNRESET' || code === 'EPIPE' || code === 'ECONNREFUSED' || /timeout/i.test(msg);
+      console.warn(`sendMail attempt ${attempt} failed (code=${code}): ${msg}`);
+      if (attempt === attempts || !isTransient) {
+        // No more retries or non-transient error - rethrow
+        throw err;
+      }
+      // Exponential backoff with cap
+      const backoff = Math.min(30000, 1000 * Math.pow(2, attempt - 1));
+      console.debug(`Retrying sendMail after ${backoff}ms (attempt ${attempt + 1} of ${attempts})`);
+      await new Promise((resolve) => setTimeout(resolve, backoff));
+    }
+  }
+}
+
 // Digio API Configuration
 const DIGIO_API_URL = process.env.DIGIO_API_URL;
 const DIGIO_API_KEY = process.env.DIGIO_API_KEY;
@@ -485,10 +509,10 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
         auth: { user: smtpUser, pass: smtpPass },
         logger: true,
         debug: !!process.env.SMTP_DEBUG,
-        // Increase timeouts (ms) to avoid premature ETIMEDOUT on slow providers
-        connectionTimeout: parseInt(process.env.SMTP_CONNECTION_TIMEOUT || '20000', 10),
-        greetingTimeout: parseInt(process.env.SMTP_GREETING_TIMEOUT || '15000', 10),
-        socketTimeout: parseInt(process.env.SMTP_SOCKET_TIMEOUT || '20000', 10),
+  // Increase timeouts (ms) to avoid premature ETIMEDOUT on slow providers
+  connectionTimeout: parseInt(process.env.SMTP_CONNECTION_TIMEOUT || '30000', 10),
+  greetingTimeout: parseInt(process.env.SMTP_GREETING_TIMEOUT || '30000', 10),
+  socketTimeout: parseInt(process.env.SMTP_SOCKET_TIMEOUT || '30000', 10),
         tls: {
           // Allow opting out of strict TLS verification for debugging only
           rejectUnauthorized: process.env.SMTP_STRICT_TLS !== 'false'
@@ -505,9 +529,9 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
         auth: { user: testAccount.user, pass: testAccount.pass },
         logger: true,
         debug: true,
-        connectionTimeout: 20000,
-        greetingTimeout: 15000,
-        socketTimeout: 20000,
+        connectionTimeout: 30000,
+        greetingTimeout: 30000,
+        socketTimeout: 30000,
       });
       usedEthereal = true;
     } else {
@@ -606,7 +630,7 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
       ];
     }
 
-    const info = await transporter.sendMail(mailOptions);
+  const info = await sendMailWithRetry(transporter, mailOptions, parseInt(process.env.SMTP_SEND_RETRIES || '3', 10));
 
   // Helpful debug logging so we can see transport results during local testing
   console.debug('Email sent:', { messageId: info.messageId, envelope: info.envelope || null });
@@ -617,9 +641,21 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
     }
     res.json(response);
   } catch (error) {
-    console.error('Email send error:', error);
-    const message = error && error.message ? error.message : String(error);
-    res.status(500).json({ success: false, error: { message } });
+    // Better diagnostics: log code + short stack (first lines) to server logs, return structured error JSON
+    try {
+      const code = error && error.code ? error.code : null;
+      const message = error && error.message ? error.message : String(error);
+      const shortStack = error && error.stack ? error.stack.split('\n').slice(0, 6).join('\n') : null;
+      console.error('Email send error:', { code, message, shortStack });
+      // Include any provider response body if present (non-sensitive)
+      const providerInfo = error && error.response ? (error.response.data || error.response) : undefined;
+      const resp = { success: false, error: { message, code } };
+      if (providerInfo) resp.error.provider = providerInfo;
+      res.status(500).json(resp);
+    } catch (inner) {
+      console.error('Error while handling email send error:', inner && inner.stack ? inner.stack : inner);
+      res.status(500).json({ success: false, error: { message: 'Email send failed' } });
+    }
   }
 });
 
@@ -680,7 +716,7 @@ app.post('/send-email-debug', async (req, res) => {
       </ul>
     `;
 
-    const info = await transporter.sendMail({ from, to, subject, text: textParts.join('\n'), html });
+  const info = await sendMailWithRetry(transporter, { from, to, subject, text: textParts.join('\n'), html }, parseInt(process.env.SMTP_SEND_RETRIES || '3', 10));
 
     const previewUrl = nodemailer.getTestMessageUrl(info) || null;
     console.debug('/send-email-debug previewUrl:', previewUrl);
@@ -843,9 +879,9 @@ app.post('/submit-popup', async (req, res) => {
           auth: { user: smtpUser, pass: smtpPass },
           logger: true,
           debug: !!process.env.SMTP_DEBUG,
-          connectionTimeout: parseInt(process.env.SMTP_CONNECTION_TIMEOUT || '20000', 10),
-          greetingTimeout: parseInt(process.env.SMTP_GREETING_TIMEOUT || '15000', 10),
-          socketTimeout: parseInt(process.env.SMTP_SOCKET_TIMEOUT || '20000', 10),
+          connectionTimeout: parseInt(process.env.SMTP_CONNECTION_TIMEOUT || '30000', 10),
+          greetingTimeout: parseInt(process.env.SMTP_GREETING_TIMEOUT || '30000', 10),
+          socketTimeout: parseInt(process.env.SMTP_SOCKET_TIMEOUT || '30000', 10),
           tls: { rejectUnauthorized: process.env.SMTP_STRICT_TLS !== 'false' }
         });
       } else if (process.env.NODE_ENV !== 'production') {
@@ -892,13 +928,13 @@ app.post('/submit-popup', async (req, res) => {
           </ul>
         `;
 
-        const info = await transporter.sendMail({
+        const info = await sendMailWithRetry(transporter, {
           from,
           to: recipients,
           subject,
           text: textParts.join('\n'),
           html,
-        });
+        }, parseInt(process.env.SMTP_SEND_RETRIES || '3', 10));
 
         console.debug('/submit-popup email sent', { messageId: info.messageId, envelope: info.envelope || null });
 
