@@ -53,9 +53,37 @@ export default function AccessibilityFeedback() {
         consent: !!form.consent,
         timestamp: Date.now(),
       };
-      const result = await push(ref(db, 'accessibilityFeedback'), submission);
-      setSubmissionId(result.key);
-      setSubmitted(true);
+      try {
+        const result = await push(ref(db, 'accessibilityFeedback'), submission);
+        setSubmissionId(result.key);
+        setSubmitted(true);
+      } catch (dbErr) {
+        console.warn('AccessibilityFeedback: RTDB push failed', dbErr);
+        if (dbErr && (dbErr.code === 'PERMISSION_DENIED' || /permission_denied/i.test(dbErr.message || ''))) {
+          // Email fallback so team receives the feedback
+          try {
+            const notifyPayload = {
+              name: submission.name || form.name,
+              email: submission.email || form.email,
+              mobile: '',
+              city: '',
+              interest: 'Accessibility Feedback (fallback)',
+              message: `Type: ${form.type}\nSeverity: ${form.severity}\nDevice: ${form.device}\nPage: ${form.pageUrl || (typeof window !== 'undefined' ? window.location.href : '')}\n\n${form.message}`,
+              source: 'AccessibilityFeedback-fallback',
+              to: 'support@wiseglobalresearch.com'
+            };
+            const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+            const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+            await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notifyPayload) });
+            setSubmitted(true);
+          } catch (fallbackErr) {
+            console.warn('Accessibility feedback fallback also failed', fallbackErr);
+            setErrors({ submit: 'Failed to submit. Please try again later.' });
+          }
+        } else {
+          setErrors({ submit: 'Failed to submit. Please try again.' });
+        }
+      }
       // optional: reset form
       setForm({
         name: '',

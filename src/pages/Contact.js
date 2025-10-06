@@ -39,7 +39,38 @@ function Contact() {
     };
 
     try {
-      await push(ref(db, 'homeFormSubmissions'), submissionData);
+      try {
+        await push(ref(db, 'homeFormSubmissions'), submissionData);
+      } catch (dbErr) {
+        console.warn('Contact page: RTDB push failed', dbErr);
+        // If permission denied, best-effort fallback to server email
+        if (dbErr && (dbErr.code === 'PERMISSION_DENIED' || /permission_denied/i.test(dbErr.message || ''))) {
+          try {
+            const endpoint = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+            await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: submissionData.name,
+                email: submissionData.email || '',
+                mobile: submissionData.phone || '',
+                city: '',
+                interest: 'Contact Page (fallback)',
+                message: submissionData.message || '',
+                source: 'ContactPage-fallback'
+              })
+            });
+            toast.success('Form submitted (email fallback used). We will contact you soon.', { position: 'top-center' });
+            setSuccess(true);
+            setFormData({ name: '', email: '', phone: '', message: '' });
+          } catch (fallbackErr) {
+            console.warn('Contact page: fallback /send-email failed', fallbackErr);
+            throw fallbackErr;
+          }
+        } else {
+          throw dbErr;
+        }
+      }
       if (window.gtag) {
         window.gtag('event', 'conversion', {'send_to': 'AW-1137180109/aoxKCJGg_4EbEIqvo6pA'});
       }

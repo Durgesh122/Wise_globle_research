@@ -14,11 +14,32 @@ export function usePopupLead() {
   async function submitLead({ name='', mobile='', city='', interest='' }) {
     setLoading(true); setError(null); setSuccess(false);
     try {
-      await push(ref(db, 'popupSubmissions'), {
-        name, mobile, city, interest,
-        createdAt: serverTimestamp(),
-        source: 'popup-hook'
-      });
+      try {
+        await push(ref(db, 'popupSubmissions'), {
+          name, mobile, city, interest,
+          createdAt: serverTimestamp(),
+          source: 'popup-hook'
+        });
+      } catch (dbErr) {
+        console.warn('popup-hook: RTDB push failed', dbErr);
+        if (dbErr && (dbErr.code === 'PERMISSION_DENIED' || /permission_denied/i.test(dbErr.message || ''))) {
+          // attempt server-side email fallback
+          try {
+            const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+            const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+            await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, mobile, city, interest, source: 'popup-hook-fallback' })
+            });
+          } catch (fallbackErr) {
+            console.warn('popup-hook: fallback email failed', fallbackErr);
+            throw fallbackErr;
+          }
+        } else {
+          throw dbErr;
+        }
+      }
       if (mobile) {
         try {
           await sendPopupEmailWithRetry({

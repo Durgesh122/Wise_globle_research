@@ -49,8 +49,40 @@ const Complaint = () => {
         ...formData,
         timestamp: Date.now()
       };
-      await push(ref(db, 'complaints'), newComplaint);
-      setSubmitted(true);
+      try {
+        await push(ref(db, 'complaints'), newComplaint);
+        setSubmitted(true);
+      } catch (dbErr) {
+        console.warn('Complaint page: RTDB push failed', dbErr);
+        if (dbErr && (dbErr.code === 'PERMISSION_DENIED' || /permission_denied/i.test(dbErr.message || ''))) {
+          // Attempt best-effort email fallback
+          try {
+            const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+            const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+            await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: newComplaint.name || '',
+                email: newComplaint.email || '',
+                mobile: newComplaint.mobile || '',
+                city: '',
+                interest: 'Complaint Form (fallback)',
+                message: `Type: ${newComplaint.complaintType}\n\nDescription: ${newComplaint.description}\n\nPreferred resolution: ${newComplaint.resolution || ''}`,
+                source: 'Complaints-fallback'
+              })
+            });
+            setSubmitted(true);
+          } catch (fallbackErr) {
+            console.error('Complaint page: fallback failed', fallbackErr);
+            toast.error('Failed to submit complaint. Please try again later.');
+            setCurrentStep(3);
+            return;
+          }
+        } else {
+          throw dbErr;
+        }
+      }
       // Best-effort: also notify server to send an email copy to support
       (async () => {
             try {
