@@ -24,11 +24,12 @@ app.set('trust proxy', 1);
 const allowedOrigins = [
   'http://localhost:3001',
   'http://localhost:3000',
+  'http://localhost:3002',
   'http://127.0.0.1:3000',
   'http://192.168.1.138:3001',
   'https://wiseglobalresearch-services.web.app',
   'https://wiseglobalresearch.com',
-  'https://mrxads-2.onrender.com',
+  'https://wise-globle-research-2.onrender.com',
 ];
 
 // More forgiving CORS checker with diagnostics. We intentionally allow
@@ -770,8 +771,25 @@ app.get('/api/economic', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+// Start server with explicit error handling so EADDRINUSE and other errors
+// are handled gracefully and produce helpful diagnostics instead of crashing.
+const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+server.on('error', (err) => {
+  if (err && err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. If you intended to run another process on this port, stop it or set PORT to a different value.`);
+    process.exit(1);
+  }
+  console.error('Server error:', err && err.stack ? err.stack : err);
+  process.exit(1);
+});
+
+server.on('listening', () => {
+  const addr = server.address();
+  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+  console.debug(`Listening on ${bind}`);
 });
 
 // Endpoint to accept popup form submissions from the client and persist

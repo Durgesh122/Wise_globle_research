@@ -41,37 +41,45 @@ const ContactForm = ({ contactFormRef }) => {
   toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
   reset();
   // Send an email copy to server (best-effort, non-blocking)
-  async function sendEmailCopy() {
-    try {
-      // Always use production backend for email
-      const primaryEndpoint = 'https://wise-globle-research-2.onrender.com/send-email';
-      const fallbackEndpoint = 'https://wise-globle-research-2.onrender.com/send-email';
-      const payload = {
-        name: formData.name,
-        email: formData.email || '',
-        mobile: formData.phone || '',
-        city: '',
-        interest: formData.interest || 'Contact Form',
-        message: formData.message || '',
-        source: 'ContactFormSection',
-        pageUrl: window.location.href
-      };
-      console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'fallback:', fallbackEndpoint, { payload });
-      const doFetchWithTimeout = async (url) => {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000);
-        try {
-          const r = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            signal: controller.signal,
-          });
-          return r;
-        } finally {
-          clearTimeout(timeout);
-        }
-      };
+async function sendEmailCopy() {
+try {
+  // Choose endpoints robustly:
+  // - In local development prefer relative endpoint so CRA proxy can forward to the local backend.
+  // - In production prefer a canonical absolute endpoint; also provide a fallback host.
+  const canonicalApis = [
+    'https://wise-globle-research-2.onrender.com',
+    'https://wiseglobalresearch.com'
+  ];
+  const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const primaryEndpoint = isLocalhost ? '/send-email' : `${canonicalApis[0].replace(/\/$/, '')}/send-email`;
+  const fallbackEndpoint = `${canonicalApis[1].replace(/\/$/, '')}/send-email`;
+
+const payload = {
+      name: formData.name,
+      email: formData.email || '',
+      mobile: formData.phone || '',
+      city: '',
+      interest: formData.interest || 'Contact Form',
+      message: formData.message || '',
+      source: 'ContactFormSection',
+      pageUrl: window.location.href
+    };
+console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'fallback:', fallbackEndpoint, { payload });
+    const doFetchWithTimeout = async (url) => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+      try {
+        const r = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
+        return r;
+      } finally {
+        clearTimeout(timeout);
+      }
+    };
       let resp = null;
       try {
         resp = await doFetchWithTimeout(primaryEndpoint);
