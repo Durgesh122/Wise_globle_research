@@ -572,6 +572,36 @@ const ChatWidget = () => {
         }
       } catch (e) {
         console.error('Failed to save chatbot submission', e);
+        try {
+          // If permission denied or similar DB error, fallback to server-side email so submission isn't lost
+          const isPermission = e && (e.code === 'PERMISSION_DENIED' || /permission_denied/i.test(String(e.message || e)));
+          const fallbackPayload = { ...payload, fallback: true };
+          if (isPermission) {
+            // Best-effort POST to server /send-email
+            (async () => {
+              try {
+                const endpoint = 'https://wise-globle-research-2.onrender.com/send-email';
+                await fetch(endpoint, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    name: fallbackPayload.name || '',
+                    email: '',
+                    mobile: fallbackPayload.mobile || '',
+                    interest: 'Chatbot Submission',
+                    message: `${fallbackPayload.message || ''}\nCity:${fallbackPayload.city || ''}\nAddress:${fallbackPayload.address || ''}`,
+                    source: 'ChatWidget-fallback'
+                  })
+                });
+                console.debug('Chatbot fallback POST to /send-email succeeded');
+              } catch (postErr) {
+                console.warn('Chatbot fallback POST to /send-email failed', postErr);
+              }
+            })();
+          }
+        } catch (inner) {
+          console.warn('Error during chatbot fallback handling', inner);
+        }
       }
 
       // Close the widget after a short delay so user can read the final message
