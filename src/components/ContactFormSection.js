@@ -26,7 +26,56 @@ const ContactForm = ({ contactFormRef }) => {
         timestamp: Date.now(),
         honeypot: honeypot || ''
       };
-  await push(ref(db, 'homePageContactSubmissions'), formData);
+      // Try to push to RTDB. If PERMISSION_DENIED occurs, fallback to server email copy.
+      try {
+        await push(ref(db, 'homePageContactSubmissions'), formData);
+      } catch (dbErr) {
+        console.warn('ContactForm: RTDB push failed:', dbErr && dbErr.code ? dbErr.code : dbErr);
+        // Firebase permission denied (client cannot write). Best-effort fallback: POST to /send-email
+        if (dbErr && (dbErr.code === 'PERMISSION_DENIED' || (dbErr.message && dbErr.message.includes('permission')))) {
+          try {
+            const payload = {
+              name: formData.name,
+              email: formData.email || '',
+              mobile: formData.phone || '',
+              city: '',
+              interest: formData.interest || 'Contact Form',
+              message: formData.message || '',
+              source: 'ContactFormSection-fallback',
+              pageUrl: typeof window !== 'undefined' ? window.location.href : ''
+            };
+            const endpoint = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 10000);
+            try {
+              const r = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                signal: controller.signal,
+              });
+              clearTimeout(timeout);
+              if (!r.ok) {
+                let body = null;
+                try { body = await r.json(); } catch (_) { body = await r.text().catch(() => null); }
+                console.warn('ContactForm: fallback /send-email returned non-ok', r.status, body);
+                toast.error('We could not save your submission to the database and email fallback failed. Please try again or contact support.', { position: 'top-center' });
+              } else {
+                toast.success('Form submitted (email fallback used). We will contact you soon.', { position: 'top-center' });
+              }
+            } catch (fetchErr) {
+              console.warn('ContactForm: fallback fetch to /send-email failed', fetchErr);
+              toast.error('We could not save your submission to the database and email fallback failed due to network. Please try again later.', { position: 'top-center' });
+            }
+          } catch (fallbackErr) {
+            console.error('ContactForm: unexpected error during fallback', fallbackErr);
+            toast.error('Submission failed. Please try again later.', { position: 'top-center' });
+          }
+        } else {
+          // If it's some other DB error, surface it.
+          throw dbErr;
+        }
+      }
       // Clear any previous send errors on new attempt
       setSendError(null);
 
