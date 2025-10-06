@@ -43,13 +43,9 @@ const ContactForm = ({ contactFormRef }) => {
   // Send an email copy to server (best-effort, non-blocking)
   async function sendEmailCopy() {
     try {
-      // During local development, prefer a relative path so CRA's proxy can forward requests to the local backend
-      // In production this will resolve to absolute URL of the hosting origin
-      const primaryEndpoint = '/send-email';
-
-      // For diagnostics / non-dev environments, provide an absolute fallback to the canonical API
-      const canonicalApi = 'https://mrxads-2.onrender.com';
-      const fallbackEndpoint = `${canonicalApi.replace(/\/$/, '')}/send-email`;
+      // Always use production backend for email
+      const primaryEndpoint = 'https://wise-globle-research-2.onrender.com/send-email';
+      const fallbackEndpoint = 'https://wise-globle-research-2.onrender.com/send-email';
       const payload = {
         name: formData.name,
         email: formData.email || '',
@@ -60,7 +56,7 @@ const ContactForm = ({ contactFormRef }) => {
         source: 'ContactFormSection',
         pageUrl: window.location.href
       };
-  console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'fallback:', fallbackEndpoint, { payload });
+      console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'fallback:', fallbackEndpoint, { payload });
       const doFetchWithTimeout = async (url) => {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 10000);
