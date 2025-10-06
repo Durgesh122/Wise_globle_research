@@ -175,7 +175,21 @@ const ContactForm = ({ contactFormRef }) => {
       setSendError(`Email copy failed: ${lastError}`);
     }
   }
-  sendEmailCopy();
+  // Avoid calling remote /send-email endpoints while developing on localhost:3000
+  // to prevent noisy CORS/network errors in the browser console. Only run
+  // the email-copy when the site is running on a production-like host.
+  try {
+    const hostname = (typeof window !== 'undefined' && window.location.hostname) || '';
+    const isDevLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+    if (!isDevLocalhost) {
+      sendEmailCopy();
+    } else {
+      console.debug('ContactForm: skipping sendEmailCopy in localhost dev to avoid noisy failures');
+    }
+  } catch (e) {
+    // If anything unexpectedly fails deciding environment, skip the send to avoid blocking the UX
+    console.warn('ContactForm: error deciding whether to send email copy (skipping):', e && e.message ? e.message : e);
+  }
     } catch (error) {
       console.error('Error submitting form:', error);
       const errorMessage = error.message ? error.message : String(error);
