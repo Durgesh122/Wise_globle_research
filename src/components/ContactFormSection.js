@@ -136,8 +136,31 @@ console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'f
       try {
         // Always try the relative endpoint first in dev to avoid CORS against production host.
         resp = await doFetchWithTimeout(primaryEndpoint);
+        // If server responded but with non-OK (e.g., 500), attempt fallback endpoints too
+        if (!resp.ok) {
+          console.warn('Primary send-email responded with non-OK, attempting fallback. Status:', resp.status, resp.statusText);
+          try {
+            resp = await doFetchWithTimeout(fallbackEndpoint);
+            if (!resp.ok) {
+              // try canonical primary host as a last attempt
+              console.debug('Fallback endpoint also returned non-OK, attempting canonical host...');
+              resp = await doFetchWithTimeout(`${canonicalApis[0].replace(/\/$/, '')}/send-email`);
+            }
+          } catch (fallbackErr) {
+            console.warn('Fallback send-email also failed:', fallbackErr);
+            // As a last resort, attempt a direct fetch to the canonical primary host without CORS expectations
+            // to help diagnostics (will likely fail in browser due to CORS, but logs are helpful).
+            try {
+              console.debug('Attempting last-resort direct fetch to canonical primary host for diagnostics...');
+              resp = await doFetchWithTimeout(`${canonicalApis[0].replace(/\/$/, '')}/send-email`);
+            } catch (lastErr) {
+              console.warn('Last-resort direct fetch failed as well:', lastErr);
+              throw fallbackErr;
+            }
+          }
+        }
       } catch (primaryErr) {
-        console.warn('Primary send-email failed, attempting fallback. Primary error:', primaryErr);
+        console.warn('Primary send-email failed (network/CORS), attempting fallback. Primary error:', primaryErr);
         setSendError(`Primary send-email failed: ${primaryErr && primaryErr.message ? primaryErr.message : String(primaryErr)}`);
         try {
           resp = await doFetchWithTimeout(fallbackEndpoint);
