@@ -39,129 +39,91 @@ const ContactForm = ({ contactFormRef }) => {
       } catch (e) { /* ignore */ }
 
   toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
-      reset();
-      // Send an email copy to server (best-effort, non-blocking)
-      (async () => {
+  reset();
+  // Send an email copy to server (best-effort, non-blocking)
+  async function sendEmailCopy() {
+    try {
+      const apiBase = 'https://mrxads-2.onrender.com';
+      const primaryEndpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
+      const fallbackEndpoint = (() => {
         try {
-<<<<<<< HEAD
-          // Use fixed API base as requested, with a same-origin fallback if the request aborts/fails (CORS)
-          const apiBase = 'https://mrxads-2.onrender.com';
-          const primaryEndpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
-          // Prefer the backend dev port when running locally (CRA runs on 3000, server uses 3002)
-          const fallbackEndpoint = (() => {
-            try {
-              const loc = window.location || {};
-              const hostname = loc.hostname || '';
-              const port = loc.port || '';
-              if (hostname === 'localhost') {
-                // If frontend is on 3000 (CRA), prefer backend on 3002
-                const backendPort = port === '3000' ? '3002' : (port || '3002');
-                return `http://${hostname}:${backendPort}/send-email`;
-              }
-            } catch (e) {
-              // fallback to origin if anything unexpected
-            }
-            return `${window.location.origin.replace(/\/$/, '')}/send-email`;
-          })();
-=======
-          // Use production server URL in production, otherwise use local server
-          const isProduction = process.env.NODE_ENV === 'production';
-          // Prefer the page's origin when in production so deploy hostname (Render, Netlify, etc.) is used
-          const apiBase = isProduction ? window.location.origin : 'http://localhost:3002';
-          const endpoint = `${apiBase.replace(/\/$/, '')}/send-email`;
->>>>>>> fd352401d3ff588f2b7060d32e8ad3c60fa902f0
-          const payload = {
-            name: formData.name,
-            email: formData.email || '',
-            mobile: formData.phone || '',
-            city: '',
-            interest: formData.interest || 'Contact Form',
-            message: formData.message || '',
-            source: 'ContactFormSection',
-            pageUrl: window.location.href
-          };
-
-          // Log diagnostics to help debug CORS / server errors in browser devtools
-          console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'fallback:', fallbackEndpoint, { payload });
-
-          // Use AbortController to avoid indefinite hangs in the browser when network/CORS issues happen
-<<<<<<< HEAD
-          // Helper to perform fetch with timeout and return response or throw
-          const doFetchWithTimeout = async (url) => {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 10000); // 10s
-            try {
-              const r = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-                signal: controller.signal,
-              });
-              return r;
-            } finally {
-              clearTimeout(timeout);
-            }
-          };
-
-          // Try primary endpoint first, if it errors (network/CORS/abort) then try fallback
-          let resp = null;
-          try {
-            resp = await doFetchWithTimeout(primaryEndpoint);
-          } catch (primaryErr) {
-            console.warn('Primary send-email failed, attempting fallback. Primary error:', primaryErr);
-            // Expose primary error to visible UI for debugging
-            setSendError(`Primary send-email failed: ${primaryErr && primaryErr.message ? primaryErr.message : String(primaryErr)}`);
-            try {
-              resp = await doFetchWithTimeout(fallbackEndpoint);
-            } catch (fallbackErr) {
-              console.warn('Fallback send-email also failed:', fallbackErr);
-              // Expose fallback error as well
-              setSendError(`Fallback send-email failed: ${fallbackErr && fallbackErr.message ? fallbackErr.message : String(fallbackErr)}`);
-              throw fallbackErr; // bubble up to outer catch
-            }
-            // If fallback succeeds, clear the error
-            setSendError(null);
+          const loc = window.location || {};
+          const hostname = loc.hostname || '';
+          const port = loc.port || '';
+          if (hostname === 'localhost') {
+            const backendPort = port === '3000' ? '3002' : (port || '3002');
+            return `http://${hostname}:${backendPort}/send-email`;
           }
-=======
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 10000); // 10s
-          const resp = await fetch(endpoint, {
+        } catch (e) {}
+        return `${window.location.origin.replace(/\/$/, '')}/send-email`;
+      })();
+      const payload = {
+        name: formData.name,
+        email: formData.email || '',
+        mobile: formData.phone || '',
+        city: '',
+        interest: formData.interest || 'Contact Form',
+        message: formData.message || '',
+        source: 'ContactFormSection',
+        pageUrl: window.location.href
+      };
+      console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'fallback:', fallbackEndpoint, { payload });
+      const doFetchWithTimeout = async (url) => {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+        try {
+          const r = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
             signal: controller.signal,
-          }).finally(() => clearTimeout(timeout));
->>>>>>> fd352401d3ff588f2b7060d32e8ad3c60fa902f0
-
-          // Try to parse response body for more helpful diagnostics
-          let respBody = null;
-          try {
-            respBody = await resp.json();
-          } catch (parseErr) {
-            // not JSON — read as text
-            try { respBody = await resp.text(); } catch (_) { respBody = null; }
-          }
-
-          if (!resp.ok) {
-            console.warn('Failed to send email copy for contact form. Response:', resp.status, resp.statusText, respBody);
-            const serverMsg = (respBody && (respBody.error?.message || respBody.message)) || resp.statusText || 'Unknown error';
-            toast.error(`Email copy not sent: ${serverMsg}`, { position: 'top-center' });
-          } else {
-            console.debug('Email copy sent (server response):', respBody);
-          }
-        } catch (e) {
-          // Network-level or CORS failure will end up here
-          console.warn('Failed to send email copy for contact form (network/CORS?):', e);
-          const msg = e && e.message ? e.message : String(e);
-          setSendError(`Email copy failed: ${msg}`);
-          toast.error(`Email copy failed: ${msg}`, { position: 'top-center' });
+          });
+          return r;
+        } finally {
+          clearTimeout(timeout);
         }
-      })();
+      };
+      let resp = null;
+      try {
+        resp = await doFetchWithTimeout(primaryEndpoint);
+      } catch (primaryErr) {
+        console.warn('Primary send-email failed, attempting fallback. Primary error:', primaryErr);
+        setSendError(`Primary send-email failed: ${primaryErr && primaryErr.message ? primaryErr.message : String(primaryErr)}`);
+        try {
+          resp = await doFetchWithTimeout(fallbackEndpoint);
+        } catch (fallbackErr) {
+          console.warn('Fallback send-email also failed:', fallbackErr);
+          setSendError(`Fallback send-email failed: ${fallbackErr && fallbackErr.message ? fallbackErr.message : String(fallbackErr)}`);
+          throw fallbackErr;
+        }
+        setSendError(null);
+      }
+      let respBody = null;
+      try {
+        respBody = await resp.json();
+      } catch (parseErr) {
+        try { respBody = await resp.text(); } catch (_) { respBody = null; }
+      }
+      if (!resp.ok) {
+        console.warn('Failed to send email copy for contact form. Response:', resp.status, resp.statusText, respBody);
+        const serverMsg = (respBody && (respBody.error?.message || respBody.message)) || resp.statusText || 'Unknown error';
+        toast.error(`Email copy not sent: ${serverMsg}`, { position: 'top-center' });
+      } else {
+        console.debug('Email copy sent (server response):', respBody);
+      }
+    } catch (e) {
+      console.warn('Failed to send email copy for contact form (network/CORS?):', e);
+      const msg = e && e.message ? e.message : String(e);
+      setSendError(`Email copy failed: ${msg}`);
+      toast.error(`Email copy failed: ${msg}`, { position: 'top-center' });
+    }
+  }
+  sendEmailCopy();
     } catch (error) {
       console.error('Error submitting form:', error);
-  const errorMessage = error.message ? error.message : String(error);
-  setSendError(`Form submission failed: ${errorMessage}`);
-  toast.error(`Failed to submit form: ${errorMessage}`, { position: 'top-center' });
+      const errorMessage = error.message ? error.message : String(error);
+      setSendError(`Form submission failed: ${errorMessage}`);
+      toast.error(`Failed to submit form: ${errorMessage}`, { position: 'top-center' });
     } finally {
       setSubmitting(false);
     }
