@@ -90,23 +90,29 @@ const ContactForm = ({ contactFormRef }) => {
   toast.success('Form submitted successfully! We will contact you soon.', { position: 'top-center' });
   reset();
   // Send an email copy to server (best-effort, non-blocking)
-async function sendEmailCopy() {
-try {
-  // Choose endpoints robustly:
-  // - In local development prefer relative endpoint so CRA proxy can forward to the local backend.
-  // - In production prefer a canonical absolute endpoint; also provide a fallback host.
-  const canonicalApis = [
-    'https://wise-globle-research-2.onrender.com',
-    'https://wiseglobalresearch.com'
-  ];
-  // Prefer a relative endpoint so Create React App dev server proxy (or the browser's same-origin rules)
-  // allow local development to forward to the backend without hitting CORS on production hosts.
+  async function sendEmailCopy() {
+    // Endpoint candidates in preferred order. Try each until one succeeds.
+    const endpoints = [];
+    const canonicalApis = [
+      'https://wise-globle-research-2.onrender.com',
+      'https://wiseglobalresearch.com'
+    ];
+  // Only use the relative endpoint when the browser is actually served from the
+  // backend port (3001). Many dev setups run CRA on :3000 while the API runs
+  // on :3001; calling a relative '/send-email' from :3000 will hit the CRA
+  // static server and often return 500. To avoid noisy errors, require port
+  // 3001 for the relative endpoint. If you intentionally want to test
+  // local relative proxying, run the frontend on port 3001 or set
+  // REACT_APP_USE_LOCAL_SEND_EMAIL=true at build time and adjust the check.
   const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-  const localRelativeEndpoint = '/send-email';
-  const primaryEndpoint = isLocalhost ? localRelativeEndpoint : `${canonicalApis[0].replace(/\/$/, '')}/send-email`;
-  const fallbackEndpoint = `${canonicalApis[1].replace(/\/$/, '')}/send-email`;
+  const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+  const useRelative = isLocalhost && port === '3001';
+  if (useRelative) endpoints.push('/send-email');
+    // prefer Render then canonical production
+    endpoints.push(`${canonicalApis[0].replace(/\/$/, '')}/send-email`);
+    endpoints.push(`${canonicalApis[1].replace(/\/$/, '')}/send-email`);
 
-const payload = {
+    const payload = {
       name: formData.name,
       email: formData.email || '',
       mobile: formData.phone || '',
@@ -114,9 +120,9 @@ const payload = {
       interest: formData.interest || 'Contact Form',
       message: formData.message || '',
       source: 'ContactFormSection',
-      pageUrl: window.location.href
+      pageUrl: (typeof window !== 'undefined' && window.location.href) || ''
     };
-console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'fallback:', fallbackEndpoint, { payload });
+
     const doFetchWithTimeout = async (url) => {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10000);
@@ -132,71 +138,41 @@ console.debug('ContactForm: sending email-copy to primary:', primaryEndpoint, 'f
         clearTimeout(timeout);
       }
     };
-      let resp = null;
+
+    let lastError = null;
+    let sent = false;
+    for (const url of endpoints) {
       try {
-        // Always try the relative endpoint first in dev to avoid CORS against production host.
-        resp = await doFetchWithTimeout(primaryEndpoint);
-        // If server responded but with non-OK (e.g., 500), attempt fallback endpoints too
-        if (!resp.ok) {
-          console.warn('Primary send-email responded with non-OK, attempting fallback. Status:', resp.status, resp.statusText);
-          try {
-            resp = await doFetchWithTimeout(fallbackEndpoint);
-            if (!resp.ok) {
-              // try canonical primary host as a last attempt
-              console.debug('Fallback endpoint also returned non-OK, attempting canonical host...');
-              resp = await doFetchWithTimeout(`${canonicalApis[0].replace(/\/$/, '')}/send-email`);
-            }
-          } catch (fallbackErr) {
-            console.warn('Fallback send-email also failed:', fallbackErr);
-            // As a last resort, attempt a direct fetch to the canonical primary host without CORS expectations
-            // to help diagnostics (will likely fail in browser due to CORS, but logs are helpful).
-            try {
-              console.debug('Attempting last-resort direct fetch to canonical primary host for diagnostics...');
-              resp = await doFetchWithTimeout(`${canonicalApis[0].replace(/\/$/, '')}/send-email`);
-            } catch (lastErr) {
-              console.warn('Last-resort direct fetch failed as well:', lastErr);
-              throw fallbackErr;
-            }
-          }
+        console.debug('ContactForm: attempting send-email ->', url);
+        const res = await doFetchWithTimeout(url);
+        // If we got a truthy response object, interpret status
+        if (res && res.ok) {
+          let body = null;
+          try { body = await res.json(); } catch (_) { body = await res.text().catch(() => null); }
+          console.debug('ContactForm: email copy sent via', url, body);
+          sent = true;
+          break;
+        } else {
+          // Non-2xx response - record and try next
+          let body = null;
+          try { body = await res.json(); } catch (_) { body = await res.text().catch(() => null); }
+          console.warn('ContactForm: send-email returned non-OK from', url, res && res.status, body);
+          lastError = `non-ok ${res && res.status}`;
+          // continue to next endpoint
         }
-      } catch (primaryErr) {
-        console.warn('Primary send-email failed (network/CORS), attempting fallback. Primary error:', primaryErr);
-        setSendError(`Primary send-email failed: ${primaryErr && primaryErr.message ? primaryErr.message : String(primaryErr)}`);
-        try {
-          resp = await doFetchWithTimeout(fallbackEndpoint);
-        } catch (fallbackErr) {
-          console.warn('Fallback send-email also failed:', fallbackErr);
-          setSendError(`Fallback send-email failed: ${fallbackErr && fallbackErr.message ? fallbackErr.message : String(fallbackErr)}`);
-          // As a last resort, attempt a direct fetch to the canonical primary host without CORS expectations
-          // to help diagnostics (will likely fail in browser due to CORS, but logs are helpful).
-          try {
-            console.debug('Attempting last-resort direct fetch to canonical primary host for diagnostics...');
-            resp = await doFetchWithTimeout(`${canonicalApis[0].replace(/\/$/, '')}/send-email`);
-          } catch (lastErr) {
-            console.warn('Last-resort direct fetch failed as well:', lastErr);
-            throw fallbackErr;
-          }
-        }
-        setSendError(null);
+      } catch (err) {
+        // Network/CORS/timeout errors surface here as TypeError or DOMException
+        console.warn('ContactForm: send-email attempt failed for', url, err && err.message ? err.message : err);
+        lastError = err && err.message ? err.message : String(err);
+        // try next endpoint instead of throwing immediately
       }
-      let respBody = null;
-      try {
-        respBody = await resp.json();
-      } catch (parseErr) {
-        try { respBody = await resp.text(); } catch (_) { respBody = null; }
-      }
-      if (!resp.ok) {
-        console.warn('Failed to send email copy for contact form. Response:', resp.status, resp.statusText, respBody);
-        const serverMsg = (respBody && (respBody.error?.message || respBody.message)) || resp.statusText || 'Unknown error';
-        toast.error(`Email copy not sent: ${serverMsg}`, { position: 'top-center' });
-      } else {
-        console.debug('Email copy sent (server response):', respBody);
-      }
-    } catch (e) {
-      console.warn('Failed to send email copy for contact form (network/CORS?):', e);
-      const msg = e && e.message ? e.message : String(e);
-      setSendError(`Email copy failed: ${msg}`);
-      toast.error(`Email copy failed: ${msg}`, { position: 'top-center' });
+    }
+
+    if (!sent) {
+      console.warn('ContactForm: all send-email endpoints failed. Last error:', lastError);
+      // Only surface a user-visible error if all endpoints failed
+      toast.error('Could not send email copy (all endpoints failed). Your submission may still have been received; if not, please contact support.', { position: 'top-center' });
+      setSendError(`Email copy failed: ${lastError}`);
     }
   }
   sendEmailCopy();
