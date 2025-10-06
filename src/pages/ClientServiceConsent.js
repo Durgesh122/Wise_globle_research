@@ -134,7 +134,7 @@ const ClientServiceConsent = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://masterxservers.onrender.com/api/submit-client-form', {
+      const response = await fetch('https://wise-globle-research-2.onrender.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

@@ -260,7 +260,7 @@ function Contact() {
                       aria-describedby="help-phone"
                       inputMode="tel"
                       autoComplete="tel"
-                      pattern="[0-9+()\\-\\s]{7,20}"
+                      pattern="[0-9+()\-\s]{7,20}"
                       className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
                       whileFocus={{ scale: 1.02 }}
                     />
