@@ -1,10 +1,9 @@
-// Duplicate simplified ChatWidget removed; the main ChatWidget implementation follows below.
 import React, { useState, useEffect, useRef, useId } from 'react';
+import { getAnswerForLanguage } from '../data/chatKB';
 import { FaTimes, FaUser, FaCity, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { db } from '../firebase';
-import { ref as dbRef, push, set, update } from 'firebase/database';
-import { services } from '../pages/Services';
+import { ref, push } from 'firebase/database';
 
 // Chat badge icon (uses FaRobot) — replaces the earlier SVG robot with a simpler badge
 const ChatLogo = ({ className = 'w-6 h-6', animated = false }) => {
@@ -56,15 +55,12 @@ const ChatWidget = () => {
   const messagesEndRef = useRef(null);
   const introSentRef = useRef(false);
   const inputRef = useRef(null);
-  const [pendingSubmissionKey, setPendingSubmissionKey] = useState(null);
+  // removed server-backed pending submission logic
   // Teaser popup state and timers
   const [showTeaser, setShowTeaser] = useState(false);
   const teaserTimerRef = useRef(null);
   const teaserAutoHideRef = useRef(null);
-  // Topic / service UI state
-  const [showTopicOptions, setShowTopicOptions] = useState(false);
-  const [showServiceOptions, setShowServiceOptions] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState(null);
+  // Topic/service UI removed — simplified flow
   
   // Track unread messages received while the widget is closed
   const [unreadCount, setUnreadCount] = useState(0);
@@ -194,16 +190,6 @@ const ChatWidget = () => {
   // with a function that calls an AI service like Gemini or ChatGPT.
   // For now, it uses a predefined set of questions and answers.
 
-  // Derive topic options and services mapping from exported `services` in Services.js
-  // Use service.category as topic and map service entries under each category
-  const topicOptions = Array.from(new Set(services.map((s) => s.category))).filter(Boolean);
-
-  const servicesByTopic = topicOptions.reduce((acc, topic) => {
-    acc[topic] = services
-      .filter((s) => s.category === topic)
-      .map((s, i) => ({ id: `${topic.toLowerCase().replace(/\s+/g, '-')}-${i}`, title: s.name, desc: s.description }));
-    return acc;
-  }, {});
 
   // Track user activity minimally (message count and last interaction)
   useEffect(() => {
@@ -387,33 +373,55 @@ const ChatWidget = () => {
 
   // All input validations removed per request — flow proceeds on any input.
 
+  // Prefer a local KB hit first, then fall back to regex-based replies.
+  // Importing the KB helper locally (lightweight, client-side)
+  // (kept close to function so patch is minimal)
+  // NOTE: findBestAnswer is imported at the top of file
+  // quick language detection: returns 'hi' for Devanagari or common Hindi tokens, otherwise 'en'
+  const detectLanguage = (text) => {
+    if (!text) return 'en';
+    // Devanagari block
+    if (/[\u0900-\u097F]/.test(text)) return 'hi';
+    // common Hindi words
+    if (/\b(kya|kaise|kripya|dhanyavaad|shukriya|namaste|namaskar)\b/i.test(text)) return 'hi';
+    return 'en';
+  };
+
   const getLocalResponse = async (userMessage) => {
     await new Promise((r) => setTimeout(r, 250));
     const topic = formData.service || 'the topic you mentioned';
+    const lang = detectLanguage(userMessage);
+    try {
+      // try KB first with language preference (getAnswerForLanguage from chatKB)
+      const kbAnswer = getAnswerForLanguage(userMessage, lang);
+      if (kbAnswer) return kbAnswer;
+    } catch (e) {
+      // ignore KB errors and continue to fallback
+    }
 
     // Greeting handling: reply and prompt for name
     if (/^\s*(hi|hello|hey|namaste|hii)\b/i.test(userMessage)) {
-      return `Hello! To get started, may I have your full name?`;
+      return lang === 'hi' ? 'नमस्ते! क्या मैं आपका पूरा नाम जान सकता हूँ?' : `Hello! To get started, may I have your full name?`;
     }
 
     // Fallback responses for common topics (English)
     if (/data|dataset|report|csv|excel/i.test(userMessage)) {
-      return `We can prepare datasets and a research brief for you — please tell me the timeline and key metrics you need.`;
+      return lang === 'hi' ? 'हम आपके लिए डेटा सेट और एक रिसर्च ब्रीफ तैयार कर सकते हैं — कृपया टाइमलाइन और मुख्य मेट्रिक्स बताइए।' : `We can prepare datasets and a research brief for you — please tell me the timeline and key metrics you need.`;
     }
     if (/intraday/i.test(userMessage)) {
-      return `Intraday trading means buying and selling within the same trading day. Key points: use stop-losses, manage position size, prefer liquid stocks, and avoid excessive leverage. This is educational information, not financial advice.`;
+      return lang === 'hi' ? 'इंट्राडे ट्रेडिंग का मतलब है उसी ट्रेडिंग दिन में खरीदना और बेच देना। मुख्य बातें: स्टॉप-लॉस का उपयोग, उचित पोजिशन साइज, लिक्विड स्टॉक्स चुनें और अत्यधिक लीवरेज से बचें। यह शैक्षिक जानकारी है, निवेश सलाह नहीं।' : `Intraday trading means buying and selling within the same trading day. Key points: use stop-losses, manage position size, prefer liquid stocks, and avoid excessive leverage. This is educational information, not financial advice.`;
     }
     if (/swing|delivery|positional/i.test(userMessage)) {
-      return `Swing or positional trading holds positions for days to weeks. Focus on trend analysis, fundamental triggers and risk management. Consider diversification and position sizing.`;
+      return lang === 'hi' ? 'स्विंग या पोजिशनल ट्रेडिंग में पोजिशन कई दिनों से हफ्तों तक रखी जा सकती है। ट्रेंड विश्लेषण, फंडामेंटल ट्रिगर्स और रिस्क मैनेजमेंट पर ध्यान दें।' : `Swing or positional trading holds positions for days to weeks. Focus on trend analysis, fundamental triggers and risk management. Consider diversification and position sizing.`;
     }
     if (/how to pick|stock pick|select stock|best stocks/i.test(userMessage)) {
-      return `To pick stocks consider consistent revenue/earnings, reasonable valuation, sector momentum and liquidity. Use a combination of quantitative screening and qualitative analysis. This is educational only.`;
+      return lang === 'hi' ? 'स्टॉक्स चुनते समय लगातार रेवन्यू/अर्निंग्स, उपयुक्त वैल्यूएशन, सेक्टर मोमेंटम और लिक्विडिटी देखें। क्वांट और क्वाल दोनों तरह के विश्लेषण का उपयोग करें। यह केवल शैक्षिक जानकारी है।' : `To pick stocks consider consistent revenue/earnings, reasonable valuation, sector momentum and liquidity. Use a combination of quantitative screening and qualitative analysis. This is educational only.`;
     }
     if (/indicator|rsi|macd|moving average|sma|ema/i.test(userMessage)) {
-      return `Indicators like RSI, MACD and moving averages help identify momentum and trend. Combine indicators with price action and volume; avoid relying on a single signal and backtest before using live.`;
+      return lang === 'hi' ? 'RSI, MACD और मूविंग एवरेज जैसे इंडिकेटर्स ट्रेंड और मोमेंटम पहचानने में मदद करते हैं। इन्हें प्राइस एक्शन और वॉल्यूम के साथ मिलाकर उपयोग करें; किसी एक सिग्नल पर भरोसा न करें और लाइव उपयोग से पहले बैकटेस्ट करें।' : `Indicators like RSI, MACD and moving averages help identify momentum and trend. Combine indicators with price action and volume; avoid relying on a single signal and backtest before using live.`;
     }
     if (/what is (wise global|your company)|sebi|registered/i.test(userMessage.toLowerCase())) {
-      return `We are a SEBI-registered research services firm providing market research, reports and analytics. We are located in Indore and offer research products — not personalised investment advice.`;
+      return lang === 'hi' ? 'हम SEBI-registered रिसर्च सर्विस हैं। हम इंदौर में स्थित हैं और मार्केट रिसर्च, रिपोर्ट्स और एनालिटिक्स प्रदान करते हैं — यह व्यक्तिगत निवेश सलाह नहीं है।' : `We are a SEBI-registered research services firm providing market research, reports and analytics. We are located in Indore and offer research products — not personalised investment advice.`;
     }
 
     // Generic fallback (English)
@@ -524,66 +532,7 @@ const ChatWidget = () => {
   };
 
   // When user selects a topic from options
-  const handleSelectTopic = (topic) => {
-    setSelectedTopic(topic);
-    setFormData((f) => ({ ...f, topic }));
-    setShowTopicOptions(false);
-    setShowServiceOptions(true);
-    // bot message: list services
-    const id = `${Date.now()}-topic`;
-    setMessages((prev) => [...prev, { fromUser: false, text: `Great — you selected: ${topic}. Which of these services interest you?`, id }]);
-  };
-
-  const handleSelectService = (service) => {
-  // persist chosen service into formData so getLocalResponse/topic logic can use it
-    setFormData((f) => ({ ...f, service: service.title }));
-    setShowServiceOptions(false);
-    // show service details and give confirmation
-    const id = `${Date.now()}-service`;
-    setMessages((prev) => [...prev, { fromUser: false, text: `${service.title}: ${service.desc}` , id }]);
-    setTimeout(async () => {
-      const finalId = `${Date.now()}-final`;
-      setMessages((prev) => [...prev, { fromUser: false, text: `Thank you for your interest in ${service.title}. Our team will contact you shortly about this service.`, id: finalId }]);
-      setStep('chatting'); // End of flow
-
-      // prepare payload and save to Realtime Database
-      const payload = {
-        name: formData.name || '',
-        city: formData.city || '',
-        address: formData.address || '',
-        mobile: formData.mobile || '',
-        service: service.title || '',
-  // include a short message to satisfy the DB write rule that requires a 'message' string
-  message: `Interested in ${service.title} - ${service.desc || ''}`,
-        timestamp: Date.now(),
-        status: 'New',
-      };
-
-      try {
-        if (pendingSubmissionKey) {
-          // update existing partial submission
-          const targetRef = dbRef(db, `chatbot-submissions/${pendingSubmissionKey}`);
-          // ensure partial flag is cleared when updating with final data
-          await update(targetRef, { ...payload, partial: false });
-          setPendingSubmissionKey(null);
-        } else {
-          const submissionsRef = dbRef(db, 'chatbot-submissions');
-          const newRef = push(submissionsRef);
-          await set(newRef, payload);
-        }
-      } catch (e) {
-        console.error('Failed to save chatbot submission', e);
-      }
-
-      // Close the widget after a short delay so user can read the final message
-      closeWithFade(700, () => {
-        setMessages([]);
-        setFormData({ name: '', city: '', address: '', mobile: '', service: '', extra: {} });
-        setStep('greeting');
-        introSentRef.current = false;
-      });
-    }, 800);
-  };
+  // topic/service flow removed — selections no longer collected here
 
   // Handlers for collecting personal info step-by-step
   const submitName = (name) => {
@@ -644,7 +593,7 @@ const ChatWidget = () => {
     setStep('askMobile');
   };
 
-  const submitMobile = (mobile) => {
+  const submitMobile = async (mobile) => {
     if (!mobile) {
       setErrorText('Please enter your mobile number');
       try { inputRef.current?.focus(); } catch (e) {}
@@ -662,56 +611,43 @@ const ChatWidget = () => {
     const botId = `${Date.now()}-asktopic`;
     setMessages((prev) => [...prev, { fromUser: true, text: normalized, id: userId }, { fromUser: false, text: `Thank you! Saving your contact...`, id: botId }]);
 
-    // Save a partial submission so we can update later when service is selected
-    (async () => {
-      const payload = {
+    // Save to Firebase RTDB
+    try {
+      // Ensure we include a 'message' string (rules require it) and timestamp as number
+      const submission = {
         name: formData.name || '',
         city: formData.city || '',
         address: formData.address || '',
-        mobile: normalized || '',
-        service: formData.service || '',
-        // partial save marker
-        partial: true,
-        // include a minimal message so server record is informative
-        message: 'Partial submission (mobile received)',
+        mobile: normalized,
+        // 'message' is required by RTDB rules for chatbot-submissions when created by unauthenticated clients
+        message: `Contact saved via chatbot${formData.service ? ' - ' + (formData.service.title || formData.service) : ''}`,
+        // optional honeypot (left empty)
+        honeypot: '',
         timestamp: Date.now(),
         status: 'New',
       };
+      await push(ref(db, 'chatbot-submissions'), submission);
+    } catch (e) {
+      // Log full error for debugging
+      console.error('Failed to write chatbot submission to RTDB:', e);
 
-      // POST to server's submit-popup endpoint which uses Admin SDK to persist
-      try {
-        const resp = await fetch('http://localhost:3002/submit-popup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-        const json = await resp.json().catch(() => ({}));
-        if (resp.ok && json && json.success) {
-          setPendingSubmissionKey(json.key || null);
-        } else {
-          console.error('submit-popup returned error', json);
-        }
-      } catch (fetchErr) {
-        console.error('Failed to POST partial submission to server', fetchErr);
+      const permDenied = (e && (e.code === 'PERMISSION_DENIED' || (typeof e.message === 'string' && e.message.toLowerCase().includes('permission_denied')) || (typeof e.message === 'string' && e.message.toLowerCase().includes('permission denied'))));
+
+      if (permDenied) {
+        // Inform user briefly and recommend contacting site admin if this persists
+        setMessages((prev) => [...prev, { fromUser: false, text: "Couldn't save contact due to database permissions. Try again later or contact support.", id: `${Date.now()}-perm` }]);
+      } else {
+        setMessages((prev) => [...prev, { fromUser: false, text: 'Sorry, failed to save your details. Please try again later.', id: `${Date.now()}-fail` }]);
       }
 
-      // After partial save completes (or attempted), prompt user to select topic/services
-      const doneId = `${Date.now()}-asktopic2`;
-      setMessages((prev) => [...prev, { fromUser: false, text: `Now, let's find the right service for you. Which of these topics are you interested in?`, id: doneId }]);
-      setShowTopicOptions(true);
-      setStep('selectingTopic');
+      setStep('chatting');
+      return;
+    }
 
-      // Send final submission to server which will persist it using Admin SDK
-      try {
-        const resp = await fetch('http://localhost:3002/submit-popup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-        const json = await resp.json().catch(() => ({}));
-        if (resp.ok && json && json.success) {
-          // successful server-side save; clear pending key if any
-          setPendingSubmissionKey(null);
-        } else {
-          console.error('/submit-popup returned error', json);
-        }
-      } catch (fetchErr) {
-        console.error('Failed to POST final submission to server', fetchErr);
-      }
-    })();
-
+    // Finalize flow: thank user and switch to chatting state
+    const doneId = `${Date.now()}-thanks`;
+    setMessages((prev) => [...prev, { fromUser: false, text: `Thanks — we've saved your contact. Our team will reach out if needed.`, id: doneId }]);
+    setStep('chatting');
   };
 
   // Input type based on step
@@ -855,33 +791,6 @@ const ChatWidget = () => {
                 >
                   End Chat
                 </button>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      const transcript = messages.map(m => `${m.fromUser ? 'User' : 'Bot'}: ${m.text}`).join('\n');
-                      const notify = {
-                        name: formData.name || 'Chat user',
-                        email: formData.email || '',
-                        mobile: formData.mobile || '',
-                        interest: 'Chat Transcript',
-                        message: transcript || '(no messages)',
-                        source: 'ChatWidget',
-                        to: 'hemraj8087@gmail.com,wiseglobalresearchservice@gmail.com'
-                      };
-                      await fetch('http://localhost:3002/send-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notify) });
-                      // eslint-disable-next-line no-console
-                      console.debug('Chat transcript sent to server');
-                    } catch (err) {
-                      // eslint-disable-next-line no-console
-                      console.warn('Failed to send chat transcript', err);
-                    }
-                  }}
-                  className="text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30 transition-colors"
-                  aria-label="Email chat transcript to support"
-                >
-                  Email Transcript
-                </button>
                 <button type="button" onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition-colors" aria-label="Close chat">
                   <FaTimes />
                 </button>
@@ -935,44 +844,7 @@ const ChatWidget = () => {
             <div className="p-3 border-t border-gray-200 bg-white">
               {step !== 'chatting' && step !== 'askService' && <StepIndicator />}
 
-              {/* Moved Topic/Service options: show just above input area */}
-              {(showTopicOptions || (showServiceOptions && selectedTopic)) && (
-                <div className="mb-3 px-1">
-                  {showTopicOptions && (
-                    <div className="space-y-2">
-                      <div className="text-sm font-medium text-black">Which topic are you interested in?</div>
-                      <div className="grid grid-cols-1 gap-2">
-                        {topicOptions.map((t) => (
-                          <button key={t} type="button" onClick={() => handleSelectTopic(t)} className="text-left p-2 bg-white border border-gray-200 rounded-lg hover:shadow transition text-black" aria-label={`Select topic ${t}`}>
-                            {t}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {showServiceOptions && selectedTopic && (
-                    <div className="space-y-2">
-                      <div className="text-sm font-medium text-black">Select a service for {selectedTopic}:</div>
-                      <div className="space-y-2">
-                        {servicesByTopic[selectedTopic]?.map((s) => (
-                          <div key={s.id} className="p-2 bg-white border border-gray-100 rounded-lg text-black">
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <div className="font-medium text-black">{s.title}</div>
-                                <div className="text-xs text-gray-700">{s.desc}</div>
-                              </div>
-                              <div>
-                                <button type="button" onClick={() => handleSelectService(s)} className="text-sm text-indigo-600 px-3 py-1 rounded hover:bg-indigo-50" aria-label={`Select service ${s.title}`}>Select</button>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
+              {/* Topic/service selection removed per request */}
 
               <motion.div animate={invalidPulse ? { x: [0, -8, 8, -6, 6, -3, 3, 0] } : { x: 0 }} transition={{ duration: 0.45 }} className="flex items-center gap-2">
                 {/* Conditional input UI based on step */}
@@ -1096,7 +968,7 @@ const ChatWidget = () => {
           // use damru-tilt for primary continuous motion, keep chat-shake as subtle lateral motion
           style={{ animation: 'damru-tilt 1.6s ease-in-out infinite, chat-shake 6s ease-in-out 4s infinite' }}
           // hide the main launcher on small screens; the MobileActionTray provides a compact chat button there
-          className={"hidden md:flex chat-launcher-animated-border bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white w-14 h-14 p-0 rounded-lg shadow-xl shadow-[#128C7E]/30 hover:shadow-[#128C7E]/50 transition-all" + (unreadCount > 0 ? ' chat-launcher-unread' : '')}
+          className={"hidden md:flex chat-launcher-animated-border bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white w-14 h-14 p-0 rounded-lg shadow-xl shadow-[#128C7E]/30 hover:shadow-[#128C7E]/50 transition-all items-center justify-center" + (unreadCount > 0 ? ' chat-launcher-unread' : '')}
         >
             <motion.div
               initial={{ scale: 0.92, opacity: 0.95, y: 0 }}
