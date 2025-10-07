@@ -57,8 +57,10 @@ const Complaint = () => {
         if (dbErr && (dbErr.code === 'PERMISSION_DENIED' || /permission_denied/i.test(dbErr.message || ''))) {
           // Attempt best-effort email fallback
           try {
-            const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-            const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+            const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+            const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+            const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+            const endpoint = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
             await fetch(endpoint, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -86,9 +88,11 @@ const Complaint = () => {
       // Best-effort: also notify server to send an email copy to support
       (async () => {
             try {
-            // Use relative endpoint in development (CRA proxy) or production host otherwise
-            const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-            const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+              // Use relative endpoint in development only when appropriate
+              const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+              const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+              const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+              const endpoint = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
           await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

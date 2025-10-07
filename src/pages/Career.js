@@ -175,13 +175,56 @@ const Career = () => {
         form.append('source', 'Career');
         if (formData.resume) form.append('resume', formData.resume, formData.resume.name);
 
-              // Use relative endpoint during development (CRA proxy). In production fall back to canonical host.
-              const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-              const backendUrl = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
-  const resp = await fetch(backendUrl, {
-          method: 'POST',
-          body: form,
-        });
+              // Use relative endpoint during development only when appropriate
+              const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+              const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+              const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+              const backendUrl = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+  let resp = null;
+          try {
+            resp = await fetch(backendUrl, { method: 'POST', body: form });
+          } catch (fetchErr) {
+            console.warn('FormData POST to /send-email failed, will try base64 fallback', fetchErr);
+          }
+          // If FormData POST failed or returned non-ok, try JSON base64 fallback
+          if (!resp || !resp.ok) {
+            try {
+              // read resume as base64 (if present)
+              let resumeBase64 = null;
+              let resumeName = null;
+              let resumeType = null;
+              if (formData.resume) {
+                const toBase64 = (file) => new Promise((resolve, reject) => {
+                  const reader = new FileReader();
+                  reader.onload = () => resolve(String(reader.result).split(',')[1]);
+                  reader.onerror = reject;
+                  reader.readAsDataURL(file);
+                });
+                try {
+                  resumeBase64 = await toBase64(formData.resume);
+                  resumeName = formData.resume.name;
+                  resumeType = formData.resume.type || 'application/pdf';
+                } catch (e) {
+                  console.warn('Failed to convert resume to base64 for fallback', e);
+                }
+              }
+              const jsonBody = {
+                name: formData.name,
+                email: formData.email,
+                mobile: formData.phone,
+                city: '',
+                interest: formData.jobId || 'career',
+                message: formData.whyHire || '',
+                source: 'Career',
+                resumeBase64,
+                resumeName,
+                resumeType
+              };
+              resp = await fetch(backendUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(jsonBody) });
+            } catch (fallbackErr) {
+              console.warn('Base64 fallback to /send-email failed', fallbackErr);
+            }
+          }
         if (!resp.ok) {
           const err = await resp.json().catch(() => ({}));
           console.warn('Server /send-email failed', err);

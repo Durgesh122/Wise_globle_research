@@ -19,7 +19,8 @@ try {
   SendEmailCommand = null;
 }
 const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+// Increase default upload limit to 20MB to accommodate larger resumes
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 // NOTE: We intentionally avoid X-Frame-Options (deprecated in favour of CSP frame-ancestors)
 dotenv.config();
 
@@ -31,6 +32,33 @@ const path = require('path');
 // Middleware
 // If behind a proxy (e.g., Render), trust it so correct proto/host are detected
 app.set('trust proxy', 1);
+
+// DEVELOPMENT-FRIENDLY CORS: when running locally, explicitly add permissive
+// CORS headers for common dev origins (localhost:3000 etc). This is only
+// applied when NODE_ENV !== 'production' so production CSP/CORS rules remain
+// controlled by the main cors middleware above.
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    try {
+      const origin = req.get('Origin') || '';
+      // Allow if no origin (curl/server) or if origin is localhost/127.0.0.1:3000
+      if (!origin || /^(https?:)?\/\/localhost(?::3000)?$/.test(origin) || /^(https?:)?\/\/127\.0\.0\.1(?::3000)?$/.test(origin)) {
+        // Mirror the Origin when present to satisfy browsers that require exact match
+        res.setHeader('Access-Control-Allow-Origin', origin || 'http://localhost:3000');
+        res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,HEAD');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+        res.setHeader('Access-Control-Expose-Headers', 'Server-Timing');
+        res.setHeader('Access-Control-Allow-Credentials', 'false');
+      }
+      // Short-circuit preflight
+      if (req.method === 'OPTIONS') return res.sendStatus(200);
+    } catch (e) {
+      // If anything goes wrong here, don't block the request - let the normal CORS middleware handle it
+      console.debug('Dev CORS middleware error:', e && e.message ? e.message : e);
+    }
+    next();
+  });
+}
 
 // Configure CORS to properly respond to preflight requests
 const allowedOrigins = [
@@ -522,6 +550,16 @@ const emailSchema = z.object({
 // Accept both JSON and multipart/form-data (with optional file named 'resume')
 app.post('/send-email', upload.single('resume'), async (req, res) => {
   try {
+    // Debug: log whether a file was received (helpful for diagnosing missing attachments)
+    try {
+      if (req.file) {
+        console.debug('/send-email: received file', { originalname: req.file.originalname, size: req.file.size, mimetype: req.file.mimetype });
+      } else {
+        console.debug('/send-email: no file received in multipart request');
+      }
+    } catch (dbgErr) {
+      console.debug('/send-email: error while logging file info', dbgErr && dbgErr.message ? dbgErr.message : dbgErr);
+    }
     // If multipart, fields are in req.body and file in req.file
     const incoming = Object.keys(req.body).length ? req.body : req.body || {};
     // Validate fields using zod by constructing an object similar to expected shape
@@ -546,6 +584,22 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
       device: formDevice = '',
       assistiveTech: formAssistive = ''
     } = parse.data;
+
+    // If multipart upload didn't provide a file, accept a base64 resume in JSON body as fallback
+    if (!req.file && req.body && req.body.resumeBase64) {
+      try {
+        const b64 = String(req.body.resumeBase64 || '').trim();
+        const name = String(req.body.resumeName || 'resume').trim();
+        const type = String(req.body.resumeType || 'application/pdf').trim();
+        if (b64) {
+          const buf = Buffer.from(b64, 'base64');
+          req.file = { originalname: name, mimetype: type, buffer: buf, size: buf.length };
+          console.debug('/send-email: constructed req.file from resumeBase64 fallback', { originalname: name, size: buf.length, mimetype: type });
+        }
+      } catch (e) {
+        console.debug('/send-email: error parsing resumeBase64 fallback', e && e.message ? e.message : e);
+      }
+    }
 
     // Create transporter from env when available; otherwise use Ethereal in non-production
     let transporter;
@@ -703,6 +757,17 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
             console.error('SES API send failed (background), falling back to SMTP retry path:', sesErr && sesErr.message ? sesErr.message : sesErr);
             // Fall through to SMTP + retry path below
           }
+        }
+
+        // Log attachments about to be sent for debugging
+        try {
+          if (mailOptions.attachments && mailOptions.attachments.length) {
+            console.debug('Background send: attachments present', mailOptions.attachments.map(a => ({ filename: a.filename, contentType: a.contentType, size: a.content ? (a.content.length || null) : null })));
+          } else {
+            console.debug('Background send: no attachments on mailOptions');
+          }
+        } catch (logErr) {
+          console.debug('Error logging attachments before send:', logErr && logErr.message ? logErr.message : logErr);
         }
 
         const info = await sendMailWithRetry(transporter, mailOptions, parseInt(process.env.SMTP_SEND_RETRIES || '3', 10));
@@ -910,6 +975,20 @@ server.on('listening', () => {
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
   console.debug(`Listening on ${bind}`);
+});
+
+// Error handler for file upload size limits and other multer errors
+app.use((err, req, res, next) => {
+  try {
+    if (err && err.code === 'LIMIT_FILE_SIZE') {
+      console.warn('Upload rejected: file too large', err);
+      return res.status(413).json({ success: false, error: { message: 'Uploaded file too large. Maximum allowed size is 20MB.' } });
+    }
+    // Pass through other errors
+  } catch (e) {
+    // ignore
+  }
+  next(err);
 });
 
 // Endpoint to accept popup form submissions from the client and persist

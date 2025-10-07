@@ -74,8 +74,10 @@ export default function AccessibilityFeedback() {
               source: 'AccessibilityFeedback-fallback',
               to: 'support@wiseglobalresearch.com'
             };
-            const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-            const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+            const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+            const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+            const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+            const endpoint = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
             await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notifyPayload) });
             setSubmitted(true);
           } catch (fallbackErr) {
@@ -118,17 +120,19 @@ export default function AccessibilityFeedback() {
             source: 'AccessibilityFeedback',
             to: 'support@wiseglobalresearch.com'
           };
-          try {
-            const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-            const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
-            await fetch(endpoint, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(notifyPayload)
-            });
-          } catch (e) {
-            throw e;
-          }
+            try {
+              const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+              const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+              const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+              const endpoint = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+              await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(notifyPayload)
+              });
+            } catch (e) {
+              throw e;
+            }
         } catch (err) {
           // don't surface to user; log for debugging
           console.warn('Accessibility feedback: failed to notify server', err);

@@ -43,7 +43,12 @@ const ContactForm = ({ contactFormRef }) => {
             source: 'ContactFormSection-fallback',
             pageUrl: typeof window !== 'undefined' ? window.location.href : ''
           };
-          const endpoint = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+          // Only use relative '/send-email' when running from API server port 3001
+          // or when explicitly enabled via REACT_APP_USE_LOCAL_SEND_EMAIL=true.
+          const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+          const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+          const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+          const endpoint = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
           const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 10000);
           try {

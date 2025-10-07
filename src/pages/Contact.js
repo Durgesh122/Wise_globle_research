@@ -46,7 +46,11 @@ function Contact() {
         // If permission denied, best-effort fallback to server email
         if (dbErr && (dbErr.code === 'PERMISSION_DENIED' || /permission_denied/i.test(dbErr.message || ''))) {
           try {
-            const endpoint = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+            // Only use relative '/send-email' when running from API server port 3001
+            const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+            const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+            const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+            const endpoint = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
             await fetch(endpoint, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -79,8 +83,10 @@ function Contact() {
       setFormData({ name: '', email: '', phone: '', message: '' });
       (async () => {
         try {
-          const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-          const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+          const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+          const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+          const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+          const endpoint = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
           await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -291,7 +297,7 @@ function Contact() {
                       aria-describedby="help-phone"
                       inputMode="tel"
                       autoComplete="tel"
-                      pattern="[0-9+()\-\s]{7,20}"
+                      pattern="^[0-9+()\\s-]{7,20}$"
                       className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
                       whileFocus={{ scale: 1.02 }}
                     />

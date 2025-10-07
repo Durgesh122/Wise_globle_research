@@ -24,15 +24,17 @@ export function usePopupLead() {
         console.warn('popup-hook: RTDB push failed', dbErr);
         if (dbErr && (dbErr.code === 'PERMISSION_DENIED' || /permission_denied/i.test(dbErr.message || ''))) {
           // attempt server-side email fallback
-          try {
-            const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-            const endpoint = isLocal ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
-            await fetch(endpoint, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ name, mobile, city, interest, source: 'popup-hook-fallback' })
-            });
-          } catch (fallbackErr) {
+            try {
+              const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+              const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+              const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+              const endpoint = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+              await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, mobile, city, interest, source: 'popup-hook-fallback' })
+              });
+            } catch (fallbackErr) {
             console.warn('popup-hook: fallback email failed', fallbackErr);
             throw fallbackErr;
           }
