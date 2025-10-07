@@ -1,3 +1,4 @@
+// Duplicate simplified ChatWidget removed; the main ChatWidget implementation follows below.
 import React, { useState, useEffect, useRef, useId } from 'react';
 import { FaTimes, FaUser, FaCity, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
@@ -1095,7 +1096,7 @@ const ChatWidget = () => {
           // use damru-tilt for primary continuous motion, keep chat-shake as subtle lateral motion
           style={{ animation: 'damru-tilt 1.6s ease-in-out infinite, chat-shake 6s ease-in-out 4s infinite' }}
           // hide the main launcher on small screens; the MobileActionTray provides a compact chat button there
-          className={"hidden md:flex chat-launcher-animated-border bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white w-14 h-14 p-0 rounded-lg shadow-xl shadow-[#128C7E]/30 hover:shadow-[#128C7E]/50 transition-all items-center justify-center" + (unreadCount > 0 ? ' chat-launcher-unread' : '')}
+          className={"hidden md:flex chat-launcher-animated-border bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white w-14 h-14 p-0 rounded-lg shadow-xl shadow-[#128C7E]/30 hover:shadow-[#128C7E]/50 transition-all" + (unreadCount > 0 ? ' chat-launcher-unread' : '')}
         >
             <motion.div
               initial={{ scale: 0.92, opacity: 0.95, y: 0 }}

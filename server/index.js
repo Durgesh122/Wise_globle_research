@@ -1100,3 +1100,104 @@ app.post('/submit-popup', async (req, res) => {
   }
 });
 
+// ----------------------------
+// Chatbot submission endpoint
+// Receives JSON { name, message, honeypot? }
+// Writes to RTDB via Admin SDK (server side) to avoid client-side permission issues.
+// Includes a simple in-memory rate limiter per IP.
+// ----------------------------
+const chatRateLimiter = new Map(); // ip -> { count, firstTs }
+const CHAT_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const CHAT_LIMIT_MAX = 6; // max submissions per IP per window
+
+const chatSchema = z.object({
+  name: z.string().max(200).optional(),
+  message: z.string().min(1).max(2000),
+  honeypot: z.string().optional(),
+});
+
+app.post('/api/submit-chatbot', async (req, res) => {
+  try {
+    const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+    // Rate limit
+    const now = Date.now();
+    const state = chatRateLimiter.get(ip) || { count: 0, firstTs: now };
+    if (now - state.firstTs > CHAT_LIMIT_WINDOW) {
+      state.count = 0; state.firstTs = now;
+    }
+    state.count += 1;
+    chatRateLimiter.set(ip, state);
+    if (state.count > CHAT_LIMIT_MAX) {
+      return res.status(429).json({ success: false, error: { message: 'rate_limited' } });
+    }
+
+    const parse = chatSchema.safeParse(req.body || {});
+    if (!parse.success) return res.status(400).json({ success: false, error: { message: 'invalid_payload' } });
+    const { name = '', message, honeypot = '' } = parse.data;
+    // Honeypot check
+    if (honeypot && String(honeypot).trim().length > 0) return res.status(400).json({ success: false, error: { message: 'bot_detected' } });
+
+    // Persist using Admin SDK to bypass client security rules
+    const payload = { name: String(name || ''), message: String(message || ''), ip: String(ip), timestamp: Date.now() };
+    const ref = await admin.database().ref('chatbot-submissions').push(payload);
+    return res.json({ success: true, key: ref.key });
+  } catch (err) {
+    console.error('/api/submit-chatbot error:', err && err.stack ? err.stack : err);
+    return res.status(500).json({ success: false, error: { message: 'server_error' } });
+  }
+});
+
+// ----------------------------
+// Chatbot submission endpoint
+// ----------------------------
+// POST /api/submit-chatbot
+// Body: { name?, message, honeypot? }
+const chatbotSchema = z.object({
+  name: z.string().optional(),
+  message: z.string().min(1).max(500),
+  honeypot: z.string().optional(),
+});
+
+// Simple in-memory rate limiter per IP (small TTL) to mitigate spam.
+const chatRateMap = new Map(); // ip -> { count, firstTs }
+const CHAT_TTL_MS = 60 * 1000; // 1 minute window
+const CHAT_LIMIT = 6; // max submissions per window
+
+app.post('/api/submit-chatbot', async (req, res) => {
+  try {
+    const parse = chatbotSchema.safeParse(req.body || {});
+    if (!parse.success) return res.status(400).json({ success: false, error: { message: 'invalid_payload' } });
+    const payload = parse.data;
+
+    // Honeypot: reject if filled
+    if (payload.honeypot && String(payload.honeypot).trim().length > 0) {
+      return res.status(400).json({ success: false, error: { message: 'bot_detected' } });
+    }
+
+    // Rate-limit per IP
+    const ip = req.ip || req.connection.remoteAddress || 'unknown';
+    const now = Date.now();
+    const st = chatRateMap.get(ip) || { count: 0, firstTs: now };
+    if ((now - st.firstTs) > CHAT_TTL_MS) {
+      st.count = 0; st.firstTs = now;
+    }
+    st.count += 1;
+    chatRateMap.set(ip, st);
+    if (st.count > CHAT_LIMIT) return res.status(429).json({ success: false, error: { message: 'rate_limited' } });
+
+    // Construct record to write via Admin SDK (server-side privileged write)
+    const record = {
+      name: payload.name || '',
+      message: payload.message || '',
+      meta: { ip, ua: req.headers['user-agent'] || '' },
+      timestamp: Date.now()
+    };
+
+    const ref = await admin.database().ref('chatbot-submissions').push(record);
+    return res.json({ success: true, key: ref.key });
+  } catch (err) {
+    console.error('/api/submit-chatbot error:', err && err.stack ? err.stack : err);
+    return res.status(500).json({ success: false, error: { message: 'server_error' } });
+  }
+});
+
