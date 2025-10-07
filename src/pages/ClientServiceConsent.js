@@ -134,13 +134,30 @@ const ClientServiceConsent = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://wise-globle-research-2.onrender.com', {
+      // Determine backend URL: use relative during local dev or when explicitly requested
+      const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
+      const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
+      const backendUrl = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
+
+      // Map form fields into a single message field so server can validate and email it
+      const payload = {
+        name: String(formData.clientName || ''),
+        email: String(formData.email || ''),
+        mobile: '',
+        city: '',
+        interest: 'ClientServiceConsent',
+        source: 'ClientServiceConsent',
+        message: `Client ID: ${formData.clientId || ''}\nFather's Name: ${formData.fatherName || ''}\nDOB: ${formData.dob || ''}\nPAN: ${formData.pan || ''}\nAadhaar: ${formData.aadhaar || ''}\nAddress: ${formData.address || ''}`
+      };
+
+      const response = await fetch(backendUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (data.success) {
         // Persist to RTDB for admin records
