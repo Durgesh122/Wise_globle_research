@@ -9,15 +9,22 @@ const nodemailer = require('nodemailer');
 // AWS SES v3 client - used as a fallback when SMTP repeatedly times out from some hosting providers
 let SESClient;
 let SendEmailCommand;
+let SendRawEmailCommand;
 try {
   const awsSes = require('@aws-sdk/client-ses');
   SESClient = awsSes.SESClient;
   SendEmailCommand = awsSes.SendEmailCommand;
+  SendRawEmailCommand = awsSes.SendRawEmailCommand;
 } catch (e) {
   // Dependency may not be installed in some environments; we'll only attempt SES fallback when available
   SESClient = null;
   SendEmailCommand = null;
+  SendRawEmailCommand = null;
 }
+// Notes:
+// - When AWS credentials are available, server prefers SES Raw API (SendRawEmail) which supports attachments.
+// - When attachments are absent, SES SendEmail (non-raw) may be used as a simpler path.
+// - In development (NODE_ENV !== 'production') Ethereal is used for preview when no AWS creds are available.
 const multer = require('multer');
 // Increase default upload limit to 20MB to accommodate larger resumes
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
@@ -412,6 +419,40 @@ async function sendViaSesFallback(mailOptions) {
   return { messageId: resp.MessageId || null, sesResponse: resp };
 }
 
+// SES raw send: supports attachments by constructing a raw MIME message via nodemailer's MailComposer
+async function sendViaSesRaw(mailOptions) {
+  if (!SESClient || !SendRawEmailCommand) throw new Error('SES Raw client not available');
+  // Use nodemailer's MailComposer to build a raw MIME message
+  const MailComposer = require('nodemailer/lib/mail-composer');
+  const fromAddr = mailOptions.from || process.env.EMAIL_FROM || process.env.AWS_SES_DEFAULT_FROM || null;
+  if (!fromAddr) throw new Error('SES raw send requires a from address');
+
+  const composer = new MailComposer({
+    from: fromAddr,
+    to: mailOptions.to,
+    cc: mailOptions.cc,
+    bcc: mailOptions.bcc,
+    subject: mailOptions.subject,
+    text: mailOptions.text,
+    html: mailOptions.html,
+    attachments: mailOptions.attachments || [],
+  });
+
+  const messageBuffer = await composer.compile().build();
+
+  const sesClient = new SESClient({ region: process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || 'ap-south-1' });
+  const params = {
+    RawMessage: { Data: messageBuffer
+    },
+    Source: fromAddr,
+    Destinations: (mailOptions.to || '').split(',').map(s => s.trim()).filter(Boolean),
+  };
+
+  const cmd = new SendRawEmailCommand(params);
+  const resp = await sesClient.send(cmd);
+  return { messageId: resp.MessageId || null, sesResponse: resp };
+}
+
 // Digio API Configuration
 const DIGIO_API_URL = process.env.DIGIO_API_URL;
 const DIGIO_API_KEY = process.env.DIGIO_API_KEY;
@@ -601,51 +642,12 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
       }
     }
 
-    // Create transporter from env when available; otherwise use Ethereal in non-production
-    let transporter;
+    // Create a sending strategy: prefer AWS SES API/Raw when credentials and client are available.
     let usedEthereal = false;
-
-    const smtpHost = process.env.SMTP_SERVER;
-    const smtpPort = parseInt(process.env.SMTP_PORT || '587', 10);
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-
-    if (smtpHost && smtpUser && smtpPass) {
-      // Add pragmatic timeouts and debug logging to help diagnose ETIMEDOUT
-      transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: String(process.env.SMTP_PORT || '587') === '465',
-        auth: { user: smtpUser, pass: smtpPass },
-        logger: true,
-        debug: !!process.env.SMTP_DEBUG,
-  // Increase timeouts (ms) to avoid premature ETIMEDOUT on slow providers
-  connectionTimeout: parseInt(process.env.SMTP_CONNECTION_TIMEOUT || '30000', 10),
-  greetingTimeout: parseInt(process.env.SMTP_GREETING_TIMEOUT || '30000', 10),
-  socketTimeout: parseInt(process.env.SMTP_SOCKET_TIMEOUT || '30000', 10),
-        tls: {
-          // Allow opting out of strict TLS verification for debugging only
-          rejectUnauthorized: process.env.SMTP_STRICT_TLS !== 'false'
-        }
-      });
-    } else if (process.env.NODE_ENV !== 'production') {
-      // Local dev: create an Ethereal test account to avoid ECONNREFUSED when real SMTP not configured
-      console.warn('SMTP not configured, creating Ethereal test account for development email preview');
-      const testAccount = await nodemailer.createTestAccount();
-      transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        secure: false,
-        auth: { user: testAccount.user, pass: testAccount.pass },
-        logger: true,
-        debug: true,
-        connectionTimeout: 30000,
-        greetingTimeout: 30000,
-        socketTimeout: 30000,
-      });
-      usedEthereal = true;
-    } else {
-      return res.status(500).json({ success: false, error: { message: 'SMTP configuration missing on server' } });
+    const hasAwsCreds = process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && SESClient && (SendRawEmailCommand || SendEmailCommand);
+    // If AWS creds present, we'll use SES API/Raw in background. Otherwise fall back to Ethereal in non-prod or error in prod.
+    if (!hasAwsCreds && process.env.NODE_ENV === 'production') {
+      return res.status(500).json({ success: false, error: { message: 'Email sending is not configured on this server' } });
     }
 
     const from = process.env.EMAIL_FROM || smtpUser || 'no-reply@example.com';
@@ -744,37 +746,46 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
     // Respond 202 Accepted immediately and perform send in background.
     (async function doSendInBackground() {
       try {
-        // If AWS credentials are present and SES client is available, prefer SES API when there are no attachments.
-        // SES SendEmail (used here) does not support attachments. For submissions with attachments, continue using SMTP.
-        const hasAwsCreds = process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && SESClient && SendEmailCommand;
-        if (hasAwsCreds && !(mailOptions.attachments && mailOptions.attachments.length)) {
-          try {
-            console.debug('AWS creds detected; sending email via SES API (preferred path)');
-            const sesInfo = await sendViaSesFallback(mailOptions);
-            console.debug('SES API send succeeded (background):', sesInfo && sesInfo.messageId ? sesInfo.messageId : sesInfo);
-            return;
-          } catch (sesErr) {
-            console.error('SES API send failed (background), falling back to SMTP retry path:', sesErr && sesErr.message ? sesErr.message : sesErr);
-            // Fall through to SMTP + retry path below
-          }
-        }
-
-        // Log attachments about to be sent for debugging
+        // Prefer AWS SES Raw (supports attachments) when AWS creds and client are available.
+        const hasAwsCredsLocal = process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && SESClient && SendRawEmailCommand;
         try {
-          if (mailOptions.attachments && mailOptions.attachments.length) {
-            console.debug('Background send: attachments present', mailOptions.attachments.map(a => ({ filename: a.filename, contentType: a.contentType, size: a.content ? (a.content.length || null) : null })));
-          } else {
-            console.debug('Background send: no attachments on mailOptions');
+          if (hasAwsCredsLocal) {
+            console.debug('AWS creds detected; sending email via SES Raw API');
+            const info = await sendViaSesRaw(mailOptions);
+            console.debug('SES Raw API send succeeded (background):', info && info.messageId ? info.messageId : info);
+            return;
           }
-        } catch (logErr) {
-          console.debug('Error logging attachments before send:', logErr && logErr.message ? logErr.message : logErr);
+        } catch (sesErr) {
+          console.error('SES Raw send failed, attempting SES SendEmail fallback if available:', sesErr && sesErr.message ? sesErr.message : sesErr);
+          // Try non-raw SES if attachments are not present and SendEmailCommand is available
+          if (!(mailOptions.attachments && mailOptions.attachments.length) && SESClient && SendEmailCommand) {
+            try {
+              const info = await sendViaSesFallback(mailOptions);
+              console.debug('SES SendEmail API send succeeded (background):', info && info.messageId ? info.messageId : info);
+              return;
+            } catch (sesErr2) {
+              console.error('SES SendEmail fallback also failed:', sesErr2 && sesErr2.message ? sesErr2.message : sesErr2);
+            }
+          }
         }
 
-        const info = await sendMailWithRetry(transporter, mailOptions, parseInt(process.env.SMTP_SEND_RETRIES || '3', 10));
-        console.debug('Email sent (background):', { messageId: info.messageId, envelope: info.envelope || null });
-        if (usedEthereal) {
-          console.debug('Ethereal preview URL (background):', nodemailer.getTestMessageUrl(info) || null);
+        // If we reach here and we're in development, use Ethereal
+        if (process.env.NODE_ENV !== 'production') {
+          try {
+            console.debug('Using Ethereal transporter for local email preview');
+            const testAccount = await nodemailer.createTestAccount();
+            const transporterLocal = nodemailer.createTransport({ host: 'smtp.ethereal.email', port: 587, secure: false, auth: { user: testAccount.user, pass: testAccount.pass } });
+            const info = await transporterLocal.sendMail(mailOptions);
+            console.debug('Ethereal email sent (background):', { messageId: info.messageId });
+            console.debug('Ethereal preview URL (background):', nodemailer.getTestMessageUrl(info) || null);
+            return;
+          } catch (ethErr) {
+            console.error('Ethereal fallback failed:', ethErr && ethErr.message ? ethErr.message : ethErr);
+          }
         }
+
+        // If we still haven't sent the email, log and throw so it's visible in logs
+        throw new Error('No available email sending method succeeded');
       } catch (error) {
         try {
           const code = error && error.code ? error.code : null;
@@ -1025,49 +1036,13 @@ app.post('/submit-popup', async (req, res) => {
 
     // Send notification email for popup submission (also send to career mailbox)
     try {
-      // Create transporter from env when available; otherwise use Ethereal in non-production
-      let transporter;
-      let usedEthereal = false;
-
-      const smtpHost = process.env.SMTP_SERVER;
-      const smtpPort = parseInt(process.env.SMTP_PORT || '587', 10);
-      const smtpUser = process.env.SMTP_USER;
-      const smtpPass = process.env.SMTP_PASS;
-
-      if (smtpHost && smtpUser && smtpPass) {
-        transporter = nodemailer.createTransport({
-          host: smtpHost,
-          port: smtpPort,
-          secure: String(process.env.SMTP_PORT || '587') === '465',
-          auth: { user: smtpUser, pass: smtpPass },
-          logger: true,
-          debug: !!process.env.SMTP_DEBUG,
-          connectionTimeout: parseInt(process.env.SMTP_CONNECTION_TIMEOUT || '30000', 10),
-          greetingTimeout: parseInt(process.env.SMTP_GREETING_TIMEOUT || '30000', 10),
-          socketTimeout: parseInt(process.env.SMTP_SOCKET_TIMEOUT || '30000', 10),
-          tls: { rejectUnauthorized: process.env.SMTP_STRICT_TLS !== 'false' }
-        });
-      } else if (process.env.NODE_ENV !== 'production') {
-        const testAccount = await nodemailer.createTestAccount();
-        transporter = nodemailer.createTransport({
-          host: 'smtp.ethereal.email',
-          port: 587,
-          secure: false,
-          auth: { user: testAccount.user, pass: testAccount.pass },
-        });
-        usedEthereal = true;
-      } else {
-        console.warn('/submit-popup email skipped: SMTP not configured');
-      }
-
-      if (transporter) {
-        const from = process.env.EMAIL_FROM || smtpUser || 'no-reply@example.com';
-  const infoEmail = process.env.INFO_EMAIL_TO || process.env.EMAIL_TO || 'info@mrxads.com';
-  const supportEmail = process.env.SUPPORT_EMAIL_TO || 'support@wiseglobalresearch.com';
-  const careerEmail = process.env.CAREER_EMAIL || 'career@wiseglobalresearch.com';
-
-  // Build recipients: include career plus existing info/support and central mailbox
-  const recipients = [careerEmail, infoEmail, supportEmail, 'wiseglobalresearchservice@gmail.com'].filter(Boolean).join(',');
+      // Prefer SES Raw API when AWS creds present; otherwise use Ethereal in dev for preview
+      try {
+        const from = process.env.EMAIL_FROM || process.env.AWS_SES_DEFAULT_FROM || 'no-reply@example.com';
+        const infoEmail = process.env.INFO_EMAIL_TO || process.env.EMAIL_TO || 'info@wiseglobalresearch.com';
+        const supportEmail = process.env.SUPPORT_EMAIL_TO || 'support@wiseglobalresearch.com';
+        const careerEmail = process.env.CAREER_EMAIL || 'career@wiseglobalresearch.com';
+        const recipients = [careerEmail, infoEmail, supportEmail, 'wiseglobalresearchservice@gmail.com'].filter(Boolean).join(',');
 
         const subject = `New popup submission: ${payload.interest || 'Interest'}`;
         const textParts = [
@@ -1091,19 +1066,24 @@ app.post('/submit-popup', async (req, res) => {
           </ul>
         `;
 
-        const info = await sendMailWithRetry(transporter, {
-          from,
-          to: recipients,
-          subject,
-          text: textParts.join('\n'),
-          html,
-        }, parseInt(process.env.SMTP_SEND_RETRIES || '3', 10));
+        const mailOptions = { from, to: recipients, subject, text: textParts.join('\n'), html };
+        const hasAwsCredsLocal = process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && SESClient && SendRawEmailCommand;
+        if (hasAwsCredsLocal) {
+          const info = await sendViaSesRaw(mailOptions);
+          console.debug('/submit-popup email sent via SES Raw', { messageId: info.messageId });
+          return res.json({ success: true, key: pushRef.key, messageId: info.messageId });
+        }
 
-        console.debug('/submit-popup email sent', { messageId: info.messageId, envelope: info.envelope || null });
-
-        const response = { success: true, key: pushRef.key, messageId: info.messageId };
-        if (usedEthereal) response.previewUrl = nodemailer.getTestMessageUrl(info) || null;
-        return res.json(response);
+        if (process.env.NODE_ENV !== 'production') {
+          const testAccount = await nodemailer.createTestAccount();
+          const transporterLocal = nodemailer.createTransport({ host: 'smtp.ethereal.email', port: 587, secure: false, auth: { user: testAccount.user, pass: testAccount.pass } });
+          const info = await transporterLocal.sendMail(mailOptions);
+          console.debug('/submit-popup Ethereal preview URL:', nodemailer.getTestMessageUrl(info) || null);
+          return res.json({ success: true, key: pushRef.key, messageId: info.messageId, previewUrl: nodemailer.getTestMessageUrl(info) || null });
+        }
+      } catch (mailErr) {
+        console.error('/submit-popup email error:', mailErr);
+        return res.json({ success: true, key: pushRef.key, warning: 'email_failed', details: mailErr.message || String(mailErr) });
       }
 
     } catch (mailErr) {
