@@ -1139,7 +1139,20 @@ app.post('/api/submit-chatbot', async (req, res) => {
 
     // Persist using Admin SDK to bypass client security rules
     const payload = { name: String(name || ''), message: String(message || ''), ip: String(ip), timestamp: Date.now() };
-    const ref = await admin.database().ref('chatbot-submissions').push(payload);
+    // Helper to race push against a timeout so clients don't hang indefinitely
+    const pushPromise = admin.database().ref('chatbot-submissions').push(payload);
+    const timeoutMs = parseInt(process.env.CHAT_PUSH_TIMEOUT_MS || '10000', 10);
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('push_timeout')), timeoutMs));
+    let ref;
+    try {
+      ref = await Promise.race([pushPromise, timeout]);
+    } catch (e) {
+      if (String(e && e.message) === 'push_timeout') {
+        console.error('/api/submit-chatbot: RTDB push timed out');
+        return res.status(504).json({ success: false, error: { message: 'db_timeout' } });
+      }
+      throw e;
+    }
     return res.json({ success: true, key: ref.key });
   } catch (err) {
     console.error('/api/submit-chatbot error:', err && err.stack ? err.stack : err);
