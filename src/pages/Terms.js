@@ -5,9 +5,35 @@ import { motion } from 'framer-motion';
 import { FaCheckCircle } from 'react-icons/fa';
 import { Helmet } from 'react-helmet-async';
 import { ThemeContext } from '../context/ThemeContext';
+import analytics from '../lib/analytics';
+
+// Animation variants used across pillar pages
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2, delayChildren: 0.2 },
+  },
+};
 
 function Terms() {
   const { background, textColor } = useContext(ThemeContext);
+  React.useEffect(() => {
+    try {
+      analytics.sendPageView(window.location.pathname, document.title);
+      analytics.sendEvent('viewed_pillar_page', {
+        page_title: document.title,
+        page_path: window.location.pathname,
+      });
+    } catch (e) {
+      // best-effort analytics
+    }
+  }, []);
   return (
     <>
       <Helmet>
@@ -15,28 +41,28 @@ function Terms() {
         <meta name="description" content="Terms page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/terms" />
       </Helmet>
-      <div
-        className="container mx-auto px-4 py-12 min-h-screen"
-        data-aos="fade-in"
-        style={{ background, color: textColor, transition: 'background 0.5s, color 0.5s' }}
+      <motion.section
+        className="relative py-8 sm:py-10 lg:py-14 px-4 sm:px-6"
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+        style={{ background, transition: 'background 0.5s' }}
       >
-        <motion.h1
-          className="text-3xl font-bold mb-6 text-center"
-          style={{ color: textColor }}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Trans i18nKey="pages.Terms.terms-conditions">Terms & Conditions</Trans>
-        </motion.h1>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="terms-content leading-relaxed break-words max-w-3xl mx-auto"
-          style={{ color: textColor }}
-        >
+        <div className="container max-w-4xl mx-auto relative z-10">
+          <motion.div
+            className="mb-6 rounded-2xl p-4 sm:p-6 shadow-2xl"
+            style={{
+              background: '#fff',
+              border: '2px solid #6366f1',
+              boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)'
+            }}
+            variants={staggerContainer}
+          >
+            <div style={{ color: textColor || '#0b1220' }}>
+              <motion.h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center" style={{ color: '#6366f1' }} variants={fadeIn}>
+                <Trans i18nKey="pages.Terms.terms-conditions">Terms & Conditions</Trans>
+              </motion.h1>
+              <motion.div className="space-y-5 text-sm sm:text-base leading-relaxed" variants={staggerContainer} style={{ color: textColor || '#0b1220' }}>
         <section className="mb-8">
             <motion.p
             className="mb-2"
@@ -187,8 +213,11 @@ function Terms() {
         <section className="mb-8">
           <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.8, duration: 0.5 }} className="" style={{ color: textColor }}><Trans i18nKey="pages.Terms.any-surfing-and-reading-of-the-informati"><Trans i18nKey="pages.Terms.any-surfing-and-reading-of-the-informati-1">Any surfing and reading of the information are the acceptance of this Terms & Condition. All Rights Reserved with Wise Global Research Services Pvt Ltd.</Trans></Trans></motion.p>
         </section>
-      </motion.div>
-    </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
     </>
   );
 }

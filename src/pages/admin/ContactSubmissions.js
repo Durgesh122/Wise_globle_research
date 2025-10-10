@@ -29,22 +29,21 @@ const buttonVariants = {
 };
 
 const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggle }) => (
-    <motion.div
-    className="table-responsive rounded-xl shadow-sm p-2"
-    style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}
+  <motion.div
+    className="table-responsive rounded-2xl shadow-2xl p-2 bg-white border-2 border-indigo-100"
     variants={itemVariants}
   >
     {/* Desktop / Tablet table */}
-      <div className="hidden sm:block">
-      <table className="w-full table-auto text-xs sm:text-sm" style={{ color: 'var(--text-body)' }}>
-        <thead className="bg-transparent">
+    <div className="hidden sm:block">
+      <table className="w-full table-auto text-xs sm:text-sm text-indigo-900">
+        <thead className="bg-indigo-100 border-b-2 border-indigo-200">
           <tr>
             <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Name</th>
             <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Email</th>
             <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Phone</th>
             <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">Message</th>
             <th className="p-2 sm:p-4 text-left text-sm sm:text-base font-semibold">
-              <button onClick={handleSortToggle} className="hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
+              <button onClick={handleSortToggle} className="hover:text-indigo-600 transition-colors">
                 Timestamp {sortOrder === 'desc' ? '↓' : '↑'}
               </button>
             </th>
@@ -55,22 +54,19 @@ const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggl
           {submissions.map((submission) => (
             <motion.tr
               key={submission.id}
-              className="transition-colors"
-              style={{ borderBottom: '1px solid var(--bg-border)' }}
+              className="transition-colors border-b border-indigo-100 hover:bg-indigo-50"
               variants={itemVariants}
             >
               <td className="p-4 break-words">{submission.name || 'N/A'}</td>
               <td className="p-4 break-words">{submission.email || 'N/A'}</td>
               <td className="p-4 break-words">{submission.phone || 'N/A'}</td>
               <td className="p-4 max-w-[10rem] sm:max-w-xs truncate break-words">{submission.message || 'N/A'}</td>
-              <td className="p-4 whitespace-nowrap">
-                {submission.timestamp ? new Date(submission.timestamp).toLocaleString('en-IN') : 'N/A'}
-              </td>
+              <td className="p-4 whitespace-nowrap">{submission.timestamp ? new Date(submission.timestamp).toLocaleString('en-IN') : 'N/A'}</td>
               <td className="p-4">
                 <motion.button
                   type="button"
                   onClick={() => handleDelete(submission.id)}
-                  className="text-red-600 hover:text-red-500"
+                  className="text-red-600 hover:text-red-700"
                   variants={buttonVariants}
                   whileHover="hover"
                   whileTap="tap"
@@ -89,21 +85,19 @@ const SubmissionTable = ({ submissions, handleDelete, sortOrder, handleSortToggl
     {/* Mobile list: show cards on small screens */}
     <div className="sm:hidden space-y-3">
       {submissions.map((s) => (
-        <div key={s.id} className="p-3 rounded-lg" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>
+        <div key={s.id} className="p-4 rounded-2xl bg-white border-2 border-indigo-100 text-indigo-900 shadow">
           <div className="flex justify-between items-start gap-3">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-adaptive truncate">{s.name || 'N/A'}</p>
-              <p className="text-xs text-adaptive truncate">{s.email || 'N/A'}</p>
-              <p className="text-xs text-adaptive">{s.phone || 'N/A'}</p>
+              <p className="text-sm font-semibold truncate">{s.name || 'N/A'}</p>
+              <p className="text-xs truncate">{s.email || 'N/A'}</p>
+              <p className="text-xs">{s.phone || 'N/A'}</p>
             </div>
             <div className="flex-shrink-0">
-              <motion.button type="button" onClick={() => handleDelete(s.id)} className="text-red-600 hover:text-red-500" variants={buttonVariants} whileHover="hover" whileTap="tap" title="Delete submission" aria-label={`Delete submission from ${s.name || 'unknown'}`}>
-                <FiTrash2 aria-hidden="true" />
-              </motion.button>
+              <motion.button type="button" onClick={() => handleDelete(s.id)} className="text-red-600 hover:text-red-700" variants={buttonVariants} whileHover="hover" whileTap="tap" title="Delete submission" aria-label={`Delete submission from ${s.name || 'unknown'}`}> <FiTrash2 aria-hidden="true" /> </motion.button>
             </div>
           </div>
-          <div className="mt-2 text-sm text-adaptive">{s.message || 'N/A'}</div>
-          <div className="mt-2 text-xs text-adaptive">{s.timestamp ? new Date(s.timestamp).toLocaleString('en-IN') : 'N/A'}</div>
+          <div className="mt-2 text-sm">{s.message || 'N/A'}</div>
+          <div className="mt-2 text-xs">{s.timestamp ? new Date(s.timestamp).toLocaleString('en-IN') : 'N/A'}</div>
         </div>
       ))}
     </div>
@@ -221,11 +215,11 @@ const ContactSubmissions = () => {
   const totalPages = Math.ceil(filteredSubmissions.length / itemsPerPage);
 
   return (
-    <motion.div className="admin-section" variants={containerVariants} initial="hidden" animate="visible">
-  <h2 className="text-3xl font-bold text-adaptive mb-6"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions-1">Contact Submissions</Trans></Trans></h2>
-  <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+    <motion.div className="admin-section bg-indigo-50 min-h-screen p-4 sm:p-8" variants={containerVariants} initial="hidden" animate="visible">
+      <h2 className="text-3xl font-bold text-indigo-700 mb-8 drop-shadow"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions"><Trans i18nKey="pages.admin_ContactSubmissions.contact-submissions-1">Contact Submissions</Trans></Trans></h2>
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} placeholder="Search contacts..." />
-        <motion.button onClick={handleExportCSV} className="px-4 py-2 rounded-lg flex items-center gap-2" style={{ background: 'linear-gradient(90deg,#2eed1c,#1fbf18)', color: '#000' }} variants={buttonVariants} whileHover="hover">
+        <motion.button onClick={handleExportCSV} className="px-4 py-2 rounded-lg flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow hover:from-green-600 hover:to-green-700 transition" variants={buttonVariants} whileHover="hover">
           <FiDownload /><Trans i18nKey="pages.admin_ContactSubmissions.export-csv">Export CSV</Trans></motion.button>
       </div>
       {isLoading ? <LoadingSpinner /> : (

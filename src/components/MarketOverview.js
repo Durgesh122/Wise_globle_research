@@ -40,9 +40,11 @@ const MarketOverview = () => {
   // ...existing code...
   return (
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
-  <div className="container max-w-3xl mx-auto">
+  <div className="container max-w-3xl mx-auto relative z-10">
+        <motion.div className="mb-6 rounded-2xl p-6 shadow-2xl" style={{ background: '#fff', border: '2px solid #6366f1', boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)' }} variants={itemVariants}>
+          <div style={{ color: '#0b1220' }}>
         <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-indigo-800"
           variants={itemVariants}
         >
           Market Overview
@@ -52,8 +54,8 @@ const MarketOverview = () => {
             {marketData.map((item, index) => (
               <motion.div
                 key={index}
-                className="rounded-lg overflow-hidden"
-                style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', color: '#111' }}
+                className="rounded-2xl overflow-hidden bg-white shadow-2xl"
+                style={{ border: '2px solid #6366f1', color: '#0b1220' }}
                 variants={cardVariants}
                 initial="hidden"
                 animate="visible"
@@ -61,12 +63,12 @@ const MarketOverview = () => {
               >
                 <div className="px-4 py-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-base sm:text-lg" style={{ color: '#111' }}>{item.name}</h3>
+                    <h3 className="font-bold text-base sm:text-lg text-indigo-800">{item.name}</h3>
                     <span aria-hidden="false" className="sr-only">{item.isUp ? 'Rising' : 'Falling'}</span>
                     <FaChartLine className={`text-xl sm:text-2xl`} aria-hidden="true" style={{ color: item.isUp ? '#00692d' : '#a30000' }} />
                   </div>
                   <div className="mt-4">
-                    <p className="text-xl sm:text-2xl font-bold" style={{ color: '#111' }}>{item.value}</p>
+                    <p className="text-xl sm:text-2xl font-bold" style={{ color: '#0b1220' }}>{item.value}</p>
                     <p className={`text-base font-semibold`} style={{ color: item.isUp ? '#00692d' : '#a30000' }}>{item.change}</p>
                   </div>
                 </div>
@@ -77,15 +79,15 @@ const MarketOverview = () => {
             {marketSymbols.slice(0, 6).map((symbol, index) => (
               <motion.div
                 key={index}
-                className="rounded-lg overflow-hidden"
-                style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', color: '#111' }}
+                className="rounded-2xl overflow-hidden bg-white shadow-2xl"
+                style={{ border: '2px solid #6366f1', color: '#0b1220' }}
                 variants={cardVariants}
                 initial="hidden"
                 animate="visible"
                 whileHover="hover"
               >
                 <div className="px-4 py-3">
-                  <h3 className="text-lg sm:text-xl font-bold mb-4 text-center" style={{ color: '#111' }}>{symbol.name} Trend</h3>
+                  <h3 className="text-lg sm:text-xl font-bold mb-4 text-center text-indigo-800">{symbol.name} Trend</h3>
                   <div className="h-48 sm:h-64 w-full">
                     <AnimatedChart symbol={symbol.symbol} />
                   </div>
@@ -94,6 +96,8 @@ const MarketOverview = () => {
             ))}
           </div>
         </div>
+        </div>
+        </motion.div>
       </div>
     </section>
   );

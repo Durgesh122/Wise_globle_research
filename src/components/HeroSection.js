@@ -74,12 +74,13 @@ const HeroSection = () => {
 
   return (
     <motion.div
-      className="flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20"
+      className="flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20 text-gray-900"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       <div className="container mx-auto">
+        <motion.div className="mb-6 rounded-2xl p-6 shadow-2xl" variants={itemVariants} initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ background: '#fff', border: '2px solid #6366f1', boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)' }}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           {/* Left Side: Text Content */}
@@ -89,7 +90,7 @@ const HeroSection = () => {
               variants={itemVariants}
             >
               <span className="block">Actionable Insights for</span>
-              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500 mt-2">
+              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-indigo-800 mt-2">
                 Smart Investing
               </span>
             </motion.h1>
@@ -107,7 +108,7 @@ const HeroSection = () => {
             >
               <Link to="/services" aria-label="View our services" className="w-full sm:w-auto">
                 <motion.button
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-white bg-blue-700 hover:bg-blue-800 shadow-lg"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   type="button"
@@ -118,9 +119,9 @@ const HeroSection = () => {
               </Link>
               <Link to="/contact" aria-label="Contact us" className="w-full sm:w-auto">
                 <motion.button
-                  className={`w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border text-base font-medium rounded-full shadow-lg ${isDarkTheme() 
+                  className={`w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border text-base font-medium rounded-full shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${isDarkTheme() 
                     ? 'bg-white/10 border-white/20 text-white hover:bg-white/20' 
-                    : 'bg-gray-200 border-transparent text-gray-900 hover:bg-gray-300'}`}
+                    : 'bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-50'}`}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   type="button"
@@ -167,6 +168,7 @@ const HeroSection = () => {
           </div>
 
         </div>
+        </motion.div>
       </div>
     </motion.div>
   );

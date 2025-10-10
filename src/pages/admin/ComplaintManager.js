@@ -115,26 +115,33 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="p-6 rounded-xl shadow-xl border max-w-md w-full"
-            style={{ background: '#ffffff4d', border: '1px solid rgba(0,0,0,0.06)' }}
+            className="p-6 rounded-2xl shadow-2xl border max-w-md w-full"
+            style={{
+              background: '#fff',
+              border: '2px solid #6366f1', // Indigo border
+              boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)',
+            }}
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
           >
-            <h3 className="text-lg font-semibold mb-4 text-adaptive">Edit Row {rowData?.srNo}</h3>
+            <h3 className="text-xl font-bold mb-5 text-indigo-700 flex items-center gap-2">
+              <FiEdit size={20} className="inline-block text-indigo-500" />
+              Edit Row {rowData?.srNo}
+            </h3>
             <div className="space-y-4">
               {Object.keys(editedRow).map(key => (
                 key !== 'srNo' && (
-                  <div key={key}>
-                    <label htmlFor={`edit-${key}`} className="capitalize text-sm text-adaptive/70">{key.replace(/([A-Z])/g, ' $1')}</label>
+                  <div key={key} className="flex flex-col gap-1">
+                    <label htmlFor={`edit-${key}`} className="capitalize text-sm font-medium text-indigo-700">{key.replace(/([A-Z])/g, ' $1')}</label>
                     <input
                       id={`edit-${key}`}
                       name={`edit-${key}`}
                       type={typeof editedRow[key] === 'number' ? 'number' : 'text'}
                       value={editedRow[key] || ''}
                       onChange={(e) => setEditedRow({ ...editedRow, [key]: e.target.value })}
-                      className="w-full p-2 rounded-lg"
-                      style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-body, #0b1220)' }}
+                      className="w-full p-2 rounded-lg border border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition"
+                      style={{ background: '#f8fafc', color: 'var(--text-body, #0b1220)' }}
                       placeholder={key}
                       disabled={key === 'source' && rowData?.srNo === 'Grand Total'}
                     />
@@ -142,9 +149,23 @@ const EditModal = ({ isOpen, onClose, rowData, onSave }) => {
                 )
               ))}
             </div>
-            <div className="flex justify-end gap-4 mt-6">
-              <motion.button onClick={onClose} className="px-4 py-2 rounded-lg" style={{ background: 'rgba(0,0,0,0.06)' }} variants={buttonVariants} whileHover="hover"><Trans i18nKey="pages.admin_ComplaintManager.cancel">Cancel</Trans></motion.button>
-              <motion.button onClick={handleSave} className="px-4 py-2 rounded-lg" style={{ background: 'linear-gradient(90deg,#2eed1c,#1fbf18)', color: '#000' }} variants={buttonVariants} whileHover="hover"><Trans i18nKey="pages.admin_ComplaintManager.save">Save</Trans></motion.button>
+            <div className="flex justify-end gap-4 mt-8">
+              <motion.button
+                onClick={onClose}
+                className="px-5 py-2 rounded-lg border border-indigo-200 bg-white text-indigo-700 font-semibold hover:bg-indigo-50 transition"
+                variants={buttonVariants}
+                whileHover="hover"
+              >
+                <Trans i18nKey="pages.admin_ComplaintManager.cancel">Cancel</Trans>
+              </motion.button>
+              <motion.button
+                onClick={handleSave}
+                className="px-5 py-2 rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-600 text-white font-semibold shadow hover:from-indigo-500 hover:to-indigo-700 transition"
+                variants={buttonVariants}
+                whileHover="hover"
+              >
+                <Trans i18nKey="pages.admin_ComplaintManager.save">Save</Trans>
+              </motion.button>
             </div>
           </motion.div>
         </motion.div>
@@ -161,38 +182,52 @@ EditModal.propTypes = {
 };
 
 const ComplaintTable = ({ tableData, handleEdit }) => (
-  <motion.div className="table-responsive h-scroll custom-scrollbar rounded-lg shadow" variants={itemVariants} style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>
-    <table className="min-w-[920px] sm:min-w-full text-sm text-left" style={{ color: 'var(--text-body)' }}>
-      <thead className="text-xs uppercase tracking-wider" style={{ background: 'var(--bg-muted)', color: 'var(--text-body)' }}>
+  <motion.div
+    className="table-responsive h-scroll custom-scrollbar rounded-2xl shadow-2xl border"
+    variants={itemVariants}
+    style={{ background: '#fff', border: '2px solid #6366f1', boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)' }}
+  >
+    <table className="min-w-[920px] sm:min-w-full text-sm text-left" style={{ color: '#0b1220', background: '#fff' }}>
+      <thead className="text-xs uppercase tracking-wider" style={{ background: '#f1f5ff', color: '#3730a3' }}>
         <tr>
-          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.received-from">Received from</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month"><Trans i18nKey="pages.admin_ComplaintManager.pending-last-month-1">Pending last month</Trans></Trans></th>
-          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.resolved">Resolved</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.pending">Pending</Trans></th>
-          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months"><Trans i18nKey="pages.admin_ComplaintManager.pending-3-months-1">Pending  3 Months</Trans></Trans></th>
-          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days"><Trans i18nKey="pages.admin_ComplaintManager.avg-resolution-time-days-1">Avg. Resolution time (days)</Trans></Trans></th>
-          <th className="px-6 py-3 text-left font-semibold text-adaptive"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
+          <th className="px-6 py-3 text-left font-bold">Sr. No.</th>
+          <th className="px-6 py-3 text-left font-bold">Received from</th>
+          <th className="px-6 py-3 text-left font-bold">Pending last month</th>
+          <th className="px-6 py-3 text-left font-bold">Received</th>
+          <th className="px-6 py-3 text-left font-bold">Resolved</th>
+          <th className="px-6 py-3 text-left font-bold">Pending</th>
+          <th className="px-6 py-3 text-left font-bold">Pending 3 Months</th>
+          <th className="px-6 py-3 text-left font-bold">Avg. Resolution time (days)</th>
+          <th className="px-6 py-3 text-left font-bold">Actions</th>
         </tr>
       </thead>
       <tbody>
         {(Array.isArray(tableData) ? tableData : Object.values(tableData || {})).map(row => (
-          <motion.tr key={row.srNo} style={{ borderBottom: '1px solid var(--bg-border)' }} variants={itemVariants}>
-            <td data-label="Sr. No." className="px-6 py-4 text-adaptive">{row.srNo}</td>
-            <td data-label="Received from" className="px-6 py-4 text-adaptive">{row.source || 'N/A'}</td>
-            <td data-label="Pending last month" className="px-6 py-4 text-adaptive">{row.pendingLastMonth || 0}</td>
-            <td data-label="Received" className="px-6 py-4 text-adaptive">{row.received || 0}</td>
-            <td data-label="Resolved" className="px-6 py-4 text-adaptive">{row.resolved || 0}</td>
-            <td data-label="Pending" className="px-6 py-4 text-adaptive">{row.pending || 0}</td>
-            <td data-label="Pending > 3 Months" className="px-6 py-4 text-adaptive">{row.pending3Months || 0}</td>
-            <td data-label="Avg. Resolution time (days)" className="px-6 py-4 text-adaptive">{row.avgResolutionTime || 0}</td>
+          <motion.tr
+            key={row.srNo}
+            style={{ borderBottom: '1px solid #e0e7ff', background: row.srNo === 'Grand Total' ? '#f1f5ff' : '#fff' }}
+            variants={itemVariants}
+          >
+            <td data-label="Sr. No." className="px-6 py-4 font-medium text-indigo-700">{row.srNo}</td>
+            <td data-label="Received from" className="px-6 py-4">{row.source || 'N/A'}</td>
+            <td data-label="Pending last month" className="px-6 py-4">{row.pendingLastMonth || 0}</td>
+            <td data-label="Received" className="px-6 py-4">{row.received || 0}</td>
+            <td data-label="Resolved" className="px-6 py-4">{row.resolved || 0}</td>
+            <td data-label="Pending" className="px-6 py-4">{row.pending || 0}</td>
+            <td data-label="Pending > 3 Months" className="px-6 py-4">{row.pending3Months || 0}</td>
+            <td data-label="Avg. Resolution time (days)" className="px-6 py-4">{row.avgResolutionTime || 0}</td>
             <td data-label="Actions" className="px-6 py-4">
-              {row.srNo !== 'Grand Total' && (
-                <motion.button type="button" onClick={() => handleEdit(row)} style={{ color: 'var(--accent)' }} variants={buttonVariants} whileHover="hover" title="Edit row" aria-label={`Edit row ${row.srNo}`}>
-                  <FiEdit aria-hidden="true" size={16} />
-                </motion.button>
-              )}
+              <motion.button
+                type="button"
+                onClick={() => handleEdit(row)}
+                className="text-indigo-600 hover:text-indigo-800"
+                variants={buttonVariants}
+                whileHover="hover"
+                title={row.srNo === 'Grand Total' ? 'Edit Grand Total' : `Edit row ${row.srNo}`}
+                aria-label={row.srNo === 'Grand Total' ? 'Edit Grand Total' : `Edit row ${row.srNo}`}
+              >
+                <FiEdit aria-hidden="true" size={16} />
+              </motion.button>
             </td>
           </motion.tr>
         ))}
@@ -231,24 +266,21 @@ const ComplaintManager = () => {
   // Helpers moved to module scope above to avoid useEffect deps
 
   useEffect(() => {
-    // Complaint Table
+    // Complaint Table (Grand Total is now editable, not auto-calculated)
     const tableRef = ref(db, 'complaintTableData');
     const unsub1 = onValue(tableRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         const arr = Array.isArray(data) ? [...data] : Object.values(data);
-        const rows = arr.filter((r) => r && r.srNo !== 'Grand Total');
-        const totals = computeComplaintGrandTotal(rows);
-        const grandRow = { srNo: 'Grand Total', source: '', ...totals };
-        setTableData([...rows, grandRow]);
+        setTableData(arr);
       } else {
         const base = [
           { srNo: 1, source: 'Directly from Investors', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
           { srNo: 2, source: 'SEBI (SCORES)', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
           { srNo: 3, source: 'Other Sources (if any)', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
+          { srNo: 'Grand Total', source: '', pendingLastMonth: 0, received: 0, resolved: 0, pending: 0, pending3Months: 0, avgResolutionTime: 0 },
         ];
-        const totals = computeComplaintGrandTotal(base);
-        setTableData([...base, { srNo: 'Grand Total', source: '', ...totals }]);
+        setTableData(base);
       }
       setIsLoading(false);
     }, (error) => {
@@ -328,13 +360,12 @@ const ComplaintManager = () => {
 
   const handleSave = async (editedRow) => {
     try {
-      const working = (Array.isArray(tableData) ? tableData : Object.values(tableData || {}))
-        .filter(r => r.srNo !== 'Grand Total')
-        .map(r => (r.srNo === editedRow.srNo ? editedRow : r));
-      const totals = computeComplaintGrandTotal(working);
-      const finalData = [...working, { srNo: 'Grand Total', source: '', ...totals }];
-      await set(ref(db, 'complaintTableData'), finalData);
-      setTableData(finalData);
+      // Update the edited row in the tableData array (including Grand Total if that's the one being edited)
+      const updated = (Array.isArray(tableData) ? tableData : Object.values(tableData || {})).map(r =>
+        r.srNo === editedRow.srNo ? editedRow : r
+      );
+      await set(ref(db, 'complaintTableData'), updated);
+      setTableData(updated);
       toast.success('Row updated successfully.');
     } catch (error) {
       toast.error('Failed to update row: ' + error.message);
@@ -408,28 +439,32 @@ const ComplaintManager = () => {
 
   return (
     <motion.div className="admin-section" variants={containerVariants} initial="hidden" animate="visible">
-      <h2 className="text-3xl font-bold text-adaptive mb-6"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager-1">Complaint Manager</Trans></Trans></h2>
+  <h2 className="text-3xl font-bold mb-6 text-indigo-700"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager"><Trans i18nKey="pages.admin_ComplaintManager.complaint-manager-1">Complaint Manager</Trans></Trans></h2>
   {/* Complaint submissions moved to Complaint Box page */}
       {isLoading ? <LoadingSpinner /> : (
         <>
           {/* Public heading controller for ComplaintTable */}
-          <motion.div className="mb-6 rounded-lg p-4" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }} variants={itemVariants}>
-            <h3 className="text-lg font-semibold text-adaptive mb-3">Public Complaints Heading</h3>
+          <motion.div
+            className="mb-6 rounded-2xl p-4 shadow-2xl border"
+            style={{ background: '#fff', border: '2px solid #6366f1', boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)' }}
+            variants={itemVariants}
+          >
+            <h3 className="text-lg font-bold text-indigo-700 mb-3">Public Complaints Heading</h3>
             <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-              <label htmlFor="headerMonthYear" className="text-sm text-adaptive min-w-[180px]">Month & Year (e.g., July 2025)</label>
+              <label htmlFor="headerMonthYear" className="text-sm text-indigo-700 min-w-[180px]">Month & Year (e.g., July 2025)</label>
               <input
                 id="headerMonthYear"
                 type="text"
                 value={headerMonthYear}
                 onChange={(e) => setHeaderMonthYear(e.target.value)}
-                className="w-full sm:max-w-md p-2 rounded-md"
-                style={{ background: 'var(--bg-surface)', border: '1px solid var(--bg-border)', color: 'var(--text-body)' }}
+                className="w-full sm:max-w-md p-2 rounded-lg border border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition"
+                style={{ background: '#f8fafc', color: '#0b1220' }}
                 placeholder="July 2025"
               />
               <motion.button
                 onClick={handleSaveHeader}
                 disabled={isSavingHeader}
-                className="px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60"
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-600 text-white font-semibold shadow hover:from-indigo-500 hover:to-indigo-700 disabled:opacity-60 transition"
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
@@ -437,39 +472,39 @@ const ComplaintManager = () => {
                 {isSavingHeader ? 'Saving…' : 'Save'}
               </motion.button>
             </div>
-            <p className="mt-2 text-xs text-adaptive">This updates the heading shown on the public Complaints table.</p>
+            <p className="mt-2 text-xs text-indigo-500">This updates the heading shown on the public Complaints table.</p>
           </motion.div>
 
           <ComplaintTable tableData={tableData} handleEdit={handleEdit} />
 
           {/* Monthly Disposal Table (admin editable) */}
           <div className="my-8">
-            <h2 className="text-xl font-bold text-adaptive mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints-1">Trend Of Monthly Disposal Of Complaints</Trans></Trans></h2>
-            <div className="table-responsive rounded-lg shadow custom-scrollbar" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>
-              <table className="min-w-full text-sm text-left" style={{ color: 'var(--text-body)' }}>
-                <thead className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-body)' }}>
+            <h2 className="text-xl font-bold mb-4 text-indigo-700"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-monthly-disposal-of-complaints-1">Trend Of Monthly Disposal Of Complaints</Trans></Trans></h2>
+            <div className="table-responsive rounded-2xl shadow-2xl custom-scrollbar border" style={{ background: '#fff', border: '2px solid #6366f1', boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)' }}>
+              <table className="min-w-full text-sm text-left" style={{ color: '#0b1220', background: '#fff' }}>
+                <thead className="text-xs uppercase tracking-wider" style={{ color: '#3730a3', background: '#f1f5ff' }}>
                   <tr>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.month">Month</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-month"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-month-1">Carried forward from previous month</Trans></Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.resolved-1">Resolved*</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.pending-2">Pending#</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
+                    <th className="px-6 py-3 font-semibold">Sr. No.</th>
+                    <th className="px-6 py-3 font-semibold">Month</th>
+                    <th className="px-6 py-3 font-semibold">Carried forward from previous month</th>
+                    <th className="px-6 py-3 font-semibold">Received</th>
+                    <th className="px-6 py-3 font-semibold">Resolved*</th>
+                    <th className="px-6 py-3 font-semibold">Pending#</th>
+                    <th className="px-6 py-3 font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {(Array.isArray(monthlyData) ? monthlyData : Object.values(monthlyData || {})).map(row => (
-                    <tr key={row.srNo} style={{ borderBottom: '1px solid var(--bg-border)' }}>
-                      <td className="px-6 py-4 text-adaptive">{row.srNo}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.month}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.carried}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.received}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.resolved}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.pending}</td>
+                    <tr key={row.srNo} style={{ borderBottom: '1px solid #e0e7ff', background: row.srNo === 'Grand Total' ? '#f1f5ff' : '#fff' }}>
+                      <td className="px-6 py-4 font-medium text-indigo-700">{row.srNo}</td>
+                      <td className="px-6 py-4">{row.month}</td>
+                      <td className="px-6 py-4">{row.carried}</td>
+                      <td className="px-6 py-4">{row.received}</td>
+                      <td className="px-6 py-4">{row.resolved}</td>
+                      <td className="px-6 py-4">{row.pending}</td>
                       <td className="px-6 py-4">
                         {row.srNo !== 'Grand Total' && (
-                          <button type="button" onClick={() => handleMonthlyEdit(row)} style={{ color: 'var(--accent)' }} title="Edit row" aria-label={`Edit row ${row.srNo}`}>
+                          <button type="button" onClick={() => handleMonthlyEdit(row)} className="text-indigo-600 hover:text-indigo-800" title="Edit row" aria-label={`Edit row ${row.srNo}`}>
                             <FiEdit aria-hidden="true" size={16} />
                           </button>
                         )}
@@ -483,32 +518,32 @@ const ComplaintManager = () => {
           </div>
           {/* Annual Disposal Table (admin editable) */}
           <div className="my-8">
-            <h2 className="text-xl font-bold text-adaptive mb-4"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints-1">Trend Of Annual Disposal Of Complaints</Trans></Trans></h2>
-            <div className="table-responsive rounded-lg shadow custom-scrollbar" style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}>
-              <table className="min-w-full text-sm text-left" style={{ color: 'var(--text-body)' }}>
-                <thead className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-body)' }}>
+            <h2 className="text-xl font-bold mb-4 text-indigo-700"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints"><Trans i18nKey="pages.admin_ComplaintManager.trend-of-annual-disposal-of-complaints-1">Trend Of Annual Disposal Of Complaints</Trans></Trans></h2>
+            <div className="table-responsive rounded-2xl shadow-2xl custom-scrollbar border" style={{ background: '#fff', border: '2px solid #6366f1', boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)' }}>
+              <table className="min-w-full text-sm text-left" style={{ color: '#0b1220', background: '#fff' }}>
+                <thead className="text-xs uppercase tracking-wider" style={{ color: '#3730a3', background: '#f1f5ff' }}>
                   <tr>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.sr-no">Sr. No.</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.year">Year</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-year"><Trans i18nKey="pages.admin_ComplaintManager.carried-forward-from-previous-year-1">Carried forward from previous year</Trans></Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.received">Received</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.resolved-1">Resolved*</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.pending-2">Pending#</Trans></th>
-                    <th className="px-6 py-3"><Trans i18nKey="pages.admin_ComplaintManager.actions">Actions</Trans></th>
+                    <th className="px-6 py-3 font-semibold">Sr. No.</th>
+                    <th className="px-6 py-3 font-semibold">Year</th>
+                    <th className="px-6 py-3 font-semibold">Carried forward from previous year</th>
+                    <th className="px-6 py-3 font-semibold">Received</th>
+                    <th className="px-6 py-3 font-semibold">Resolved*</th>
+                    <th className="px-6 py-3 font-semibold">Pending#</th>
+                    <th className="px-6 py-3 font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {(Array.isArray(annualData) ? annualData : Object.values(annualData || {})).map(row => (
-                    <tr key={row.srNo} style={{ borderBottom: '1px solid var(--bg-border)' }}>
-                      <td className="px-6 py-4 text-adaptive">{row.srNo}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.year}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.carried}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.received}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.resolved}</td>
-                      <td className="px-6 py-4 text-adaptive">{row.pending}</td>
+                    <tr key={row.srNo} style={{ borderBottom: '1px solid #e0e7ff', background: row.srNo === 'Grand Total' ? '#f1f5ff' : '#fff' }}>
+                      <td className="px-6 py-4 font-medium text-indigo-700">{row.srNo}</td>
+                      <td className="px-6 py-4">{row.year}</td>
+                      <td className="px-6 py-4">{row.carried}</td>
+                      <td className="px-6 py-4">{row.received}</td>
+                      <td className="px-6 py-4">{row.resolved}</td>
+                      <td className="px-6 py-4">{row.pending}</td>
                       <td className="px-6 py-4">
                         {row.srNo !== 'Grand Total' && (
-                          <button type="button" onClick={() => handleAnnualEdit(row)} style={{ color: 'var(--accent)' }} title="Edit row" aria-label={`Edit row ${row.srNo}`}>
+                          <button type="button" onClick={() => handleAnnualEdit(row)} className="text-indigo-600 hover:text-indigo-800" title="Edit row" aria-label={`Edit row ${row.srNo}`}>
                             <FiEdit aria-hidden="true" size={16} />
                           </button>
                         )}

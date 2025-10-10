@@ -90,7 +90,7 @@ function highlightText(text, terms) {
       if (matchIndex > i) parts.push(text.slice(i, matchIndex));
       const end = matchIndex + matchTerm.length;
       parts.push(
-        <mark key={i} className="bg-yellow-300/70 text-black rounded px-0.5">
+        <mark key={i} className="bg-indigo-200 text-indigo-900 rounded px-0.5">
           {text.slice(matchIndex, end)}
         </mark>
       );
@@ -257,13 +257,13 @@ export default function Search() {
   const expanded = (debouncedQ.trim().length > 0 && (results.length > 0 || suggestions.length > 0)) || (showRecent && debouncedQ.trim().length === 0);
 
   return (
-    <section aria-labelledby="search-title" className="min-h-screen bg-transparent text-white p-4 sm:p-6 md:p-8">
+    <section aria-labelledby="search-title" className="min-h-screen bg-transparent text-gray-900 p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 id="search-title" className="text-4xl sm:text-5xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
+          <h1 id="search-title" className="text-4xl sm:text-5xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-indigo-800">
             Search Our Site
           </h1>
-          <p className="text-lg text-white/80">Find the information you need, quickly and easily.</p>
+          <p className="text-lg text-gray-600">Find the information you need, quickly and easily.</p>
         </div>
 
         {/* Filters */}
@@ -273,8 +273,11 @@ export default function Search() {
               key={c}
               type="button"
               onClick={() => setCategory(c)}
-              className={`px-3 py-1 rounded-full border transition ${category === c ? 'bg-green-500 text-black border-green-400' : 'text-black'}`}
-              style={category === c ? undefined : { background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)' }}
+              className={`px-3 py-1 rounded-full border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                category === c
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow'
+                  : 'bg-white text-indigo-700 border-indigo-200 hover:bg-indigo-50'
+              }`}
               aria-pressed={category === c}
             >
               {c}
@@ -285,7 +288,7 @@ export default function Search() {
         <div className="relative mb-8">
           <label htmlFor="site-search" className="sr-only">Search the site</label>
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <FaSearch className="text-white/70" />
+            <FaSearch className="text-indigo-500" />
           </div>
           <input
             ref={inputRef}
@@ -296,8 +299,7 @@ export default function Search() {
             aria-controls="search-listbox"
             aria-activedescendant={activeIndex >= 0 && results[activeIndex] ? `search-option-${activeIndex}` : undefined}
             aria-autocomplete="list"
-            className="w-full rounded-full pr-12 pl-12 py-4 text-lg text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-            style={{ background: '#D4e3ff', border: '2px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(6px)' }}
+            className="w-full rounded-full pr-12 pl-12 py-4 text-lg text-gray-900 placeholder-gray-400 border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 bg-white shadow-sm"
             placeholder="e.g. Privacy, Careers, Smart Cash"
             value={q}
             onFocus={() => setShowRecent(true)}
@@ -310,7 +312,7 @@ export default function Search() {
             <button
               type="button"
               onClick={() => { setQ(''); setActiveIndex(-1); inputRef.current?.focus(); }}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/80 hover:text-white"
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-indigo-500 hover:text-indigo-700"
               aria-label="Clear search"
             >
               <FaTimesCircle />
@@ -321,19 +323,18 @@ export default function Search() {
         <div role="region" aria-live="polite" aria-label="Search results" className="transition-all duration-300">
           {debouncedQ.trim() && results.length === 0 && (
             <div className="text-center py-12">
-              <h2 className="text-2xl font-semibold text-white/80">No results found</h2>
-              <p className="text-white/60 mt-2">Try a different search term.</p>
+              <h2 className="text-2xl font-semibold text-gray-800">No results found</h2>
+              <p className="text-gray-600 mt-2">Try a different search term.</p>
               {suggestions.length > 0 && (
                 <div className="mt-6">
-                  <p className="text-white/70 mb-2">Did you mean:</p>
+                  <p className="text-gray-700 mb-2">Did you mean:</p>
                   <div className="flex flex-wrap gap-2 justify-center">
                     {suggestions.map((s) => (
                       <button
                         key={s.path}
                         type="button"
                         onClick={() => setQ(s.label)}
-                        className="px-3 py-1 rounded-full border"
-                        style={{ background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)', color: 'black' }}
+                        className="px-3 py-1 rounded-full border bg-white text-indigo-700 border-indigo-200 hover:bg-indigo-50"
                       >
                         {s.label}
                       </button>
@@ -346,7 +347,7 @@ export default function Search() {
 
           {debouncedQ.trim() && results.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4 text-white/80">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
                 Found {results.length} {results.length === 1 ? 'result' : 'results'}
               </h2>
               <ul id="search-listbox" role="listbox" className="space-y-4">
@@ -356,19 +357,22 @@ export default function Search() {
                     role="option"
                     aria-selected={activeIndex === idx}
                     key={r.path}
-                    className={`rounded-lg shadow-lg border transition-all duration-300 transform ${activeIndex === idx ? 'border-green-400 shadow-green-300/40 -translate-y-1' : 'border-white/20 hover:border-white/40 hover:-translate-y-1 hover:shadow-white/30'}`}
-                    style={{ background: '#D4e3ff', backdropFilter: 'blur(4px)' }}
+                    className={`rounded-lg border transition-all duration-300 transform bg-white shadow-sm ${
+                      activeIndex === idx
+                        ? 'border-indigo-500 ring-1 ring-indigo-300 -translate-y-1 shadow-md'
+                        : 'border-indigo-100 hover:border-indigo-300 hover:-translate-y-1 hover:shadow-md'
+                    }`}
                     onMouseEnter={() => setActiveIndex(idx)}
                   >
                     <Link to={r.path} className="block p-6">
                       <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-500 text-black">{r.category}</span>
-                        <h3 className="text-xl font-semibold text-green-300">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">{r.category}</span>
+                        <h3 className="text-xl font-semibold text-indigo-700">
                           {highlightText(r.label, terms)}
                         </h3>
                       </div>
-                      <p className="text-black mt-2">{highlightText(r.description, terms)}</p>
-                      <div className="text-sm text-black/70 mt-3">{highlightText(r.path, terms)}</div>
+                      <p className="text-gray-700 mt-2">{highlightText(r.description, terms)}</p>
+                      <div className="text-sm text-gray-500 mt-3">{highlightText(r.path, terms)}</div>
                     </Link>
                   </li>
                 ))}
@@ -379,16 +383,15 @@ export default function Search() {
           {!debouncedQ.trim() && (
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-xl font-semibold text-white/80">Browse {category === 'All' ? 'All' : category} pages</h2>
-                <div className="text-white/60 text-sm">Showing {browseItems.length}</div>
+                <h2 className="text-xl font-semibold text-gray-800">Browse {category === 'All' ? 'All' : category} pages</h2>
+                <div className="text-gray-600 text-sm">Showing {browseItems.length}</div>
               </div>
               <div className="flex flex-wrap gap-2">
                 {browseItems.map((item) => (
                   <Link
                     key={item.path}
                     to={item.path}
-                    className="px-3 py-2 rounded-lg border transition"
-                    style={{ background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)', color: 'black' }}
+                    className="px-3 py-2 rounded-lg border transition bg-white text-indigo-700 border-indigo-200 hover:bg-indigo-50"
                     aria-label={`${item.label} (${item.category})`}
                   >
                     {item.label}
@@ -401,10 +404,10 @@ export default function Search() {
           {/* Recent searches dropdown */}
           {showRecent && !debouncedQ.trim() && recent.length > 0 && (
             <div className="max-w-4xl mx-auto mt-2">
-              <div className="rounded-lg border p-4" style={{ background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)', backdropFilter: 'blur(4px)' }}>
+              <div className="rounded-lg border border-indigo-200 p-4 bg-white shadow-sm">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-black/80 font-medium">Recent searches</h3>
-                  <button onClick={clearRecent} className="text-sm text-black/60 hover:text-black">Clear all</button>
+                  <h3 className="text-gray-700 font-medium">Recent searches</h3>
+                  <button onClick={clearRecent} className="text-sm text-indigo-600 hover:text-indigo-800">Clear all</button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {recent.map((item, i) => (
@@ -413,8 +416,7 @@ export default function Search() {
                       type="button"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setQ(item)}
-                      className="px-3 py-1 rounded-full border"
-                      style={{ background: '#D4e3ff', borderColor: 'rgba(0,0,0,0.06)', color: 'black' }}
+                      className="px-3 py-1 rounded-full border bg-white text-indigo-700 border-indigo-200 hover:bg-indigo-50"
                     >
                       {item}
                     </button>

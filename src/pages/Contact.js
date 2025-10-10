@@ -173,12 +173,12 @@ function Contact() {
   const title = "Let's Talk";
 
   return (
-    <div className="relative min-h-screen py-12 px-4 overflow-hidden bg-transparent">
+    <div className="relative min-h-screen py-12 px-4 overflow-hidden bg-gradient-to-br from-white via-indigo-50 to-indigo-100">
       {/* Transparent (page-controlled) background + very subtle accents */}
       <div className="absolute inset-0 -z-10" aria-hidden="true" />
       {/* softer decorative blurred blobs (subtle, translucent) */}
-      <div className="absolute -left-12 -top-12 w-72 h-72 bg-white/6 rounded-full filter blur-3xl opacity-20 animate-[float_12s_ease-in-out_infinite]" />
-      <div className="absolute -right-8 bottom-6 w-56 h-56 bg-white/5 rounded-full filter blur-2xl opacity-16 animate-[float_10s_ease-in-out_infinite]" />
+      <div className="absolute -left-12 -top-12 w-72 h-72 bg-indigo-200/10 rounded-full filter blur-3xl opacity-20 animate-[float_12s_ease-in-out_infinite]" />
+      <div className="absolute -right-8 bottom-6 w-56 h-56 bg-indigo-100/10 rounded-full filter blur-2xl opacity-16 animate-[float_10s_ease-in-out_infinite]" />
       <Helmet>
         <title>Contact — Wise Global Research Services</title>
         <meta name="description" content="Contact Wise Global Research Services for enquiries, research subscriptions and support." />
@@ -219,9 +219,9 @@ function Contact() {
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0 }}
-              className="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-xl mx-auto"
+              className="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-xl mx-auto border-2 border-indigo-200"
             >
-              <motion.h2 id="contact-title" className="text-4xl sm:text-5xl font-extrabold text-center mb-8 text-gray-800 drop-shadow-lg" variants={itemVariants}>
+              <motion.h2 id="contact-title" className="text-4xl sm:text-5xl font-extrabold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-indigo-800 drop-shadow-lg" variants={itemVariants}>
                 {title.split("").map((char, index) => (
                   <motion.span key={index} custom={index} variants={letterVariants}>
                     {char}
@@ -258,7 +258,7 @@ function Contact() {
                       onChange={handleChange} value={formData.name}
                       aria-describedby="help-name"
                       autoComplete="name"
-                      className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      className="w-full p-3 pl-10 bg-white border-2 border-indigo-200 rounded-lg text-gray-900 outline-none placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-colors"
                       whileFocus={{ scale: 1.02 }}
                     />
                   </div>
@@ -277,7 +277,7 @@ function Contact() {
                       onChange={handleChange} value={formData.email}
                       aria-describedby="help-email"
                       autoComplete="email"
-                      className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      className="w-full p-3 pl-10 bg-white border-2 border-indigo-200 rounded-lg text-gray-900 outline-none placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-colors"
                       whileFocus={{ scale: 1.02 }}
                     />
                   </div>
@@ -298,7 +298,7 @@ function Contact() {
                       inputMode="tel"
                       autoComplete="tel"
                       pattern="^[0-9+()\\s-]{7,20}$"
-                      className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      className="w-full p-3 pl-10 bg-white border-2 border-indigo-200 rounded-lg text-gray-900 outline-none placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-colors"
                       whileFocus={{ scale: 1.02 }}
                     />
                   </div>
@@ -316,7 +316,7 @@ function Contact() {
                       name="message" placeholder="Your Message..." rows="4" required
                       onChange={handleChange} value={formData.message}
                       aria-describedby="help-message"
-                      className="w-full p-3 pl-10 bg-gray-100 border-2 border-gray-200 rounded-lg text-gray-900 outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      className="w-full p-3 pl-10 bg-white border-2 border-indigo-200 rounded-lg text-gray-900 outline-none placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 transition-colors"
                       whileFocus={{ scale: 1.02 }}
                     />
                   </div>
@@ -326,7 +326,7 @@ function Contact() {
                 <motion.button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 sm:py-4 bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500 text-gray-900 font-bold rounded-lg shadow-xl hover:brightness-105 transition-all duration-300 text-sm sm:text-base"
+                  className="w-full py-3 sm:py-4 bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold rounded-lg shadow-xl hover:brightness-105 transition-all duration-300 text-sm sm:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.98, y: 0 }}
                 >

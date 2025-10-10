@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Trans } from '../i18nShim';
 import { motion } from 'framer-motion';
 import {
@@ -10,6 +10,7 @@ import { ref as dbRef, push, set } from 'firebase/database';
 
 
 import { Helmet } from 'react-helmet-async';
+import { ThemeContext } from '../context/ThemeContext';
 // Animation variants for container and items
 const containerVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -44,6 +45,7 @@ const ClientServiceConsent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [showPopup, setShowPopup] = useState(false);
+  const { textColor } = useContext(ThemeContext) || {};
   // no file fields: only form inputs
 
   // No file uploads — form only
@@ -134,30 +136,13 @@ const ClientServiceConsent = () => {
     setIsSubmitting(true);
 
     try {
-      // Determine backend URL: use relative during local dev or when explicitly requested
-      const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      const port = (typeof window !== 'undefined' && window.location.port) ? window.location.port : '';
-      const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
-      const backendUrl = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
-
-      // Map form fields into a single message field so server can validate and email it
-      const payload = {
-        name: String(formData.clientName || ''),
-        email: String(formData.email || ''),
-        mobile: '',
-        city: '',
-        interest: 'ClientServiceConsent',
-        source: 'ClientServiceConsent',
-        message: `Client ID: ${formData.clientId || ''}\nFather's Name: ${formData.fatherName || ''}\nDOB: ${formData.dob || ''}\nPAN: ${formData.pan || ''}\nAadhaar: ${formData.aadhaar || ''}\nAddress: ${formData.address || ''}`
-      };
-
-      const response = await fetch(backendUrl, {
+      const response = await fetch('https://masterxservers.onrender.com/api/submit-client-form', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formData)
       });
 
-      const data = await response.json().catch(() => ({}));
+      const data = await response.json();
 
       if (data.success) {
         // Persist to RTDB for admin records
@@ -196,17 +181,12 @@ const ClientServiceConsent = () => {
   // Render input field with icon (binds to formData and handleChange)
   const renderInput = (id, label, icon, type = 'text', attrs = {}, note) => (
     <>
-      <Helmet>
-        <title>Client Service Consent - Wise Global Research</title>
-        <meta name="description" content="Client Service Consent page — Wise Global Research." />
-        <link rel="canonical" href="https://wiseglobalresearch.com/clientserviceconsent" />
-      </Helmet>
 <motion.div variants={itemVariants} className="w-full">
       <label htmlFor={id} className="block text-sm font-medium text-gray-900 mb-2">
         {label}
       </label>
       <div className="relative">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-700 text-xl">
+        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-700 text-xl pointer-events-none">
           {icon}
         </span>
         <input
@@ -236,29 +216,40 @@ const ClientServiceConsent = () => {
 
   return (
     <div className="py-6 xs:py-8 sm:py-12">
+      <Helmet>
+        <title>Client Service Consent - Wise Global Research</title>
+        <meta name="description" content="Client Service Consent page — Wise Global Research." />
+        <link rel="canonical" href="https://wiseglobalresearch.com/clientserviceconsent" />
+      </Helmet>
       <motion.div
-        className="max-w-4xl mx-auto w-full px-2 xs:px-4 sm:px-6"
+        className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-12"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
         {/* Breadcrumb removed as requested */}
         <motion.div
-          className="bg-[#ffffff4d] backdrop-blur-md p-4 xs:p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-300/50"
+          className="mb-6 rounded-2xl p-3 sm:p-6 shadow-2xl"
+          style={{
+            background: '#fff',
+            border: '2px solid #6366f1',
+            boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)'
+          }}
           variants={itemVariants}
         >
-          <div className="text-center mb-6 xs:mb-8">
-            <h2 className="text-2xl xs:text-3xl font-extrabold text-gray-900"><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent Form</Trans></h2>
-            <p className="mt-1 xs:mt-2 text-gray-700 text-xs xs:text-sm">Please fill out the form below.</p>
-          </div>
+          <div style={{ color: textColor || '#0b1220' }}>
+            <div className="text-center mb-6 xs:mb-8">
+              <h2 className="text-2xl xs:text-3xl font-extrabold" style={{ color: '#6366f1' }}><Trans i18nKey="pages.ClientServiceConsent.client-service-consent">Client Service Consent Form</Trans></h2>
+              <p className="mt-1 xs:mt-2 text-xs xs:text-sm text-black">Please fill out the form below.</p>
+            </div>
 
-  <form onSubmit={handleSubmit} noValidate className="space-y-4 xs:space-y-6">
+            <form onSubmit={handleSubmit} noValidate className="space-y-4 sm:space-y-6">
             <motion.div
               variants={containerVariants}
-              className="p-3 xs:p-4 sm:p-6 rounded-lg bg-[#ffffff4d] border border-gray-300/30"
+              className="p-3 sm:p-6 rounded-lg bg-white border border-indigo-50 shadow-sm"
             >
               <h3 className="text-lg xs:text-xl font-semibold text-gray-900 border-b border-gray-300/40 pb-2 mb-4 xs:mb-6"><Trans i18nKey="pages.ClientServiceConsent.client-information">Client Information</Trans></h3>
-              <div className="grid grid-cols-1 xs:grid-cols-2 gap-4 xs:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                 {renderInput(
                   'clientName',
                   'Client Name*',
@@ -314,7 +305,7 @@ const ClientServiceConsent = () => {
 
             <motion.div
               variants={containerVariants}
-              className="p-3 xs:p-4 sm:p-6 rounded-lg bg-[#ffffff4d] border border-gray-300/30"
+              className="p-3 sm:p-6 rounded-lg bg-white border border-indigo-50 shadow-sm"
             >
               <motion.div variants={itemVariants}>
                 <label
@@ -329,7 +320,7 @@ const ClientServiceConsent = () => {
                   rows="4"
                   placeholder="Enter Full Address"
                   autoComplete="street-address"
-                  className={`w-full px-3 xs:px-4 py-2 xs:py-3 rounded-lg border bg-white/0 text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 text-xs xs:text-sm`}
+                  className={`w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border bg-white/0 text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 text-xs sm:text-sm`}
                 ></textarea>
               </motion.div>
             </motion.div>
@@ -346,18 +337,27 @@ const ClientServiceConsent = () => {
 
             {/* Popup Modal for messages */}
             {showPopup && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40" role="dialog" aria-modal="true">
-                <div className={`p-6 rounded-xl shadow-2xl border-2 flex flex-col items-center max-w-xs w-full animate-fade-in ${message.type === 'success' ? 'bg-green-600/90 border-green-400' : 'bg-red-600/90 border-red-400'}`}>
-                  <span className="text-4xl mb-2">
-                    {message.type === 'success' ? <RiCheckboxCircleFill className="text-green-200" /> : <RiCloseCircleFill className="text-red-200" />}
-                  </span>
-                  <span className="text-white text-center font-semibold mb-2 whitespace-pre-line" aria-live="assertive">
-                    {message.text}
-                  </span>
-                  <button
-                    className="mt-4 px-4 py-2 rounded bg-gray-900 text-white hover:bg-gray-800 transition"
-                    onClick={() => setShowPopup(false)}
-                  >Close</button>
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4" role="dialog" aria-modal="true">
+                <div className={`relative w-full max-w-lg mx-auto rounded-xl shadow-2xl border-2 overflow-hidden animate-fade-in bg-white ${message.type === 'success' ? 'border-green-400' : 'border-red-400'}`}>
+                  <div className={`flex items-center justify-center p-6 ${message.type === 'success' ? 'bg-green-100' : 'bg-red-100'}`}>
+                    <div className={`flex items-center justify-center rounded-full h-16 w-16 ${message.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
+                      {message.type === 'success' ? <RiCheckboxCircleFill className="text-white text-3xl" /> : <RiCloseCircleFill className="text-white text-3xl" />}
+                    </div>
+                  </div>
+                  <div className="p-4 sm:p-6 text-center bg-white">
+                    <div className="text-gray-900 font-semibold text-base sm:text-lg whitespace-pre-line" aria-live="assertive">
+                      {message.text}
+                    </div>
+                    <div className="mt-4 flex justify-center">
+                      <button
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-indigo-600 text-white font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        onClick={() => setShowPopup(false)}
+                        aria-label="Close message"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -366,7 +366,7 @@ const ClientServiceConsent = () => {
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full shine-hover py-2 xs:py-3 px-3 xs:px-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-300 text-sm xs:text-base"
+                className="w-full shine-hover py-2 sm:py-3 px-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-300 text-sm sm:text-base"
                 whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                 whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
               >
@@ -375,6 +375,7 @@ const ClientServiceConsent = () => {
               </motion.button>
             </motion.div>
           </form>
+          </div>
         </motion.div>
       </motion.div>
     </div>

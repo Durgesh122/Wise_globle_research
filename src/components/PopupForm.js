@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ref as dbRef, onValue } from 'firebase/database';
 import { db } from '../firebase';
 
-// Simplified image-only popup. Shows image and a close button.
-// Accepts optional `imageUrl` prop. If not provided, reads localStorage key `popupImage`.
+// Simplified media popup. Shows image/video/embed and a close button.
+// Accepts optional `imageUrl` prop. If not provided, it will use the Realtime DB value at `admin/popupMedia`.
 const PopupForm = ({ onClose, forceShow = false, imageUrl: propImageUrl }) => {
   const [visible, setVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(propImageUrl || '');
@@ -18,9 +18,16 @@ const PopupForm = ({ onClose, forceShow = false, imageUrl: propImageUrl }) => {
 
   useEffect(() => {
     let timer;
-    // If explicitly forced, always show immediately (useful for debugging/tests)
+    // If explicitly forced, only show immediately when media is available.
+    // This avoids showing an empty popup (for example due to stale localStorage values)
+    // while still allowing tests/admins to force the popup when an image/video is present.
     if (forceShow) {
-      setVisible(true);
+      const hasMediaNow = Boolean(propImageUrl || imageUrl);
+      if (hasMediaNow) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
       return () => clearTimeout(timer);
     }
 
@@ -35,7 +42,9 @@ const PopupForm = ({ onClose, forceShow = false, imageUrl: propImageUrl }) => {
       }
 
       // Only show the popup when we're on the homepage, the disclaimer is accepted,
-      // AND there is an image to display (either from prop or admin DB).
+      // AND there is media to display (either from prop or admin DB). We explicitly do
+      // not read any `popupImage` key from localStorage here — admin media should come
+      // from the Realtime DB or be passed in via props.
       const hasImage = Boolean(propImageUrl || imageUrl);
       if (location.pathname === '/' && allowed && hasImage) {
         // Reset visibility then show after a small delay for nicer UX

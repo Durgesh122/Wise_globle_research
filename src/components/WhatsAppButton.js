@@ -7,9 +7,11 @@ function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
     aria-label="Chat with us on WhatsApp"
-  className="hidden md:flex fixed bottom-7 right-6 sm:bottom-7 sm:right-6 z-50 w-14 h-14 items-center justify-center bg-green-500 hover:bg-green-600 text-white text-adaptive rounded-full shadow-lg transition duration-300 ease-in-out"
+  className="hidden md:flex fixed bottom-7 right-6 sm:bottom-7 sm:right-6 z-50 w-14 h-14 items-center justify-center bg-purple-500 hover:bg-purple-600 text-white text-adaptive rounded-full shadow-lg transition-transform duration-200 ease-in-out transform hover:scale-105 active:scale-95"
       data-aos="zoom-in"
     >
+      {/* ping ring for subtle attention — respects reduced motion */}
+      <span className="absolute inline-flex h-14 w-14 rounded-full bg-purple-400 opacity-30 motion-safe:animate-ping motion-reduce:opacity-0" aria-hidden="true"></span>
       {/* Inline WhatsApp SVG icon to avoid external font/icon libraries */}
       <svg
         xmlns="http://www.w3.org/2000/svg"

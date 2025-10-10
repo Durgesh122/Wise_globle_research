@@ -21,14 +21,6 @@ const WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const CATEGORIES = ['Market', 'Technical', 'Financial', 'Competitor', 'Other'];
 
 // Animation variants
-const containerVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: 'easeOut', staggerChildren: 0.2 },
-  },
-};
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -237,10 +229,10 @@ const DaySelector = ({ activeDay, setActiveDay }) => (
           <motion.button
             key={day}
             onClick={() => setActiveDay(day)}
-            className={`min-w-[80px] px-4 py-2 text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+            className={`min-w-[64px] sm:min-w-[80px] px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
               activeDay === day
                 ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
-                : 'bg-white/10 text-white hover:bg-white/20'
+                : 'bg-white text-black hover:bg-white/20'
             } ${day === 'Monday' ? 'rounded-l-lg' : ''} ${
               day === 'Friday' ? 'rounded-r-lg' : ''
             }`}
@@ -270,18 +262,18 @@ const SearchFilter = ({ searchTerm, setSearchTerm, selectedCategory, setSelected
     data-aos="fade-up"
   >
     <div className="relative flex-grow">
-      <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+      <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600" />
       <input
         type="text"
         placeholder="Search reports..."
-        className="pl-10 pr-4 py-3 w-full rounded-lg bg-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
+        className="pl-10 pr-4 py-3 w-full rounded-lg bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         aria-label="Search reports"
       />
     </div>
     <select
-      className="px-4 py-3 rounded-lg bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
+      className="w-full md:w-auto px-4 py-3 rounded-lg bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
       value={selectedCategory}
       onChange={(e) => setSelectedCategory(e.target.value)}
       aria-label="Select report category"
@@ -330,13 +322,15 @@ const ReportCard = ({ report, isSelected, onPreview }) => (
     <div className="mt-3 flex flex-col sm:flex-row items-center gap-3">
       <motion.button
         onClick={() => onPreview && onPreview(report)}
-        className="w-full sm:w-auto px-4 py-2 bg-white/10 text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2"
+        className="w-full sm:w-auto px-4 py-2 bg-white text-black rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2"
+        style={{ minHeight: 44 }}
         variants={buttonVariants}
         whileHover="hover"
         whileTap="tap"
         aria-label={`Preview ${report.title}`}
       >
-        <FiEye /><Trans i18nKey="pages.Reports.preview">Preview</Trans>
+        <FiEye className="text-indigo-600" />
+        <span className="ml-2"> <Trans i18nKey="pages.Reports.preview">Preview</Trans></span>
       </motion.button>
     </div>
   </motion.li>
@@ -357,7 +351,7 @@ ReportCard.propTypes = {
 // Pagination component
 const Pagination = ({ totalPages, currentPage, paginate }) => (
   <motion.div
-    className="mt-6 flex justify-center gap-3"
+    className="mt-6 flex flex-wrap justify-center gap-3"
     variants={itemVariants}
     data-aos="fade-up"
   >
@@ -580,137 +574,162 @@ function Reports() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <motion.div
-      className="min-h-screen bg-transparent py-8 px-4 sm:px-6 lg:px-8 pt-20"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <div className="max-w-7xl mx-auto">
+    <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
+      <div className="container max-w-4xl mx-auto">
         <motion.div
-          className="text-center mb-12"
+          className="mb-6 rounded-2xl p-6 shadow-2xl"
+          style={{
+            background: '#fff',
+            border: '2px solid #6366f1',
+            boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)'
+          }}
           variants={itemVariants}
-          data-aos="fade-up"
+          initial="hidden"
+          animate="visible"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight"><Trans i18nKey="pages.Reports.research-reports">Research Reports</Trans></h1>
-          <p className="mt-5 max-w-xl mx-auto text-xl text-white"><Trans i18nKey="pages.Reports.daily-analysis-and-insights">Daily analysis and insights</Trans></p>
-        </motion.div>
+          <div style={{ color: '#0b1220' }}>
+            <motion.h1
+              className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-indigo-800"
+              variants={itemVariants}
+            >
+              <Trans i18nKey="pages.Reports.research-reports">Research Reports</Trans>
+            </motion.h1>
+            <motion.p className="text-center text-sm sm:text-base mb-6" variants={itemVariants}>
+              <Trans i18nKey="pages.Reports.daily-analysis-and-insights">Daily analysis and insights</Trans>
+            </motion.p>
 
-        {/* Day Selector */}
-        <DaySelector activeDay={activeDay} setActiveDay={setActiveDay} />
+            {/* Day Selector and controls */}
+            <DaySelector activeDay={activeDay} setActiveDay={setActiveDay} />
 
-        {/* Search & Filter */}
-        <SearchFilter
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        />
+            <SearchFilter
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
 
-        {/* Sort Controls */}
-        <motion.div
-          className="mb-6 flex justify-end gap-4"
-          variants={itemVariants}
-          data-aos="fade-up"
-        >
-          <select
-            className="px-4 py-2 rounded-lg bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            aria-label="Sort reports by"
-          >
-            <option value="title"><Trans i18nKey="pages.Reports.sort-by-title">Sort by Title</Trans></option>
-            <option value="size"><Trans i18nKey="pages.Reports.sort-by-size">Sort by Size</Trans></option>
-          </select>
-          <motion.button
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-            className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-            variants={buttonVariants}
-            whileHover="hover"
-            whileTap="tap"
-            aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
-          >
-            {sortOrder === 'asc' ? 'Sort ↓' : 'Sort ↑'}
-          </motion.button>
-        </motion.div>
+            <motion.div className="mb-6 flex justify-end gap-4" variants={itemVariants}>
+              <select
+                className="px-3 py-2 rounded-lg bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md transition-all duration-300"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                aria-label="Sort reports by"
+              >
+                <option value="title"><Trans i18nKey="pages.Reports.sort-by-title">Sort by Title</Trans></option>
+                <option value="size"><Trans i18nKey="pages.Reports.sort-by-size">Sort by Size</Trans></option>
+              </select>
+              <motion.button
+                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+                aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
+              >
+                {sortOrder === 'asc' ? 'Sort ↓' : 'Sort ↑'}
+              </motion.button>
+            </motion.div>
 
-        {/* Main Content */}
-        <motion.div
-          className="bg-white/10 backdrop-blur-lg shadow-xl rounded-lg overflow-hidden"
-          variants={itemVariants}
-          data-aos="fade-up"
-        >
-          <div className="flex flex-col md:flex-row">
-            {/* Report List */}
-            <div className="w-full md:w-1/3 border-r border-gray-200/20">
-              <div className="p-6">
-                <h3 className="text-lg font-medium text-white mb-4">{activeDay}</h3>
-                {isLoading ? (
-                  <LoadingSpinner />
-                ) : paginatedReports.length > 0 ? (
-                  <ul className="space-y-4">
-                    {paginatedReports.map((report) => (
-                      <ReportCard
-                        key={report.id}
-                        report={report}
-                        isSelected={pdfPreview?.id === report.id}
-                        onPreview={handlePreviewReport}
-                      />
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-gray-300 text-sm"><Trans i18nKey="pages.Reports.no-reports-found">No reports found.</Trans></p>
-                )}
+            {/* Main content grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-1">
+                <div className="px-4 py-3">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-3 text-indigo-800">{activeDay}</h3>
+                  {isLoading ? (
+                    <LoadingSpinner />
+                  ) : paginatedReports.length > 0 ? (
+                    <ul className="space-y-4">
+                      {paginatedReports.map((report) => (
+                        <motion.li
+                          key={report.id}
+                          whileHover={{ y: -4 }}
+                          className="rounded-2xl overflow-hidden bg-white shadow-2xl"
+                          style={{ border: '2px solid #6366f1', color: '#0b1220' }}
+                          variants={itemVariants}
+                        >
+                          <div className="px-4 py-3">
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <h4 className="text-md sm:text-lg font-semibold mb-1 text-indigo-800">{report.title}</h4>
+                                <p className="text-sm" style={{ color: '#0b1220' }}>{report.description}</p>
+                              </div>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{report.size}</span>
+                            </div>
+                            <div className="mt-3 flex gap-3">
+                              <motion.button
+                                onClick={() => handlePreviewReport(report)}
+                                className="px-3 py-2 bg-white text-black rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2"
+                                style={{ minHeight: 40 }}
+                                variants={buttonVariants}
+                                whileHover="hover"
+                                whileTap="tap"
+                                aria-label={`Preview ${report.title}`}
+                              >
+                                <FiEye className="text-indigo-600" />
+                                <span className="ml-2">Preview</span>
+                              </motion.button>
+                            </div>
+                          </div>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-500 text-sm">No reports found.</p>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* PDF Preview */}
-            <div className="w-full md:w-2/3 bg-transparent">
-              <div className="p-6 h-full">
+              <div className="md:col-span-2 bg-white rounded-lg p-4">
                 {pdfPreview ? (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-white text-black shadow-sm rounded-lg overflow-hidden h-full flex flex-col"
-                    data-aos="fade-up"
+                    className="h-full flex flex-col"
+                    variants={itemVariants}
                   >
-                    <div className="px-6 py-4 border-b border-gray-200">
-                      <h3 className="text-lg font-medium text-black">{pdfPreview.title}</h3>
+                    <div className="px-4 py-3 border-b border-indigo-100">
+                      <h3 className="text-lg font-semibold text-indigo-800">{pdfPreview.title}</h3>
                       <p className="text-sm text-gray-700 mt-1">{pdfPreview.description}</p>
                     </div>
-                    <div className="flex-grow p-6 flex items-center justify-center bg-white">
+                    <div className="flex-1 p-6 flex items-center justify-center">
                       <div className="text-center">
-                        <div className="mb-4 p-4 bg-white rounded-lg shadow-inner border">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
-                            alt="PDF Thumbnail"
-                            className="w-32 h-32 object-contain mx-auto"
-                          />
+                        <div className="relative w-full h-36 sm:h-40 mb-4 select-none">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div
+                              className="relative w-[88%] h-[80%] bg-indigo-50 border border-indigo-200 rounded-md shadow-inner overflow-hidden"
+                              style={{ minWidth: 0, minHeight: 0 }}
+                            >
+                              <img src="https://cdn-icons-png.flaticon.com/512/337/337946.png" alt="PDF Thumbnail" className="w-full h-full object-cover rounded-md" />
+                              <span className="absolute -top-2 left-6 w-12 h-4 bg-indigo-100 border border-indigo-200 rounded-full shadow-sm" />
+                              <span className="absolute -bottom-2 right-6 w-12 h-4 bg-indigo-100 border border-indigo-200 rounded-full shadow-sm" />
+                            </div>
+                          </div>
                         </div>
+
                         <motion.button
                           onClick={() => setIsPreviewOpen(true)}
-                          className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 mx-auto"
+                          className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 mx-auto mb-2"
                           variants={buttonVariants}
                           whileHover="hover"
                           whileTap="tap"
                           aria-label="View report"
                         >
-                          <FiEye /><Trans i18nKey="pages.Reports.view-report">View Report</Trans></motion.button>
-                        <p className="mt-2 text-sm text-gray-700">
-                          {pdfPreview.title} ({pdfPreview.size})
-                        </p>
+                          <FiEye />
+                          <span>View Report</span>
+                        </motion.button>
+                        <p className="mt-2 text-sm text-gray-700">{pdfPreview.title} ({pdfPreview.size})</p>
                       </div>
                     </div>
-                    <div className="px-6 py-4 border-t border-gray-200 bg-white text-right">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"><Trans i18nKey="pages.Reports.available-for-download-only">Available for download only</Trans></span>
+                    <div className="px-4 py-3 border-t border-indigo-100 bg-indigo-50 text-right rounded-b-lg mt-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Available for download only</span>
                     </div>
                   </motion.div>
                 ) : (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center">
                       <svg
-                        className="mx-auto h-12 w-12 text-gray-400"
+                        className="mx-auto h-12 w-12 text-indigo-200"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -723,7 +742,7 @@ function Reports() {
                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                         />
                       </svg>
-                      <h3 className="mt-2 text-sm font-medium text-black"><Trans i18nKey="pages.Reports.no-report-selected">No report selected</Trans></h3>
+                      <h3 className="mt-2 text-sm font-medium text-indigo-800">No report selected</h3>
                       <p className="mt-1 text-sm text-gray-700">Click on a report to preview it.</p>
                     </div>
                   </div>
@@ -793,8 +812,6 @@ function Reports() {
             paginate={paginate}
           />
         )}
-      </div>
-
       {/* Report Preview Modal */}
       <ReportPreviewModal
         isOpen={isPreviewOpen}
@@ -805,7 +822,8 @@ function Reports() {
         report={selectedReport}
         onDownload={handleDownload}
       />
-    </motion.div>
+      </div>
+    </section>
   );
 }
 

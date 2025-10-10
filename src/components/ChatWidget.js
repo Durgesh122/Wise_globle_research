@@ -66,6 +66,22 @@ const ChatWidget = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const origFaviconRef = useRef(null);
 
+  // Track narrow/mobile viewport so we can render the panel as a bottom-sheet
+  const [isMobileView, setIsMobileView] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const mq = window.matchMedia('(max-width: 767px)');
+    const update = () => setIsMobileView(!!mq.matches);
+    update();
+    // modern API
+    if (mq.addEventListener) mq.addEventListener('change', update);
+    else mq.addListener && mq.addListener(update);
+    return () => {
+      try { if (mq.removeEventListener) mq.removeEventListener('change', update); }
+      catch (_) { try { mq.removeListener && mq.removeListener(update); } catch(_) {} }
+    };
+  }, []);
+
   // Helper: set favicon href (creates link if missing)
   const setFaviconHref = (href) => {
     if (typeof document === 'undefined') return;
@@ -735,8 +751,21 @@ const ChatWidget = () => {
     );
   };
 
+  // Keep a stable wrapper. Important: on small screens avoid rendering a
+  // full-viewport fixed element when the chat is closed as it would intercept
+  // touch events and block underlying form inputs. Only use inset-0 when the
+  // mobile sheet is actually open; otherwise position the launcher in the
+  // bottom-right like desktop but slightly lower for mobile.
   return (
-    <div className="fixed bottom-24 right-6 z-50">
+    <div className={isMobileView ? (isOpen ? 'fixed inset-0 z-50 flex items-end justify-center' : 'fixed bottom-6 right-6 z-50') : 'fixed bottom-24 right-6 z-50'}>
+      {/* mobile backdrop when using bottom-sheet */}
+      {isMobileView && isOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       {/* Chat panel */}
       <AnimatePresence>
         {isOpen && (
@@ -746,9 +775,9 @@ const ChatWidget = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="w-80 mr-16 h-[28rem] bg-white/90 backdrop-blur-xl shadow-2xl rounded-[28px] border border-gray-200 flex flex-col overflow-hidden relative z-40"
+            className={`${isMobileView ? 'w-full max-w-[920px] mx-3 h-auto max-h-[92vh] rounded-t-2xl rounded-b-0' : 'w-80 mr-16 h-[28rem] rounded-[28px]'} bg-white/95 backdrop-blur-xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden relative z-50`}
           >
-            <div className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white px-4 py-3 flex justify-between items-center rounded-t-[28px]">
+            <div className={`bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white px-4 py-3 flex justify-between items-center ${isMobileView ? 'rounded-t-2xl' : 'rounded-t-[28px]'}`}>
               <div className="flex items-center gap-2">
                 <div className="bg-white/20 p-1 rounded-full">
                   <ChatLogo className="w-6 h-6" animated />
@@ -968,7 +997,7 @@ const ChatWidget = () => {
           // use damru-tilt for primary continuous motion, keep chat-shake as subtle lateral motion
           style={{ animation: 'damru-tilt 1.6s ease-in-out infinite, chat-shake 6s ease-in-out 4s infinite' }}
           // hide the main launcher on small screens; the MobileActionTray provides a compact chat button there
-          className={"hidden md:flex chat-launcher-animated-border bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white w-14 h-14 p-0 rounded-lg shadow-xl shadow-[#128C7E]/30 hover:shadow-[#128C7E]/50 transition-all items-center justify-center" + (unreadCount > 0 ? ' chat-launcher-unread' : '')}
+          className={"hidden md:flex chat-launcher-animated-border bg-purple-500 hover:bg-purple-600 text-white w-14 h-14 p-0 rounded-full shadow-xl shadow-purple-500/30 transition-transform duration-200 ease-in-out transform hover:scale-105 active:scale-95 items-center justify-center" + (unreadCount > 0 ? ' chat-launcher-unread' : '')}
         >
             <motion.div
               initial={{ scale: 0.92, opacity: 0.95, y: 0 }}
@@ -976,7 +1005,9 @@ const ChatWidget = () => {
               transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
               className="w-9 h-9 relative"
             >
-            <ChatLogo className="w-9 h-9" animated />
+            {/* ping ring behind the launcher (respects reduced motion via CSS) */}
+            <span className="absolute inset-0 inline-flex rounded-full bg-purple-400 opacity-30 motion-safe:animate-ping motion-reduce:opacity-0" aria-hidden="true"></span>
+            <ChatLogo className="w-9 h-9 text-white" animated />
             <motion.span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-white/90" initial={{ scale: 0.8, opacity: 0.8 }} animate={{ scale: [0.8, 1.3, 0.8], opacity: [0.6, 1, 0.6] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }} />
             <motion.span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full bg-white/70" initial={{ scale: 0.8, opacity: 0.8 }} animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.5, 0.9, 0.5] }} transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }} />
           </motion.div>

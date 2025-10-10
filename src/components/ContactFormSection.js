@@ -50,7 +50,7 @@ const ContactForm = ({ contactFormRef }) => {
           const useRelative = (process.env.REACT_APP_USE_LOCAL_SEND_EMAIL === 'true') || (isLocalhost && port === '3001');
           const endpoint = useRelative ? '/send-email' : 'https://wise-globle-research-2.onrender.com/send-email';
           const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 10000);
+          const timeout = setTimeout(() => controller.abort(), 20000); // increased timeout to 20s for cold starts
           try {
             const r = await fetch(endpoint, {
               method: 'POST',
@@ -68,7 +68,17 @@ const ContactForm = ({ contactFormRef }) => {
               toast.success('Form submitted (email fallback used). We will contact you soon.', { position: 'top-center' });
             }
           } catch (fetchErr) {
-            console.warn('ContactForm: fallback fetch to /send-email failed', fetchErr);
+            // Log detailed error info to help triage AbortError vs network/CORS
+            try {
+              console.warn('ContactForm: fallback fetch to /send-email failed', {
+                message: fetchErr && fetchErr.message,
+                name: fetchErr && fetchErr.name,
+                stack: fetchErr && fetchErr.stack,
+                endpoint
+              });
+            } catch (logErr) {
+              console.warn('ContactForm: fetchErr logging failed', logErr);
+            }
             toast.error('We could not save your submission to the database and email fallback failed due to network. Please try again later.', { position: 'top-center' });
           }
         } catch (fallbackErr) {
@@ -125,7 +135,7 @@ const ContactForm = ({ contactFormRef }) => {
 
     const doFetchWithTimeout = async (url) => {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
+      const timeout = setTimeout(() => controller.abort(), 20000); // 20s timeout
       try {
         const r = await fetch(url, {
           method: 'POST',
@@ -134,6 +144,18 @@ const ContactForm = ({ contactFormRef }) => {
           signal: controller.signal,
         });
         return r;
+      } catch (err) {
+        // surface richer debug data to console so we can see if this was a timeout (AbortError) or network/CORS
+        try {
+          console.warn('ContactForm: doFetchWithTimeout error for', url, {
+            name: err && err.name,
+            message: err && err.message,
+            stack: err && err.stack,
+          });
+        } catch (logErr) {
+          console.warn('ContactForm: error while logging fetch error', logErr);
+        }
+        throw err;
       } finally {
         clearTimeout(timeout);
       }
@@ -208,19 +230,25 @@ const ContactForm = ({ contactFormRef }) => {
   };
 
   return (
-  <section ref={contactFormRef} className="py-12 px-4 sm:px-6 bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl md:rounded-3xl lg:rounded-3xl shadow-2xl">
+    <section
+      ref={contactFormRef}
+      className="py-12 px-4 sm:px-6"
+    >
       <div className="container max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">
         {/* Image section */}
         <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-          <img src={blog01} alt="Contact Us" className="rounded-xl shadow-lg max-h-96 object-cover border-2 border-black" style={{ background: '#fff' }} />
+          <img
+            src={blog01}
+            alt="Contact Us"
+            className="rounded-xl shadow-lg max-h-96 object-cover border-2 border-indigo-200 bg-white"
+          />
         </div>
         {/* Form section */}
         <div className="w-full md:w-1/2">
-          <div className="rounded-2xl overflow-hidden shadow-xl" style={{ background: '#fff', border: '2px solid #111', color: '#111' }}>
+          <div className="rounded-2xl overflow-hidden shadow-2xl bg-white" style={{ border: '2px solid #6366f1', color: '#0b1220' }}>
             <div className="px-6 py-8">
               <motion.h2
-                className="text-3xl sm:text-4xl font-extrabold text-center mb-8 tracking-tight"
-                style={{ color: '#111' }}
+                className="text-3xl sm:text-4xl font-extrabold text-center mb-8 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-indigo-800"
                 variants={itemVariants}
                 id="contact-form-heading"
               >
@@ -241,8 +269,14 @@ const ContactForm = ({ contactFormRef }) => {
                   </div>
                 </div>
               )}
-              <form id="contactForm" data-gtm-event="contact_form_submit" onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-7" aria-labelledby="contact-form-heading">
-                <hr className="mb-6 border-t border-gray-200/60" />
+              <form
+                id="contactForm"
+                data-gtm-event="contact_form_submit"
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-5 sm:space-y-7"
+                aria-labelledby="contact-form-heading"
+              >
+                <hr className="mb-6 border-t border-indigo-200/60" />
                 {/* Honeypot field for bots */}
                 <input
                   id="contact-honeypot"
@@ -256,7 +290,7 @@ const ContactForm = ({ contactFormRef }) => {
                   className="hidden"
                 />
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-black" htmlFor="name">Name</label>
+                  <label className="block text-sm font-semibold mb-1" htmlFor="name" style={{ color: '#0b1220' }}>Name</label>
                   <input
                     id="name"
                     {...register('name', {
@@ -265,7 +299,8 @@ const ContactForm = ({ contactFormRef }) => {
                     })}
                     type="text"
                     autoComplete="name"
-                    className={`w-full px-4 py-2 rounded-lg border-2 border-black focus:ring-2 focus:ring-blue-500 focus:border-blue-700 bg-white text-black ${errors.name ? 'border-red-500' : ''}`}
+                    className={`w-full px-4 py-2 rounded-lg border-2 border-indigo-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-700 bg-white placeholder-gray-400 ${errors.name ? 'border-red-500' : ''}`}
+                    style={{ color: '#0b1220' }}
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name ? 'name-error' : undefined}
                   />
@@ -273,7 +308,7 @@ const ContactForm = ({ contactFormRef }) => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
-                    <label className="block text-sm font-semibold mb-1 text-black" htmlFor="email">Email</label>
+                      <label className="block text-sm font-semibold mb-1" htmlFor="email" style={{ color: '#0b1220' }}>Email</label>
                     <input
                       id="email"
                       {...register('email', {
@@ -285,14 +320,15 @@ const ContactForm = ({ contactFormRef }) => {
                       })}
                       type="email"
                       autoComplete="email"
-                      className={`w-full px-4 py-2 rounded-lg border-2 border-black focus:ring-2 focus:ring-blue-500 focus:border-blue-700 bg-white text-black ${errors.email ? 'border-red-500' : ''}`}
+                      className={`w-full px-4 py-2 rounded-lg border-2 border-indigo-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-700 bg-white placeholder-gray-400 ${errors.email ? 'border-red-500' : ''}`}
+                      style={{ color: '#0b1220' }}
                       aria-invalid={!!errors.email}
                       aria-describedby={errors.email ? 'email-error' : undefined}
                     />
                     {errors.email && <p id="email-error" className="text-red-500 text-xs sm:text-sm mt-1">{errors.email.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-1 text-black" htmlFor="phone">Phone</label>
+                    <label className="block text-sm font-semibold mb-1" htmlFor="phone" style={{ color: '#0b1220' }}>Phone</label>
                     <input
                       id="phone"
                       {...register('phone', {
@@ -304,7 +340,8 @@ const ContactForm = ({ contactFormRef }) => {
                       })}
                       type="tel"
                       autoComplete="tel"
-                      className={`w-full px-4 py-2 rounded-lg border-2 border-black focus:ring-2 focus:ring-blue-500 focus:border-blue-700 bg-white text-black ${errors.phone ? 'border-red-500' : ''}`}
+                      className={`w-full px-4 py-2 rounded-lg border-2 border-indigo-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-700 bg-white placeholder-gray-400 ${errors.phone ? 'border-red-500' : ''}`}
+                      style={{ color: '#0b1220' }}
                       aria-invalid={!!errors.phone}
                       aria-describedby={errors.phone ? 'phone-error' : undefined}
                     />
@@ -312,23 +349,24 @@ const ContactForm = ({ contactFormRef }) => {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-black" htmlFor="interest">Area of Interest</label>
+                  <label className="block text-sm font-semibold mb-1" htmlFor="interest" style={{ color: '#0b1220' }}>Area of Interest</label>
                   <select
                     id="interest"
                     {...register('interest', { required: 'Please select an area of interest' })}
-                    className={`w-full px-4 py-2 rounded-lg border-2 border-black focus:ring-2 focus:ring-blue-500 focus:border-blue-700 bg-white text-black ${errors.interest ? 'border-red-500' : ''}`}
+                    className={`w-full px-4 py-2 rounded-lg border-2 border-indigo-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-700 bg-white ${errors.interest ? 'border-red-500' : ''}`}
+                    style={{ color: '#0b1220' }}
                     aria-invalid={!!errors.interest}
                     aria-describedby={errors.interest ? 'interest-error' : undefined}
                   >
-                    <option value="" className="text-black">Select an option</option>
-                    <option value="equity" className="text-black">Equity</option>
-                    <option value="derivatives" className="text-black">Derivatives</option>
-                    <option value="commodity" className="text-black">Commodity</option>
+                    <option value="" className="text-gray-400">Select an option</option>
+                    <option value="equity" className="text-gray-900">Equity</option>
+                    <option value="derivatives" className="text-gray-900">Derivatives</option>
+                    <option value="commodity" className="text-gray-900">Commodity</option>
                   </select>
                   {errors.interest && <p id="interest-error" className="text-red-500 text-xs sm:text-sm mt-1">{errors.interest.message}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-black" htmlFor="message">Message</label>
+                  <label className="block text-sm font-semibold mb-1" htmlFor="message" style={{ color: '#0b1220' }}>Message</label>
                   <textarea
                     id="message"
                     {...register('message', {
@@ -337,7 +375,8 @@ const ContactForm = ({ contactFormRef }) => {
                     })}
                     rows={4}
                     autoComplete="off"
-                    className={`w-full px-4 py-2 rounded-lg border-2 border-black focus:ring-2 focus:ring-blue-500 focus:border-blue-700 bg-white text-black ${errors.message ? 'border-red-500' : ''}`}
+                    className={`w-full px-4 py-2 rounded-lg border-2 border-indigo-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-700 bg-white placeholder-gray-400 ${errors.message ? 'border-red-500' : ''}`}
+                    style={{ color: '#0b1220' }}
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? 'message-error' : undefined}
                   ></textarea>
@@ -346,7 +385,7 @@ const ContactForm = ({ contactFormRef }) => {
                 <motion.button
                   type="submit"
                   disabled={submitting}
-                  className={`shine-hover w-full py-3 rounded-lg shadow-md text-base font-semibold ${submitting ? 'bg-gray-500 cursor-not-allowed' : 'bg-gradient-to-r from-blue-500 to-purple-500'} text-white text-adaptive`}
+                  className={`shine-hover w-full py-3 rounded-lg shadow-md text-base font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${submitting ? 'bg-indigo-300 cursor-not-allowed' : 'bg-gradient-to-r from-indigo-600 to-indigo-800'} text-white`}
                   whileHover={{ scale: submitting ? 1 : 1.02, rotateY: submitting ? 0 : 10 }}
                   whileTap={{ scale: submitting ? 1 : 0.98 }}
                 >

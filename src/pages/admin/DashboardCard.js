@@ -34,18 +34,17 @@ const DashboardCard = ({ icon, title, value, color, to, onClick }) => {
 
   const Content = (
     <motion.div
-      className={`backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg flex items-center sm:items-center space-x-3 sm:space-x-4 hover:shadow-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full`}
-      style={{ background: 'var(--bg-muted)', border: '1px solid var(--bg-border)' }}
+      className={`p-4 sm:p-6 rounded-2xl shadow-2xl border-2 border-indigo-100 bg-white flex items-center sm:items-center space-x-3 sm:space-x-4 hover:shadow-indigo-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 w-full transition`}
       variants={cardVariants}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.98 }}
     >
-      <div className={`flex-shrink-0 flex items-center justify-center rounded-full ${token.bg} ${token.text} w-12 h-12 sm:w-14 sm:h-14 text-2xl sm:text-3xl`}> 
+      <div className={`flex-shrink-0 flex items-center justify-center rounded-full ${token.bg} ${token.text} w-12 h-12 sm:w-14 sm:h-14 text-2xl sm:text-3xl shadow`}> 
         {icon}
       </div>
       <div className="min-w-0">
-  <p className="text-sm font-medium text-adaptive truncate">{title}</p>
-  <p className="text-2xl sm:text-3xl font-extrabold text-adaptive mt-1 truncate">{formatNumber(value)}</p>
+        <p className="text-sm font-semibold text-indigo-700 truncate">{title}</p>
+        <p className="text-2xl sm:text-3xl font-extrabold text-indigo-900 mt-1 truncate">{formatNumber(value)}</p>
       </div>
     </motion.div>
   );

@@ -147,13 +147,13 @@ const ComplaintBox = () => {
   };
 
   return (
-    <div className="admin-section">
-      <h2 className="text-2xl font-bold text-white mb-4">Complaint Box Submission</h2>
+    <div className="admin-section bg-indigo-50 min-h-screen p-4 sm:p-8">
+      <h2 className="text-3xl font-bold text-indigo-700 mb-8 drop-shadow">Complaint Box Submission</h2>
 
       {loading ? (
-        <div className="p-6 bg-gray-800 rounded-lg shadow"><LoadingSpinner /></div>
+        <div className="p-6 bg-white rounded-2xl shadow-2xl border-2 border-indigo-100 flex justify-center"><LoadingSpinner /></div>
       ) : complaints.length === 0 ? (
-        <div className="p-6 bg-gray-800 rounded-lg shadow text-gray-300">No complaints submitted yet.</div>
+        <div className="p-6 bg-white rounded-2xl shadow-2xl border-2 border-indigo-100 text-gray-500">No complaints submitted yet.</div>
       ) : (
         <>
           {/* Delete confirmation dialog */}
@@ -206,99 +206,99 @@ const ComplaintBox = () => {
             </div>
           )}
           {/* Desktop / Tablet table */}
-          <div className="hidden md:block overflow-x-auto bg-gray-800 rounded-lg shadow custom-scrollbar">
+          <div className="hidden md:block overflow-x-auto bg-white rounded-2xl shadow-2xl border-2 border-indigo-100 custom-scrollbar">
             <div className="table-responsive">
-            <table className="min-w-full text-sm text-left text-gray-300">
-              <thead className="bg-gray-700 text-xs text-gray-200 uppercase tracking-wider">
-                <tr>
-                  <th className="px-6 py-3">Date</th>
-                  <th className="px-6 py-3">Name</th>
-                  <th className="px-6 py-3">Email / Client ID</th>
-                  <th className="px-6 py-3">Mobile</th>
-                  <th className="px-6 py-3">Type</th>
-                  <th className="px-6 py-3">Description</th>
-                  <th className="px-6 py-3">Preferred Resolution</th>
-                  <th className="px-6 py-3">Status</th>
-                  <th className="px-6 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {complaints.map((c) => (
-                  <tr key={c.id} className="border-b border-gray-700 hover:bg-gray-600/50 align-top">
-                    <td className="px-6 py-4 whitespace-nowrap">{c.timestamp ? new Date(c.timestamp).toLocaleString() : '-'}</td>
-                    <td className="px-6 py-4 font-medium break-words">{c.name || '-'}</td>
-                    <td className="px-6 py-4 break-words">{c.email || '-'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{c.mobile || '-'}</td>
-                    <td className="px-6 py-4 break-words">{c.complaintType || '-'}</td>
-                    <td className="px-6 py-4 max-w-xs">
-                      <div
-                        className={`relative whitespace-pre-wrap break-words break-all ${
-                          expandedDesc[c.id] ? '' : 'max-h-24 overflow-hidden'
-                        }`}
-                        title={c.description || ''}
-                      >
-                        {c.description || '-'}
-                      </div>
-                      {isLong(c.description) && (
-                        <button
-                          type="button"
-                          onClick={() => toggleDesc(c.id)}
-                          className="mt-2 text-xs text-blue-400 hover:text-blue-300 focus:outline-none"
-                        >
-                          {expandedDesc[c.id] ? 'Show less' : 'Show more'}
-                        </button>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 max-w-xs">
-                      <div
-                        className={`relative whitespace-pre-wrap break-words break-all ${
-                          expandedRes[c.id] ? '' : 'max-h-24 overflow-hidden'
-                        }`}
-                        title={c.resolution || ''}
-                      >
-                        {c.resolution || '-'}
-                      </div>
-                      {isLong(c.resolution) && (
-                        <button
-                          type="button"
-                          onClick={() => toggleRes(c.id)}
-                          className="mt-2 text-xs text-blue-400 hover:text-blue-300 focus:outline-none"
-                        >
-                          {expandedRes[c.id] ? 'Show less' : 'Show more'}
-                        </button>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${getStatusBadgeClass(c.status)}`}>
-                        {c.status || 'New'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <select
-                        value={c.status || 'New'}
-                        onChange={(e) => handleStatusChange(c.id, e.target.value)}
-                        className="bg-gray-700 border border-gray-600 rounded-md p-1 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="New">New</option>
-                        <option value="In Review">In Review</option>
-                        <option value="Resolved">Resolved</option>
-                        <option value="Closed">Closed</option>
-                      </select>
-                    </td>
+              <table className="min-w-full text-sm text-left text-gray-700">
+                <thead className="bg-indigo-100 text-xs text-indigo-700 uppercase tracking-wider border-b-2 border-indigo-200">
+                  <tr>
+                    <th className="px-6 py-3">Date</th>
+                    <th className="px-6 py-3">Name</th>
+                    <th className="px-6 py-3">Email / Client ID</th>
+                    <th className="px-6 py-3">Mobile</th>
+                    <th className="px-6 py-3">Type</th>
+                    <th className="px-6 py-3">Description</th>
+                    <th className="px-6 py-3">Preferred Resolution</th>
+                    <th className="px-6 py-3">Status</th>
+                    <th className="px-6 py-3">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {complaints.map((c) => (
+                    <tr key={c.id} className="border-b border-indigo-100 hover:bg-indigo-50 align-top transition">
+                      <td className="px-6 py-4 whitespace-nowrap">{c.timestamp ? new Date(c.timestamp).toLocaleString() : '-'}</td>
+                      <td className="px-6 py-4 font-medium break-words">{c.name || '-'}</td>
+                      <td className="px-6 py-4 break-words">{c.email || '-'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{c.mobile || '-'}</td>
+                      <td className="px-6 py-4 break-words">{c.complaintType || '-'}</td>
+                      <td className="px-6 py-4 max-w-xs">
+                        <div
+                          className={`relative whitespace-pre-wrap break-words break-all ${
+                            expandedDesc[c.id] ? '' : 'max-h-24 overflow-hidden'
+                          }`}
+                          title={c.description || ''}
+                        >
+                          {c.description || '-'}
+                        </div>
+                        {isLong(c.description) && (
+                          <button
+                            type="button"
+                            onClick={() => toggleDesc(c.id)}
+                            className="mt-2 text-xs text-indigo-600 hover:text-indigo-500 focus:outline-none"
+                          >
+                            {expandedDesc[c.id] ? 'Show less' : 'Show more'}
+                          </button>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 max-w-xs">
+                        <div
+                          className={`relative whitespace-pre-wrap break-words break-all ${
+                            expandedRes[c.id] ? '' : 'max-h-24 overflow-hidden'
+                          }`}
+                          title={c.resolution || ''}
+                        >
+                          {c.resolution || '-'}
+                        </div>
+                        {isLong(c.resolution) && (
+                          <button
+                            type="button"
+                            onClick={() => toggleRes(c.id)}
+                            className="mt-2 text-xs text-indigo-600 hover:text-indigo-500 focus:outline-none"
+                          >
+                            {expandedRes[c.id] ? 'Show less' : 'Show more'}
+                          </button>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${getStatusBadgeClass(c.status)}`}>
+                          {c.status || 'New'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <select
+                          value={c.status || 'New'}
+                          onChange={(e) => handleStatusChange(c.id, e.target.value)}
+                          className="bg-indigo-50 border border-indigo-200 rounded-md p-1 text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                        >
+                          <option value="New">New</option>
+                          <option value="In Review">In Review</option>
+                          <option value="Resolved">Resolved</option>
+                          <option value="Closed">Closed</option>
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 
           {/* Mobile cards */}
           <div className="md:hidden space-y-4">
             {complaints.map((c) => (
-              <div key={c.id} className="bg-gray-800 rounded-lg shadow p-4 text-gray-200">
+              <div key={c.id} className="bg-white rounded-2xl shadow-2xl border-2 border-indigo-100 p-4 text-indigo-900">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="text-sm text-gray-400">{c.timestamp ? new Date(c.timestamp).toLocaleString() : '-'}</div>
+                    <div className="text-sm text-indigo-400">{c.timestamp ? new Date(c.timestamp).toLocaleString() : '-'}</div>
                     <div className="font-semibold">{c.name || '-'}</div>
                   </div>
                   <span className={`px-2 py-1 rounded-full text-xs font-semibold text-white h-fit ${getStatusBadgeClass(c.status)}`}>
@@ -306,18 +306,18 @@ const ComplaintBox = () => {
                   </span>
                 </div>
 
-                <div className="mt-2 text-sm break-words break-all"><span className="text-gray-400">Email/ID:</span> {c.email || '-'}</div>
-                <div className="mt-1 text-sm break-words break-all"><span className="text-gray-400">Mobile:</span> {c.mobile || '-'}</div>
-                <div className="mt-1 text-sm break-words break-all"><span className="text-gray-400">Type:</span> {c.complaintType || '-'}</div>
+                <div className="mt-2 text-sm break-words break-all"><span className="text-indigo-400">Email/ID:</span> {c.email || '-'}</div>
+                <div className="mt-1 text-sm break-words break-all"><span className="text-indigo-400">Mobile:</span> {c.mobile || '-'}</div>
+                <div className="mt-1 text-sm break-words break-all"><span className="text-indigo-400">Type:</span> {c.complaintType || '-'}</div>
 
                 <div className="mt-3">
-                  <div className="text-gray-300 text-xs uppercase">Description</div>
+                  <div className="text-indigo-500 text-xs uppercase">Description</div>
                   <div className={`mt-1 text-sm whitespace-pre-wrap break-words break-all ${expandedDesc[c.id] ? '' : 'max-h-24 overflow-hidden'}`}>{c.description || '-'}</div>
                   {isLong(c.description) && (
                     <button
                       type="button"
                       onClick={() => toggleDesc(c.id)}
-                      className="mt-1 text-xs text-blue-400 hover:text-blue-300"
+                      className="mt-1 text-xs text-indigo-600 hover:text-indigo-500"
                     >
                       {expandedDesc[c.id] ? 'Show less' : 'Show more'}
                     </button>
@@ -325,13 +325,13 @@ const ComplaintBox = () => {
                 </div>
 
                 <div className="mt-3">
-                  <div className="text-gray-300 text-xs uppercase">Preferred Resolution</div>
+                  <div className="text-indigo-500 text-xs uppercase">Preferred Resolution</div>
                   <div className={`mt-1 text-sm whitespace-pre-wrap break-words break-all ${expandedRes[c.id] ? '' : 'max-h-24 overflow-hidden'}`}>{c.resolution || '-'}</div>
                   {isLong(c.resolution) && (
                     <button
                       type="button"
                       onClick={() => toggleRes(c.id)}
-                      className="mt-1 text-xs text-blue-400 hover:text-blue-300"
+                      className="mt-1 text-xs text-indigo-600 hover:text-indigo-500"
                     >
                       {expandedRes[c.id] ? 'Show less' : 'Show more'}
                     </button>
@@ -339,11 +339,11 @@ const ComplaintBox = () => {
                 </div>
 
                 <div className="mt-4">
-                  <label className="text-xs text-gray-400 mr-2">Update status:</label>
+                  <label className="text-xs text-indigo-400 mr-2">Update status:</label>
                   <select
                     value={c.status || 'New'}
                     onChange={(e) => handleStatusChange(c.id, e.target.value)}
-                    className="bg-gray-700 border border-gray-600 rounded-md p-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    className="bg-indigo-50 border border-indigo-200 rounded-md p-2 text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full transition"
                   >
                     <option value="New">New</option>
                     <option value="In Review">In Review</option>

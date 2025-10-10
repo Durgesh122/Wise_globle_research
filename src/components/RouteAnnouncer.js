@@ -63,56 +63,35 @@ function useSpeechSynthesis({ lang, rate, pitch, voiceName, synthErrorCountRef, 
   useEffect(() => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
     const loadVoices = () => {
-      const availableVoices = window.speechSynthesis.getVoices();
-      setVoices(availableVoices);
+      try {
+        const vs = window.speechSynthesis.getVoices() || [];
+        setVoices(vs);
+      } catch (e) {
+        setVoices([]);
+      }
     };
     loadVoices();
-    window.speechSynthesis.onvoiceschanged = loadVoices;
+    if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []);
 
-  const speak = useCallback((text, { onstart, onend, onerror } = {}) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    if (synthErrorCountRef.current > SPEECH_SYNTHESIS_MAX_ERRORS && (Date.now() - (lastSynthErrorAtRef.current || 0)) < SPEECH_SYNTHESIS_ERROR_COOLDOWN) {
-      console.warn('Skipping speak due to recent speech synthesis errors.');
-      if (typeof onerror === 'function') onerror(new Error('speech-synthesis-cooldown'));
-      return;
+  const pause = () => {
+    if (typeof window !== 'undefined' && window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+      setIsPaused(true);
     }
+  };
+
+  const speak = useCallback((text, { onstart, onend, onerror } = {}) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window) || !text) return null;
     try {
-      const languageCode = lang === 'hi' ? 'hi-IN' : 'en-US';
-      
-      if (voices.length > 0) {
-        const hasVoiceForLang = voices.some(v => v.lang === languageCode || v.lang.startsWith(`${lang}-`));
-        if (!hasVoiceForLang) {
-          console.warn(`No speech synthesis voice available for language: ${lang}. Please install a voice for this language in your system settings.`);
-          if (typeof onerror === 'function') onerror(new Error('language-unavailable'));
-          return;
-        }
-      }
-
       const utter = new SpeechSynthesisUtterance(text);
-
-      const cleanup = () => {
-        utteranceRef.current = utteranceRef.current.filter(u => u !== utter);
-      };
-
-      utter.lang = languageCode;
-      utter.rate = rate;
-      utter.pitch = pitch;
-
-      let voiceToUse = voices.find(v => v.name === voiceName);
-
-      if (!voiceToUse && voiceName === '') {
-        if (lang === 'hi') {
-            voiceToUse = voices.find(v => v.lang === 'hi-IN' && v.name.includes('Swara')) || 
-                         voices.find(v => v.lang === 'hi-IN' && v.name.includes('Online')) ||
-                         voices.find(v => v.lang === 'hi-IN');
-        }
+      utter.rate = pitch || 1; // note: using pitch variable for compatibility; outer code uses rate/pitch
+      utter.pitch = pitch || 1;
+      // try to pick matching voice if voiceName provided
+      if (voiceName && voices && voices.length) {
+        const v = voices.find(vv => vv.name === voiceName);
+        if (v) utter.voice = v;
       }
-      
-      if (voiceToUse) {
-        utter.voice = voiceToUse;
-      }
-
       utter.onstart = (e) => {
         setIsSpeaking(true);
         setIsPaused(false);
@@ -121,51 +100,21 @@ function useSpeechSynthesis({ lang, rate, pitch, voiceName, synthErrorCountRef, 
       utter.onend = (e) => {
         setIsSpeaking(false);
         setIsPaused(false);
-        cleanup();
         if (typeof onend === 'function') onend(e);
       };
       utter.onerror = (e) => {
         setIsSpeaking(false);
         setIsPaused(false);
-        // Some browsers emit 'interrupted' when user gestures or other TTS preempts.
-        // Treat 'interrupted' as non-fatal: cleanup and call onend so queues continue.
-        const errCode = e && e.error ? e.error : (e && e.name) || 'unknown';
-        if (errCode === 'interrupted') {
-          console.warn('Speech synthesis interrupted; continuing with queue.');
-          cleanup();
-          // Call onend to mimic natural end so higher-level queue logic proceeds.
-          if (typeof onend === 'function') onend(e);
-          return;
-        }
-
-        if (e && e.error) console.error(`An error occurred during speech synthesis: ${e.error}`, e);
-        else console.error('An error occurred during speech synthesis.', e);
-
-        synthErrorCountRef.current = (synthErrorCountRef.current || 0) + 1;
-        lastSynthErrorAtRef.current = Date.now();
-        if (synthErrorCountRef.current > SPEECH_SYNTHESIS_MAX_ERRORS && (Date.now() - lastSynthErrorAtRef.current) < SPEECH_SYNTHESIS_ERROR_COOLDOWN) {
-          console.warn('Multiple speech synthesis errors detected; pausing announcements temporarily.');
-        }
-        cleanup();
         if (typeof onerror === 'function') onerror(e);
       };
-      
       utteranceRef.current.push(utter);
       window.speechSynthesis.speak(utter);
-
       return utter;
     } catch (err) {
-      console.error('speak() failed', err);
       if (typeof onerror === 'function') onerror(err);
+      return null;
     }
-  }, [lang, rate, pitch, voiceName, voices, synthErrorCountRef, lastSynthErrorAtRef]);
-
-  const pause = () => {
-    if (typeof window !== 'undefined' && window.speechSynthesis.speaking) {
-      window.speechSynthesis.pause();
-      setIsPaused(true);
-    }
-  };
+  }, [voices, voiceName, pitch]);
 
   const resume = () => {
     if (typeof window !== 'undefined' && window.speechSynthesis.paused) {
@@ -216,6 +165,7 @@ export default function RouteAnnouncer() {
     const p = pathname.toLowerCase();
     return p === '/admin' || p.startsWith('/admin/') || p.includes('/admin-panel') || p.includes('/wp-admin');
   })();
+  
   const [message, setMessage] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [accessibilityOpen, setAccessibilityOpen] = useState(() => {
@@ -383,28 +333,58 @@ export default function RouteAnnouncer() {
   const markUserGestureAndFlushRef = useRef(null);
   if (!markUserGestureAndFlushRef.current) {
     markUserGestureAndFlushRef.current = () => {
+      // mark that a user gesture occurred. Audio resume/creation must happen
+      // inside a user gesture — handlers that receive click/touch should call
+      // tryInitOrResumeAudio directly. This ref only records the gesture.
       userGestureRef.current = true;
-      try {
-        const ctx = beepCtxRef.current;
-        if (ctx && ctx.state === 'suspended') try { ctx.resume(); } catch(_) {}
-        if (beepPendingRef.current) {
-          try { playBeep(); } catch(_) {}
-          beepPendingRef.current = false;
-        }
-      } catch(_) {}
     };
   }
   const markUserGestureAndFlush = markUserGestureAndFlushRef.current;
+
+  // Helper to create or resume AudioContext inside a user gesture. Safe to call
+  // from click/touch handlers — it will attempt to create/resume and set
+  // beepPendingRef if creation is blocked.
+  const tryInitOrResumeAudio = useCallback(() => {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+      if (!beepCtxRef.current) {
+        try {
+          beepCtxRef.current = new AC();
+        } catch (err) {
+          // creation blocked
+          beepPendingRef.current = true;
+          return false;
+        }
+      }
+      const ctx = beepCtxRef.current;
+      if (ctx && ctx.state === 'suspended' && typeof ctx.resume === 'function') {
+        try { ctx.resume(); } catch (err) { /* may still be blocked */ }
+      }
+      // If we resumed and had pending beep, play it now
+      if (beepPendingRef.current) {
+        try { playBeep(); } catch(_) {}
+        beepPendingRef.current = false;
+      }
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }, [playBeep]);
 
   // Listen for external 'open-speaker-panel' events (dispatched by other controls)
   // so the panel opens when mobile/floating buttons dispatch the event.
   const panelRef = useRef(null);
   useEffect(() => {
+    // The 'open-speaker-panel' event may be dispatched programmatically and
+    // therefore is not guaranteed to be a user gesture. Creating or resuming
+    // an AudioContext here can trigger the browser autoplay policy error
+    // "The AudioContext was not allowed to start...". To avoid that, keep
+    // audio init/resume only inside actual user gesture handlers (see the
+    // touchstart/click first-touch listeners below that call
+    // tryInitOrResumeAudio()). Here we only open the panel and set focus.
     if (typeof document === 'undefined') return undefined;
     const onOpen = (e) => {
-      try {
-        markUserGestureAndFlush();
-      } catch (_) {}
       setMenuOpen(true);
       // focus the panel for keyboard users (if available)
       try { if (panelRef.current && typeof panelRef.current.focus === 'function') panelRef.current.focus(); } catch(_) {}
@@ -416,7 +396,7 @@ export default function RouteAnnouncer() {
       try { document.removeEventListener('open-speaker-panel', onOpen); } catch(_) {}
       try { if (window && window.removeEventListener) window.removeEventListener('open-speaker-panel', onOpen); } catch(_) {}
     };
-  }, [markUserGestureAndFlush]);
+  }, []);
 
   // Observe accessibility open flag so we don't render floating controls when AccessibilityMenu is active
   useEffect(() => {
@@ -452,19 +432,24 @@ export default function RouteAnnouncer() {
     // Note: we intentionally DO NOT auto-open the panel via custom events. The panel must open
     // only when the user clicks/taps the button.
     const onFirstTouch = (e) => {
-      try { markUserGestureAndFlush(); } catch (_) {}
+      try {
+          // We must create/resume AudioContext inside this user gesture
+          tryInitOrResumeAudio();
+          markUserGestureAndFlush();
+      } catch (_) {}
       // remove after first use
-      document.removeEventListener('touchstart', onFirstTouch);
-      document.removeEventListener('click', onFirstTouch);
+      try { document.removeEventListener('touchstart', onFirstTouch); } catch(_) {}
+      try { document.removeEventListener('click', onFirstTouch); } catch(_) {}
     };
-    document.addEventListener('touchstart', onFirstTouch, { passive: true });
-    document.addEventListener('click', onFirstTouch, { passive: true });
+    // use non-passive listeners so this handler runs as an active user gesture
+    document.addEventListener('touchstart', onFirstTouch, { passive: false });
+    document.addEventListener('click', onFirstTouch, { passive: false });
 
     return () => {
       document.removeEventListener('touchstart', onFirstTouch);
       document.removeEventListener('click', onFirstTouch);
     };
-  }, [markUserGestureAndFlush]);
+  }, [markUserGestureAndFlush, tryInitOrResumeAudio]);
 
   // Add a body attribute while the panel is open so global CSS can hide page logo
   useEffect(() => {
@@ -541,9 +526,9 @@ export default function RouteAnnouncer() {
     padding: '0.5rem 0.75rem',
     fontSize: '14px',
     borderRadius: '8px',
-    border: '1px solid #e5e7eb',
-    background: '#f3f4f6',
-    color: '#0f172a',
+    border: '1px solid #e9e5ff',
+    background: '#ffffff',
+    color: '#000000',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -565,6 +550,21 @@ export default function RouteAnnouncer() {
   // Peek state: when true, the button remains partially visible (small peek) and icon is shown
   const [peek, setPeek] = useState(false);
 
+  // Hide the route announcer on small screens (mobile)
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const mq = window.matchMedia('(max-width: 768px)');
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else mq.addListener(onChange);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', onChange);
+      else mq.removeListener(onChange);
+    };
+  }, []);
+
 
 
   // Small floating button style for the Route Announcer toggle
@@ -581,8 +581,8 @@ export default function RouteAnnouncer() {
     padding: '10px 14px',
     height: '56px',
     borderRadius: '12px',
-    background: 'var(--primary-green, #158862d3)',
-    color: '#fff',
+  background: 'linear-gradient(135deg,#6366f1 100%,#6366f1 100%)',
+    color: '#6366f1',
     fontWeight: 700,
     cursor: 'pointer',
     boxShadow: '0 6px 18px rgba(2,6,23,0.18)',
@@ -640,9 +640,40 @@ export default function RouteAnnouncer() {
     } catch (_) {}
   }, []);
 
+  // When opened on mobile, focus the panel so keyboard users land inside and
+  // resume any audio contexts safely after the user gesture that opened it.
+  useEffect(() => {
+    try {
+      if (isMobile && menuOpen && panelRef.current && typeof panelRef.current.focus === 'function') {
+        panelRef.current.focus();
+      }
+    } catch (_) {}
+  }, [isMobile, menuOpen]);
+
+  // When the panel opens on mobile as a result of a user gesture, speak the announcement
+  useEffect(() => {
+    if (!menuOpen || !isMobile) return;
+    try {
+      const finalMsg = getAnnouncementMessage(lang, pathname);
+      if (typeof window !== 'undefined' && voiceEnabledRef.current) {
+        // speak respects selected voice/rate/pitch
+        speak(finalMsg);
+      }
+      if (beepEnabledRef.current) {
+        playBeep();
+      }
+    } catch (_) {}
+  }, [menuOpen, isMobile, lang, pathname, speak, playBeep]);
+
+  // do not render the floating toggle on small/mobile screens (keep component mounted so it can
+  // listen for open-speaker-panel and user-gesture events dispatched by MobileActionTray)
+
   return (
     <div>
       <div aria-live="polite" aria-atomic="true" style={visuallyHiddenStyle}>{message}</div>
+      {menuOpen && isMobile && (
+        <div aria-hidden="true" onClick={() => setMenuOpen(false)} style={{position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.35)', zIndex: 9000}} />
+      )}
       {menuOpen && (
         <div
           ref={panelRef}
@@ -652,50 +683,72 @@ export default function RouteAnnouncer() {
           aria-label={lang==='hi' ? 'स्पीकर आइकन पैनल' : 'Speaker icon panel'}
           onMouseEnter={() => setMenuOpen(true)}
           onMouseLeave={() => setMenuOpen(false)}
-          style={{
-            position: 'fixed',
-            // place panel above the button and aligned with accessibility panel
-            bottom: '288px',
-            right: '24px',
-            zIndex: 9001,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-            padding: '0.25rem',
-            borderRadius: '12px',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-            alignItems: 'center',
-            background: '#fff',
-            border: '2px solid #22741aff',
-            backdropFilter: 'blur(6px)',
-            minWidth: '160px',
-            maxWidth: '260px',
-          }}
-        >
-          <button
-            type="button"
-            aria-label={lang==='hi' ? 'बंद करें' : 'Close'}
-            onClick={() => { setMenuOpen(false); }}
-            style={{
-              position: 'absolute',
-              top: '-10px',
-              right: '-10px',
-              width: '28px',
-              height: '28px',
-              borderRadius: '9999px',
+            style={ isMobile ? {
+              position: 'fixed',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 9001,
               display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              padding: '0.5rem',
+              borderRadius: '12px 12px 0 0',
+              boxShadow: '0 -12px 34px rgba(99,102,241,0.12)',
               alignItems: 'center',
-              justifyContent: 'center',
-              background: '#ffffff',
-              border: '1px solid #e6e6e6',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-              cursor: 'pointer',
-              zIndex: 9002
+              background: '#fff',
+              borderTop: '1px solid rgba(99,102,241,0.08)',
+              backdropFilter: 'blur(6px)',
+              minWidth: '100%',
+              maxWidth: '100%',
+              height: '48vh',
+              overflow: 'auto',
+            } : {
+              position: 'fixed',
+              // place panel above the button and aligned with accessibility panel
+              bottom: '288px',
+              right: '24px',
+              zIndex: 9001,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              padding: '0.15rem',
+              borderRadius: '12px',
+              boxShadow: '0 12px 34px rgba(99,102,241,0.08)',
+              alignItems: 'center',
+              background: '#fff',
+              border: '1px solid rgba(99,102,241,0.06)',
+              backdropFilter: 'blur(6px)',
+              minWidth: '140px',
+              maxWidth: '220px',
             }}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setMenuOpen(false); } }}
-          >
-            <FiX aria-hidden="true" />
-          </button>
+        >
+          {/* inner purple-bordered card to match AccessibilityMenu */}
+          <div style={{width: '100%', boxSizing: 'border-box', borderRadius: '10px', padding: isMobile ? '10px' : '8px', background: '#fff', border: '2px solid #6366f1', boxShadow: '0 12px 34px rgba(99,102,241,0.08)'}}>
+            <button
+              type="button"
+              aria-label={lang==='hi' ? 'बंद करें' : 'Close'}
+              onClick={() => { setMenuOpen(false); }}
+              style={{
+                position: 'absolute',
+                top: isMobile ? '10px' : '-10px',
+                right: isMobile ? '12px' : '-10px',
+                width: isMobile ? '36px' : '28px',
+                height: isMobile ? '36px' : '28px',
+                borderRadius: '9999px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#ffffff',
+                border: '1px solid #e6e6e6',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                cursor: 'pointer',
+                zIndex: 9002
+              }}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setMenuOpen(false); } }}
+            >
+              <FiX aria-hidden="true" style={{color: '#6366f1'}} />
+            </button>
           <button
             type="button"
             aria-pressed={voiceEnabled}
@@ -711,11 +764,11 @@ export default function RouteAnnouncer() {
             }}
             title={lang==='hi' ? (voiceEnabled ? 'आवाज़ बंद करें' : 'आवाज़ चालू करें') : (voiceEnabled ? 'Voice Off' : 'Voice On')}
             aria-label={lang==='hi' ? (voiceEnabled ? 'आवाज़ बंद करें' : 'आवाज़ चालू करें') : (voiceEnabled ? 'Voice Off' : 'Voice On')}
-            style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            style={{...baseButtonStyle, width: isMobile ? '44px' : '36px', height: isMobile ? '44px' : '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
             onMouseEnter={(e)=> { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#e6e9ee'; }}
             onMouseLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#f3f4f6'; }}
           >
-            <FaVolumeUp aria-hidden="true" />
+            <FaVolumeUp aria-hidden="true" style={{color: '#6366f1'}} />
           </button>
 
           <button
@@ -733,11 +786,11 @@ export default function RouteAnnouncer() {
             }}
             title={lang==='hi' ? (beepEnabled ? 'बीप बंद करें' : 'बीप चालू करें') : (beepEnabled ? 'Beep Off' : 'Beep On')}
             aria-label={lang==='hi' ? (beepEnabled ? 'बीप बंद करें' : 'बीप चालू करें') : (beepEnabled ? 'Beep Off' : 'Beep On')}
-            style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            style={{...baseButtonStyle, width: isMobile ? '44px' : '36px', height: isMobile ? '44px' : '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
             onMouseEnter={(e)=> { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#e6e9ee'; }}
             onMouseLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#f3f4f6'; }}
           >
-            <FaBell aria-hidden="true" />
+            <FaBell aria-hidden="true" style={{color: '#6366f1'}} />
           </button>
 
           <button
@@ -745,11 +798,11 @@ export default function RouteAnnouncer() {
             onClick={()=> isReadingAll ? stopReading() : startReading()}
             title={lang==='hi' ? (isReadingAll ? 'रोकें' : 'पूरा पढ़ें') : (isReadingAll ? 'Stop' : 'Read All')}
             aria-label={lang==='hi' ? (isReadingAll ? 'रोकें' : 'पूरा पढ़ें') : (isReadingAll ? 'Stop' : 'Read All')}
-            style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            style={{...baseButtonStyle, width: isMobile ? '44px' : '36px', height: isMobile ? '44px' : '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
             onMouseEnter={(e)=> { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#e6e9ee'; }}
             onMouseLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#f3f4f6'; }}
           >
-            {isReadingAll ? <FaStop aria-hidden="true" /> : <FaPlay aria-hidden="true" />}
+            {isReadingAll ? <FaStop aria-hidden="true" style={{color: '#6366f1'}} /> : <FaPlay aria-hidden="true" style={{color: '#6366f1'}} />}
           </button>
 
           <button
@@ -758,9 +811,9 @@ export default function RouteAnnouncer() {
             disabled={!isSpeaking || isPaused}
             title={lang==='hi' ? 'ठहरें' : 'Pause'}
             aria-label={lang==='hi' ? 'ठहरें' : 'Pause'}
-            style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
+            style={{...baseButtonStyle, width: isMobile ? '44px' : '36px', height: isMobile ? '44px' : '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
           >
-            <FaPause aria-hidden="true" />
+            <FaPause aria-hidden="true" style={{color: '#6366f1'}} />
           </button>
 
           <button
@@ -771,11 +824,11 @@ export default function RouteAnnouncer() {
             aria-label={lang==='hi' ? 'जारी रखें' : 'Resume'}
             style={{...baseButtonStyle, width: '36px', height: '36px', borderRadius: '8px', justifyContent: 'center', background: '#f3f4f6'}}
           >
-            <FaPlay aria-hidden="true" />
+            <FaPlay aria-hidden="true" style={{color: '#6366f1'}} />
           </button>
 
-          <div style={{width: '160px', padding: '0 0.25rem', boxSizing: 'border-box'}}>
-            <label htmlFor="voice-select" style={{fontSize: '12px', display: 'block', marginBottom: '4px', textAlign: 'center'}}>{lang === 'hi' ? 'आवाज़' : 'Voice'}</label>
+          <div style={{width: '140px', padding: '0 0.25rem', boxSizing: 'border-box'}}>
+            <label htmlFor="voice-select" style={{fontSize: '12px', display: 'block', marginBottom: '4px', textAlign: 'center', color: '#000000'}}>{lang === 'hi' ? 'आवाज़' : 'Voice'}</label>
             <select
               id="voice-select"
               value={voiceName}
@@ -796,8 +849,8 @@ export default function RouteAnnouncer() {
               style={{
                   ...baseButtonStyle,
                   width: '100%',
-                  padding: '0.35rem',
-                  color: '#0f172a',
+                  padding: '0.3rem',
+                  color: '#000000',
                   backgroundColor: '#fff',
                   fontSize: '13px'
                 }}
@@ -806,15 +859,15 @@ export default function RouteAnnouncer() {
               {voices
                   .filter(v => v.lang.startsWith(lang))
                   .map(voice => (
-                    <option key={voice.name} value={voice.name} style={{color: '#000', backgroundColor: '#FFF'}}>
+                    <option key={voice.name} value={voice.name} style={{color: '#000000', backgroundColor: '#FFF'}}>
                       {voice.name.length > 25 ? `${voice.name.substring(0,22)}...` : voice.name}
                     </option>
                   ))}
             </select>
           </div>
 
-          <div style={{width: '160px', padding: '0.25rem', boxSizing: 'border-box'}}>
-              <label htmlFor="rate-slider" style={{fontSize: '12px', display: 'block', marginBottom: '4px', textAlign: 'center'}}>{lang === 'hi' ? 'गति' : 'Rate'}: {rate.toFixed(1)}</label>
+          <div style={{width: '140px', padding: '0.25rem', boxSizing: 'border-box'}}>
+              <label htmlFor="rate-slider" style={{fontSize: '12px', display: 'block', marginBottom: '4px', textAlign: 'center', color: '#000000'}}>{lang === 'hi' ? 'गति' : 'Rate'}: {rate.toFixed(1)}</label>
               <input
                 type="range"
                 id="rate-slider"
@@ -827,8 +880,8 @@ export default function RouteAnnouncer() {
               />
           </div>
 
-          <div style={{width: '160px', padding: '0.25rem', boxSizing: 'border-box'}}>
-              <label htmlFor="pitch-slider" style={{fontSize: '12px', display: 'block', marginBottom: '4px', textAlign: 'center'}}>{lang === 'hi' ? 'पिच' : 'Pitch'}: {pitch.toFixed(1)}</label>
+          <div style={{width: '140px', padding: '0.25rem', boxSizing: 'border-box'}}>
+              <label htmlFor="pitch-slider" style={{fontSize: '12px', display: 'block', marginBottom: '4px', textAlign: 'center', color: '#000000'}}>{lang === 'hi' ? 'पिच' : 'Pitch'}: {pitch.toFixed(1)}</label>
               <input
                 type="range"
                 id="pitch-slider"
@@ -863,12 +916,12 @@ export default function RouteAnnouncer() {
           >
             {lang === 'hi' ? 'EN' : 'हिंदी'}
           </button>
-
+          </div>
         </div>
       )}
 
   {/* Small Route Announcer toggle button (right side) */}
-  {!isAdminPath && !accessibilityOpen && (
+  {!isAdminPath && !accessibilityOpen && !isMobile && (
           <button
             type="button"
             onClick={handleRouteAnnouncerToggle}
@@ -916,13 +969,13 @@ export default function RouteAnnouncer() {
           >
             <span style={{display: 'inline-flex', alignItems: 'center', gap: '8px', alignSelf: 'center'}}>
               {/* small attention badge */}
-              <span aria-hidden="true" style={{width: '10px', height: '10px', borderRadius: '99px', background: '#ff4757', boxShadow: '0 0 8px rgba(255,71,87,0.6)', marginLeft: '-10px', marginRight: '6px'}} />
+              <span aria-hidden="true" style={{width: '10px', height: '10px', borderRadius: '99px', background: '#ffffffff', boxShadow: '0 0 10px rgba(251, 251, 255, 1)', marginLeft: '-10px', marginRight: '6px'}} />
               {/* label is visually clipped by default; reveal on hover/focus by expanding button width; force English text */}
               {/* visually-hidden label for screen readers; keep aria-label/title on button */}
               <span ref={labelRef} className="sr-only" style={{fontSize: '15px'}}>Route Announcer</span>
               {/* speaker icon using FaVolumeUp; wrap in span so we can attach a ref to a DOM node */}
-              <span ref={iconRef} aria-hidden="true" style={{display: 'inline-flex', width: '20px', height: '20px', transition: 'opacity 220ms ease, transform 200ms ease', opacity: (peek ? 1 : 0)}}>
-                <FaVolumeUp />
+              <span ref={iconRef} aria-hidden="true" style={{display: 'inline-flex', width: '20px', height: '20px', transition: 'opacity 220ms ease, transform 200ms ease', opacity: (peek ? 1 : 0), color: '#ffffffff'}}>
+                <FaVolumeUp style={{color: 'inherit'}} />
               </span>
             </span>
           </button>

@@ -243,26 +243,26 @@ const AdminLogin = () => {
         <meta name="description" content="Admin Login page — Wise Global Research." />
         <link rel="canonical" href="https://wiseglobalresearch.com/adminlogin" />
       </Helmet>
-<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-yellow-50 px-2 sm:px-0">
+<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-indigo-100 px-2 sm:px-0">
   <motion.div
-        variants={{
-          hidden: { opacity: 0, y: 60, scale: 0.98 },
-          visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
-        }}
-        initial="hidden"
-        animate="visible"
-        className="relative p-6 rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-md text-adaptive bg-white flex flex-col items-center"
-        role="region"
-        aria-label="Admin login form"
-        style={{ minWidth: 0 }}
-      >
+    variants={{
+      hidden: { opacity: 0, y: 60, scale: 0.98 },
+      visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
+    }}
+    initial="hidden"
+    animate="visible"
+    className="relative p-6 rounded-2xl shadow-xl w-full max-w-[95vw] sm:max-w-md bg-white border border-indigo-200 flex flex-col items-center"
+    role="region"
+    aria-label="Admin login form"
+    style={{ minWidth: 0 }}
+  >
         {/* Back button */}
         <button
           type="button"
           onClick={() => navigate('/', { replace: true })}
-          className="absolute left-4 top-4 inline-flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none"
+          className="absolute left-4 top-4 inline-flex items-center justify-center p-2 rounded-md bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 focus:outline-none"
           aria-label="Go home"
-          style={{ color: textColor || undefined, backgroundColor: 'rgba(21, 146, 59, 0.9)' }}
+          style={{ color: textColor || undefined }}
         >
           <FaArrowLeft className="w-4 h-4" />
         </button>
@@ -327,66 +327,66 @@ const AdminLogin = () => {
         </motion.h2>
 
   <form onSubmit={handleLogin} className="flex flex-col gap-3 sm:gap-4 w-full max-w-xs sm:max-w-sm mx-auto">
-          <div className="relative">
-            <label htmlFor="email-input" className="sr-only">Email address</label>
-            <motion.input
-              id="email-input"
-              type="email"
-              placeholder={"Email address"}
-              className="px-3 py-2 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-300 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 w-full text-sm sm:text-base transition-all"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              variants={inputVariants}
-              whileHover="hover"
-              whileFocus="focus"
-              aria-label={"Email"}
-              autoComplete="email"
-            />
-            {errors.email && (
-              <p className="text-red-400 text-xs sm:text-sm mt-1" role="alert">
-                {errors.email}
-              </p>
-            )}
-          </div>
+    <div className="relative">
+      <label htmlFor="email-input" className="sr-only">Email address</label>
+      <motion.input
+        id="email-input"
+        type="email"
+        placeholder={"Email address"}
+        className="px-3 py-2 sm:px-4 sm:py-3 rounded-lg border border-indigo-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 w-full text-sm sm:text-base transition-all"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        variants={inputVariants}
+        whileHover="hover"
+        whileFocus="focus"
+        aria-label={"Email"}
+        autoComplete="email"
+      />
+      {errors.email && (
+        <p className="text-red-500 text-xs sm:text-sm mt-1" role="alert">
+          {errors.email}
+        </p>
+      )}
+    </div>
 
-          <div className="relative">
-            <label htmlFor="password-input" className="sr-only">Password</label>
-            <motion.input
-              id="password-input"
-              type="password"
-              placeholder={"Password"}
-              className="px-3 py-2 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-300 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 w-full text-sm sm:text-base transition-all"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              variants={inputVariants}
-              whileHover="hover"
-              whileFocus="focus"
-              aria-label={"Password"}
-              autoComplete="current-password"
-            />
-            {errors.password && (
-              <p className="text-red-400 text-xs sm:text-sm mt-1" role="alert">
-                {errors.password}
-              </p>
-            )}
-          </div>
+    <div className="relative">
+      <label htmlFor="password-input" className="sr-only">Password</label>
+      <motion.input
+        id="password-input"
+        type="password"
+        placeholder={"Password"}
+        className="px-3 py-2 sm:px-4 sm:py-3 rounded-lg border border-indigo-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 w-full text-sm sm:text-base transition-all"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        variants={inputVariants}
+        whileHover="hover"
+        whileFocus="focus"
+        aria-label={"Password"}
+        autoComplete="current-password"
+      />
+      {errors.password && (
+        <p className="text-red-500 text-xs sm:text-sm mt-1" role="alert">
+          {errors.password}
+        </p>
+      )}
+    </div>
 
-          <motion.button
-            type="submit"
-            disabled={isLoading}
-            className={`bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold py-2 sm:py-3 rounded-xl transition duration-300 shadow-lg border-2 border-yellow-400/60 ${
-              isLoading ? "opacity-50 cursor-not-allowed" : "hover:from-yellow-500 hover:to-yellow-400"
-            }`}
-            variants={buttonVariants}
-            whileHover={isLoading ? {} : "hover"}
-            whileTap={isLoading ? {} : "tap"}
-            aria-label={"Submit login"}
-          >
-            {isLoading ? "Signing in..." : "Sign In"}
-          </motion.button>
-        </form>
+    <motion.button
+      type="submit"
+      disabled={isLoading}
+      className={`bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 sm:py-3 rounded-lg transition duration-300 shadow border border-indigo-200 ${
+        isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-indigo-700"
+      }`}
+      variants={buttonVariants}
+      whileHover={isLoading ? {} : "hover"}
+      whileTap={isLoading ? {} : "tap"}
+      aria-label={"Submit login"}
+    >
+      {isLoading ? "Signing in..." : "Sign In"}
+    </motion.button>
+  </form>
 
         {authDebug && lastAuthError && (
           <div className="mt-4 p-3 rounded-lg" style={{ background: 'rgba(17,24,39,0.45)' }}>

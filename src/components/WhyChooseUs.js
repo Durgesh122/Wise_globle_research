@@ -47,83 +47,83 @@ const WhyChooseUs = () => {
 
   return (
     <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
-      <div className="container max-w-3xl mx-auto text-white text-adaptive">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+      <div className="container max-w-3xl mx-auto">
+        <motion.div className="mb-6 rounded-2xl p-6 shadow-2xl" variants={itemVariants} style={{ background: '#fff', border: '2px solid #6366f1', boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)' }}>
+          <div style={{ color: '#0b1220' }}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-indigo-800">Frequently Asked Questions</h2>
 
-        <div className="space-y-4">
-          {faqs.map((f, i) => {
-            const isOpen = openIndex === i;
-            const isLocked = locks[i];
-            return (
-              <div
-                key={i}
-                className="rounded-lg overflow-hidden"
-                style={{ background: '#ffffffff', border: '1px solid rgba(0,0,0,0.06)' }}
-              >
-                <div
-                  className={`flex items-center justify-between px-4 py-3 cursor-pointer select-none`}
-                  style={isLocked ? { background: '#ffffffff' } : {}}
-                >
-                  <button
-                    type="button"
-                    onClick={() => toggle(i)}
-                    className="flex-1 text-left flex items-center gap-3"
-                    aria-expanded={isOpen}
-                    aria-controls={`faq-panel-${i}`}
+            <div className="space-y-4">
+              {faqs.map((f, i) => {
+                const isOpen = openIndex === i;
+                const isLocked = locks[i];
+                return (
+                  <div
+                    key={i}
+                    className="rounded-2xl overflow-hidden bg-white shadow-2xl"
+                    style={{ border: '2px solid #6366f1', color: '#0b1220' }}
                   >
-                    <span className="text-lg font-semibold text-black">{f.q}</span>
-                  </button>
+                    <div
+                      className={`flex items-center justify-between px-4 py-3 cursor-pointer select-none bg-white`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => toggle(i)}
+                        className="flex-1 text-left flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded"
+                        aria-expanded={isOpen}
+                        aria-controls={`faq-panel-${i}`}
+                      >
+                        <span className="text-lg font-semibold text-indigo-800">{f.q}</span>
+                      </button>
 
-                  <div className="flex items-center gap-3 ml-4">
-                    <button
-                      type="button"
-                      aria-pressed={isLocked}
-                      onClick={() => toggleLock(i)}
-                      className="text-sm p-2 rounded hover:bg-black/5"
-                      title={isLocked ? 'Unlock answer' : 'Lock answer'}
-                      aria-label={isLocked ? 'Unlock answer' : 'Lock answer'}
-                      style={{ color: 'rgba(0,0,0,0.7)' }}
-                    >
-                      {isLocked ? <FiLock aria-hidden="true" /> : <FiUnlock aria-hidden="true" />}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggle(i)}
-                      className={`p-2 rounded transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                      style={{ color: 'rgba(0,0,0,0.7)' }}
-                      title={isOpen ? 'Collapse answer' : 'Expand answer'}
-                      aria-label={isOpen ? 'Collapse answer' : 'Expand answer'}
-                      aria-controls={`faq-panel-${i}`}
-                      aria-expanded={isOpen}
-                    >
-                      <FiChevronDown aria-hidden="true" />
-                    </button>
-                  </div>
-                </div>
-
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      key="content"
-                      id={`faq-panel-${i}`}
-                      initial="closed"
-                      animate="open"
-                      exit="closed"
-                      variants={itemVariants}
-                      transition={{ duration: 0.35, ease: 'easeInOut' }}
-                      className="px-4 pt-0 pb-4 text-adaptive"
-                      style={{ color: 'rgba(0,0,0,0.8)' }}
-                    >
-                      <div className="overflow-hidden">
-                        <p>{f.a}</p>
+                      <div className="flex items-center gap-3 ml-4">
+                        <button
+                          type="button"
+                          aria-pressed={isLocked}
+                          onClick={() => toggleLock(i)}
+                          className="text-sm p-2 rounded hover:bg-indigo-50 text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                          title={isLocked ? 'Unlock answer' : 'Lock answer'}
+                          aria-label={isLocked ? 'Unlock answer' : 'Lock answer'}
+                        >
+                          {isLocked ? <FiLock aria-hidden="true" /> : <FiUnlock aria-hidden="true" />}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => toggle(i)}
+                          className={`p-2 rounded transform transition-transform ${isOpen ? 'rotate-180' : ''} hover:bg-indigo-50 text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500`}
+                          title={isOpen ? 'Collapse answer' : 'Expand answer'}
+                          aria-label={isOpen ? 'Collapse answer' : 'Expand answer'}
+                          aria-controls={`faq-panel-${i}`}
+                          aria-expanded={isOpen}
+                        >
+                          <FiChevronDown aria-hidden="true" />
+                        </button>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-        </div>
+                    </div>
+
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          key="content"
+                          id={`faq-panel-${i}`}
+                          initial="closed"
+                          animate="open"
+                          exit="closed"
+                          variants={itemVariants}
+                          transition={{ duration: 0.35, ease: 'easeInOut' }}
+                          className="px-4 pt-0 pb-4 text-adaptive"
+                        >
+                          <div className="overflow-hidden">
+                            <p style={{ color: '#0b1220' }}>{f.a}</p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

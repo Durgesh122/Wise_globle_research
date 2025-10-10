@@ -114,8 +114,8 @@ const Home = () => {
         animate="visible"
       >
   {/* Disclaimer should appear first; only after accepted do we show the image popup */}
-  <PopupDisclaimer onAccept={handleDisclaimerAccepted} />
-  {disclaimerAccepted && showPopup && <PopupForm onClose={() => setShowPopup(false)} forceShow={true} />}
+  <PopupDisclaimer onAccept={handleDisclaimerAccepted} showBackdrop={false} />
+  {disclaimerAccepted && showPopup && <PopupForm onClose={() => setShowPopup(false)} forceShow={true} showBackdrop={false} />}
    {/* <TradingViewTicker suppressHelmet={true} /> */}
         <ErrorBoundary>
           {/* Inline (non-sticky) alert shown at top of hero */}

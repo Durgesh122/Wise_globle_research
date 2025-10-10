@@ -939,9 +939,9 @@ function Navbar() {
                   src={wiseLogo}
                   alt="Wise Logo"
                   className="wise-logo h-10 sm:h-12 md:h-14 w-auto rounded-full logo-hover"
-                  loading="auto"
+                  loading="eager"
                   decoding="async"
-                  fetchpriority="low"
+                  fetchpriority="high"
                 />
               </div>
             </Link>

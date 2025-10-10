@@ -59,7 +59,7 @@ export default function MobileActionTray() {
       <motion.button aria-label="Accessibility" onClick={openA11y} className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow" whileTap={{ scale: 0.96 }} animate={pulse} transition={{ duration: 2.0, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}>
         <FaUniversalAccess />
       </motion.button>
-      <motion.button aria-label="Speaker" onClick={openSpeaker} className="w-12 h-12 rounded-full bg-amber-500 text-white flex items-center justify-center shadow" whileTap={{ scale: 0.96 }} animate={pulse} transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}>
+      <motion.button aria-label="Speaker" onClick={openSpeaker} className="w-12 h-12 rounded-full bg-gradient-to-r from-[#7c6cf6] to-[#6366f1] text-white flex items-center justify-center shadow" whileTap={{ scale: 0.96 }} animate={pulse} transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}>
         <FaVolumeUp />
       </motion.button>
     </div>

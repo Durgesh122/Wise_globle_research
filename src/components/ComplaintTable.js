@@ -56,72 +56,91 @@ const ComplaintTable = () => {
     };
   }, []);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
+  };
+
   return (
-    <section className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6">
-  <div className="container max-w-3xl mx-auto">
-        <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8"
+    <motion.section
+      className="relative py-10 sm:py-14 lg:py-20 px-4 sm:px-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <div className="container max-w-3xl mx-auto relative z-10">
+        <motion.div
+          className="mb-6 rounded-2xl p-6 shadow-2xl"
           variants={itemVariants}
+          style={{ background: '#fff', border: '2px solid #6366f1', boxShadow: '0 8px 32px 0 rgba(60,60,120,0.18), 0 1.5px 8px 0 rgba(99,102,241,0.10)' }}
         >
-          {`Complaint Data for ${headingMonthYear}`}
-        </motion.h2>
-        {loadingTable ? (
-          <div className="flex justify-center items-center py-6">
-            <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+          <div style={{ color: '#0b1220' }}>
+            <motion.h2
+              className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-indigo-800"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {`Complaint Data for ${headingMonthYear}`}
+            </motion.h2>
+            {loadingTable ? (
+              <div className="flex justify-center items-center py-6">
+                <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : errorTable ? (
+              <div className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center text-gray-900">
+                {errorTable}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table
+                  className="w-full border-separate border-spacing-0 text-left text-xs sm:text-sm border border-indigo-200"
+                  style={{ background: 'transparent', color: '#0b1220' }}
+                  aria-label={`Complaint Data for ${headingMonthYear}`}
+                >
+                  <caption className="sr-only">Monthly complaint receipt and resolution statistics by source</caption>
+                  <thead>
+                    <tr className="bg-indigo-50 border-b border-indigo-200">
+                      <th scope="col" className="p-2 sm:p-3 border border-indigo-200 text-center min-w-[70px]" style={{ color: '#0b1220' }}>Sr. No.</th>
+                      <th scope="col" className="p-2 sm:p-3 border border-indigo-200 text-center min-w-[160px]" style={{ color: '#0b1220' }}>Received from</th>
+                      <th scope="col" className="p-2 sm:p-3 border border-indigo-200 text-center min-w-[180px]" style={{ color: '#0b1220' }}>Pending at the end of last month</th>
+                      <th scope="col" className="p-2 sm:p-3 border border-indigo-200 text-center min-w-[90px]" style={{ color: '#0b1220' }}>Received</th>
+                      <th scope="col" className="p-2 sm:p-3 border border-indigo-200 text-center min-w-[90px]" style={{ color: '#0b1220' }}>Resolved</th>
+                      <th scope="col" className="p-2 sm:p-3 border border-indigo-200 text-center min-w-[90px]" style={{ color: '#0b1220' }}>Pending</th>
+                      <th scope="col" className="p-2 sm:p-3 border border-indigo-200 text-center min-w-[170px]" style={{ color: '#0b1220' }}>Pending Complaints 3 Months</th>
+                      <th scope="col" className="p-2 sm:p-3 border border-indigo-200 text-center min-w-[210px]" style={{ color: '#0b1220' }}>Average Resolution time (in days)^</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.isArray(tableData) &&
+                      tableData.map((row) => (
+                        <tr
+                          key={row.srNo}
+                          className="transition-colors hover:bg-indigo-50 border-b border-indigo-100"
+                          style={{ backgroundColor: '#fff', color: '#0b1220' }}
+                        >
+                          <td className="p-2 sm:p-3 border border-indigo-100 text-center min-w-[70px]">{row.srNo}</td>
+                          <td className="p-2 sm:p-3 border border-indigo-100 text-center min-w-[160px]">{row.source}</td>
+                          <td className="p-2 sm:p-3 border border-indigo-100 text-center min-w-[180px]">{row.pendingLastMonth || 0}</td>
+                          <td className="p-2 sm:p-3 border border-indigo-100 text-center min-w-[90px]">{row.received || 0}</td>
+                          <td className="p-2 sm:p-3 border border-indigo-100 text-center min-w-[90px]">{row.resolved || 0}</td>
+                          <td className="p-2 sm:p-3 border border-indigo-100 text-center min-w-[90px]">{row.pending || 0}</td>
+                          <td className="p-2 sm:p-3 border border-indigo-100 text-center min-w-[170px]">{row.pending3Months || 0}</td>
+                          <td className="p-2 sm:p-3 border border-indigo-100 text-center min-w-[210px]">{row.avgResolutionTime || 0}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <p className="mt-4 text-xs sm:text-sm" style={{ color: '#0b1220' }}>
+              ^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.
+            </p>
           </div>
-        ) : errorTable ? (
-          <div className="bg-red-500/20 rounded-xl p-6 shadow-lg border border-red-500/30 text-center" style={{ color: '#111' }}>
-            {errorTable}
-          </div>
-        ) : (
-          <div className="rounded-lg overflow-hidden" style={{ background: '#fff', border: '1.5px solid #cbd5e1', color: '#111' }}>
-            <div className="overflow-x-auto">
-              <table
-                className="w-full border-separate border-spacing-0 text-left text-xs sm:text-sm border border-gray-300"
-                style={{ background: 'transparent' }}
-                aria-label={`Complaint Data for ${headingMonthYear}`}
-              >
-                <caption className="sr-only">Monthly complaint receipt and resolution statistics by source</caption>
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-300">
-                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[70px]" style={{ color: '#111' }}>Sr. No.</th>
-                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[160px]" style={{ color: '#111' }}>Received from</th>
-                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[180px]" style={{ color: '#111' }}>Pending at the end of last month</th>
-                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]" style={{ color: '#111' }}>Received</th>
-                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]" style={{ color: '#111' }}>Resolved</th>
-                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]" style={{ color: '#111' }}>Pending</th>
-                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[170px]" style={{ color: '#111' }}>Pending Complaints 3 Months</th>
-                    <th scope="col" className="p-2 sm:p-3 border border-gray-300 text-center min-w-[210px]" style={{ color: '#111' }}>Average Resolution time (in days)^</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.isArray(tableData) &&
-                    tableData.map((row) => (
-                      <tr
-                        key={row.srNo}
-                        className="transition-colors hover:bg-gray-100 border-b border-gray-300"
-                        style={{ backgroundColor: '#fff' }}
-                      >
-                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[70px]">{row.srNo}</td>
-                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[160px]">{row.source}</td>
-                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[180px]">{row.pendingLastMonth || 0}</td>
-                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]">{row.received || 0}</td>
-                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]">{row.resolved || 0}</td>
-                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[90px]">{row.pending || 0}</td>
-                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[170px]">{row.pending3Months || 0}</td>
-                        <td className="p-2 sm:p-3 border border-gray-300 text-center min-w-[210px]">{row.avgResolutionTime || 0}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-  <p className="mt-4 text-xs sm:text-sm" style={{ color: 'var(--text-body)' }}>
-          ^ Average Resolution time is the sum total of time taken to resolve each complaint in days, in the current month divided by total number of complaints resolved in the current month.
-        </p>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

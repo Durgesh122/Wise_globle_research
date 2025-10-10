@@ -1,26 +1,24 @@
+
 import React, { useMemo } from 'react';
 
-// Extracts the YouTube video ID from various URL formats
+// Minimal YouTube ID extractor (copied from Media.js)
 function extractYouTubeId(input = '') {
   if (!input) return '';
   // If only an ID is passed
   if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
   try {
     const url = new URL(input);
-    // Standard watch URL: https://www.youtube.com/watch?v=VIDEOID
     const v = url.searchParams.get('v');
     if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
-    // youtu.be short URL: https://youtu.be/VIDEOID
     const shortId = url.hostname.includes('youtu.be') ? url.pathname.slice(1) : '';
     if (shortId && /^[a-zA-Z0-9_-]{11}$/.test(shortId)) return shortId;
-    // Embed URL: https://www.youtube.com/embed/VIDEOID
     const parts = url.pathname.split('/');
     const embedIndex = parts.indexOf('embed');
     if (embedIndex !== -1 && parts[embedIndex + 1] && /^[a-zA-Z0-9_-]{11}$/.test(parts[embedIndex + 1])) {
       return parts[embedIndex + 1];
     }
   } catch {
-    // ignore
+    // ignore parse errors
   }
   return '';
 }
@@ -50,7 +48,16 @@ export default function YouTubeEmbed({ url, videoId, title = 'YouTube video', st
         />
       </div>
       <p className="text-xs text-white/70">
-        Privacy-enhanced mode enabled (youtube-nocookie.com). <a className="underline" href={watchUrl} target="_blank" rel="noopener noreferrer">Watch on YouTube</a>.
+        Privacy-enhanced mode enabled (youtube-nocookie.com).{' '}
+        <a
+          className="underline"
+          href={watchUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: '#6366f1', borderColor: '#6366f1', fontWeight: 600 }}
+        >
+          Watch on YouTube
+        </a>.
       </p>
     </section>
   );

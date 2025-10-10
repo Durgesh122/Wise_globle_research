@@ -442,7 +442,7 @@ const ComplaintTable = ({ tableData, setTableData, handleEditTableRow, handleDel
               <td className="p-4">{row.resolved || 0}</td>
               <td className="p-4">{row.pending || 0}</td>
               <td className="p-4">{row.pending3Months || 0}</td>
-              <td className="p-4">{row.avgResolutionTime || 0}</td>
+              <td className="p-4">{row.srNo === 'Grand Total' ? 0 : (row.avgResolutionTime || 0)}</td>
               <td className="p-4 flex gap-2">
                 <motion.button
                   type="button"

@@ -12,8 +12,8 @@ const A11yIcon = ({ className = 'w-9 h-9' }) => (
   >
     <defs>
       <linearGradient id="a11y-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-  <stop offset="0%" stopColor="#10b981"/>
-  <stop offset="100%" stopColor="#059669"/>
+        <stop offset="0%" stopColor="#8b5cf6" />
+        <stop offset="100%" stopColor="#6366f1" />
       </linearGradient>
     </defs>
     {/* Badge background */}
@@ -462,8 +462,8 @@ export default function AccessibilityMenu() {
     return () => document.removeEventListener('keydown', handler);
   }, [open]);
 
-  const btnCommon = 'px-3 py-2 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2eed1c] transition transform active:scale-95 border border-gray-200';
-  const switchCls = (active) => `flex items-center justify-between w-full text-left whitespace-normal break-words ${btnCommon} ${active ? 'ring-1 ring-[#2eed1c]' : ''}`;
+  const btnCommon = 'px-2 py-1 sm:px-2 sm:py-1 rounded-md bg-gray-50 hover:bg-[#f3eefc] text-gray-900 text-[11px] sm:text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c7b7ff] transition transform active:scale-95 border border-[#e9e5ff]';
+  const switchCls = (active) => `flex items-center justify-between w-full text-left whitespace-normal break-words ${btnCommon} ${active ? 'ring-1 ring-[#c7b7ff]' : ''}`;
 
   const increaseFont = () => setSettings((s) => ({ ...s, fontScale: clampFontScale(s.fontScale + 0.1) }));
   const decreaseFont = () => setSettings((s) => ({ ...s, fontScale: clampFontScale(s.fontScale - 0.1) }));
@@ -496,7 +496,7 @@ export default function AccessibilityMenu() {
         onClick={() => setOpen((v) => !v)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.96 }}
-  className="hidden md:flex fixed bottom-40 right-6 md:right-6 z-[9000] bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-green-300 w-14 h-14 items-center justify-center pointer-events-auto"
+  className="hidden md:flex fixed bottom-40 right-6 md:right-6 z-[9000] bg-gradient-to-br from-[#7c3aed] to-[#6366f1] text-white rounded-full shadow-lg hover:opacity-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#c7b7ff] w-14 h-14 items-center justify-center pointer-events-auto"
       >
         <A11yIcon className="w-9 h-9" />
       </motion.button>
@@ -509,62 +509,67 @@ export default function AccessibilityMenu() {
           aria-modal="true"
           aria-label="Accessibility menu"
           id="accessibility-menu-panel"
-          className="fixed left-0 right-0 bottom-0 sm:left-auto sm:right-6 sm:bottom-56 w-full sm:w-[28rem] max-w-[100vw] sm:max-w-[92vw] max-h-[75vh] overflow-y-auto rounded-t-2xl sm:rounded-xl bg-white text-gray-900 shadow-2xl border border-[#2eed1c] p-3 md:p-4 space-y-3 z-[9001] pointer-events-auto"
+          className="fixed left-0 right-0 bottom-0 sm:left-auto sm:right-6 sm:bottom-48 w-full max-w-[100vw] sm:max-w-[24rem] max-h-[55vh] sm:max-h-[70vh] overflow-y-auto rounded-t-lg sm:rounded-xl bg-white text-black shadow-2xl p-1 sm:p-1 md:p-2 space-y-2 sm:space-y-2 z-[9001] pointer-events-auto box-border mx-3 sm:mx-0 min-h-0"
         >
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-400/40 flex items-center justify-center">
-                <A11yIcon className="w-5 h-5" />
-              </div>
+          <div style={{ border: '2px solid rgba(99,102,241,0.18)', borderRadius: '0.875rem' }} className="p-1 sm:p-2 min-w-0">
+            <div style={{ border: '2px solid #6366f1', boxShadow: '0 8px 32px 0 rgba(99,102,241,0.12), 0 1.5px 8px 0 rgba(99,102,241,0.06)', borderRadius: '0.75rem' }} className="p-3 min-w-0 text-black">
+            <div className="flex items-center justify-between gap-2 min-w-0">
+            <div className="flex items-center gap-2 min-w-0">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ede9fe] to-[#efefff] border border-[#e9e5ff] flex items-center justify-center">
+                  <A11yIcon className="w-5 h-5" />
+                </div>
               <div>
-                <h2 className="text-sm font-semibold leading-tight">Accessibility</h2>
+                  <h2 className="text-sm font-semibold leading-tight" style={{ color: '#000000' }}>Accessibility</h2>
                 <span className="sr-only">Adjust for better readability</span>
               </div>
             </div>
-            <button onClick={() => setOpen(false)} className={btnCommon} aria-label="Close accessibility menu">✕</button>
+              <button onClick={() => setOpen(false)} className={btnCommon} aria-label="Close accessibility menu">✕</button>
+            </div>
           </div>
 
           {/* Text size */}
           <div className="space-y-2">
             <div className="text-xs opacity-80">Text size</div>
             <div className="flex items-center gap-2">
-              <button ref={firstInteractiveRef} onClick={decreaseFont} className={`${btnCommon} px-3 py-2`} aria-label="Decrease text size">A−</button>
-              <button onClick={resetFont} className={`${btnCommon} px-3 py-2`} aria-label="Reset text size">A</button>
-              <button onClick={increaseFont} className={`${btnCommon} px-3 py-2`} aria-label="Increase text size">A+</button>
+              <button ref={firstInteractiveRef} onClick={decreaseFont} className={`${btnCommon} py-1.5`} aria-label="Decrease text size">A−</button>
+              <button onClick={resetFont} className={`${btnCommon} py-1.5`} aria-label="Reset text size">A</button>
+              <button onClick={increaseFont} className={`${btnCommon} py-1.5`} aria-label="Increase text size">A+</button>
               <div className="ml-auto text-xs opacity-80" aria-live="polite">{Math.round(settings.fontScale * 100)}%</div>
             </div>
           </div>
 
+          <hr className="border-t-[1px] border-[#ebe8ff] my-2" />
+
           {/* Letter spacing */}
           <div className="space-y-2">
             <div className="text-xs opacity-80">Letter spacing</div>
-            <div className="grid grid-cols-4 gap-2 sm:flex sm:items-center">
-              <button onClick={() => inc('letterSpacingPx', -1, 4, -1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Decrease letter spacing">−</button>
-              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-gray-100 rounded" aria-live="polite">{settings.letterSpacingPx}px</div>
-              <button onClick={() => inc('letterSpacingPx', -1, 4, 1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Increase letter spacing">+</button>
-              <button onClick={() => setSettings((s)=>({ ...s, letterSpacingPx: 0 }))} className={`${btnCommon} sm:ml-auto w-full`} aria-label="Reset letter spacing">Reset</button>
+            <div className="grid grid-cols-4 gap-1 sm:flex sm:items-center">
+              <button onClick={() => inc('letterSpacingPx', -1, 4, -1)} className={`${btnCommon} w-full py-1.5`} aria-label="Decrease letter spacing">−</button>
+              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-gray-50 rounded" aria-live="polite">{settings.letterSpacingPx}px</div>
+              <button onClick={() => inc('letterSpacingPx', -1, 4, 1)} className={`${btnCommon} w-full py-1.5`} aria-label="Increase letter spacing">+</button>
+              <button onClick={() => setSettings((s)=>({ ...s, letterSpacingPx: 0 }))} className={`${btnCommon} sm:ml-auto w-full py-1.5`} aria-label="Reset letter spacing">Reset</button>
             </div>
           </div>
 
           {/* Line height (levels) */}
           <div className="space-y-2">
             <div className="text-xs opacity-80">Line height</div>
-            <div className="grid grid-cols-4 gap-2 sm:flex sm:items-center">
-              <button onClick={() => inc('lineHeightLevel', 0, 3, -1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Decrease line height">−</button>
-              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-gray-100 rounded" aria-live="polite">{['Normal','1.5','1.75','2'][settings.lineHeightLevel || 0]}</div>
-              <button onClick={() => inc('lineHeightLevel', 0, 3, 1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Increase line height">+</button>
-              <button onClick={() => setSettings((s)=>({ ...s, lineHeightLevel: 0 }))} className={`${btnCommon} sm:ml-auto w-full`} aria-label="Reset line height">Reset</button>
+            <div className="grid grid-cols-4 gap-1 sm:flex sm:items-center">
+              <button onClick={() => inc('lineHeightLevel', 0, 3, -1)} className={`${btnCommon} w-full py-1.5`} aria-label="Decrease line height">−</button>
+              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-gray-50 rounded" aria-live="polite">{['Normal','1.5','1.75','2'][settings.lineHeightLevel || 0]}</div>
+              <button onClick={() => inc('lineHeightLevel', 0, 3, 1)} className={`${btnCommon} w-full py-1.5`} aria-label="Increase line height">+</button>
+              <button onClick={() => setSettings((s)=>({ ...s, lineHeightLevel: 0 }))} className={`${btnCommon} sm:ml-auto w-full py-1.5`} aria-label="Reset line height">Reset</button>
             </div>
           </div>
 
           {/* Font weight */}
           <div className="space-y-2">
             <div className="text-xs opacity-80">Font weight</div>
-            <div className="grid grid-cols-4 gap-2 sm:flex sm:items-center">
-              <button onClick={() => inc('fontWeightLevel', 0, 3, -1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Decrease font weight">−</button>
-              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-gray-100 rounded" aria-live="polite">{['400','500','600','700'][settings.fontWeightLevel || 0]}</div>
-              <button onClick={() => inc('fontWeightLevel', 0, 3, 1)} className={`${btnCommon} px-3 py-2 w-full`} aria-label="Increase font weight">+</button>
-              <button onClick={() => setSettings((s)=>({ ...s, fontWeightLevel: 0 }))} className={`${btnCommon} sm:ml-auto w-full`} aria-label="Reset font weight">Reset</button>
+            <div className="grid grid-cols-4 gap-1 sm:flex sm:items-center">
+              <button onClick={() => inc('fontWeightLevel', 0, 3, -1)} className={`${btnCommon} w-full py-1.5`} aria-label="Decrease font weight">−</button>
+              <div className="text-xs opacity-80 min-w-[3rem] text-center sm:w-auto w-full py-2 bg-gray-50 rounded" aria-live="polite">{['400','500','600','700'][settings.fontWeightLevel || 0]}</div>
+              <button onClick={() => inc('fontWeightLevel', 0, 3, 1)} className={`${btnCommon} w-full py-1.5`} aria-label="Increase font weight">+</button>
+              <button onClick={() => setSettings((s)=>({ ...s, fontWeightLevel: 0 }))} className={`${btnCommon} sm:ml-auto w-full py-1.5`} aria-label="Reset font weight">Reset</button>
             </div>
           </div>
 
@@ -573,14 +578,14 @@ export default function AccessibilityMenu() {
             <div className="text-xs opacity-80">Contrast</div>
             <div className="grid grid-cols-3 gap-2">
             {/* Contrast: Default / Dark / Light */}
-              <button onClick={() => setContrast('default')} className={`${switchCls(settings.contrastMode === 'default')} min-h-[2.5rem]`} aria-pressed={settings.contrastMode === 'default'}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiSun className="opacity-90 flex-shrink-0" /> <span>Default</span></span>
+              <button onClick={() => setContrast('default')} className={`${switchCls(settings.contrastMode === 'default')} min-h-[2rem] sm:min-h-[2.25rem]`} aria-pressed={settings.contrastMode === 'default'}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiSun className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Default</span></span>
               </button>
-              <button onClick={() => setContrast('dark')} className={`${switchCls(settings.contrastMode === 'dark')} min-h-[2.5rem]`} aria-pressed={settings.contrastMode === 'dark'}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiSun className="opacity-90 flex-shrink-0" /> <span>Dark</span></span>
+              <button onClick={() => setContrast('dark')} className={`${switchCls(settings.contrastMode === 'dark')} min-h-[2rem] sm:min-h-[2.25rem]`} aria-pressed={settings.contrastMode === 'dark'}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiSun className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Dark</span></span>
               </button>
-              <button onClick={() => setContrast('light')} className={`${switchCls(settings.contrastMode === 'light')} min-h-[2.5rem]`} aria-pressed={settings.contrastMode === 'light'}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiSun className="opacity-90 flex-shrink-0" /> <span>Light</span></span>
+              <button onClick={() => setContrast('light')} className={`${switchCls(settings.contrastMode === 'light')} min-h-[2rem] sm:min-h-[2.25rem]`} aria-pressed={settings.contrastMode === 'light'}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiSun className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Light</span></span>
               </button>
             </div>
           </div>
@@ -588,14 +593,14 @@ export default function AccessibilityMenu() {
           <div className="space-y-2">
             <div className="text-xs opacity-80">Saturation</div>
             <div className="grid grid-cols-3 gap-2">
-              <button onClick={() => setSaturation('normal')} className={`${switchCls(settings.saturation === 'normal')} min-h-[2.5rem]`} aria-pressed={settings.saturation === 'normal'}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiDroplet className="opacity-90 flex-shrink-0" /> <span>Normal</span></span>
+              <button onClick={() => setSaturation('normal')} className={`${switchCls(settings.saturation === 'normal')} min-h-[2rem] sm:min-h-[2.25rem]`} aria-pressed={settings.saturation === 'normal'}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiDroplet className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Normal</span></span>
               </button>
-              <button onClick={() => setSaturation('high')} className={`${switchCls(settings.saturation === 'high')} min-h-[2.5rem]`} aria-pressed={settings.saturation === 'high'}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiDroplet className="opacity-90 flex-shrink-0" /> <span>High</span></span>
+              <button onClick={() => setSaturation('high')} className={`${switchCls(settings.saturation === 'high')} min-h-[2rem] sm:min-h-[2.25rem]`} aria-pressed={settings.saturation === 'high'}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiDroplet className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>High</span></span>
               </button>
-              <button onClick={() => setSaturation('low')} className={`${switchCls(settings.saturation === 'low')} min-h-[2.5rem]`} aria-pressed={settings.saturation === 'low'}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiDroplet className="opacity-90 flex-shrink-0" /> <span>Low</span></span>
+              <button onClick={() => setSaturation('low')} className={`${switchCls(settings.saturation === 'low')} min-h-[2rem] sm:min-h-[2.25rem]`} aria-pressed={settings.saturation === 'low'}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiDroplet className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Low</span></span>
               </button>
             </div>
           </div>
@@ -604,40 +609,40 @@ export default function AccessibilityMenu() {
             <div className="text-xs opacity-80">Display</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {/* Monochrome */}
-              <button onClick={() => toggle('monochrome')} className={`${switchCls(settings.monochrome)} min-h-[2.75rem]`} aria-pressed={settings.monochrome}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiDroplet className="opacity-90 flex-shrink-0" /> <span>Monochrome</span></span>
+              <button onClick={() => toggle('monochrome')} className={`${switchCls(settings.monochrome)} min-h-[2rem] sm:min-h-[2.5rem]`} aria-pressed={settings.monochrome}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiDroplet className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Monochrome</span></span>
               </button>
               {/* Align Left */}
-              <button onClick={() => toggleAlign('left')} className={`${switchCls(settings.alignLeft)} min-h-[2.75rem]`} aria-pressed={settings.alignLeft}>
-                <span className="flex items-center gap-2 whitespace-normal"><span className="flex-shrink-0">↤</span> <span>Align left</span></span>
+              <button onClick={() => toggleAlign('left')} className={`${switchCls(settings.alignLeft)} min-h-[2rem] sm:min-h-[2.5rem]`} aria-pressed={settings.alignLeft}>
+                <span className="flex items-center gap-2 whitespace-normal"><span className="text-[#6d28d9] flex-shrink-0">↤</span> <span>Align left</span></span>
               </button>
               {/* Align Right */}
-              <button onClick={() => toggleAlign('right')} className={`${switchCls(settings.alignRight)} min-h-[2.75rem]`} aria-pressed={settings.alignRight}>
-                <span className="flex items-center gap-2 whitespace-normal"><span className="flex-shrink-0">↦</span> <span>Align right</span></span>
+              <button onClick={() => toggleAlign('right')} className={`${switchCls(settings.alignRight)} min-h-[2rem] sm:min-h-[2.5rem]`} aria-pressed={settings.alignRight}>
+                <span className="flex items-center gap-2 whitespace-normal"><span className="text-[#6d28d9] flex-shrink-0">↦</span> <span>Align right</span></span>
               </button>
               {/* Reading guide */}
-              <button onClick={() => toggle('readingGuide')} className={`${switchCls(settings.readingGuide)} min-h-[2.75rem]`} aria-pressed={settings.readingGuide} aria-label="Toggle reading guide (horizontal reading ruler)">
-                <span className="flex items-center gap-2 whitespace-normal"><FiBookOpen className="opacity-90 flex-shrink-0" /> <span>Reading guide</span></span>
+              <button onClick={() => toggle('readingGuide')} className={`${switchCls(settings.readingGuide)} min-h-[2rem] sm:min-h-[2.5rem]`} aria-pressed={settings.readingGuide} aria-label="Toggle reading guide (horizontal reading ruler)">
+                <span className="flex items-center gap-2 whitespace-normal"><FiBookOpen className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Reading guide</span></span>
               </button>
               {/* Dyslexic font */}
-              <button onClick={() => toggle('dyslexic')} className={`${switchCls(settings.dyslexic)} min-h-[2.75rem]`} aria-pressed={settings.dyslexic}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiType className="opacity-90 flex-shrink-0" /> <span>Dyslexic font</span></span>
+              <button onClick={() => toggle('dyslexic')} className={`${switchCls(settings.dyslexic)} min-h-[2rem] sm:min-h-[2.5rem]`} aria-pressed={settings.dyslexic}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiType className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Dyslexic font</span></span>
               </button>
               {/* Reduce motion (Stop animations) */}
-              <button onClick={() => toggle('reduceMotion')} className={`${switchCls(settings.reduceMotion)} min-h-[2.75rem]`} aria-pressed={settings.reduceMotion}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiZapOff className="opacity-90 flex-shrink-0" /> <span>Stop animations</span></span>
+              <button onClick={() => toggle('reduceMotion')} className={`${switchCls(settings.reduceMotion)} min-h-[2rem] sm:min-h-[2.5rem]`} aria-pressed={settings.reduceMotion}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiZapOff className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Stop animations</span></span>
               </button>
               {/* Big cursor */}
-              <button onClick={() => toggle('bigCursor')} className={`${switchCls(settings.bigCursor)} min-h-[2.75rem]`} aria-pressed={settings.bigCursor}>
-                <span className="flex items-center gap-2 whitespace-normal"><span className="flex-shrink-0">🖱️</span> <span>Big cursor</span></span>
+              <button onClick={() => toggle('bigCursor')} className={`${switchCls(settings.bigCursor)} min-h-[2rem] sm:min-h-[2.5rem]`} aria-pressed={settings.bigCursor}>
+                <span className="flex items-center gap-2 whitespace-normal"><span className="text-[#6d28d9] flex-shrink-0">🖱️</span> <span>Big cursor</span></span>
               </button>
               {/* Optional: Highlight links retained */}
-              <button onClick={() => toggle('highlightLinks')} className={`${switchCls(settings.highlightLinks)} min-h-[2.75rem]`} aria-pressed={settings.highlightLinks}>
-                <span className="flex items-center gap-2 whitespace-normal"><FiLink className="opacity-90 flex-shrink-0" /> <span>Highlight links</span></span>
+              <button onClick={() => toggle('highlightLinks')} className={`${switchCls(settings.highlightLinks)} min-h-[2rem] sm:min-h-[2.5rem]`} aria-pressed={settings.highlightLinks}>
+                <span className="flex items-center gap-2 whitespace-normal"><FiLink className="text-[#6d28d9] opacity-95 flex-shrink-0" /> <span>Highlight links</span></span>
               </button>
               {/* Text-to-speech */}
-              <button onClick={() => toggle('tts')} className={`${switchCls(settings.tts)} min-h-[2.75rem]`} aria-pressed={settings.tts} aria-label="Toggle text to speech">
-                <span className="flex items-center gap-2 whitespace-normal"><span className="flex-shrink-0">🔊</span> <span>Text to speech</span></span>
+              <button onClick={() => toggle('tts')} className={`${switchCls(settings.tts)} min-h-[2rem] sm:min-h-[2.5rem]`} aria-pressed={settings.tts} aria-label="Toggle text to speech">
+                <span className="flex items-center gap-2 whitespace-normal"><span className="text-[#6d28d9] flex-shrink-0">🔊</span> <span>Text to speech</span></span>
               </button>
             </div>
           </div>
@@ -649,6 +654,7 @@ export default function AccessibilityMenu() {
 
           <p className="text-[10px] opacity-60 mt-1">Settings are saved on this device.</p>
         </div>
+      </div>
       )}
     </div>
   );

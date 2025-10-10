@@ -65,13 +65,14 @@ export default function AccessibleMedia({
           {chapters?.length > 0 && (
             <div className="rounded-md bg-white/10 p-3">
               <h4 className="font-medium mb-2">Chapters</h4>
-              <ol className="list-decimal ml-5 text-sm space-y-1">
+              <ol className="list-decimal ml-4 sm:ml-5 text-xs sm:text-sm space-y-1">
                 {chapters.map((c, i) => (
                   <li key={i}>
                     <button
                       type="button"
-                      className="underline underline-offset-2 hover:no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+                      className="underline underline-offset-2 hover:no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6366f1]"
                       aria-label={`Jump to ${c.label} at ${c.time}`}
+                      style={{ color: '#6366f1', borderColor: '#6366f1', fontWeight: 600 }}
                       // Placeholder: hook up with real player when available
                       onClick={() => {
                         // no-op placeholder
@@ -106,13 +107,14 @@ export default function AccessibleMedia({
           {downloads?.length > 0 && (
             <div className="rounded-md bg-white/10 p-3">
               <h4 className="font-medium mb-2">Download</h4>
-              <ul className="list-disc ml-5 text-sm space-y-1">
+              <ul className="list-disc ml-4 sm:ml-5 text-xs sm:text-sm space-y-1">
                 {downloads.map((d, i) => (
                   <li key={i}>
                     <a
-                      className="underline underline-offset-2 hover:no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+                      className="underline underline-offset-2 hover:no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6366f1]"
                       href={d.href}
                       download
+                      style={{ color: '#6366f1', borderColor: '#6366f1', fontWeight: 600 }}
                     >
                       {d.label}{d.size ? ` — ${d.size}` : ''}
                     </a>

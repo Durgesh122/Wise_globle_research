@@ -76,7 +76,9 @@ const allowedOrigins = [
   'http://192.168.1.138:3001',
   'https://wiseglobalresearch-services.web.app',
   'https://wiseglobalresearch.com',
+  'https://www.wiseglobalresearch.com',
   'https://wise-globle-research-2.onrender.com',
+  'https://www.wise-globle-research-2.onrender.com',
 ];
 
 // More forgiving CORS checker with diagnostics. We intentionally allow
