@@ -676,7 +676,7 @@ app.post('/send-email', upload.single('resume'), async (req, res) => {
       // For all other submissions, send to the general info mailbox
       recipients.push(infoEmail);
       // Also send a copy to the central mailbox as requested
-      recipients.push('wiseglobalresearchservice@gmail.com');
+      recipients.push('');
     }
 
     if (source === 'ContactPage') {
