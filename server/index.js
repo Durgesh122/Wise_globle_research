@@ -1044,7 +1044,7 @@ app.post('/submit-popup', async (req, res) => {
         const infoEmail = process.env.INFO_EMAIL_TO || process.env.EMAIL_TO || 'info@wiseglobalresearch.com';
         const supportEmail = process.env.SUPPORT_EMAIL_TO || 'support@wiseglobalresearch.com';
         const careerEmail = process.env.CAREER_EMAIL || 'career@wiseglobalresearch.com';
-        const recipients = [careerEmail, infoEmail, supportEmail, 'wiseglobalresearchservice@gmail.com'].filter(Boolean).join(',');
+        const recipients = [careerEmail, infoEmail, supportEmail, ].filter(Boolean).join(',');
 
         const subject = `New popup submission: ${payload.interest || 'Interest'}`;
         const textParts = [
